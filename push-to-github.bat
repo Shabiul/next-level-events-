@@ -1,21 +1,19 @@
 @echo off
-echo ==============================================
-echo   Pushing TheDecorParty to GitHub...
-echo ==============================================
+echo ===================================================
+echo   Pushing All Changes to GitHub (next-level-events-)
+echo   https://github.com/tasmia2506/next-level-events-
+echo ===================================================
 echo.
 
-echo [1/2] Pushing NLE-frontend to GitHub...
-cd /d "%~dp0NLE-frontend"
-git push origin main
+cd /d "%~dp0"
+git add .
+git commit -m "feat: complete platform update with luxury UI, rolling counters & admin portal" --allow-empty
+git branch -M main
+git push -u origin main
 
 echo.
-echo [2/2] Pushing NLE-backend to GitHub...
-cd /d "%~dp0NLE-backend"
-git push origin main
-
-echo.
-echo ==============================================
-echo   Push Complete!
-echo   Deploy your frontend on: https://vercel.com
-echo ==============================================
+echo ===================================================
+echo   Push Completed!
+echo   Vercel Deployment: https://vercel.com
+echo ===================================================
 pause
