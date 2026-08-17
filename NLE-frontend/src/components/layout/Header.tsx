@@ -381,11 +381,11 @@ export const Header: React.FC<HeaderProps> = ({
                     Services
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="p-0">
-                    <div className="w-[920px] max-w-[94vw] rounded-3xl border border-[#DDD5C7] dark:border-[#483250] bg-[#FAF8F5] dark:bg-[#201325] p-6 shadow-2xl">
+                    <div className="w-[780px] max-w-[94vw] rounded-3xl border border-[#DDD5C7] dark:border-[#483250] bg-[#FAF8F5] dark:bg-[#201325] p-6 shadow-2xl">
                       <div className="grid grid-cols-12 gap-6">
                         
-                        {/* Col 1: Curated Décors (span 4) */}
-                        <div className="col-span-4 border-r border-[#DDD5C7]/70 dark:border-[#483250]/70 pr-4">
+                        {/* Col 1: Curated Décors (span 5) */}
+                        <div className="col-span-5 border-r border-[#DDD5C7]/70 dark:border-[#483250]/70 pr-4">
                           <button
                             type="button"
                             onClick={() => handleNavAnchor('curated-decors')}
@@ -460,45 +460,8 @@ export const Header: React.FC<HeaderProps> = ({
                           </div>
                         </div>
 
-                        {/* Col 3: Quick Links & Express (span 2) */}
-                        <div className="col-span-2 flex flex-col gap-1">
-                          <div className="pb-3 border-b border-[#DDD5C7]/60 dark:border-[#483250]/60 mb-3">
-                            <span className="text-xs font-bold uppercase tracking-wider text-[#725D75] dark:text-[#A78A9F]">
-                              Services
-                            </span>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => handleNavAnchor('express')}
-                            className="text-left rounded-xl px-2 py-1.5 text-xs text-[#725D75] hover:text-[#34203C] dark:text-[#C9BEAB] dark:hover:text-white transition-colors cursor-pointer"
-                          >
-                            Express Setups
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleNavAnchor('gallery')}
-                            className="text-left rounded-xl px-2 py-1.5 text-xs text-[#725D75] hover:text-[#34203C] dark:text-[#C9BEAB] dark:hover:text-white transition-colors cursor-pointer"
-                          >
-                            Live Gallery
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleNavAnchor('why-us')}
-                            className="text-left rounded-xl px-2 py-1.5 text-xs text-[#725D75] hover:text-[#34203C] dark:text-[#C9BEAB] dark:hover:text-white transition-colors cursor-pointer"
-                          >
-                            Why Choose Us
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleNavAnchor('faq')}
-                            className="text-left rounded-xl px-2 py-1.5 text-xs text-[#725D75] hover:text-[#34203C] dark:text-[#C9BEAB] dark:hover:text-white transition-colors cursor-pointer"
-                          >
-                            FAQ
-                          </button>
-                        </div>
-
-                        {/* Col 4: Explore All Spotlight Banner Card (span 3) */}
-                        <div className="col-span-3">
+                        {/* Col 3: Explore All Spotlight Banner Card (span 4) */}
+                        <div className="col-span-4">
                           <div className="flex h-full flex-col justify-between rounded-2xl bg-gradient-to-br from-[#34203C] to-[#483250] p-4 text-[#FAF8F5] shadow-lg">
                             <div>
                               <div className="flex items-center gap-1.5 text-[#C9BEAB] text-xs font-bold uppercase tracking-wider mb-2">
