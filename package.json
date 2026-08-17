@@ -1,0 +1,23 @@
+{
+  "name": "tdp-workspace",
+  "version": "1.0.0",
+  "description": "TDP Monorepo workspace for NLE Frontend and Backend",
+  "scripts": {
+    "dev": "node dev.js",
+    "dev:all": "node dev.js",
+    "dev:frontend": "npm --prefix NLE-frontend run dev",
+    "dev:backend": "npm --prefix NLE-backend run dev",
+    "build": "npm --prefix NLE-backend run build && npm --prefix NLE-frontend run build",
+    "build:frontend": "npm --prefix NLE-frontend run build",
+    "build:backend": "npm --prefix NLE-backend run build",
+    "typecheck": "npm --prefix NLE-backend run typecheck && npm --prefix NLE-frontend run type-check",
+    "lint": "npm --prefix NLE-frontend run lint",
+    "push:frontend": "git -C NLE-frontend push origin main",
+    "push:backend": "git -C NLE-backend push origin main",
+    "push": "git -C NLE-frontend push origin main && git -C NLE-backend push origin main",
+    "install:all": "npm --prefix NLE-backend install --legacy-peer-deps && npm --prefix NLE-frontend install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

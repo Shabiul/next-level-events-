@@ -1,0 +1,1 @@
+export { auth, provider } from './services/firebase';
