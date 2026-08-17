@@ -175,6 +175,15 @@ export const Footer: React.FC<FooterProps> = ({
               ))}
               <li>
                 <Link
+                  to="/ai-planner"
+                  className={`${linkClass} text-[#C9BEAB] hover:text-[#FAF8F5] font-medium`}
+                >
+                  <Sparkles size={13} className="text-[#C9BEAB]" />
+                  <span>AI Party Planner ✨</span>
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/admin/login"
                   className={`${linkClass} text-[#C9BEAB] hover:text-[#FAF8F5] font-medium`}
                 >

@@ -588,28 +588,6 @@ export const Header: React.FC<HeaderProps> = ({
                     Contact
                   </button>
                 </NavigationMenuItem>
-
-                {/* 7. AI Planner */}
-                <NavigationMenuItem>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (onAssistantOpen) onAssistantOpen();
-                      else navigate('/ai-planner');
-                    }}
-                    className={cn(
-                      'inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border transition-all duration-300 cursor-pointer',
-                      location.pathname === '/ai-planner'
-                        ? 'border-[#C9BEAB] bg-[#C9BEAB] text-[#34203C] font-bold shadow-xs'
-                        : isOverDark
-                          ? 'border-white/30 bg-white/10 text-[#F8F5EF] hover:bg-white/20'
-                          : 'border-[#34203C]/20 bg-[#34203C]/06 text-[#34203C] hover:bg-[#34203C]/12'
-                    )}
-                  >
-                    <Sparkles size={12} className={location.pathname === '/ai-planner' ? 'text-[#34203C]' : isOverDark ? 'text-[#C9BEAB]' : 'text-[#725D75]'} />
-                    <span>AI Planner</span>
-                  </button>
-                </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
           </div>

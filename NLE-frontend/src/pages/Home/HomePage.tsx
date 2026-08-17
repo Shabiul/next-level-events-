@@ -469,6 +469,18 @@ export const HomePage: React.FC<HomePageProps> = ({
               </div>
             </form>
           </div>
+
+          {/* Quick AI Planner Trigger Prompt */}
+          <div className="flex items-center justify-center gap-2 pt-1 text-center">
+            <button
+              type="button"
+              onClick={() => navigate('/ai-planner')}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#34203C]/50 hover:bg-[#34203C]/70 dark:bg-white/10 dark:hover:bg-white/15 border border-[#C9BEAB]/35 text-xs font-medium text-[#FAF8F5] transition-all hover:scale-102 cursor-pointer shadow-sm backdrop-blur-md"
+            >
+              <Sparkles size={13} className="text-[#C9BEAB]" />
+              <span>Need custom theme ideas? <span className="font-semibold text-[#C9BEAB] hover:underline">Ask our AI Celebration Planner →</span></span>
+            </button>
+          </div>
         </div>
       </section>
 

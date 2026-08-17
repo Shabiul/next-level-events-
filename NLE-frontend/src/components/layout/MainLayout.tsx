@@ -7,6 +7,7 @@ import { CartPage } from '../CartPage';
 import { Footer } from './Footer';
 import { Header } from './Header';
 import { FloatingActionMenu } from './FloatingActionMenu';
+import { FloatingAIPlanner } from './FloatingAIPlanner';
 import { cn } from '../../utils/utils';
 import type { AdminCategory, AuthTab, AuthUser, CartItem, Translations } from '../../types';
 import type { AuthRedirect } from '../../context/AuthContext';
@@ -66,6 +67,7 @@ export default function MainLayout({
   auth,
   t,
   onLogoClick,
+  onAssistantOpen,
   showAssistantButton = false,
   showMobileMenu = true,
   categories = [],
@@ -193,7 +195,12 @@ export default function MainLayout({
           />
         </div>
       )}
-      {!hideShell && <FloatingActionMenu />}
+      {!hideShell && (
+        <>
+          <FloatingActionMenu />
+          <FloatingAIPlanner onAssistantOpen={onAssistantOpen} />
+        </>
+      )}
     </>
   );
 }
