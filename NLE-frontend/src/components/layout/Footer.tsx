@@ -286,6 +286,13 @@ export const Footer: React.FC<FooterProps> = ({
                   </a>
                 </div>
               </div>
+
+              <Link
+                to="/contact"
+                className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#C9BEAB] hover:text-white transition-colors pt-1"
+              >
+                <span>Send Custom Enquiry →</span>
+              </Link>
             </div>
           </div>
 

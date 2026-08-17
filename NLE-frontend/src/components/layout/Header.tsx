@@ -540,10 +540,14 @@ export const Header: React.FC<HeaderProps> = ({
                 <NavigationMenuItem>
                   <button
                     type="button"
-                    onClick={() => handleNavAnchor('contact')}
+                    onClick={() => {
+                      if (location.pathname !== '/contact') {
+                        navigate('/contact');
+                      }
+                    }}
                     className={cn(
                       'px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer',
-                      activeSection === 'contact'
+                      location.pathname === '/contact'
                         ? isOverDark
                           ? 'bg-[#A78A9F] text-[#34203C] shadow-xs font-bold'
                           : 'bg-[#34203C] text-[#FAF8F5] shadow-xs font-bold'
@@ -833,8 +837,16 @@ export const Header: React.FC<HeaderProps> = ({
                       {/* Contact */}
                       <button
                         type="button"
-                        onClick={() => handleNavAnchor('contact')}
-                        className="text-left py-2 px-1 hover:text-[#A78A9F] transition-colors border-b border-[#DDD5C7]/50 dark:border-[#483250]/50"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          if (location.pathname !== '/contact') {
+                            navigate('/contact');
+                          }
+                        }}
+                        className={cn(
+                          "text-left py-2 px-1 hover:text-[#A78A9F] transition-colors border-b border-[#DDD5C7]/50 dark:border-[#483250]/50",
+                          location.pathname === '/contact' && "text-[#A78A9F] font-bold"
+                        )}
                       >
                         Contact &amp; Booking
                       </button>
