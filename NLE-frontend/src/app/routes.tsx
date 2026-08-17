@@ -19,6 +19,7 @@ import TermsPage from '../pages/Static/TermsPage';
 import AboutPage from '../pages/Static/AboutPage';
 import ContactPage from '../pages/Static/ContactPage';
 import GalleryPage from '../pages/Static/GalleryPage';
+import PackagesPage from '../pages/Static/PackagesPage';
 import AdminPage from '../pages/AdminPage';
 import AdminAuthPage from '../pages/Auth/AdminAuthPage';
 
@@ -116,6 +117,17 @@ export const AppRoutes: React.FC = () => {
               <HomePage
                 categories={categories}
                 onSelectCategory={handleSelectCategory}
+                onViewProduct={handleViewProduct}
+                onBookProduct={handleBookProduct}
+              />
+            }
+          />
+
+          {/* Dedicated Packages Page */}
+          <Route
+            path="/packages"
+            element={
+              <PackagesPage
                 onViewProduct={handleViewProduct}
                 onBookProduct={handleBookProduct}
               />

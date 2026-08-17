@@ -500,10 +500,14 @@ export const Header: React.FC<HeaderProps> = ({
                 <NavigationMenuItem>
                   <button
                     type="button"
-                    onClick={() => handleNavAnchor('packages')}
+                    onClick={() => {
+                      if (location.pathname !== '/packages') {
+                        navigate('/packages');
+                      }
+                    }}
                     className={cn(
                       'px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer',
-                      activeSection === 'packages'
+                      location.pathname === '/packages'
                         ? isOverDark
                           ? 'bg-[#A78A9F] text-[#34203C] shadow-xs font-bold'
                           : 'bg-[#34203C] text-[#FAF8F5] shadow-xs font-bold'
@@ -823,8 +827,16 @@ export const Header: React.FC<HeaderProps> = ({
                       {/* Packages */}
                       <button
                         type="button"
-                        onClick={() => handleNavAnchor('packages')}
-                        className="text-left py-2 px-1 hover:text-[#A78A9F] transition-colors border-b border-[#DDD5C7]/50 dark:border-[#483250]/50"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          if (location.pathname !== '/packages') {
+                            navigate('/packages');
+                          }
+                        }}
+                        className={cn(
+                          "text-left py-2 px-1 hover:text-[#A78A9F] transition-colors border-b border-[#DDD5C7]/50 dark:border-[#483250]/50",
+                          location.pathname === '/packages' && "text-[#A78A9F] font-bold"
+                        )}
                       >
                         Packages &amp; Pricing
                       </button>
