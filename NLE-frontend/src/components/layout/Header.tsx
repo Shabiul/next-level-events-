@@ -520,10 +520,14 @@ export const Header: React.FC<HeaderProps> = ({
                 <NavigationMenuItem>
                   <button
                     type="button"
-                    onClick={() => handleNavAnchor('gallery')}
+                    onClick={() => {
+                      if (location.pathname !== '/gallery') {
+                        navigate('/gallery');
+                      }
+                    }}
                     className={cn(
                       'px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer',
-                      activeSection === 'gallery'
+                      location.pathname === '/gallery'
                         ? isOverDark
                           ? 'bg-[#A78A9F] text-[#34203C] shadow-xs font-bold'
                           : 'bg-[#34203C] text-[#FAF8F5] shadow-xs font-bold'
@@ -828,8 +832,16 @@ export const Header: React.FC<HeaderProps> = ({
                       {/* Gallery */}
                       <button
                         type="button"
-                        onClick={() => handleNavAnchor('gallery')}
-                        className="text-left py-2 px-1 hover:text-[#A78A9F] transition-colors border-b border-[#DDD5C7]/50 dark:border-[#483250]/50"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          if (location.pathname !== '/gallery') {
+                            navigate('/gallery');
+                          }
+                        }}
+                        className={cn(
+                          "text-left py-2 px-1 hover:text-[#A78A9F] transition-colors border-b border-[#DDD5C7]/50 dark:border-[#483250]/50",
+                          location.pathname === '/gallery' && "text-[#A78A9F] font-bold"
+                        )}
                       >
                         Visual Gallery
                       </button>

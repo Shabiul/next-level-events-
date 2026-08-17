@@ -880,7 +880,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           <Button
             variant="primary"
             size="md"
-            onClick={() => navigate('/explore')}
+            onClick={() => navigate('/gallery')}
             className="self-start sm:self-auto rounded-full text-xs font-semibold tracking-wider uppercase px-6 py-3"
           >
             <span>Browse Full Gallery</span>

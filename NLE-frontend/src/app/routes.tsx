@@ -18,6 +18,7 @@ import ResetPassword from '../pages/Auth/ResetPasswordPage';
 import TermsPage from '../pages/Static/TermsPage';
 import AboutPage from '../pages/Static/AboutPage';
 import ContactPage from '../pages/Static/ContactPage';
+import GalleryPage from '../pages/Static/GalleryPage';
 import AdminPage from '../pages/AdminPage';
 import AdminAuthPage from '../pages/Auth/AdminAuthPage';
 
@@ -242,6 +243,7 @@ export const AppRoutes: React.FC = () => {
           <Route path="/refund" element={<TermsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/gallery" element={<GalleryPage />} />
 
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminAuthPage initialTab="admin-login" />} />
