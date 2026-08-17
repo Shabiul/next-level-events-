@@ -15,6 +15,7 @@ import {
   Gift,
   PartyPopper,
   Flame,
+  Phone,
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import type { AdminCategory, AuthTab, AuthUser, Translations } from '../../types';
@@ -60,6 +61,7 @@ export interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   auth,
   onLogoClick,
+  onAssistantOpen,
   categories = [],
   onSelectCategory,
 }) => {
@@ -68,8 +70,10 @@ export const Header: React.FC<HeaderProps> = ({
   const navigate = useNavigate();
   const location = useLocation();
   const [accountOpen, setAccountOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [navTheme, setNavTheme] = useState<'dark' | 'light'>('dark');
+  const [activeSection, setActiveSection] = useState<string>('home');
   const accountRef = useRef<HTMLDivElement>(null);
   const headerPillRef = useRef<HTMLDivElement>(null);
 
@@ -136,6 +140,52 @@ export const Header: React.FC<HeaderProps> = ({
     }
   }, [location.pathname]);
 
+  // Active section observer for smooth scroll spy
+  useEffect(() => {
+    if (location.pathname !== '/' && location.pathname !== '') {
+      setActiveSection('');
+      return;
+    }
+
+    const sectionIds = ['about', 'services', 'curated-decors', 'packages', 'gallery', 'contact', 'footer'];
+    const elements = sectionIds
+      .map(id => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (elements.length === 0) return;
+
+    const handleScrollSpy = () => {
+      const scrollPos = window.scrollY;
+      if (scrollPos < 250) {
+        setActiveSection('home');
+        return;
+      }
+
+      // Check sections bottom to top or by distance to header
+      let currentActive = 'home';
+      for (const el of elements) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= 160 && rect.bottom >= 120) {
+          const id = el.id;
+          if (id === 'curated-decors' || id === 'services') {
+            currentActive = 'services';
+          } else if (id === 'footer' || id === 'contact') {
+            currentActive = 'contact';
+          } else {
+            currentActive = id;
+          }
+          break;
+        }
+      }
+      setActiveSection(currentActive);
+    };
+
+    window.addEventListener('scroll', handleScrollSpy, { passive: true });
+    handleScrollSpy();
+
+    return () => window.removeEventListener('scroll', handleScrollSpy);
+  }, [location.pathname]);
+
   useEffect(() => {
     let animFrame: number;
 
@@ -169,7 +219,35 @@ export const Header: React.FC<HeaderProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  /**
+   * Unified Anchor Navigation Handler
+   * - If on HomePage: Smooth scroll directly to DOM element below sticky navbar
+   * - If on Subpage: Navigate to `/#${targetId}` to trigger homepage offset scroll
+   */
+  const handleNavAnchor = (targetId: string) => {
+    setMobileMenuOpen(false);
+
+    if (location.pathname === '/' || location.pathname === '') {
+      if (targetId === 'top') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setActiveSection('home');
+      } else {
+        const el = document.getElementById(targetId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    } else {
+      if (targetId === 'top') {
+        navigate('/');
+      } else {
+        navigate(`/#${targetId}`);
+      }
+    }
+  };
+
   const handleNavCategory = (catName: string, subName?: string) => {
+    setMobileMenuOpen(false);
     if (onSelectCategory) {
       onSelectCategory(catName, subName);
     } else {
@@ -211,7 +289,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex items-center gap-2 pr-2 sm:pr-4 pl-1 sm:pl-2">
             <button
               type="button"
-              onClick={onLogoClick || (() => navigate('/'))}
+              onClick={onLogoClick || (() => handleNavAnchor('top'))}
               className="flex items-center text-left cursor-pointer focus:outline-none group"
               aria-label="TheDecorParty Home"
             >
@@ -245,14 +323,15 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="hidden lg:block">
             <NavigationMenu className={cn(isOverDark ? 'text-[#F8F5EF]' : 'text-[#34203C]')}>
               <NavigationMenuList className="gap-1 xl:gap-1.5">
-                {/* Home */}
+                
+                {/* 1. Logo / Home */}
                 <NavigationMenuItem>
                   <button
                     type="button"
-                    onClick={() => navigate('/')}
+                    onClick={() => handleNavAnchor('top')}
                     className={cn(
                       'px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer',
-                      location.pathname === '/' && !location.hash
+                      location.pathname === '/' && activeSection === 'home'
                         ? isOverDark
                           ? 'bg-[#A78A9F] text-[#34203C] shadow-xs font-bold'
                           : 'bg-[#34203C] text-[#FAF8F5] shadow-xs font-bold'
@@ -265,29 +344,59 @@ export const Header: React.FC<HeaderProps> = ({
                   </button>
                 </NavigationMenuItem>
 
-                {/* Occasions Mega Dropdown */}
+                {/* 2. About */}
+                <NavigationMenuItem>
+                  <button
+                    type="button"
+                    onClick={() => handleNavAnchor('about')}
+                    className={cn(
+                      'px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer',
+                      location.pathname === '/' && activeSection === 'about'
+                        ? isOverDark
+                          ? 'bg-[#A78A9F] text-[#34203C] shadow-xs font-bold'
+                          : 'bg-[#34203C] text-[#FAF8F5] shadow-xs font-bold'
+                        : isOverDark
+                          ? 'text-[#F8F5EF] hover:text-white hover:bg-white/15'
+                          : 'text-[#34203C]/90 hover:text-[#34203C] hover:bg-[#34203C]/08'
+                    )}
+                  >
+                    About
+                  </button>
+                </NavigationMenuItem>
+
+                {/* 3. Services (Dropdown Toggle Only, No Route Navigation on Trigger) */}
                 <NavigationMenuItem>
                   <NavigationMenuTrigger
                     className={cn(
                       'bg-transparent px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer',
-                      isOverDark
-                        ? 'text-[#F8F5EF] hover:text-white hover:bg-white/15 data-[state=open]:bg-white/20'
-                        : 'text-[#34203C]/90 hover:text-[#34203C] hover:bg-[#34203C]/08 data-[state=open]:bg-[#34203C]/10'
+                      activeSection === 'services'
+                        ? isOverDark
+                          ? 'bg-[#A78A9F]/30 text-white font-bold'
+                          : 'bg-[#34203C]/12 text-[#34203C] font-bold'
+                        : isOverDark
+                          ? 'text-[#F8F5EF] hover:text-white hover:bg-white/15 data-[state=open]:bg-white/20'
+                          : 'text-[#34203C]/90 hover:text-[#34203C] hover:bg-[#34203C]/08 data-[state=open]:bg-[#34203C]/10'
                     )}
                   >
-                    Occasions
+                    Services
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="p-0">
                     <div className="w-[920px] max-w-[94vw] rounded-3xl border border-[#DDD5C7] dark:border-[#483250] bg-[#FAF8F5] dark:bg-[#201325] p-6 shadow-2xl">
                       <div className="grid grid-cols-12 gap-6">
-                        {/* Col 1: Categories (span 4) */}
+                        
+                        {/* Col 1: Curated Décors (span 4) */}
                         <div className="col-span-4 border-r border-[#DDD5C7]/70 dark:border-[#483250]/70 pr-4">
-                          <div className="flex items-center gap-2 pb-3 border-b border-[#DDD5C7]/60 dark:border-[#483250]/60 mb-3">
+                          <button
+                            type="button"
+                            onClick={() => handleNavAnchor('curated-decors')}
+                            className="flex items-center gap-2 pb-3 border-b border-[#DDD5C7]/60 dark:border-[#483250]/60 mb-3 w-full text-left hover:opacity-80 transition-opacity cursor-pointer"
+                          >
                             <PartyPopper size={16} className="text-[#A78A9F]" />
                             <span className="text-xs font-bold uppercase tracking-wider text-[#34203C] dark:text-[#FAF8F5]">
-                              Curated Decors
+                              Curated Décors
                             </span>
-                          </div>
+                            <ArrowUpRight size={12} className="text-[#725D75] ml-auto" />
+                          </button>
                           <div className="flex flex-col gap-1 max-h-[300px] overflow-y-auto pr-1">
                             {categories.slice(0, 6).map((cat) => (
                               <NavigationMenuLink
@@ -308,110 +417,87 @@ export const Header: React.FC<HeaderProps> = ({
 
                         {/* Col 2: Experiences (span 3) */}
                         <div className="col-span-3 border-r border-[#DDD5C7]/70 dark:border-[#483250]/70 pr-4">
-                          <div className="flex items-center gap-2 pb-3 border-b border-[#DDD5C7]/60 dark:border-[#483250]/60 mb-3">
+                          <button
+                            type="button"
+                            onClick={() => handleNavAnchor('experiences')}
+                            className="flex items-center gap-2 pb-3 border-b border-[#DDD5C7]/60 dark:border-[#483250]/60 mb-3 w-full text-left hover:opacity-80 transition-opacity cursor-pointer"
+                          >
                             <Flame size={16} className="text-[#C9BEAB]" />
                             <span className="text-xs font-bold uppercase tracking-wider text-[#34203C] dark:text-[#FAF8F5]">
                               Experiences
                             </span>
-                          </div>
+                            <ArrowUpRight size={12} className="text-[#725D75] ml-auto" />
+                          </button>
                           <div className="flex flex-col gap-1">
-                            <a
-                              href="/#signature-collections"
-                              onClick={(e) => {
-                                if (location.pathname !== '/') {
-                                  e.preventDefault();
-                                  navigate('/#signature-collections');
-                                }
-                              }}
-                              className="rounded-xl px-3 py-2 text-xs font-medium text-[#34203C] hover:bg-[#A78A9F]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors"
+                            <button
+                              type="button"
+                              onClick={() => handleNavAnchor('experiences')}
+                              className="text-left rounded-xl px-3 py-2 text-xs font-medium text-[#34203C] hover:bg-[#A78A9F]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors cursor-pointer"
                             >
                               Cabana Setups
-                            </a>
-                            <a
-                              href="/#signature-collections"
-                              onClick={(e) => {
-                                if (location.pathname !== '/') {
-                                  e.preventDefault();
-                                  navigate('/#signature-collections');
-                                }
-                              }}
-                              className="rounded-xl px-3 py-2 text-xs font-medium text-[#34203C] hover:bg-[#A78A9F]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors"
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleNavAnchor('experiences')}
+                              className="text-left rounded-xl px-3 py-2 text-xs font-medium text-[#34203C] hover:bg-[#A78A9F]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors cursor-pointer"
                             >
                               Terrace Proposals
-                            </a>
-                            <a
-                              href="/#detailed-services"
-                              onClick={(e) => {
-                                if (location.pathname !== '/') {
-                                  e.preventDefault();
-                                  navigate('/#detailed-services');
-                                }
-                              }}
-                              className="rounded-xl px-3 py-2 text-xs font-medium text-[#34203C] hover:bg-[#A78A9F]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors"
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleNavAnchor('express')}
+                              className="text-left rounded-xl px-3 py-2 text-xs font-medium text-[#34203C] hover:bg-[#A78A9F]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors cursor-pointer"
                             >
                               Car Boot Surprises
-                            </a>
-                            <a
-                              href="/#detailed-services"
-                              onClick={(e) => {
-                                if (location.pathname !== '/') {
-                                  e.preventDefault();
-                                  navigate('/#detailed-services');
-                                }
-                              }}
-                              className="rounded-xl px-3 py-2 text-xs font-medium text-[#34203C] hover:bg-[#A78A9F]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors"
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleNavAnchor('packages')}
+                              className="text-left rounded-xl px-3 py-2 text-xs font-medium text-[#34203C] hover:bg-[#A78A9F]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors cursor-pointer"
                             >
                               Kids Themes
-                            </a>
+                            </button>
                           </div>
                         </div>
 
-                        {/* Col 3: Quick Links (span 2) */}
+                        {/* Col 3: Quick Links & Express (span 2) */}
                         <div className="col-span-2 flex flex-col gap-1">
                           <div className="pb-3 border-b border-[#DDD5C7]/60 dark:border-[#483250]/60 mb-3">
                             <span className="text-xs font-bold uppercase tracking-wider text-[#725D75] dark:text-[#A78A9F]">
                               Services
                             </span>
                           </div>
-                          <a
-                            href="/#gallery"
-                            onClick={(e) => {
-                              if (location.pathname !== '/') {
-                                e.preventDefault();
-                                navigate('/#gallery');
-                              }
-                            }}
-                            className="rounded-xl px-2 py-1.5 text-xs text-[#725D75] hover:text-[#34203C] dark:text-[#C9BEAB] dark:hover:text-white transition-colors"
+                          <button
+                            type="button"
+                            onClick={() => handleNavAnchor('express')}
+                            className="text-left rounded-xl px-2 py-1.5 text-xs text-[#725D75] hover:text-[#34203C] dark:text-[#C9BEAB] dark:hover:text-white transition-colors cursor-pointer"
+                          >
+                            Express Setups
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleNavAnchor('gallery')}
+                            className="text-left rounded-xl px-2 py-1.5 text-xs text-[#725D75] hover:text-[#34203C] dark:text-[#C9BEAB] dark:hover:text-white transition-colors cursor-pointer"
                           >
                             Live Gallery
-                          </a>
-                          <a
-                            href="/#why-us"
-                            onClick={(e) => {
-                              if (location.pathname !== '/') {
-                                e.preventDefault();
-                                navigate('/#why-us');
-                              }
-                            }}
-                            className="rounded-xl px-2 py-1.5 text-xs text-[#725D75] hover:text-[#34203C] dark:text-[#C9BEAB] dark:hover:text-white transition-colors"
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleNavAnchor('why-us')}
+                            className="text-left rounded-xl px-2 py-1.5 text-xs text-[#725D75] hover:text-[#34203C] dark:text-[#C9BEAB] dark:hover:text-white transition-colors cursor-pointer"
                           >
                             Why Choose Us
-                          </a>
-                          <a
-                            href="/#faq"
-                            onClick={(e) => {
-                              if (location.pathname !== '/') {
-                                e.preventDefault();
-                                navigate('/#faq');
-                              }
-                            }}
-                            className="rounded-xl px-2 py-1.5 text-xs text-[#725D75] hover:text-[#34203C] dark:text-[#C9BEAB] dark:hover:text-white transition-colors"
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleNavAnchor('faq')}
+                            className="text-left rounded-xl px-2 py-1.5 text-xs text-[#725D75] hover:text-[#34203C] dark:text-[#C9BEAB] dark:hover:text-white transition-colors cursor-pointer"
                           >
-                            Signal FAQ
-                          </a>
+                            FAQ
+                          </button>
                         </div>
 
-                        {/* Col 4: Spotlight Banner Card (span 3) */}
+                        {/* Col 4: Explore All Spotlight Banner Card (span 3) */}
                         <div className="col-span-3">
                           <div className="flex h-full flex-col justify-between rounded-2xl bg-gradient-to-br from-[#34203C] to-[#483250] p-4 text-[#FAF8F5] shadow-lg">
                             <div>
@@ -428,8 +514,10 @@ export const Header: React.FC<HeaderProps> = ({
                             </div>
                             <button
                               type="button"
-                              onClick={() => navigate('/explore')}
-                              className="mt-4 flex items-center justify-center gap-1 rounded-full bg-[#FAF8F5] py-2 text-xs font-bold text-[#34203C] shadow hover:bg-[#C9BEAB] transition-colors"
+                              onClick={() => {
+                                navigate('/explore');
+                              }}
+                              className="mt-4 flex items-center justify-center gap-1 rounded-full bg-[#FAF8F5] py-2 text-xs font-bold text-[#34203C] shadow hover:bg-[#C9BEAB] transition-colors cursor-pointer"
                             >
                               <span>Explore All</span>
                               <ArrowUpRight size={13} />
@@ -441,61 +529,84 @@ export const Header: React.FC<HeaderProps> = ({
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
-                {/* Collections */}
-                <NavigationMenuItem>
-                  <a
-                    href="/#signature-collections"
-                    onClick={(e) => {
-                      if (location.pathname !== '/') {
-                        e.preventDefault();
-                        navigate('/#signature-collections');
-                      }
-                    }}
-                    className={cn(
-                      'px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer',
-                      isOverDark
-                        ? 'text-[#F8F5EF] hover:text-white hover:bg-white/15'
-                        : 'text-[#34203C]/90 hover:text-[#34203C] hover:bg-[#34203C]/08'
-                    )}
-                  >
-                    Collections
-                  </a>
-                </NavigationMenuItem>
-
-                {/* Packages */}
-                <NavigationMenuItem>
-                  <a
-                    href="/#detailed-services"
-                    onClick={(e) => {
-                      if (location.pathname !== '/') {
-                        e.preventDefault();
-                        navigate('/#detailed-services');
-                      }
-                    }}
-                    className={cn(
-                      'px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer',
-                      isOverDark
-                        ? 'text-[#F8F5EF] hover:text-white hover:bg-white/15'
-                        : 'text-[#34203C]/90 hover:text-[#34203C] hover:bg-[#34203C]/08'
-                    )}
-                  >
-                    Packages
-                  </a>
-                </NavigationMenuItem>
-
-                {/* AI Planner */}
+                {/* 4. Packages */}
                 <NavigationMenuItem>
                   <button
                     type="button"
-                    onClick={() => navigate('/ai-planner')}
+                    onClick={() => handleNavAnchor('packages')}
                     className={cn(
-                      'inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border transition-all duration-300 cursor-pointer',
-                      isOverDark
-                        ? 'border-white/30 bg-white/10 text-[#F8F5EF] hover:bg-white/20'
-                        : 'border-[#34203C]/20 bg-[#34203C]/06 text-[#34203C] hover:bg-[#34203C]/12'
+                      'px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer',
+                      activeSection === 'packages'
+                        ? isOverDark
+                          ? 'bg-[#A78A9F] text-[#34203C] shadow-xs font-bold'
+                          : 'bg-[#34203C] text-[#FAF8F5] shadow-xs font-bold'
+                        : isOverDark
+                          ? 'text-[#F8F5EF] hover:text-white hover:bg-white/15'
+                          : 'text-[#34203C]/90 hover:text-[#34203C] hover:bg-[#34203C]/08'
                     )}
                   >
-                    <Sparkles size={12} className={isOverDark ? 'text-[#C9BEAB]' : 'text-[#725D75]'} />
+                    Packages
+                  </button>
+                </NavigationMenuItem>
+
+                {/* 5. Gallery */}
+                <NavigationMenuItem>
+                  <button
+                    type="button"
+                    onClick={() => handleNavAnchor('gallery')}
+                    className={cn(
+                      'px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer',
+                      activeSection === 'gallery'
+                        ? isOverDark
+                          ? 'bg-[#A78A9F] text-[#34203C] shadow-xs font-bold'
+                          : 'bg-[#34203C] text-[#FAF8F5] shadow-xs font-bold'
+                        : isOverDark
+                          ? 'text-[#F8F5EF] hover:text-white hover:bg-white/15'
+                          : 'text-[#34203C]/90 hover:text-[#34203C] hover:bg-[#34203C]/08'
+                    )}
+                  >
+                    Gallery
+                  </button>
+                </NavigationMenuItem>
+
+                {/* 6. Contact */}
+                <NavigationMenuItem>
+                  <button
+                    type="button"
+                    onClick={() => handleNavAnchor('contact')}
+                    className={cn(
+                      'px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer',
+                      activeSection === 'contact'
+                        ? isOverDark
+                          ? 'bg-[#A78A9F] text-[#34203C] shadow-xs font-bold'
+                          : 'bg-[#34203C] text-[#FAF8F5] shadow-xs font-bold'
+                        : isOverDark
+                          ? 'text-[#F8F5EF] hover:text-white hover:bg-white/15'
+                          : 'text-[#34203C]/90 hover:text-[#34203C] hover:bg-[#34203C]/08'
+                    )}
+                  >
+                    Contact
+                  </button>
+                </NavigationMenuItem>
+
+                {/* 7. AI Planner */}
+                <NavigationMenuItem>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (onAssistantOpen) onAssistantOpen();
+                      else navigate('/ai-planner');
+                    }}
+                    className={cn(
+                      'inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border transition-all duration-300 cursor-pointer',
+                      location.pathname === '/ai-planner'
+                        ? 'border-[#C9BEAB] bg-[#C9BEAB] text-[#34203C] font-bold shadow-xs'
+                        : isOverDark
+                          ? 'border-white/30 bg-white/10 text-[#F8F5EF] hover:bg-white/20'
+                          : 'border-[#34203C]/20 bg-[#34203C]/06 text-[#34203C] hover:bg-[#34203C]/12'
+                    )}
+                  >
+                    <Sparkles size={12} className={location.pathname === '/ai-planner' ? 'text-[#34203C]' : isOverDark ? 'text-[#C9BEAB]' : 'text-[#725D75]'} />
                     <span>AI Planner</span>
                   </button>
                 </NavigationMenuItem>
@@ -505,7 +616,8 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* 3. Right Action Items */}
           <div className="flex items-center gap-1.5 sm:gap-2">
-            {/* Explore CTA Button */}
+            
+            {/* Book Now / Explore Action Button */}
             <button
               type="button"
               onClick={() => navigate('/explore')}
@@ -516,7 +628,7 @@ export const Header: React.FC<HeaderProps> = ({
                   : 'bg-[#34203C] hover:bg-[#483250] text-[#FAF8F5]'
               )}
             >
-              <span>Explore</span>
+              <span>Book Now</span>
               <span className="text-[12px]">→</span>
             </button>
 
@@ -662,7 +774,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Mobile Sheet Trigger */}
             <div className="lg:hidden">
-              <Sheet>
+              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
                 <SheetTrigger asChild>
                   <button
                     type="button"
@@ -670,71 +782,148 @@ export const Header: React.FC<HeaderProps> = ({
                       'flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full transition-all duration-300 cursor-pointer',
                       isOverDark ? 'text-[#F8F5EF] hover:bg-white/15' : 'text-[#34203C] hover:bg-[#34203C]/08'
                     )}
+                    aria-label="Open Navigation Menu"
                   >
                     <Menu size={18} />
                   </button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] sm:w-[360px] bg-[#FAF8F5] dark:bg-[#1B101F] p-6">
-                  <div className="flex flex-col gap-6 pt-6">
-                    <div className="flex flex-col gap-2">
+                <SheetContent side="right" className="w-[300px] sm:w-[360px] bg-[#FAF8F5] dark:bg-[#1B101F] p-6 overflow-y-auto">
+                  <div className="flex flex-col gap-5 pt-4">
+                    
+                    {/* Brand header */}
+                    <div className="flex items-center justify-between pb-3 border-b border-[#DDD5C7] dark:border-[#483250]">
+                      <span className="font-serif text-sm font-bold tracking-wider text-[#34203C] dark:text-[#FAF8F5] uppercase">
+                        TheDecorParty
+                      </span>
+                    </div>
+
+                    <div className="flex flex-col gap-1 text-sm font-semibold text-[#34203C] dark:text-[#FAF8F5]">
+                      
+                      {/* Home */}
                       <button
                         type="button"
-                        onClick={() => navigate('/')}
-                        className="text-left text-sm font-semibold py-2 border-b border-[#DDD5C7] dark:border-[#483250]"
+                        onClick={() => handleNavAnchor('top')}
+                        className="text-left py-2 px-1 hover:text-[#A78A9F] transition-colors border-b border-[#DDD5C7]/50 dark:border-[#483250]/50"
                       >
                         Home
                       </button>
-                      <a
-                        href="/#signature-collections"
-                        className="text-left text-sm font-semibold py-2 border-b border-[#DDD5C7] dark:border-[#483250]"
-                      >
-                        Collections
-                      </a>
-                      <a
-                        href="/#detailed-services"
-                        className="text-left text-sm font-semibold py-2 border-b border-[#DDD5C7] dark:border-[#483250]"
-                      >
-                        Packages
-                      </a>
+
+                      {/* About */}
                       <button
                         type="button"
-                        onClick={() => navigate('/ai-planner')}
-                        className="flex items-center gap-2 text-left text-sm font-semibold py-2 border-b border-[#DDD5C7] dark:border-[#483250]"
+                        onClick={() => handleNavAnchor('about')}
+                        className="text-left py-2 px-1 hover:text-[#A78A9F] transition-colors border-b border-[#DDD5C7]/50 dark:border-[#483250]/50"
                       >
-                        <Sparkles size={14} className="text-[#A78A9F]" />
-                        <span>AI Planner</span>
+                        About Us
                       </button>
-                    </div>
 
-                    {categories.length > 0 && (
-                      <Accordion type="single" collapsible className="w-full">
-                        <AccordionItem value="categories">
-                          <AccordionTrigger className="text-xs font-bold uppercase tracking-wider text-[#725D75] dark:text-[#A78A9F]">
-                            Curated Occasions
+                      {/* Services Accordion */}
+                      <Accordion type="single" collapsible className="w-full border-b border-[#DDD5C7]/50 dark:border-[#483250]/50">
+                        <AccordionItem value="mobile-services" className="border-none">
+                          <AccordionTrigger className="py-2 px-1 text-sm font-semibold text-[#34203C] dark:text-[#FAF8F5] hover:no-underline">
+                            Services &amp; Occasions
                           </AccordionTrigger>
-                          <AccordionContent className="flex flex-col gap-1 pt-2">
-                            {categories.map((cat) => (
+                          <AccordionContent className="flex flex-col gap-1.5 pl-3 pt-1 pb-3 text-xs text-[#725D75] dark:text-[#C9BEAB]">
+                            <button
+                              type="button"
+                              onClick={() => handleNavAnchor('curated-decors')}
+                              className="text-left py-1 hover:text-[#34203C] dark:hover:text-white"
+                            >
+                              • Curated Décors
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleNavAnchor('experiences')}
+                              className="text-left py-1 hover:text-[#34203C] dark:hover:text-white"
+                            >
+                              • Immersive Experiences
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleNavAnchor('express')}
+                              className="text-left py-1 hover:text-[#34203C] dark:hover:text-white"
+                            >
+                              • Express 3-Hour Setup
+                            </button>
+                            {categories.slice(0, 5).map((cat) => (
                               <button
                                 key={cat._id || cat.name}
                                 type="button"
                                 onClick={() => handleNavCategory(cat.name)}
-                                className="text-left text-xs py-1.5 px-2 rounded-md hover:bg-[#A78A9F]/10"
+                                className="text-left py-1 pl-2 hover:text-[#34203C] dark:hover:text-white"
                               >
-                                {cat.name}
+                                &ndash; {cat.name}
                               </button>
                             ))}
                           </AccordionContent>
                         </AccordionItem>
                       </Accordion>
-                    )}
 
-                    <button
-                      type="button"
-                      onClick={() => navigate('/explore')}
-                      className="w-full rounded-full bg-[#34203C] dark:bg-[#C9BEAB] dark:text-[#34203C] text-[#FAF8F5] py-3 text-xs font-bold uppercase tracking-wider"
-                    >
-                      Explore All Packages
-                    </button>
+                      {/* Packages */}
+                      <button
+                        type="button"
+                        onClick={() => handleNavAnchor('packages')}
+                        className="text-left py-2 px-1 hover:text-[#A78A9F] transition-colors border-b border-[#DDD5C7]/50 dark:border-[#483250]/50"
+                      >
+                        Packages &amp; Pricing
+                      </button>
+
+                      {/* Gallery */}
+                      <button
+                        type="button"
+                        onClick={() => handleNavAnchor('gallery')}
+                        className="text-left py-2 px-1 hover:text-[#A78A9F] transition-colors border-b border-[#DDD5C7]/50 dark:border-[#483250]/50"
+                      >
+                        Visual Gallery
+                      </button>
+
+                      {/* Contact */}
+                      <button
+                        type="button"
+                        onClick={() => handleNavAnchor('contact')}
+                        className="text-left py-2 px-1 hover:text-[#A78A9F] transition-colors border-b border-[#DDD5C7]/50 dark:border-[#483250]/50"
+                      >
+                        Contact &amp; Booking
+                      </button>
+
+                      {/* AI Planner */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          if (onAssistantOpen) onAssistantOpen();
+                          else navigate('/ai-planner');
+                        }}
+                        className="flex items-center gap-2 text-left py-2 px-1 hover:text-[#A78A9F] transition-colors border-b border-[#DDD5C7]/50 dark:border-[#483250]/50"
+                      >
+                        <Sparkles size={14} className="text-[#A78A9F]" />
+                        <span>AI Celebration Planner</span>
+                      </button>
+                    </div>
+
+                    {/* Action CTA */}
+                    <div className="flex flex-col gap-2.5 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          navigate('/explore');
+                        }}
+                        className="w-full rounded-full bg-[#34203C] dark:bg-[#C9BEAB] dark:text-[#34203C] text-[#FAF8F5] py-3 text-xs font-bold uppercase tracking-wider shadow-md text-center cursor-pointer"
+                      >
+                        Book Now / Explore All
+                      </button>
+
+                      <a
+                        href="https://wa.me/917022058460"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex items-center justify-center gap-2 w-full rounded-full border border-[#DDD5C7] dark:border-[#483250] py-2.5 text-xs font-semibold text-[#34203C] dark:text-[#FAF8F5] text-center"
+                      >
+                        <Phone size={13} className="text-[#25D366]" />
+                        <span>WhatsApp Quick Assistance</span>
+                      </a>
+                    </div>
                   </div>
                 </SheetContent>
               </Sheet>

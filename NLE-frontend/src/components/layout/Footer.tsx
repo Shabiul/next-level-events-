@@ -84,7 +84,7 @@ export const Footer: React.FC<FooterProps> = ({
   )}`;
 
   return (
-    <footer className="relative bg-[#201024] text-[#FAF8F5] border-t border-white/10 overflow-hidden">
+    <footer id="footer" className="relative bg-[#201024] text-[#FAF8F5] border-t border-white/10 overflow-hidden scroll-mt-24 sm:scroll-mt-28">
       
       {/* Ambient background glows in locked Japanese Violet & Lilac */}
       <div className="pointer-events-none absolute -top-40 -right-40 h-96 w-96 rounded-full bg-[#A78A9F]/10 blur-3xl" />

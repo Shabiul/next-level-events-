@@ -9,8 +9,27 @@ interface SheetContextType {
 
 const SheetContext = React.createContext<SheetContextType | null>(null);
 
-export function Sheet({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = React.useState(false);
+export function Sheet({
+  children,
+  open: controlledOpen,
+  onOpenChange,
+}: {
+  children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) {
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : uncontrolledOpen;
+
+  const setOpen = React.useCallback(
+    (val: boolean) => {
+      if (onOpenChange) onOpenChange(val);
+      if (!isControlled) setUncontrolledOpen(val);
+    },
+    [isControlled, onOpenChange]
+  );
+
   return (
     <SheetContext.Provider value={{ open, setOpen }}>
       {children}

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Shield,
   Clock,
@@ -307,6 +307,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   onBookProduct: _onBookProduct,
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Floating filter form state
   const [activeTab, setActiveTab] = useState('birthdays');
@@ -317,6 +318,22 @@ export const HomePage: React.FC<HomePageProps> = ({
 
   // Initialize clean scroll reveal effects
   useScrollReveal();
+
+  // Handle incoming hash anchors from navigation with smooth scroll & sticky navbar offset
+  useEffect(() => {
+    if (location.hash) {
+      const targetId = location.hash.replace('#', '');
+      if (targetId) {
+        const timer = setTimeout(() => {
+          const el = document.getElementById(targetId);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 120);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [location.hash]);
 
   const handleBookingSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -499,7 +516,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* ========================================================================= */}
       {/* 4. ABOUT THEDECORPARTY (Exact Redesign Section)                          */}
       {/* ========================================================================= */}
-      <section id="about" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal">
+      <section id="about" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-20 items-center">
           {/* Left Column: Story & Narrative Content */}
           <motion.div
@@ -627,7 +644,9 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* ========================================================================= */}
       {/* 5. OUR SERVICES & PACKAGES (Luxury Full-Width Section)                   */}
       {/* ========================================================================= */}
-      <section id="signature-collections" data-nav-theme="dark" className="w-full scroll-reveal">
+      <section id="services" data-nav-theme="dark" className="w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
+        <div id="experiences" className="scroll-mt-24 sm:scroll-mt-28" />
+        <div id="signature-collections" className="scroll-mt-24 sm:scroll-mt-28" />
         <div
           className="relative overflow-hidden rounded-none w-full py-12 sm:py-16 lg:py-20 px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 text-[#FAF8F5] shadow-2xl border-y border-white/10"
           style={{
@@ -690,7 +709,8 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* ========================================================================= */}
       {/* 6. CELEBRATION OCCASIONS DIRECTORY                                       */}
       {/* ========================================================================= */}
-      <section id="categories" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal">
+      <section id="curated-decors" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
+        <div id="categories" className="scroll-mt-24 sm:scroll-mt-28" />
         <CategoryGrid
           categories={categories}
           onSelect={(catName) => onSelectCategory(catName)}
@@ -700,7 +720,9 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* ========================================================================= */}
       {/* 7. FEATURED PACKAGES (Detailed Inclusions & Live Product Rails)           */}
       {/* ========================================================================= */}
-      <section id="detailed-services" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal">
+      <section id="packages" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
+        <div id="express" className="scroll-mt-24 sm:scroll-mt-28" />
+        <div id="detailed-services" className="scroll-mt-24 sm:scroll-mt-28" />
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-12">
           <div className="flex flex-col gap-2.5">
             <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#725D75] dark:text-[#A78A9F]">
@@ -823,13 +845,12 @@ export const HomePage: React.FC<HomePageProps> = ({
             );
           })}
         </div>
-
       </section>
 
       {/* ========================================================================= */}
       {/* 8. REAL CELEBRATIONS / MASONRY GALLERY                                   */}
       {/* ========================================================================= */}
-      <section id="gallery" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal">
+      <section id="gallery" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-12">
           <div className="flex flex-col gap-2.5">
             <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#725D75] dark:text-[#A78A9F]">
@@ -882,7 +903,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* ========================================================================= */}
       {/* 10. HOW IT WORKS / BOOKING JOURNEY (Full Width & Squared)                 */}
       {/* ========================================================================= */}
-      <section id="process" data-nav-theme="light" className="w-full scroll-reveal">
+      <section id="process" data-nav-theme="light" className="w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
         <div className="w-full rounded-none border-y border-[#DDD5C7] dark:border-[#483250] bg-[#F5EFE6] dark:bg-[#25172C] py-12 sm:py-16 lg:py-18 px-5 sm:px-8 lg:px-12 shadow-xs">
           <div className="mx-auto max-w-[1720px]">
             <div className="mb-8 sm:mb-10 text-center max-w-2xl mx-auto">
@@ -914,14 +935,10 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-
-
-
-
       {/* ========================================================================= */}
       {/* 12. CUSTOMER REVIEWS & TESTIMONIALS (Infinite Scrolling Section)          */}
       {/* ========================================================================= */}
-      <div id="testimonials" data-nav-theme="light" className="w-full scroll-reveal">
+      <div id="testimonials" data-nav-theme="light" className="w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
         <InfiniteTestimonials
           badgeText="Verified Reviews"
           subtitle="Real reviews from Indiranagar, Koramangala, Whitefield, HSR, and all across Bengaluru."
@@ -931,14 +948,15 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* ========================================================================= */}
       {/* 13. TABBED FAQ ACCORDION SECTION                                         */}
       {/* ========================================================================= */}
-      <div className="w-full scroll-reveal">
+      <div className="w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
         <TabbedFAQ id="faq" />
       </div>
 
       {/* ========================================================================= */}
-      {/* 14. FINAL CTA BANNER (Image 2 Style & Proportions, Image 1 Colors)       */}
+      {/* 14. FINAL CTA BANNER (Contact / Booking Action Section)                   */}
       {/* ========================================================================= */}
-      <section id="final-cta" data-nav-theme="dark" className="w-full scroll-reveal">
+      <section id="contact" data-nav-theme="dark" className="w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
+        <div id="final-cta" className="scroll-mt-24 sm:scroll-mt-28" />
         <div
           className="relative overflow-hidden rounded-none py-14 sm:py-16 md:py-20 px-6 sm:px-10 text-[#FAF8F5] shadow-2xl border-y border-white/10 text-center w-full"
           style={{
