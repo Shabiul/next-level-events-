@@ -2,7 +2,7 @@ import { auth } from "../../services/firebase";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Mail, Lock, User, Phone, Eye, EyeOff, Sparkles, Shield, KeyRound } from 'lucide-react';
+import { X, Mail, Lock, User, Phone, Eye, EyeOff, Sparkles, Shield, KeyRound, UserPlus, LogIn } from 'lucide-react';
 import type { AuthTab, AuthUser } from '../../types';
 import { cn } from '../../utils/utils';
 import { getApiUrl } from '../../services/api.service';
@@ -314,28 +314,28 @@ const LoginForm: React.FC<{
 
   return (
     <form className="flex flex-col gap-4 animate-fade-in" onSubmit={submit} noValidate>
-      {/* Header section with Sign Up toggle (Image 2 style) */}
-      <div className="flex items-start justify-between gap-3 mb-1">
+      {/* Header section */}
+      <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#FAF8F5] font-serif">
-            Login to your account
+            Customer Log In
           </h2>
           <p className="mt-1 text-xs sm:text-[13px] text-[#C8B5C3] font-light">
-            Enter your email below to login to your account
+            Enter your email to manage your celebration bookings
           </p>
         </div>
         <button
           type="button"
           onClick={onRegister}
-          className="text-xs sm:text-sm font-semibold text-[#FAF8F5] hover:text-[#C9BEAB] transition-colors cursor-pointer shrink-0 mt-1"
+          className="text-xs sm:text-sm font-semibold text-[#C9BEAB] hover:text-[#FAF8F5] hover:underline transition-colors cursor-pointer shrink-0 mt-1"
         >
-          Sign Up
+          Create Account →
         </button>
       </div>
 
       <InputField
         id="loginEmail"
-        label="Email"
+        label="Email Address"
         type="email"
         value={email}
         onChange={setEmail}
@@ -358,7 +358,7 @@ const LoginForm: React.FC<{
             className="text-xs text-[#C8B5C3] hover:text-[#C9BEAB] hover:underline cursor-pointer transition-colors"
             onClick={onForgot}
           >
-            Forgot your password?
+            Forgot password?
           </button>
         }
       />
@@ -375,15 +375,27 @@ const LoginForm: React.FC<{
       </div>
 
       <div className="flex flex-col gap-3 mt-1">
-        <SubmitButton loading={loading} loadingLabel="Logging in...">
-          Login
+        <SubmitButton loading={loading} loadingLabel="Signing in...">
+          Customer Log In →
         </SubmitButton>
 
         <SocialGoogleButton
           onClick={handleGoogle}
           loading={googleLoading}
-          label="Login with Google"
+          label="Sign in with Google"
         />
+
+        {/* Customer Registration Callout */}
+        <div className="pt-2 text-center text-xs text-[#C8B5C3]">
+          <span>New to TheDecorParty? </span>
+          <button
+            type="button"
+            onClick={onRegister}
+            className="font-semibold text-[#C9BEAB] hover:text-[#FAF8F5] hover:underline transition-colors cursor-pointer"
+          >
+            Create Customer Account
+          </button>
+        </div>
 
         {/* Quick Admin Portal Access Link */}
         <div className="pt-2 border-t border-[#A78A9F]/20 text-center">
@@ -470,8 +482,8 @@ const RegisterForm: React.FC<{
     e.preventDefault();
     setSubmitError('');
     const errs: Record<string, string> = {};
-    if (!first) errs.first = 'Enter first name';
-    if (!last) errs.last = 'Enter last name';
+    if (!first.trim()) errs.first = 'Enter your first name';
+    if (!last.trim()) errs.last = 'Enter your last name';
     if (!validateEmail(email)) errs.email = 'Enter a valid email address';
     if (!validatePhone(phone)) errs.phone = 'Enter a valid 10-digit mobile number';
     if (pass.length < 8) errs.pass = 'Password must be at least 8 characters';
@@ -485,7 +497,7 @@ const RegisterForm: React.FC<{
       const res = await fetch(getApiUrl('/api/auth/register'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName: first, lastName: last, email, password: pass, phone })
+        body: JSON.stringify({ firstName: first.trim(), lastName: last.trim(), email: email.trim(), password: pass, phone: phone.trim() })
       });
       const data = await parseJsonResponse<{ msg?: string; message?: string }>(res);
       if (!res.ok) {
@@ -499,7 +511,7 @@ const RegisterForm: React.FC<{
       const loginRes = await fetch(getApiUrl('/api/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password: pass })
+        body: JSON.stringify({ email: email.trim(), password: pass })
       });
       const loginData = await parseJsonResponse<{ token?: string; user?: { id: string; firstName: string; lastName: string; email: string; role: AuthUser['role'] }; msg?: string; message?: string }>(loginRes);
       if (loginRes.ok && loginData?.token && loginData.user) {
@@ -525,21 +537,21 @@ const RegisterForm: React.FC<{
   return (
     <form className="flex flex-col gap-3.5 animate-fade-in" onSubmit={submit} noValidate>
       {/* Header section with Log In toggle */}
-      <div className="flex items-start justify-between gap-3 mb-1">
+      <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#FAF8F5] font-serif">
-            Create an account
+            Create Customer Account
           </h2>
           <p className="mt-1 text-xs sm:text-[13px] text-[#C8B5C3] font-light">
-            Enter your details to create your celebration account
+            Join TheDecorParty to book and customize celebration events
           </p>
         </div>
         <button
           type="button"
           onClick={onLogin}
-          className="text-xs sm:text-sm font-semibold text-[#FAF8F5] hover:text-[#C9BEAB] transition-colors cursor-pointer shrink-0 mt-1"
+          className="text-xs sm:text-sm font-semibold text-[#C9BEAB] hover:text-[#FAF8F5] hover:underline transition-colors cursor-pointer shrink-0 mt-1"
         >
-          Log In
+          Sign In →
         </button>
       </div>
 
@@ -567,7 +579,7 @@ const RegisterForm: React.FC<{
 
       <InputField
         id="regEmail"
-        label="Email"
+        label="Email Address"
         type="email"
         value={email}
         onChange={setEmail}
@@ -591,41 +603,43 @@ const RegisterForm: React.FC<{
         placeholder="9876543210"
       />
 
-      <div>
-        <PasswordInput
-          id="regPass"
-          label="Password"
-          value={pass}
-          onChange={setPass}
-          error={errors.pass}
-          autoComplete="new-password"
-          placeholder="At least 8 characters"
-        />
-        {pass && (
-          <div className="mt-1.5 flex flex-col gap-0.5">
-            <div className="h-1 w-full overflow-hidden rounded-full bg-white/10">
-              <div
-                className={cn('h-full rounded-full transition-all duration-300', strength.bg)}
-                style={{ width: strength.width }}
-              />
+      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+        <div>
+          <PasswordInput
+            id="regPass"
+            label="Password"
+            value={pass}
+            onChange={setPass}
+            error={errors.pass}
+            autoComplete="new-password"
+            placeholder="Min 8 chars"
+          />
+          {pass && (
+            <div className="mt-1 flex flex-col gap-0.5">
+              <div className="h-1 w-full overflow-hidden rounded-full bg-white/10">
+                <div
+                  className={cn('h-full rounded-full transition-all duration-300', strength.bg)}
+                  style={{ width: strength.width }}
+                />
+              </div>
+              <div className="flex items-center justify-between text-[9.5px]">
+                <span className="text-[#C8B5C3]">Strength:</span>
+                <span className="font-semibold" style={{ color: strength.color }}>{strength.label}</span>
+              </div>
             </div>
-            <div className="flex items-center justify-between text-[10px]">
-              <span className="text-[#C8B5C3]">Strength:</span>
-              <span className="font-semibold" style={{ color: strength.color }}>{strength.label}</span>
-            </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
 
-      <PasswordInput
-        id="regConfirm"
-        label="Confirm Password"
-        value={confirm}
-        onChange={setConfirm}
-        error={errors.confirm || (confirm && pass !== confirm ? 'Passwords do not match' : undefined)}
-        autoComplete="new-password"
-        placeholder="Repeat password"
-      />
+        <PasswordInput
+          id="regConfirm"
+          label="Confirm Password"
+          value={confirm}
+          onChange={setConfirm}
+          error={errors.confirm || (confirm && pass !== confirm ? 'Passwords do not match' : undefined)}
+          autoComplete="new-password"
+          placeholder="Repeat pass"
+        />
+      </div>
 
       <div>
         <label className="flex items-start gap-2 text-xs text-[#C8B5C3] select-none cursor-pointer">
@@ -649,8 +663,8 @@ const RegisterForm: React.FC<{
       )}
 
       <div className="flex flex-col gap-3 mt-1">
-        <SubmitButton loading={loading} loadingLabel="Creating account...">
-          Create account
+        <SubmitButton loading={loading} loadingLabel="Creating customer account...">
+          Create Customer Account →
         </SubmitButton>
 
         <SocialGoogleButton
@@ -658,6 +672,18 @@ const RegisterForm: React.FC<{
           loading={googleLoading}
           label="Sign up with Google"
         />
+
+        {/* Existing account switcher */}
+        <div className="pt-2 text-center text-xs text-[#C8B5C3]">
+          <span>Already have an account? </span>
+          <button
+            type="button"
+            onClick={onLogin}
+            className="font-semibold text-[#C9BEAB] hover:text-[#FAF8F5] hover:underline transition-colors cursor-pointer"
+          >
+            Customer Sign In
+          </button>
+        </div>
 
         <div className="pt-2 border-t border-[#A78A9F]/20 text-center">
           <button
@@ -816,8 +842,8 @@ const AdminRegisterForm: React.FC<{
     e.preventDefault();
     setSubmitError('');
     const errs: Record<string, string> = {};
-    if (!first) errs.first = 'Enter first name';
-    if (!last) errs.last = 'Enter last name';
+    if (!first.trim()) errs.first = 'Enter first name';
+    if (!last.trim()) errs.last = 'Enter last name';
     if (!validateEmail(email)) errs.email = 'Enter a valid email address';
     if (!validatePhone(phone)) errs.phone = 'Enter a valid 10-digit mobile number';
     if (pass.length < 8) errs.pass = 'Password must be at least 8 characters';
@@ -832,11 +858,11 @@ const AdminRegisterForm: React.FC<{
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          firstName: first,
-          lastName: last,
-          email,
+          firstName: first.trim(),
+          lastName: last.trim(),
+          email: email.trim(),
           password: pass,
-          phone,
+          phone: phone.trim(),
           role: 'admin',
           adminSecret: adminSecret.trim(),
         })
@@ -854,7 +880,7 @@ const AdminRegisterForm: React.FC<{
       const loginRes = await fetch(getApiUrl('/api/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password: pass })
+        body: JSON.stringify({ email: email.trim(), password: pass })
       });
       const loginData = await parseJsonResponse<{ token?: string; user?: { id: string; firstName: string; lastName: string; email: string; role: AuthUser['role'] }; msg?: string; message?: string }>(loginRes);
       if (loginRes.ok && loginData?.token && loginData.user) {
@@ -1120,6 +1146,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, tab, onClose, onSe
 
   if (!isOpen) return null;
 
+  const isCustomerTab = tab === 'login' || tab === 'register';
   const isAdminTab = tab === 'admin-login' || tab === 'admin-register';
 
   return (
@@ -1139,7 +1166,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, tab, onClose, onSe
         <div
           className={cn(
             "relative flex w-full flex-col overflow-hidden rounded-3xl border border-[#A78A9F]/30 p-6 sm:p-8 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.75),inset_0_1px_0_rgba(255,255,255,0.12)] animate-scale-in text-[#FAF8F5] my-auto transition-all duration-300",
-            isAdminTab ? "max-w-[480px] border-[#C9BEAB]/35" : "max-w-[440px]"
+            isAdminTab || tab === 'register' ? "max-w-[480px]" : "max-w-[440px]"
           )}
           style={{
             background: isAdminTab
@@ -1162,6 +1189,70 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, tab, onClose, onSe
             <X size={16} />
           </button>
 
+          {/* Top Segmented Tab Pill for Customer Auth (Image 1 + Image 2 hybrid) */}
+          {isCustomerTab && (
+            <div className="flex items-center rounded-2xl bg-black/40 border border-[#A78A9F]/25 p-1 mb-5 w-full relative z-10">
+              <button
+                type="button"
+                className={cn(
+                  'flex-1 flex items-center justify-center gap-1.5 py-2 text-xs sm:text-[13px] font-semibold rounded-xl transition-all cursor-pointer text-center',
+                  tab === 'login'
+                    ? 'bg-[#FAF8F5] text-[#25172C] shadow-md font-bold'
+                    : 'text-[#C8B5C3] hover:text-[#FAF8F5]'
+                )}
+                onClick={() => onSetTab('login')}
+              >
+                <LogIn size={14} className={tab === 'login' ? 'text-[#25172C]' : 'text-[#A78A9F]'} />
+                <span>Customer Login</span>
+              </button>
+              <button
+                type="button"
+                className={cn(
+                  'flex-1 flex items-center justify-center gap-1.5 py-2 text-xs sm:text-[13px] font-semibold rounded-xl transition-all cursor-pointer text-center',
+                  tab === 'register'
+                    ? 'bg-[#FAF8F5] text-[#25172C] shadow-md font-bold'
+                    : 'text-[#C8B5C3] hover:text-[#FAF8F5]'
+                )}
+                onClick={() => onSetTab('register')}
+              >
+                <UserPlus size={14} className={tab === 'register' ? 'text-[#25172C]' : 'text-[#A78A9F]'} />
+                <span>Customer Register</span>
+              </button>
+            </div>
+          )}
+
+          {/* Top Segmented Tab Pill for Admin Auth */}
+          {isAdminTab && (
+            <div className="flex items-center rounded-2xl bg-black/40 border border-[#C9BEAB]/30 p-1 mb-5 w-full relative z-10">
+              <button
+                type="button"
+                className={cn(
+                  'flex-1 flex items-center justify-center gap-1.5 py-2 text-xs sm:text-[13px] font-semibold rounded-xl transition-all cursor-pointer text-center',
+                  tab === 'admin-login'
+                    ? 'bg-[#C9BEAB] text-[#25172C] shadow-md font-bold'
+                    : 'text-[#C8B5C3] hover:text-[#FAF8F5]'
+                )}
+                onClick={() => onSetTab('admin-login')}
+              >
+                <Shield size={14} className={tab === 'admin-login' ? 'text-[#25172C]' : 'text-[#C9BEAB]'} />
+                <span>Admin Login</span>
+              </button>
+              <button
+                type="button"
+                className={cn(
+                  'flex-1 flex items-center justify-center gap-1.5 py-2 text-xs sm:text-[13px] font-semibold rounded-xl transition-all cursor-pointer text-center',
+                  tab === 'admin-register'
+                    ? 'bg-[#C9BEAB] text-[#25172C] shadow-md font-bold'
+                    : 'text-[#C8B5C3] hover:text-[#FAF8F5]'
+                )}
+                onClick={() => onSetTab('admin-register')}
+              >
+                <KeyRound size={14} className={tab === 'admin-register' ? 'text-[#25172C]' : 'text-[#C9BEAB]'} />
+                <span>Register Admin</span>
+              </button>
+            </div>
+          )}
+
           {/* Content Area */}
           <div className="relative z-10">
             {tab === 'login' && (
@@ -1174,7 +1265,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, tab, onClose, onSe
             )}
             {tab === 'register' && (
               <RegisterForm
-                onSuccess={(u, token) => handleSuccess(u, token, 'Account created', `Welcome, ${u.firstName}! Your celebration account is ready.`)}
+                onSuccess={(u, token) => handleSuccess(u, token, 'Account created', `Welcome, ${u.firstName}! Your customer account is ready.`)}
                 onLogin={() => onSetTab('login')}
                 onAdminRegister={() => onSetTab('admin-register')}
               />
