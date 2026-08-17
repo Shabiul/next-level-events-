@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Sparkles,
@@ -9,6 +9,15 @@ import {
   Maximize2,
 } from 'lucide-react';
 import { SeoHead } from '../../components/layout/SeoHead';
+import { useProducts } from '../../hooks/useProducts';
+import {
+  BIRTHDAY,
+  ANNIVERSARY,
+  DINNERS,
+  MOST_BOOKED,
+  HERO_SLIDES,
+  CAT_ICONS,
+} from '../../data';
 
 export type GalleryCategory =
   | 'ALL'
@@ -26,11 +35,11 @@ export interface GalleryImageItem {
   category: GalleryCategory;
   image: string;
   tag: string;
-  aspectClass?: string; // Optional helper class for varying heights
+  price?: string | number;
 }
 
-// Curated collection using all suitable images from the project's asset repository
-export const GALLERY_COLLECTION: GalleryImageItem[] = [
+// Curated base collection using all suitable images from the project's asset repository
+export const BASE_GALLERY_COLLECTION: GalleryImageItem[] = [
   {
     id: 'gal-01',
     title: 'TheDecorParty Signature Purple Milestone Suite',
@@ -184,14 +193,125 @@ const CATEGORIES: GalleryCategory[] = [
   'CUSTOM THEMES',
 ];
 
+const mapCategoryToFilter = (catName?: string, name?: string): GalleryCategory => {
+  const c = (catName || '').toLowerCase();
+  const n = (name || '').toLowerCase();
+
+  if (c.includes('birthday') || n.includes('birthday') || n.includes('bday') || n.includes('kids')) return 'BIRTHDAYS';
+  if (c.includes('balloon') || n.includes('balloon') || n.includes('arch') || n.includes('garland') || n.includes('ring')) return 'BALLOON DECOR';
+  if (c.includes('baby') || n.includes('baby') || n.includes('cradle') || n.includes('shower') || n.includes('welcome baby')) return 'BABY SHOWERS';
+  if (c.includes('proposal') || n.includes('proposal') || n.includes('marry me') || n.includes('rose day')) return 'PROPOSALS';
+  if (c.includes('wedding') || n.includes('wedding') || n.includes('haldi') || n.includes('mehendi') || n.includes('sangeet') || c.includes('festival')) return 'WEDDINGS';
+  if (c.includes('anniversary') || n.includes('anniversary') || c.includes('romantic') || n.includes('cabana') || n.includes('candlelight') || c.includes('dinner')) return 'ANNIVERSARIES';
+  return 'CUSTOM THEMES';
+};
+
 export const GalleryPage: React.FC = () => {
+  const { products } = useProducts();
   const [activeCategory, setActiveCategory] = useState<GalleryCategory>('ALL');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const filteredImages =
-    activeCategory === 'ALL'
-      ? GALLERY_COLLECTION
-      : GALLERY_COLLECTION.filter((item) => item.category === activeCategory);
+  // Combine Base Collection, Package Catalog and Products Data dynamically
+  const allImages = useMemo(() => {
+    const list: GalleryImageItem[] = [...BASE_GALLERY_COLLECTION];
+    const seenUrls = new Set(list.map((item) => item.image));
+
+    // 1. Static Package Collections from Data
+    const staticPackageSets = [
+      { items: BIRTHDAY, cat: 'BIRTHDAYS' as GalleryCategory, defaultTag: 'Birthday Package' },
+      { items: ANNIVERSARY, cat: 'ANNIVERSARIES' as GalleryCategory, defaultTag: 'Anniversary Package' },
+      { items: DINNERS, cat: 'ANNIVERSARIES' as GalleryCategory, defaultTag: 'Candlelight Dinner' },
+      { items: MOST_BOOKED, cat: 'CUSTOM THEMES' as GalleryCategory, defaultTag: 'Most Booked' },
+    ];
+
+    staticPackageSets.forEach(({ items, cat, defaultTag }) => {
+      items.forEach((p, idx) => {
+        if (p.img && !seenUrls.has(p.img)) {
+          seenUrls.add(p.img);
+          list.push({
+            id: `static-pkg-${cat}-${idx}`,
+            title: p.title,
+            category: mapCategoryToFilter(cat, p.title),
+            image: p.img,
+            tag: p.badge || defaultTag,
+            price: p.price,
+          });
+        }
+      });
+    });
+
+    // 2. Hero and Category icon packages
+    HERO_SLIDES.forEach((slide, idx) => {
+      if (slide.img && !seenUrls.has(slide.img)) {
+        seenUrls.add(slide.img);
+        list.push({
+          id: `hero-slide-${idx}`,
+          title: slide.headline.replace('\n', ' '),
+          category: mapCategoryToFilter(slide.chip, slide.headline),
+          image: slide.img,
+          tag: slide.chip,
+        });
+      }
+    });
+
+    CAT_ICONS.forEach((icon, idx) => {
+      if (icon.img && !seenUrls.has(icon.img)) {
+        seenUrls.add(icon.img);
+        list.push({
+          id: `cat-icon-${idx}`,
+          title: icon.label.replace('\n', ' '),
+          category: mapCategoryToFilter(icon.label, icon.label),
+          image: icon.img,
+          tag: 'Curated Category',
+        });
+      }
+    });
+
+    // 3. Live Dynamic Products / Packages from Backend API & Database
+    if (Array.isArray(products) && products.length > 0) {
+      products.forEach((p) => {
+        const cat = mapCategoryToFilter(p.categoryName, p.name);
+
+        // Main package image
+        if (p.image && !seenUrls.has(p.image)) {
+          seenUrls.add(p.image);
+          list.push({
+            id: `pkg-${p._id}-main`,
+            title: p.name,
+            category: cat,
+            image: p.image,
+            tag: p.badge || p.subcategory || p.categoryName || 'Celebration Package',
+            price: p.price ? `₹${p.price.toLocaleString('en-IN')}` : undefined,
+          });
+        }
+
+        // Additional package gallery photos
+        if (Array.isArray(p.moreImages)) {
+          p.moreImages.forEach((imgUrl, idx) => {
+            if (imgUrl && !seenUrls.has(imgUrl)) {
+              seenUrls.add(imgUrl);
+              list.push({
+                id: `pkg-${p._id}-more-${idx}`,
+                title: `${p.name} — Detail View ${idx + 2}`,
+                category: cat,
+                image: imgUrl,
+                tag: p.badge || p.categoryName || 'Gallery Showcase',
+                price: p.price ? `₹${p.price.toLocaleString('en-IN')}` : undefined,
+              });
+            }
+          });
+        }
+      });
+    }
+
+    return list;
+  }, [products]);
+
+  const filteredImages = useMemo(() => {
+    return activeCategory === 'ALL'
+      ? allImages
+      : allImages.filter((item) => item.category === activeCategory);
+  }, [activeCategory, allImages]);
 
   const openLightbox = (index: number) => {
     setLightboxIndex(index);
@@ -231,7 +351,7 @@ export const GalleryPage: React.FC = () => {
   return (
     <>
       <SeoHead
-        title="Celebration Gallery — TheDecorParty | Real Events & Decor Inspiration"
+        title="Celebration Gallery — TheDecorParty | Real Events & Package Inspirations"
         description="A curated Pinterest-style board of real celebrations, balloon decor installations, milestone birthdays, and romantic setups styled across Bengaluru."
       />
 
@@ -290,6 +410,11 @@ export const GalleryPage: React.FC = () => {
           <div className="mt-8 sm:mt-12 flex items-center justify-start sm:justify-center overflow-x-auto pb-3 sm:pb-0 scrollbar-none gap-2 px-2 max-w-full">
             {CATEGORIES.map((cat) => {
               const isActive = activeCategory === cat;
+              const count =
+                cat === 'ALL'
+                  ? allImages.length
+                  : allImages.filter((item) => item.category === cat).length;
+
               return (
                 <button
                   key={cat}
@@ -297,13 +422,22 @@ export const GalleryPage: React.FC = () => {
                   onClick={() => {
                     setActiveCategory(cat);
                   }}
-                  className={`relative shrink-0 rounded-full px-4 sm:px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer ${
+                  className={`relative shrink-0 rounded-full px-4 sm:px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
                     isActive
                       ? 'bg-[#34203C] text-[#FAF8F5] dark:bg-[#C9BEAB] dark:text-[#25172C] shadow-md scale-103'
                       : 'bg-[#34203C]/06 text-[#725D75] hover:bg-[#34203C]/12 hover:text-[#34203C] dark:bg-white/06 dark:text-[#C8B5C3] dark:hover:bg-white/12 dark:hover:text-white'
                   }`}
                 >
                   <span>{cat}</span>
+                  <span
+                    className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
+                      isActive
+                        ? 'bg-white/20 text-white dark:bg-black/20 dark:text-black'
+                        : 'bg-[#34203C]/10 dark:bg-white/10 text-[#725D75] dark:text-[#DDD5C7]'
+                    }`}
+                  >
+                    {count}
+                  </span>
                 </button>
               );
             })}
@@ -339,7 +473,7 @@ export const GalleryPage: React.FC = () => {
                   />
 
                   {/* Soft Elegant Overlay on Hover */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-3 sm:p-4">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-3 sm:p-4">
                     {/* Top Right Action Icon */}
                     <div className="self-end flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-black/40 backdrop-blur-md text-white border border-white/20">
                       <Maximize2 size={13} />
@@ -354,6 +488,11 @@ export const GalleryPage: React.FC = () => {
                         <p className="text-xs sm:text-sm font-serif font-semibold text-white leading-tight line-clamp-1">
                           {item.title}
                         </p>
+                        {item.price && (
+                          <span className="text-[11px] font-semibold text-[#DDD5C7]/90 mt-0.5">
+                            {item.price}
+                          </span>
+                        )}
                       </div>
                       <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#FAF8F5] text-[#34203C]">
                         <ArrowUpRight size={12} />
@@ -437,6 +576,11 @@ export const GalleryPage: React.FC = () => {
                 <div className="mt-3 flex items-center gap-2 rounded-full bg-black/60 backdrop-blur-md border border-white/15 px-4 py-1.5 text-xs text-white">
                   <span className="font-serif font-medium">{filteredImages[lightboxIndex].title}</span>
                   <span className="text-[#C9BEAB]">• {filteredImages[lightboxIndex].tag}</span>
+                  {filteredImages[lightboxIndex].price && (
+                    <span className="text-white font-bold ml-1">
+                      ({filteredImages[lightboxIndex].price})
+                    </span>
+                  )}
                 </div>
               </motion.div>
 
