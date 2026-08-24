@@ -253,12 +253,12 @@ export const Footer: React.FC<FooterProps> = ({
               </a>
 
               <a
-                href="tel:+919743200712"
+                href="tel:+918660924212"
                 onClick={() => trackContactClick('phone', 'footer')}
                 className="flex items-center gap-2.5 text-xs text-[#FAF8F5]/80 hover:text-[#C9BEAB] transition-colors"
               >
                 <Phone size={14} className="text-[#A78A9F] shrink-0" />
-                <span className="font-medium">+91 97432 00712</span>
+                <span className="font-medium">+91 86609 24212</span>
               </a>
 
               <a

@@ -35,12 +35,16 @@ export const HeroSlider: React.FC = () => {
               key={i}
               className="relative flex min-w-full h-full min-h-[90vh] lg:min-h-[94vh] items-center justify-center overflow-hidden text-center pt-24 pb-36 sm:pt-28 sm:pb-40 lg:pt-32 lg:pb-48 px-4 sm:px-8"
             >
-              {/* Background Image with subtle zoom & scale */}
-              <img
-                src={slide.img}
-                alt={slide.headline}
+              {/* Background Video Media */}
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
                 className="absolute inset-0 h-full w-full object-cover object-center pointer-events-none scale-102 transition-transform duration-1000"
-              />
+              >
+                <source src="/landing page.mp4" type="video/mp4" />
+              </video>
 
               {/* Luxury Vignette & Soft Gradient Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-[#2D1C34] via-[#2D1C34]/55 to-[#2D1C34]/30 pointer-events-none" />
@@ -50,7 +54,7 @@ export const HeroSlider: React.FC = () => {
               {/* Centered Content Container */}
               <div
                 key={animKey}
-                className="relative z-10 max-w-5xl mx-auto flex flex-col items-center text-center gap-4 sm:gap-5 px-4 mt-4"
+                className="relative z-10 max-w-7xl mx-auto flex flex-col items-center text-center gap-4 sm:gap-5 px-4 mt-4"
               >
                 {/* Eyebrow */}
                 <div
@@ -63,7 +67,7 @@ export const HeroSlider: React.FC = () => {
 
                 {/* H1 Primary Page Headline: Editorial Playfair Display with Great Vibes Accent */}
                 <h1
-                  className="font-serif text-balance text-4xl sm:text-6xl md:text-7xl lg:text-[76px] xl:text-[84px] leading-[1.04] tracking-tight text-[#FAF8F5] font-normal max-w-5xl mx-auto"
+                  className="font-serif text-balance text-4xl sm:text-6xl md:text-7xl lg:text-[76px] xl:text-[84px] leading-[1.04] tracking-tight text-[#FAF8F5] font-normal max-w-7xl mx-auto"
                   style={{
                     textShadow: '0 4px 30px rgba(52, 32, 60, 0.85)',
                     animation: 'fadeInUp 0.4s ease 0.05s both',

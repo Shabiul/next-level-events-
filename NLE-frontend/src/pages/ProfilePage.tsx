@@ -189,7 +189,7 @@ export default function ProfilePage() {
       authModalOpen={auth.isOpen}
       authModalTab={auth.tab}
     >
-      <main className="mx-auto max-w-[1100px] px-4 py-6 md:px-6 min-h-[85vh]">
+      <main className="mx-auto max-w-7xl px-4 py-6 md:px-6 min-h-[85vh]">
         <div className="mb-5 flex items-center gap-3">
           <BackButton onClick={() => navigate('/')} />
           <h1 className="text-xl font-black text-slate-900 dark:text-white md:text-2xl">My Account</h1>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Shield,
@@ -7,17 +7,13 @@ import {
   MessageSquare,
   Sparkles,
   CheckCircle2,
-  MapPin,
-  CalendarDays,
-  Search,
   Phone,
-  Layers,
   Gift,
   Heart,
-  Flame
+  Flame,
+  MapPin,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { HeroSlider } from '../../components/product/HeroSlider';
 import { CategoryGrid } from '../../components/category/CategoryGrid';
 import { Button } from '../../components/ui/Button';
 import TabbedFAQ from '../../components/ui/TabbedFAQ';
@@ -29,7 +25,6 @@ import { GlowingImageCard } from '../../components/ui/GlowingImageCard';
 import { TiltGlareCard } from '../../components/ui/TiltGlareCard';
 import { ParallaxTourCard } from '../../components/ui/ParallaxTourCard';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
-import { cn } from '../../utils/utils';
 import type { AdminCategory, AdminProduct } from '../../types';
 
 interface HomePageProps {
@@ -39,15 +34,6 @@ interface HomePageProps {
   onBookProduct: (product: AdminProduct) => void;
 }
 
-// 1. FLOATING SELECTOR MODE TABS
-const SELECTOR_TABS = [
-  { id: 'birthdays', label: 'Birthday Setups', query: 'Birthday', icon: '🎂' },
-  { id: 'romantic', label: 'Candlelight & Cabana', query: 'Romantic', icon: '🕯️' },
-  { id: 'proposals', label: 'Marry Me & Proposal', query: 'Proposal', icon: '💍' },
-  { id: 'baby-shower', label: 'Baby Shower & Welcome', query: 'Baby Shower', icon: '👶' },
-  { id: 'festivals', label: 'Haldi & Festivals', query: 'Festivals', icon: '🌸' },
-];
-
 // 3. SIGNATURE PACKAGES SHOWCASE (Editorial Card Layout)
 const SIGNATURE_COLLECTIONS = [
   {
@@ -55,7 +41,7 @@ const SIGNATURE_COLLECTIONS = [
     name: 'Candlelight & Cabana Setups',
     type: 'Romantic Special',
     tag: 'Top Rated',
-    image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&auto=format&fit=crop&q=80',
+    image: '/romantic-dinner.jpg',
     desc: 'Private sheer canopy cabana with fresh rose petal walkways, fairy lights, and intimate candlelit dining styled at your home or terrace.',
     popularSetup: 'Dreamy Rooftop Cabana',
     specs: ['🕯️ 50+ LED Lights', '🌹 Fresh Petals', '⏱️ 75m Setup'],
@@ -68,7 +54,7 @@ const SIGNATURE_COLLECTIONS = [
     name: 'Milestone Birthday Arches',
     type: 'Birthday Milestone',
     tag: 'Best Seller',
-    image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&auto=format&fit=crop&q=80',
+    image: '/1ss.jpeg',
     desc: 'Artisanal pastel balloon ring installations with customized LED neon signage, organic garlands, and photo-ready backdrop styling.',
     popularSetup: 'Pastel Ring Arch & Neon',
     specs: ['🎂 All Ages', '💡 Neon Included', '⏱️ 60m Setup'],
@@ -78,23 +64,23 @@ const SIGNATURE_COLLECTIONS = [
   },
   {
     id: 'c3',
-    name: 'Grand Proposals & Marry Me',
-    type: 'Grand Proposal',
-    tag: 'Cinematic',
-    image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&auto=format&fit=crop&q=80',
-    desc: 'Giant 4-foot illuminated marquee letters with plush red carpet walkways, romantic heart balloon arches, lanterns, and mood lighting.',
-    popularSetup: '4FT Illuminated Marry Me',
-    specs: ['💍 4ft Marquee', '🔴 Red Carpet', '⏱️ 90m Setup'],
-    price: '₹4,999',
+    name: 'Kids Activities & Party Games',
+    type: 'Kids Special',
+    tag: 'Interactive Fun',
+    image: '/kids.jpeg',
+    desc: 'Fun party games, balloon twisting, face painting, mascot artists, and bespoke theme styling for kids birthday bashes.',
+    popularSetup: 'Kids Theme & Games Zone',
+    specs: ['🧒 All Ages', '🎨 Games Included', '⏱️ 45m Setup'],
+    price: '₹1,499',
     unit: '/ complete setup',
-    categoryKey: 'Anniversary',
+    categoryKey: 'Kids Activities',
   },
   {
     id: 'c4',
     name: 'Baby Shower & Welcome Baby',
     type: 'Welcome Baby',
     tag: 'Cherished',
-    image: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?w=800&auto=format&fit=crop&q=80',
+    image: '/welcome-baby.jpg',
     desc: 'Pastel blue & blush pink organic balloon cascades with plush teddy bear props, custom welcome signage, and bespoke cradle styling.',
     popularSetup: 'Teddy Bear & Clouds Arch',
     specs: ['👶 Cradle Styling', '☁️ Cloud Props', '⏱️ 60m Setup'],
@@ -309,14 +295,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Floating filter form state
-  const [activeTab, setActiveTab] = useState('birthdays');
-  const [pickupArea, setPickupArea] = useState('');
-  const [themeInput, setThemeInput] = useState('');
-  const [eventDate, setEventDate] = useState('');
-  const [spaceType, setSpaceType] = useState('');
-
-  // Initialize clean scroll reveal effects
+  // Initialize clean scroll reveal & scroll threshold effects
   useScrollReveal();
 
   // Handle incoming hash anchors from navigation with smooth scroll & sticky navbar offset
@@ -335,150 +314,66 @@ export const HomePage: React.FC<HomePageProps> = ({
     }
   }, [location.hash]);
 
-  const handleBookingSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const queryParts: string[] = [];
-    if (pickupArea) queryParts.push(pickupArea);
-    if (themeInput) queryParts.push(themeInput);
-    if (spaceType) queryParts.push(spaceType);
-    const tabObj = SELECTOR_TABS.find(t => t.id === activeTab);
-    if (tabObj && !themeInput) {
-      queryParts.push(tabObj.query);
-    }
-    const q = queryParts.join(' ').trim() || 'all';
-    navigate(`/explore?q=${encodeURIComponent(q)}`);
-  };
-
   return (
     <div className="flex flex-col pb-0 bg-[#FAF8F5] dark:bg-[#1B101F] text-[#34203C] dark:text-[#FAF8F5] font-sans antialiased transition-colors">
 
       {/* ========================================================================= */}
-      {/* 1. HERO SLIDER SECTION                                                    */}
+      {/* 1. CINEMATIC LUXURY FULL-SCREEN HERO SECTION                             */}
       {/* ========================================================================= */}
-      <section data-nav-theme="dark" className="relative w-full">
-        <HeroSlider />
-      </section>
+      <section 
+        data-nav-theme="dark" 
+        className="relative w-full min-h-[100vh] sm:min-h-[100svh] overflow-hidden flex flex-col justify-center items-center text-center shadow-2xl bg-[#0F0A12] px-4 sm:px-6"
+      >
+        {/* Background Video Media with Scrim & Vignette Overlays */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            disablePictureInPicture
+            disableRemotePlayback
+            controls={false}
+            className="w-full h-full object-cover object-center transform-gpu will-change-transform transition-all duration-700"
+          >
+            <source src="/lan.mp4" type="video/mp4" />
+            <source src="/landing page.mp4" type="video/mp4" />
+          </video>
+          {/* Ambient vignette & gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/45 pointer-events-none" />
+        </div>
 
-      {/* ========================================================================= */}
-      {/* 2. CELEBRATION FINDER (Embedded In-Page Search Capsule)                   */}
-      {/* ========================================================================= */}
-      <section id="celebration-finder" data-nav-theme="light" className="relative z-20 -mt-16 pb-10 sm:-mt-20 sm:pb-14">
-        <div className="mx-auto w-full max-w-7xl px-6 sm:px-8 lg:px-12 flex flex-col items-center gap-4">
-          
-          {/* Top Category Mode Tabs */}
-          <div className="flex items-center gap-1 overflow-x-auto rounded-full bg-[#34203C]/40 p-1.5 backdrop-blur-md border border-[#C9BEAB]/30 shadow-xl max-w-full hide-scrollbar">
-            {SELECTOR_TABS.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                className={cn(
-                  'rounded-full px-4 py-2 text-xs sm:text-sm font-semibold tracking-wide transition-colors whitespace-nowrap cursor-pointer',
-                  activeTab === tab.id
-                    ? 'bg-[#FAF8F5] text-[#34203C] shadow-md font-bold'
-                    : 'text-[#FAF8F5]/85 hover:text-[#FAF8F5] hover:bg-white/10'
-                )}
-              >
-                <span className="mr-1.5">{tab.icon}</span>
-                <span>{tab.label}</span>
-              </button>
-            ))}
-          </div>
+        {/* Hero Editorial Content */}
+        <div className="relative z-10 max-w-4xl mx-auto w-full flex flex-col items-center justify-center text-center px-4 my-auto pt-16 sm:pt-20">
+          <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-black/50 border border-white/25 text-[#FAF8F5] text-[10px] sm:text-xs font-semibold uppercase tracking-[0.22em] backdrop-blur-md mb-4 shadow-md">
+            <Sparkles className="w-3.5 h-3.5 text-[#C9BEAB]" />
+            Bespoke Event Styling &amp; Surprise Setups
+          </span>
 
-          {/* Floating Search Capsule Bar */}
-          <div className="w-full">
-            <form
-              onSubmit={handleBookingSearch}
-              className="mx-auto flex w-full max-w-5xl flex-col overflow-hidden rounded-3xl bg-[#FAF8F5]/95 shadow-2xl border border-[#DDD5C7]/80 backdrop-blur-xl dark:bg-[#2D1C34]/95 dark:border-[#483250] lg:flex-row lg:items-center lg:rounded-full lg:p-2"
-            >
-              {/* Location Input */}
-              <label className="flex flex-1 cursor-text flex-col gap-1 border-b border-[#34203C]/8 px-5 py-3.5 transition-colors last:border-b-0 dark:border-[#483250] lg:border-b-0 lg:px-5 lg:py-2 lg:rounded-full lg:hover:bg-[#34203C]/5 dark:lg:hover:bg-[#FAF8F5]/5">
-                <span className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#34203C] dark:text-[#C9BEAB]">
-                  <MapPin size={14} className="text-[#A78A9F]" />
-                  <span>Setup Location</span>
-                </span>
-                <input
-                  type="text"
-                  placeholder="e.g. Indiranagar, Whitefield"
-                  value={pickupArea}
-                  onChange={(e) => setPickupArea(e.target.value)}
-                  className="w-full border-none bg-transparent p-0 text-sm font-medium text-[#34203C] placeholder:text-[#725D75]/60 focus:outline-none dark:text-[#FAF8F5] dark:placeholder:text-[#A78A9F]/60"
-                />
-              </label>
+          <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-[76px] font-normal text-[#FAF8F5] leading-[1.04] tracking-tight uppercase max-w-4xl drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)]">
+            CELEBRATE <span className="text-[#C9BEAB] font-normal italic font-['Great_Vibes'] lowercase text-[1.2em] tracking-normal">Unforgettable</span> MOMENTS
+          </h1>
 
-              <div className="mx-1 hidden h-8 w-px shrink-0 self-center bg-[#DDD5C7] dark:bg-[#483250] lg:block" />
+          <p className="mt-4 max-w-2xl text-xs sm:text-sm md:text-base text-[#FAF8F5]/90 font-sans font-light leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+            Signature balloon arches, romantic candlelight cabanas, bespoke birthday themes, and live entertainment styled across Bengaluru.
+          </p>
 
-              {/* Theme / Style Input */}
-              <label className="flex flex-1 cursor-text flex-col gap-1 border-b border-[#34203C]/8 px-5 py-3.5 transition-colors last:border-b-0 dark:border-[#483250] lg:border-b-0 lg:px-5 lg:py-2 lg:rounded-full lg:hover:bg-[#34203C]/5 dark:lg:hover:bg-[#FAF8F5]/5">
-                <span className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#34203C] dark:text-[#C9BEAB]">
-                  <Sparkles size={14} className="text-[#A78A9F]" />
-                  <span>Occasion / Vibe</span>
-                </span>
-                <input
-                  type="text"
-                  placeholder="e.g. Pastel Ring, Cabana"
-                  value={themeInput}
-                  onChange={(e) => setThemeInput(e.target.value)}
-                  className="w-full border-none bg-transparent p-0 text-sm font-medium text-[#34203C] placeholder:text-[#725D75]/60 focus:outline-none dark:text-[#FAF8F5] dark:placeholder:text-[#A78A9F]/60"
-                />
-              </label>
-
-              <div className="mx-1 hidden h-8 w-px shrink-0 self-center bg-[#DDD5C7] dark:bg-[#483250] lg:block" />
-
-              {/* Date Input */}
-              <label className="flex flex-1 cursor-text flex-col gap-1 border-b border-[#34203C]/8 px-5 py-3.5 transition-colors last:border-b-0 dark:border-[#483250] lg:border-b-0 lg:px-5 lg:py-2 lg:rounded-full lg:hover:bg-[#34203C]/5 dark:lg:hover:bg-[#FAF8F5]/5">
-                <span className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#34203C] dark:text-[#C9BEAB]">
-                  <CalendarDays size={14} className="text-[#A78A9F]" />
-                  <span>Celebration Date</span>
-                </span>
-                <input
-                  type="date"
-                  value={eventDate}
-                  onChange={(e) => setEventDate(e.target.value)}
-                  className="w-full border-none bg-transparent p-0 text-sm font-medium text-[#34203C] placeholder:text-[#725D75]/60 focus:outline-none dark:text-[#FAF8F5] cursor-pointer"
-                />
-              </label>
-
-              <div className="mx-1 hidden h-8 w-px shrink-0 self-center bg-[#DDD5C7] dark:bg-[#483250] lg:block" />
-
-              {/* Space / Guests */}
-              <label className="flex flex-1 cursor-text flex-col gap-1 border-b border-[#34203C]/8 px-5 py-3.5 transition-colors last:border-b-0 dark:border-[#483250] lg:border-b-0 lg:px-5 lg:py-2 lg:rounded-full lg:hover:bg-[#34203C]/5 dark:lg:hover:bg-[#FAF8F5]/5">
-                <span className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#34203C] dark:text-[#C9BEAB]">
-                  <Layers size={14} className="text-[#A78A9F]" />
-                  <span>Space Type</span>
-                </span>
-                <input
-                  type="text"
-                  placeholder="Living Room, Terrace"
-                  value={spaceType}
-                  onChange={(e) => setSpaceType(e.target.value)}
-                  className="w-full border-none bg-transparent p-0 text-sm font-medium text-[#34203C] placeholder:text-[#725D75]/60 focus:outline-none dark:text-[#FAF8F5] dark:placeholder:text-[#A78A9F]/60"
-                />
-              </label>
-
-              {/* Submit CTA Button in Radiant Lilac */}
-              <div className="p-3 lg:p-0 lg:pl-2">
-                <button
-                  type="submit"
-                  aria-label="Search decoration setups"
-                  className="group flex h-12 w-full lg:w-12 items-center justify-center gap-2 rounded-2xl lg:rounded-full bg-[#A78A9F] text-[#34203C] hover:bg-[#C9BEAB] shadow-md transition-all active:scale-95 cursor-pointer"
-                >
-                  <Search size={18} />
-                  <span className="text-xs font-bold uppercase tracking-wider lg:hidden">Search Setups</span>
-                </button>
-              </div>
-            </form>
-          </div>
-
-          {/* Quick AI Planner Trigger Prompt */}
-          <div className="flex items-center justify-center gap-2 pt-1 text-center">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             <button
               type="button"
-              onClick={() => navigate('/ai-planner')}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#34203C]/50 hover:bg-[#34203C]/70 dark:bg-white/10 dark:hover:bg-white/15 border border-[#C9BEAB]/35 text-xs font-medium text-[#FAF8F5] transition-all hover:scale-102 cursor-pointer shadow-sm backdrop-blur-md"
+              onClick={() => navigate('/explore')}
+              className="inline-flex items-center gap-2 rounded-full bg-[#FAF8F5] text-[#1B101F] hover:bg-[#C9BEAB] px-7 py-3.5 text-xs font-extrabold uppercase tracking-wider shadow-xl transition-all duration-300 hover:scale-103 cursor-pointer"
             >
-              <Sparkles size={13} className="text-[#C9BEAB]" />
-              <span>Need custom theme ideas? <span className="font-semibold text-[#C9BEAB] hover:underline">Ask our AI Celebration Planner →</span></span>
+              <span>Explore Themes &amp; Setups</span>
+              <ArrowRight size={14} />
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/packages')}
+              className="inline-flex items-center gap-2 rounded-full bg-black/50 hover:bg-white/20 text-[#FAF8F5] border border-white/30 backdrop-blur-md px-7 py-3.5 text-xs font-bold uppercase tracking-wider shadow-xl transition-all duration-300 hover:scale-103 cursor-pointer"
+            >
+              <span>View All Packages</span>
             </button>
           </div>
         </div>
@@ -730,11 +625,11 @@ export const HomePage: React.FC<HomePageProps> = ({
       </section>
 
       {/* ========================================================================= */}
-      {/* 7. FEATURED PACKAGES (Detailed Inclusions & Live Product Rails)           */}
+      {/* 7. DETAILED SERVICE INCLUSIONS / TRANSPARENT PRICING                      */}
       {/* ========================================================================= */}
-      <section id="packages" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
-        <div id="express" className="scroll-mt-24 sm:scroll-mt-28" />
-        <div id="detailed-services" className="scroll-mt-24 sm:scroll-mt-28" />
+      <section id="packages" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal scroll-mt-36 sm:scroll-mt-44 pt-6 sm:pt-10">
+        <div id="express" className="scroll-mt-36 sm:scroll-mt-44" />
+        <div id="detailed-services" className="scroll-mt-36 sm:scroll-mt-44" />
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-12">
           <div className="flex flex-col gap-2.5">
             <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#725D75] dark:text-[#A78A9F]">
@@ -749,17 +644,18 @@ export const HomePage: React.FC<HomePageProps> = ({
             </p>
           </div>
 
-          <a
-            href="/explore"
-            className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#34203C] hover:text-[#725D75] dark:text-[#C9BEAB] hover:underline whitespace-nowrap self-start sm:self-auto"
+          <button
+            type="button"
+            onClick={() => navigate('/packages')}
+            className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#34203C] hover:text-[#725D75] dark:text-[#C9BEAB] hover:underline whitespace-nowrap self-start sm:self-auto cursor-pointer"
           >
-            <span>Explore All Tiers</span>
+            <span>Explore All Packages</span>
             <ArrowRight size={14} />
-          </a>
+          </button>
         </div>
 
         {/* 4-Card Single Row Grid with Animated Gradient Border Beam & Ambient Inner Glow */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 items-stretch">
           {DETAILED_SERVICES.map((srv, i) => {
             const Icon =
               srv.iconType === 'heart'
@@ -774,16 +670,16 @@ export const HomePage: React.FC<HomePageProps> = ({
               <GradientBoldCard
                 key={i}
                 popular={srv.popular}
-                className="h-full"
+                className="h-full flex flex-col justify-between"
               >
-                <div>
+                <div className="flex flex-col h-full">
                   {/* Top Inner Header Box (Matching Champagne Gold Palette from Image 2) */}
                   <div className="rounded-2xl p-4 sm:p-5 mb-5 border border-[#A78A9F]/25 bg-[#34203C]/85 shadow-inner backdrop-blur-md transition-all duration-300 group-hover:border-[#C9BEAB]/40 group-hover:bg-[#483250]/90">
                     {/* Tag & Popular Badge */}
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-1.5 text-[#C9BEAB] text-xs font-bold uppercase tracking-wider min-w-0">
-                        <Icon size={14} className="text-[#C9BEAB] flex-shrink-0" />
-                        <span className="truncate">{srv.tag}</span>
+                    <div className="flex items-center justify-between gap-2 min-h-[24px]">
+                      <div className="flex items-center gap-1.5 text-[#C9BEAB] text-[11px] font-bold uppercase tracking-wider min-w-0">
+                        <Icon size={13} className="text-[#C9BEAB] flex-shrink-0" />
+                        <span className="whitespace-nowrap">{srv.tag}</span>
                       </div>
                       {srv.popular && (
                         <span className="rounded-full border border-[#C9BEAB]/40 bg-[#483250]/80 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#C9BEAB] shadow-xs flex-shrink-0">
@@ -804,7 +700,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                       </div>
                     </div>
 
-                    {/* Action Button inside Top Box (Exact Khaki Shell Pill from Image 2) */}
+                    {/* Action Button inside Top Box */}
                     <button
                       type="button"
                       onClick={() => onSelectCategory(srv.category)}
@@ -816,17 +712,17 @@ export const HomePage: React.FC<HomePageProps> = ({
                   </div>
 
                   {/* Package Title */}
-                  <h3 className="font-serif text-sm sm:text-base font-bold uppercase tracking-[0.03em] leading-snug text-[#FAF8F5] mb-2 group-hover:text-[#C9BEAB] transition-colors">
+                  <h3 className="font-serif text-sm sm:text-base font-bold uppercase tracking-[0.03em] leading-snug text-[#FAF8F5] mb-2 group-hover:text-[#C9BEAB] transition-colors min-h-[48px] flex items-start">
                     {srv.title}
                   </h3>
 
                   {/* Subtitle / Description */}
-                  <p className="text-xs font-light leading-relaxed text-[#DDD5C7]/85 mb-5">
+                  <p className="text-xs font-light leading-relaxed text-[#DDD5C7]/85 mb-5 min-h-[52px]">
                     {srv.desc}
                   </p>
 
                   {/* What's Included / Circular Checkmarks List */}
-                  <div className="border-t border-white/10 pt-4 mb-5">
+                  <div className="border-t border-white/10 pt-4 mb-5 flex-1">
                     <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#C9BEAB] block mb-3">
                       What's Included:
                     </span>

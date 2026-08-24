@@ -7,7 +7,7 @@ import type { AdminProduct, BookingAddonSnapshot, BookingDetails } from '../../t
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { getApiUrl } from '../../services/api.service';
-import { trackBeginCheckout, trackAddPaymentInfo, trackPaymentFailed, trackPurchase, trackWhatsappClick, type GAItem } from '../../utils/analytics';
+import { trackPaymentFailed, trackPurchase, trackWhatsappClick, type GAItem } from '../../utils/analytics';
 import AuthContext from '../../context/AuthContext';
 import { cn } from '../../utils/utils';
 
@@ -60,6 +60,14 @@ const WA_SVG = (
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" />
   </svg>
 );
+
+const AVAILABLE_ADDONS_PRESETS: BookingAddonSnapshot[] = [
+  { name: 'LED Number / Age Lights (Set of 2)', price: 499, kind: 'addon' },
+  { name: 'Foil Balloon Bouquet (10 Balloons)', price: 699, kind: 'addon' },
+  { name: 'Candlelight Cabana Upgrade', price: 1499, kind: 'addon' },
+  { name: 'Live Ice Gola / Refreshment Counter', price: 2499, kind: 'activity' },
+  { name: 'Bespoke Welcome Board Setup', price: 899, kind: 'addon' },
+];
 
 export const BookingWizard: React.FC<BookingPageProps> = ({
   product,
@@ -248,55 +256,32 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
       '',
       `*Event Date:* ${form.eventDate}`,
       `*Event Time:* ${form.eventTime}`,
-      `*Name:* ${nameTrimmed}`,
-      `*Contact:* +91 ${cleanPhone}`,
-      `*Location:* ${locationTrimmed}`,
-      form.requests ? `*Special Requests:* ${form.requests.trim()}` : '',
+      `*Venue Address:* ${form.location}`,
+      `*Contact Person:* ${nameTrimmed} (${cleanPhone})`,
+      ...(form.email ? [`*Email:* ${form.email}`] : []),
+      ...(form.requests ? [`*Special Requests:* ${form.requests}`] : []),
       '',
       'Please confirm slot availability and payment schedule. Thank you!',
     ].filter(Boolean).join('\n');
 
     try {
       await createBookingOrder('pending');
-    } catch (err) {
-      console.error('Failed to save WhatsApp booking:', err);
+    } catch (e) {
+      console.warn('Draft order save before WhatsApp redirect failed', e);
     }
-    onConfirm(product, bookingPayload, 'whatsapp');
+
     window.open(`https://wa.me/917022058460?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   const startPayment = async () => {
-    const checkoutItems: GAItem[] = [
-      {
-        item_id: product._id,
-        item_name: product.name,
-        item_category: product.categoryName,
-        item_subcategory: product.subcategory,
-        price: product.price,
-        quantity: 1,
-      },
-      ...form.addOns.map((addon) => ({
-        item_id: `addon-${addon.name.toLowerCase().replace(/\s+/g, '_')}`,
-        item_name: addon.name,
-        price: addon.price,
-        quantity: 1,
-      })),
-    ];
-
-    trackBeginCheckout(checkoutItems, totalPrice);
-    trackAddPaymentInfo('razorpay', checkoutItems, totalPrice);
-    setLoading(true);
     setError('');
-    setPaymentDialog(null);
+    setLoading(true);
 
-    let paymentHandled = false;
     const savePaymentOutcome = async (
       status: 'paid' | 'failed' | 'cancelled',
-      meta?: { razorpayOrderId?: string; razorpayPaymentId?: string; razorpaySignature?: string; },
+      meta?: { razorpayOrderId?: string; razorpayPaymentId?: string; razorpaySignature?: string },
       dialog?: PaymentDialogState
     ) => {
-      if (paymentHandled) return null;
-      paymentHandled = true;
       setLoading(false);
 
       try {
@@ -452,8 +437,8 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
           },
         },
         handler: async (paymentResponse: any) => {
-          setLoading(true);
           try {
+            setLoading(true);
             const token = getAuthToken();
             const verifyResponse = await fetch(getApiUrl('/api/payment/verify'), {
               method: 'POST',
@@ -595,434 +580,491 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
   };
 
   return (
-    <div className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 md:px-8 animate-fade-in pb-24 sm:pb-12">
-      {/* Top Breadcrumb */}
-      <div className="mb-6 flex flex-col gap-4">
-        <div className="flex items-center gap-2 text-xs font-medium text-[#6F6F6B] dark:text-[#A0A09C]">
-          <BackButton onClick={onBack} className="hover:text-[#1C1C1C] dark:hover:text-white">
-            Back to Package
-          </BackButton>
-          <span>/</span>
-          <span className="font-semibold text-[#1C1C1C] dark:text-white">Checkout</span>
-        </div>
+    <div className="relative min-h-screen bg-transparent text-[#1C1C1C] dark:text-white font-sans antialiased transition-colors pb-24 overflow-x-hidden">
+      
+      {/* FIXED ENTIRE PAGE BALLOON WALLPAPER BACKGROUND */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <img 
+          src="/cards-bg.jpg" 
+          alt="Fixed Lavender Floral Balloon Wallpaper" 
+          className="w-full h-full object-cover opacity-100 scale-100"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-100/75 via-slate-100/80 to-slate-100/90 dark:from-[#140A17]/85 dark:via-[#140A17]/90 dark:to-[#140A17] backdrop-blur-[1px]" />
+      </div>
 
-        {/* 3-Step Progress */}
-        <div className="rounded-xl border border-[#E8E7E3] bg-white dark:bg-[#1E1E1E] dark:border-[#2E2E2E] p-4 shadow-card">
-          <div className="flex items-center justify-between max-w-xl mx-auto relative">
-            <div className="flex items-center gap-2 z-10">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1C1C1C] text-white text-xs font-bold dark:bg-white dark:text-black">
-                1
+      <div className="relative z-10 mx-auto max-w-[1400px] px-4 py-8 sm:px-6 md:px-8 animate-fade-in pt-24">
+        {/* Top Breadcrumb */}
+        <div className="mb-6 flex flex-col gap-4">
+          <div className="flex items-center gap-2 text-xs font-medium text-[#6F6F6B] dark:text-[#A0A09C]">
+            <BackButton onClick={onBack} className="hover:text-[#1C1C1C] dark:hover:text-white">
+              Back to Package
+            </BackButton>
+            <span>/</span>
+            <span className="font-semibold text-[#1C1C1C] dark:text-white">Checkout</span>
+          </div>
+
+          {/* 3-Step Progress */}
+          <div className="rounded-xl border border-white/40 bg-white/90 dark:bg-[#1E1E1E]/90 dark:border-[#2E2E2E] p-4 shadow-xl backdrop-blur-xl">
+            <div className="flex items-center justify-between max-w-xl mx-auto relative">
+              <div className="flex items-center gap-2 z-10">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1C1C1C] text-white text-xs font-bold dark:bg-white dark:text-black">
+                  1
+                </div>
+                <span className="text-xs sm:text-sm font-semibold text-[#1C1C1C] dark:text-white">Event Details</span>
               </div>
-              <span className="text-xs sm:text-sm font-semibold text-[#1C1C1C] dark:text-white">Event Details</span>
-            </div>
 
-            <div className="absolute left-[20%] right-[20%] top-1/2 -translate-y-1/2 h-px bg-[#E8E7E3] dark:bg-[#2E2E2E]" />
+              <div className="absolute left-[20%] right-[20%] top-1/2 -translate-y-1/2 h-px bg-[#E8E7E3] dark:bg-[#2E2E2E]" />
 
-            <div className="flex items-center gap-2 z-10">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#F4F3F0] text-[#6F6F6B] text-xs font-semibold dark:bg-[#262626] dark:text-[#A0A09C]">
-                2
+              <div className="flex items-center gap-2 z-10">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#F4F3F0] text-[#6F6F6B] text-xs font-semibold dark:bg-[#262626] dark:text-[#A0A09C]">
+                  2
+                </div>
+                <span className="text-xs sm:text-sm font-medium text-[#6F6F6B] dark:text-[#A0A09C] hidden sm:inline">Review</span>
               </div>
-              <span className="text-xs sm:text-sm font-medium text-[#6F6F6B] dark:text-[#A0A09C] hidden sm:inline">Review</span>
-            </div>
 
-            <div className="flex items-center gap-2 z-10">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#F4F3F0] text-[#6F6F6B] text-xs font-semibold dark:bg-[#262626] dark:text-[#A0A09C]">
-                3
+              <div className="flex items-center gap-2 z-10">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#F4F3F0] text-[#6F6F6B] text-xs font-semibold dark:bg-[#262626] dark:text-[#A0A09C]">
+                  3
+                </div>
+                <span className="text-xs sm:text-sm font-medium text-[#6F6F6B] dark:text-[#A0A09C] hidden sm:inline">Confirmation</span>
               </div>
-              <span className="text-xs sm:text-sm font-medium text-[#6F6F6B] dark:text-[#A0A09C] hidden sm:inline">Confirmation</span>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-start">
-        {/* Left Column: Form Cards */}
-        <section className="lg:col-span-7 xl:col-span-8 flex flex-col gap-6">
-          <form className="flex flex-col gap-6" onSubmit={handleSubmit} noValidate>
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-start">
+          {/* Left Column: Form Cards */}
+          <section className="lg:col-span-7 xl:col-span-8 flex flex-col gap-6">
+            <form className="flex flex-col gap-6" onSubmit={handleSubmit} noValidate>
 
-            {/* 1. Contact Info */}
-            <div className="rounded-xl border border-[#E8E7E3] bg-white dark:bg-[#1E1E1E] dark:border-[#2E2E2E] p-5 sm:p-6 shadow-card">
-              <div className="mb-4 flex items-center gap-2 border-b border-[#E8E7E3] dark:border-[#2E2E2E] pb-3">
-                <User size={16} className="text-[#1C1C1C] dark:text-white" />
-                <h2 className="font-editorial text-base font-bold text-[#1C1C1C] dark:text-white">1. Contact Information</h2>
-              </div>
+              {/* 1. Contact Info */}
+              <div className="rounded-xl border border-white/40 bg-white/90 dark:bg-[#1E1E1E]/90 dark:border-[#2E2E2E] p-5 sm:p-6 shadow-xl backdrop-blur-xl">
+                <div className="mb-4 flex items-center gap-2 border-b border-[#E8E7E3] dark:border-[#2E2E2E] pb-3">
+                  <User size={16} className="text-[#1C1C1C] dark:text-white" />
+                  <h2 className="font-editorial text-base font-bold text-[#1C1C1C] dark:text-white">1. Contact Information</h2>
+                </div>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Input
-                  label="Full Name"
-                  id="name"
-                  type="text"
-                  placeholder="e.g. Rahul Sharma"
-                  value={form.name}
-                  onChange={e => updateField('name', e.target.value)}
-                  onBlur={() => handleBlur('name')}
-                  required
-                  error={nameError}
-                />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <Input
+                    label="Full Name"
+                    id="name"
+                    type="text"
+                    placeholder="e.g. Rahul Sharma"
+                    value={form.name}
+                    onChange={e => updateField('name', e.target.value)}
+                    onBlur={() => handleBlur('name')}
+                    required
+                    error={nameError}
+                  />
 
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="mobile" className="text-xs font-semibold tracking-wide uppercase text-[#1C1C1C] dark:text-neutral-300">
-                    Mobile Number <span className="text-red-500 ml-0.5">*</span>
-                  </label>
-                  <div className="relative flex items-center">
-                    <span className="absolute left-3.5 text-xs font-semibold text-[#6F6F6B] border-r border-[#E8E7E3] dark:border-[#2E2E2E] pr-2">
-                      +91
-                    </span>
-                    <input
-                      id="mobile"
-                      type="tel"
-                      inputMode="numeric"
-                      placeholder="9876543210"
-                      value={form.mobile}
-                      onChange={e => updateField('mobile', e.target.value.replace(/\D/g, '').slice(0, 10))}
-                      onBlur={() => handleBlur('mobile')}
-                      required
-                      className={cn(
-                        'w-full h-10 rounded-lg border bg-white dark:bg-[#1E1E1E] pl-16 pr-3.5 text-sm text-[#1C1C1C] dark:text-white placeholder:text-[#6F6F6B]/60 outline-none transition-all',
-                        phoneError
-                          ? 'border-red-500'
-                          : 'border-[#E8E7E3] dark:border-[#2E2E2E] focus:border-[#1C1C1C] focus:ring-1 focus:ring-[#1C1C1C]'
-                      )}
-                    />
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="mobile" className="text-xs font-semibold tracking-wide uppercase text-[#1C1C1C] dark:text-neutral-300">
+                      Mobile Number <span className="text-red-500 ml-0.5">*</span>
+                    </label>
+                    <div className="relative flex items-center">
+                      <span className="absolute left-3.5 text-xs font-semibold text-[#6F6F6B] border-r border-[#E8E7E3] dark:border-[#2E2E2E] pr-2">
+                        +91
+                      </span>
+                      <input
+                        id="mobile"
+                        type="tel"
+                        inputMode="numeric"
+                        placeholder="9876543210"
+                        value={form.mobile}
+                        onChange={e => updateField('mobile', e.target.value.replace(/\D/g, '').slice(0, 10))}
+                        onBlur={() => handleBlur('mobile')}
+                        required
+                        className={cn(
+                          'w-full h-10 rounded-lg border bg-white dark:bg-[#1E1E1E] pl-16 pr-3.5 text-sm text-[#1C1C1C] dark:text-white placeholder:text-[#6F6F6B]/60 outline-none transition-all',
+                          phoneError
+                            ? 'border-red-500'
+                            : 'border-[#E8E7E3] dark:border-[#2E2E2E] focus:border-[#1C1C1C] focus:ring-1 focus:ring-[#1C1C1C]'
+                        )}
+                      />
+                    </div>
+                    {phoneError && <p className="text-xs text-red-500 font-medium">{phoneError}</p>}
                   </div>
-                  {phoneError && <p className="text-xs text-red-500 font-medium">{phoneError}</p>}
+                </div>
+
+                <div className="mt-4">
+                  <Input
+                    label="Email Address"
+                    id="email"
+                    type="email"
+                    placeholder="name@domain.com"
+                    value={form.email || ''}
+                    onChange={e => updateField('email', e.target.value)}
+                    onBlur={() => handleBlur('email')}
+                    error={emailError}
+                  />
                 </div>
               </div>
 
-              <div className="mt-4">
-                <Input
-                  label="Email Address"
-                  id="email"
-                  type="email"
-                  placeholder="name@domain.com"
-                  value={form.email || ''}
-                  onChange={e => updateField('email', e.target.value)}
-                  onBlur={() => handleBlur('email')}
-                  error={emailError}
-                />
-              </div>
-            </div>
-
-            {/* 2. Setup Details */}
-            <div className="rounded-xl border border-[#E8E7E3] bg-white dark:bg-[#1E1E1E] dark:border-[#2E2E2E] p-5 sm:p-6 shadow-card">
-              <div className="mb-4 flex items-center gap-2 border-b border-[#E8E7E3] dark:border-[#2E2E2E] pb-3">
-                <Calendar size={16} className="text-[#1C1C1C] dark:text-white" />
-                <h2 className="font-editorial text-base font-bold text-[#1C1C1C] dark:text-white">2. Event Schedule &amp; Venue</h2>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Input
-                  label="Event Date"
-                  id="eventDate"
-                  type="date"
-                  min={minDateString}
-                  value={form.eventDate}
-                  onChange={e => updateField('eventDate', e.target.value)}
-                  onBlur={() => handleBlur('eventDate')}
-                  required
-                  error={dateError}
-                  hint="Select tomorrow or any upcoming celebration date"
-                />
-
-                <Input
-                  label="Event Start Time"
-                  id="eventTime"
-                  type="time"
-                  value={form.eventTime}
-                  onChange={e => updateField('eventTime', e.target.value)}
-                  onBlur={() => handleBlur('eventTime')}
-                  required
-                  error={timeError}
-                />
-              </div>
-
-              <div className="mt-4">
-                <Input
-                  label="Complete Venue Address"
-                  id="location"
-                  type="text"
-                  placeholder="Flat/House No, Apartment name, Street, Area, Bengaluru"
-                  value={form.location}
-                  onChange={e => updateField('location', e.target.value)}
-                  onBlur={() => handleBlur('location')}
-                  required
-                  error={locationError}
-                />
-              </div>
-            </div>
-
-            {/* 3. Add-ons in booking */}
-            <div className="rounded-xl border border-[#E8E7E3] bg-white dark:bg-[#1E1E1E] dark:border-[#2E2E2E] p-5 sm:p-6 shadow-card">
-              <div className="mb-4 flex items-center justify-between border-b border-[#E8E7E3] dark:border-[#2E2E2E] pb-3">
-                <div className="flex items-center gap-2">
-                  <Sparkles size={16} className="text-amber-600" />
-                  <h2 className="font-editorial text-base font-bold text-[#1C1C1C] dark:text-white">3. Selected Add-ons</h2>
+              {/* 2. Setup Details */}
+              <div className="rounded-xl border border-white/40 bg-white/90 dark:bg-[#1E1E1E]/90 dark:border-[#2E2E2E] p-5 sm:p-6 shadow-xl backdrop-blur-xl">
+                <div className="mb-4 flex items-center gap-2 border-b border-[#E8E7E3] dark:border-[#2E2E2E] pb-3">
+                  <Calendar size={16} className="text-[#1C1C1C] dark:text-white" />
+                  <h2 className="font-editorial text-base font-bold text-[#1C1C1C] dark:text-white">2. Event Schedule &amp; Venue</h2>
                 </div>
-                <span className="text-xs font-semibold text-[#6F6F6B] dark:text-[#A0A09C]">
-                  {form.addOns.length} item{form.addOns.length === 1 ? '' : 's'}
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <Input
+                    label="Event Date"
+                    id="eventDate"
+                    type="date"
+                    min={minDateString}
+                    value={form.eventDate}
+                    onChange={e => updateField('eventDate', e.target.value)}
+                    onBlur={() => handleBlur('eventDate')}
+                    required
+                    error={dateError}
+                    hint="Select tomorrow or any upcoming celebration date"
+                  />
+
+                  <Input
+                    label="Event Start Time"
+                    id="eventTime"
+                    type="time"
+                    value={form.eventTime}
+                    onChange={e => updateField('eventTime', e.target.value)}
+                    onBlur={() => handleBlur('eventTime')}
+                    required
+                    error={timeError}
+                  />
+                </div>
+
+                <div className="mt-4">
+                  <Input
+                    label="Complete Venue Address"
+                    id="location"
+                    type="text"
+                    placeholder="Flat/House No, Apartment name, Street, Area, Bengaluru"
+                    value={form.location}
+                    onChange={e => updateField('location', e.target.value)}
+                    onBlur={() => handleBlur('location')}
+                    required
+                    error={locationError}
+                  />
+                </div>
+              </div>
+
+              {/* 3. Add-ons & Experience Upgrades */}
+              <div className="rounded-xl border border-white/40 bg-white/90 dark:bg-[#1E1E1E]/90 dark:border-[#2E2E2E] p-5 sm:p-6 shadow-xl backdrop-blur-xl">
+                <div className="mb-4 flex items-center justify-between border-b border-[#E8E7E3] dark:border-[#2E2E2E] pb-3">
+                  <div className="flex items-center gap-2">
+                    <Sparkles size={16} className="text-amber-500" />
+                    <h2 className="font-editorial text-base font-bold text-[#1C1C1C] dark:text-white">3. Selected Add-ons &amp; Upgrades</h2>
+                  </div>
+                  <span className="text-xs font-semibold text-[#6F6F6B] dark:text-[#A0A09C]">
+                    {form.addOns.length} selected
+                  </span>
+                </div>
+
+                {/* Active Selected Addons List */}
+                {form.addOns.length > 0 && (
+                  <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {form.addOns.map((addon) => (
+                      <div
+                        key={addon.id || addon.name}
+                        className="flex items-center justify-between gap-3 rounded-lg border border-emerald-300 bg-emerald-50/80 p-2.5 dark:bg-emerald-950/40 dark:border-emerald-700/50 shadow-xs"
+                      >
+                        <div className="min-w-0">
+                          <div className="truncate text-xs font-semibold text-[#1C1C1C] dark:text-white flex items-center gap-1">
+                            <Sparkles size={11} className="text-emerald-600 dark:text-emerald-400" />
+                            {addon.name}
+                          </div>
+                          <div className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300">
+                            +₹{addon.price.toLocaleString('en-IN')}
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => removeAddon(addon.id || addon.name)}
+                          className="flex h-6 w-6 items-center justify-center rounded-full text-[#6F6F6B] hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors cursor-pointer"
+                          title="Remove Add-on"
+                        >
+                          <X size={13} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Popular Add-ons Quick Picker */}
+                <div className="mt-2">
+                  <p className="text-xs font-bold text-[#1C1C1C] dark:text-neutral-300 mb-2.5 uppercase tracking-wider">
+                    Popular Celebration Enhancements:
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {AVAILABLE_ADDONS_PRESETS.map((preset) => {
+                      const isSelected = form.addOns.some(a => a.name === preset.name);
+                      return (
+                        <button
+                          key={preset.name}
+                          type="button"
+                          onClick={() => {
+                            if (isSelected) {
+                              removeAddon(preset.name);
+                            } else {
+                              setForm(prev => ({ ...prev, addOns: [...prev.addOns, preset] }));
+                            }
+                          }}
+                          className={cn(
+                            'flex items-center justify-between p-2.5 rounded-lg border text-left text-xs transition-all cursor-pointer shadow-2xs',
+                            isSelected
+                              ? 'border-emerald-600 bg-emerald-50 text-emerald-900 font-semibold dark:bg-emerald-950/40 dark:text-emerald-200'
+                              : 'border-[#E8E7E3] bg-[#FAFAF8] text-[#1C1C1C] hover:border-[#1C1C1C] dark:bg-[#151515] dark:border-[#2E2E2E] dark:text-white'
+                          )}
+                        >
+                          <div className="truncate pr-2">
+                            <span className="font-semibold block">{preset.name}</span>
+                            <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400">+₹{preset.price.toLocaleString('en-IN')}</span>
+                          </div>
+                          <div className={cn(
+                            'flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold transition',
+                            isSelected ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-700 dark:bg-[#2A2A2A] dark:text-slate-300'
+                          )}>
+                            {isSelected ? '✓' : '+'}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* 4. Special Requests */}
+              <div className="rounded-xl border border-white/40 bg-white/90 dark:bg-[#1E1E1E]/90 dark:border-[#2E2E2E] p-5 sm:p-6 shadow-xl backdrop-blur-xl">
+                <label htmlFor="requests" className="block text-xs font-semibold uppercase tracking-wide text-[#1C1C1C] dark:text-white mb-2">
+                  4. Special Notes or Customization Requests (Optional)
+                </label>
+                <textarea
+                  id="requests"
+                  value={form.requests}
+                  onChange={e => updateField('requests', e.target.value)}
+                  placeholder="Mention theme color changes, surprise timings, names to display on board..."
+                  rows={3}
+                  className="w-full rounded-lg border border-[#E8E7E3] bg-white p-3 text-xs text-[#1C1C1C] outline-none placeholder:text-[#6F6F6B]/60 focus:border-[#1C1C1C] focus:ring-1 focus:ring-[#1C1C1C] dark:bg-[#1E1E1E] dark:border-[#2E2E2E] dark:text-white"
+                />
+              </div>
+
+              {/* 5. Payment Selection */}
+              <div className="rounded-xl border border-white/40 bg-white/90 dark:bg-[#1E1E1E]/90 dark:border-[#2E2E2E] p-5 sm:p-6 shadow-xl backdrop-blur-xl">
+                <h2 className="font-editorial text-base font-bold text-[#1C1C1C] dark:text-white mb-3">5. Payment Method</h2>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div
+                    onClick={() => setPaymentMethod('razorpay')}
+                    className={cn(
+                      'flex items-start gap-3 rounded-xl border p-3.5 cursor-pointer transition-all',
+                      paymentMethod === 'razorpay'
+                        ? 'border-[#1C1C1C] bg-[#F4F3F0] dark:bg-[#262626] dark:border-white'
+                        : 'border-[#E8E7E3] bg-white dark:bg-[#1E1E1E] dark:border-[#2E2E2E]'
+                    )}
+                  >
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="razorpay"
+                      checked={paymentMethod === 'razorpay'}
+                      onChange={() => setPaymentMethod('razorpay')}
+                      className="mt-0.5 accent-[#1C1C1C]"
+                    />
+                    <div>
+                      <div className="flex items-center gap-1.5 font-bold text-xs text-[#1C1C1C] dark:text-white">
+                        <CreditCard size={14} /> Pay via Razorpay
+                      </div>
+                      <p className="mt-0.5 text-[11px] text-[#6F6F6B] dark:text-[#A0A09C]">
+                        Instant confirmation via UPI, Cards, Netbanking.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={() => setPaymentMethod('whatsapp')}
+                    className={cn(
+                      'flex items-start gap-3 rounded-xl border p-3.5 cursor-pointer transition-all',
+                      paymentMethod === 'whatsapp'
+                        ? 'border-emerald-600 bg-emerald-50/50 dark:bg-emerald-950/20'
+                        : 'border-[#E8E7E3] bg-white dark:bg-[#1E1E1E] dark:border-[#2E2E2E]'
+                    )}
+                  >
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="whatsapp"
+                      checked={paymentMethod === 'whatsapp'}
+                      onChange={() => setPaymentMethod('whatsapp')}
+                      className="mt-0.5 accent-emerald-600"
+                    />
+                    <div>
+                      <div className="flex items-center gap-1.5 font-bold text-xs text-emerald-700 dark:text-emerald-400">
+                        {WA_SVG} Confirm via WhatsApp
+                      </div>
+                      <p className="mt-0.5 text-[11px] text-[#6F6F6B] dark:text-[#A0A09C]">
+                        Send details to decor manager for manual invoicing.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {error && (
+                <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600 dark:bg-red-950/40 dark:text-red-300">
+                  {error}
+                </div>
+              )}
+
+              {/* Submit button on desktop */}
+              <div className="hidden sm:flex flex-col gap-2">
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="lg"
+                  loading={loading}
+                  disabled={!isFormValid || loading}
+                  className="w-full justify-center rounded-xl"
+                >
+                  {paymentMethod === 'razorpay' ? 'Proceed to Payment' : 'Confirm via WhatsApp'}
+                </Button>
+              </div>
+            </form>
+          </section>
+
+          {/* Right Column: Order Summary Sidebar */}
+          <aside className="lg:col-span-5 xl:col-span-4 sticky top-24">
+            <div className="rounded-xl border border-white/40 bg-white/90 dark:bg-[#1E1E1E]/90 dark:border-[#2E2E2E] p-5 shadow-xl backdrop-blur-xl flex flex-col gap-4">
+              <div className="border-b border-[#E8E7E3] dark:border-[#2E2E2E] pb-3">
+                <h2 className="font-editorial text-sm font-bold uppercase tracking-wider text-[#1C1C1C] dark:text-white">
+                  Booking Summary
+                </h2>
+              </div>
+
+              <div className="flex gap-3 items-center">
+                <img src={product.image} alt={product.name} className="h-14 w-14 rounded-lg object-cover bg-[#F4F3F0] dark:bg-[#141414] border border-[#E8E7E3] dark:border-[#2E2E2E] flex-shrink-0" />
+                <div className="min-w-0">
+                  <h3 className="text-xs font-bold text-[#1C1C1C] dark:text-white truncate">{product.name}</h3>
+                  <p className="text-[11px] text-[#6F6F6B] dark:text-[#A0A09C]">{product.categoryName}</p>
+                </div>
+              </div>
+
+              {(form.eventDate || form.eventTime || locationTrimmed) && (
+                <div className="rounded-lg border border-[#E8E7E3] bg-[#FAFAF8] p-2.5 flex flex-col gap-1.5 text-xs text-[#1C1C1C] dark:bg-[#141414] dark:border-[#2E2E2E] dark:text-white">
+                  {form.eventDate && (
+                    <div className="flex items-center gap-1.5 text-[11px]">
+                      <Calendar size={13} className="text-[#6F6F6B]" />
+                      <span>{form.eventDate}</span>
+                    </div>
+                  )}
+                  {form.eventTime && (
+                    <div className="flex items-center gap-1.5 text-[11px]">
+                      <Clock size={13} className="text-[#6F6F6B]" />
+                      <span>{form.eventTime}</span>
+                    </div>
+                  )}
+                  {locationTrimmed && (
+                    <div className="flex items-start gap-1.5 text-[11px]">
+                      <MapPin size={13} className="text-[#6F6F6B] flex-shrink-0 mt-0.5" />
+                      <span className="truncate">{locationTrimmed}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Price lines */}
+              <div className="flex flex-col gap-2 border-t border-[#E8E7E3] dark:border-[#2E2E2E] pt-3 text-xs">
+                <div className="flex items-center justify-between text-[#6F6F6B] dark:text-[#A0A09C]">
+                  <span>Base Package</span>
+                  <span className="font-semibold text-[#1C1C1C] dark:text-white">₹{product.price?.toLocaleString('en-IN')}</span>
+                </div>
+
+                {form.addOns.map((addon) => (
+                  <div key={addon.id || addon.name} className="flex items-center justify-between text-[#6F6F6B] dark:text-[#A0A09C]">
+                    <span className="truncate pr-2">{addon.name}</span>
+                    <span className="font-semibold text-[#1C1C1C] dark:text-white flex-shrink-0">
+                      +₹{addon.price?.toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Total */}
+              <div className="border-t border-[#E8E7E3] dark:border-[#2E2E2E] pt-3 flex items-baseline justify-between">
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-[#6F6F6B] block">Total Payable</span>
+                  <span className="text-xl font-bold text-[#1C1C1C] dark:text-white">₹{totalPrice.toLocaleString('en-IN')}</span>
+                </div>
+                <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full">
+                  GST Included
                 </span>
               </div>
 
-              {form.addOns.length === 0 ? (
-                <div className="rounded-lg border border-dashed border-[#E8E7E3] dark:border-[#2E2E2E] p-4 text-center text-xs text-[#6F6F6B] dark:text-[#A0A09C]">
-                  No optional add-ons selected
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {form.addOns.map((addon) => (
-                    <div
-                      key={addon.id || addon.name}
-                      className="flex items-center justify-between gap-3 rounded-lg border border-[#E8E7E3] bg-[#FAFAF8] p-2.5 dark:bg-[#151515] dark:border-[#2E2E2E]"
-                    >
-                      <div className="min-w-0">
-                        <div className="truncate text-xs font-semibold text-[#1C1C1C] dark:text-white">{addon.name}</div>
-                        <div className="text-[11px] font-bold text-[#1C1C1C] dark:text-neutral-200">
-                          +₹{addon.price.toLocaleString('en-IN')}
-                        </div>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => removeAddon(addon.id || addon.name)}
-                        className="flex h-6 w-6 items-center justify-center rounded-full text-[#6F6F6B] hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors cursor-pointer"
-                        title="Remove"
-                      >
-                        <X size={13} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* 4. Special Requests */}
-            <div className="rounded-xl border border-[#E8E7E3] bg-white dark:bg-[#1E1E1E] dark:border-[#2E2E2E] p-5 sm:p-6 shadow-card">
-              <label htmlFor="requests" className="block text-xs font-semibold uppercase tracking-wide text-[#1C1C1C] dark:text-white mb-2">
-                4. Special Notes or Customization Requests (Optional)
-              </label>
-              <textarea
-                id="requests"
-                value={form.requests}
-                onChange={e => updateField('requests', e.target.value)}
-                placeholder="Mention theme color changes, surprise timings, names to display on board..."
-                rows={3}
-                className="w-full rounded-lg border border-[#E8E7E3] bg-white p-3 text-xs text-[#1C1C1C] outline-none placeholder:text-[#6F6F6B]/60 focus:border-[#1C1C1C] focus:ring-1 focus:ring-[#1C1C1C] dark:bg-[#1E1E1E] dark:border-[#2E2E2E] dark:text-white"
-              />
-            </div>
-
-            {/* 5. Payment Selection */}
-            <div className="rounded-xl border border-[#E8E7E3] bg-white dark:bg-[#1E1E1E] dark:border-[#2E2E2E] p-5 sm:p-6 shadow-card">
-              <h2 className="font-editorial text-base font-bold text-[#1C1C1C] dark:text-white mb-3">5. Payment Method</h2>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div
-                  onClick={() => setPaymentMethod('razorpay')}
-                  className={cn(
-                    'flex items-start gap-3 rounded-xl border p-3.5 cursor-pointer transition-all',
-                    paymentMethod === 'razorpay'
-                      ? 'border-[#1C1C1C] bg-[#F4F3F0] dark:bg-[#262626] dark:border-white'
-                      : 'border-[#E8E7E3] bg-white dark:bg-[#1E1E1E] dark:border-[#2E2E2E]'
-                  )}
-                >
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="razorpay"
-                    checked={paymentMethod === 'razorpay'}
-                    onChange={() => setPaymentMethod('razorpay')}
-                    className="mt-0.5 accent-[#1C1C1C]"
-                  />
-                  <div>
-                    <div className="flex items-center gap-1.5 font-bold text-xs text-[#1C1C1C] dark:text-white">
-                      <CreditCard size={14} /> Pay via Razorpay
-                    </div>
-                    <p className="mt-0.5 text-[11px] text-[#6F6F6B] dark:text-[#A0A09C]">
-                      Instant confirmation via UPI, Cards, Netbanking.
-                    </p>
-                  </div>
-                </div>
-
-                <div
-                  onClick={() => setPaymentMethod('whatsapp')}
-                  className={cn(
-                    'flex items-start gap-3 rounded-xl border p-3.5 cursor-pointer transition-all',
-                    paymentMethod === 'whatsapp'
-                      ? 'border-emerald-600 bg-emerald-50/50 dark:bg-emerald-950/20'
-                      : 'border-[#E8E7E3] bg-white dark:bg-[#1E1E1E] dark:border-[#2E2E2E]'
-                  )}
-                >
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="whatsapp"
-                    checked={paymentMethod === 'whatsapp'}
-                    onChange={() => setPaymentMethod('whatsapp')}
-                    className="mt-0.5 accent-emerald-600"
-                  />
-                  <div>
-                    <div className="flex items-center gap-1.5 font-bold text-xs text-emerald-700 dark:text-emerald-400">
-                      {WA_SVG} Confirm via WhatsApp
-                    </div>
-                    <p className="mt-0.5 text-[11px] text-[#6F6F6B] dark:text-[#A0A09C]">
-                      Send details to decor manager for manual invoicing.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {error && (
-              <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600 dark:bg-red-950/40 dark:text-red-300">
-                {error}
-              </div>
-            )}
-
-            {/* Submit button on desktop */}
-            <div className="hidden sm:flex flex-col gap-2">
               <Button
-                type="submit"
+                type="button"
                 variant="primary"
                 size="lg"
-                loading={loading}
-                disabled={!isFormValid || loading}
+                onClick={() => {
+                  const fakeEvent = { preventDefault: () => {} } as any;
+                  handleSubmit(fakeEvent);
+                }}
+                disabled={loading}
                 className="w-full justify-center rounded-xl"
               >
-                {paymentMethod === 'razorpay' ? 'Proceed to Payment' : 'Confirm via WhatsApp'}
+                <span>{paymentMethod === 'razorpay' ? 'Proceed to Payment' : 'Confirm via WhatsApp'}</span>
+                <ChevronRight size={14} />
               </Button>
-            </div>
-          </form>
-        </section>
 
-        {/* Right Column: Order Summary Sidebar */}
-        <aside className="lg:col-span-5 xl:col-span-4 sticky top-24">
-          <div className="rounded-xl border border-[#E8E7E3] bg-white dark:bg-[#1E1E1E] dark:border-[#2E2E2E] p-5 shadow-card flex flex-col gap-4">
-            <div className="border-b border-[#E8E7E3] dark:border-[#2E2E2E] pb-3">
-              <h2 className="font-editorial text-sm font-bold uppercase tracking-wider text-[#1C1C1C] dark:text-white">
-                Booking Summary
-              </h2>
-            </div>
-
-            <div className="flex gap-3 items-center">
-              <img src={product.image} alt={product.name} className="h-14 w-14 rounded-lg object-cover bg-[#F4F3F0] dark:bg-[#141414] border border-[#E8E7E3] dark:border-[#2E2E2E] flex-shrink-0" />
-              <div className="min-w-0">
-                <h3 className="text-xs font-bold text-[#1C1C1C] dark:text-white truncate">{product.name}</h3>
-                <p className="text-[11px] text-[#6F6F6B] dark:text-[#A0A09C]">{product.categoryName}</p>
+              <div className="border-t border-[#E8E7E3] dark:border-[#2E2E2E] pt-3 flex flex-col gap-1.5 text-[11px] text-[#6F6F6B] dark:text-[#A0A09C]">
+                <span className="flex items-center gap-1.5"><Lock size={12} className="text-[#1C1C1C] dark:text-white" /> Secure 256-bit encrypted checkout</span>
+                <span className="flex items-center gap-1.5"><Zap size={12} className="text-[#1C1C1C] dark:text-white" /> Instant slot confirmation</span>
+                <span className="flex items-center gap-1.5"><ShieldCheck size={12} className="text-[#1C1C1C] dark:text-white" /> Free rescheduling 48 hrs before event</span>
               </div>
             </div>
+          </aside>
+        </div>
 
-            {(form.eventDate || form.eventTime || locationTrimmed) && (
-              <div className="rounded-lg border border-[#E8E7E3] bg-[#FAFAF8] p-2.5 flex flex-col gap-1.5 text-xs text-[#1C1C1C] dark:bg-[#141414] dark:border-[#2E2E2E] dark:text-white">
-                {form.eventDate && (
-                  <div className="flex items-center gap-1.5 text-[11px]">
-                    <Calendar size={13} className="text-[#6F6F6B]" />
-                    <span>{form.eventDate}</span>
-                  </div>
-                )}
-                {form.eventTime && (
-                  <div className="flex items-center gap-1.5 text-[11px]">
-                    <Clock size={13} className="text-[#6F6F6B]" />
-                    <span>{form.eventTime}</span>
-                  </div>
-                )}
-                {locationTrimmed && (
-                  <div className="flex items-start gap-1.5 text-[11px]">
-                    <MapPin size={13} className="text-[#6F6F6B] flex-shrink-0 mt-0.5" />
-                    <span className="truncate">{locationTrimmed}</span>
-                  </div>
-                )}
+        {/* Dialog Modal */}
+        {paymentDialog && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs px-4 py-6 animate-fade-in">
+            <div className="w-full max-w-md rounded-2xl border border-[#E8E7E3] bg-white p-6 shadow-modal dark:bg-[#1E1E1E] dark:border-[#2E2E2E]" role="dialog">
+              <h3 className="text-base font-bold text-[#1C1C1C] dark:text-white">{paymentDialog.title}</h3>
+              <p className="mt-1 text-xs text-[#6F6F6B] dark:text-[#A0A09C]">{paymentDialog.message}</p>
+              {paymentDialog.details && (
+                <p className="mt-2 text-xs font-medium text-[#1C1C1C] dark:text-white">{paymentDialog.details}</p>
+              )}
+              <div className="mt-5 flex gap-2 justify-end">
+                <Button type="button" variant="primary" size="sm" onClick={() => setPaymentDialog(null)}>
+                  OK
+                </Button>
               </div>
-            )}
-
-            {/* Price lines */}
-            <div className="flex flex-col gap-2 border-t border-[#E8E7E3] dark:border-[#2E2E2E] pt-3 text-xs">
-              <div className="flex items-center justify-between text-[#6F6F6B] dark:text-[#A0A09C]">
-                <span>Base Package</span>
-                <span className="font-semibold text-[#1C1C1C] dark:text-white">₹{product.price?.toLocaleString('en-IN')}</span>
-              </div>
-
-              {form.addOns.map((addon) => (
-                <div key={addon.id || addon.name} className="flex items-center justify-between text-[#6F6F6B] dark:text-[#A0A09C]">
-                  <span className="truncate pr-2">{addon.name}</span>
-                  <span className="font-semibold text-[#1C1C1C] dark:text-white flex-shrink-0">
-                    +₹{addon.price?.toLocaleString('en-IN')}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* Total */}
-            <div className="border-t border-[#E8E7E3] dark:border-[#2E2E2E] pt-3 flex items-baseline justify-between">
-              <div>
-                <span className="text-[10px] uppercase font-bold text-[#6F6F6B] block">Total Payable</span>
-                <span className="text-xl font-bold text-[#1C1C1C] dark:text-white">₹{totalPrice.toLocaleString('en-IN')}</span>
-              </div>
-              <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full">
-                GST Included
-              </span>
-            </div>
-
-            <Button
-              type="button"
-              variant="primary"
-              size="lg"
-              onClick={() => {
-                const fakeEvent = { preventDefault: () => {} } as any;
-                handleSubmit(fakeEvent);
-              }}
-              disabled={loading}
-              className="w-full justify-center rounded-xl"
-            >
-              <span>{paymentMethod === 'razorpay' ? 'Proceed to Payment' : 'Confirm via WhatsApp'}</span>
-              <ChevronRight size={14} />
-            </Button>
-
-            <div className="border-t border-[#E8E7E3] dark:border-[#2E2E2E] pt-3 flex flex-col gap-1.5 text-[11px] text-[#6F6F6B] dark:text-[#A0A09C]">
-              <span className="flex items-center gap-1.5"><Lock size={12} className="text-[#1C1C1C] dark:text-white" /> Secure 256-bit encrypted checkout</span>
-              <span className="flex items-center gap-1.5"><Zap size={12} className="text-[#1C1C1C] dark:text-white" /> Instant slot confirmation</span>
-              <span className="flex items-center gap-1.5"><ShieldCheck size={12} className="text-[#1C1C1C] dark:text-white" /> Free rescheduling 48 hrs before event</span>
             </div>
           </div>
-        </aside>
-      </div>
+        )}
 
-      {/* Dialog Modal */}
-      {paymentDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs px-4 py-6 animate-fade-in">
-          <div className="w-full max-w-md rounded-2xl border border-[#E8E7E3] bg-white p-6 shadow-modal dark:bg-[#1E1E1E] dark:border-[#2E2E2E]" role="dialog">
-            <h3 className="text-base font-bold text-[#1C1C1C] dark:text-white">{paymentDialog.title}</h3>
-            <p className="mt-1 text-xs text-[#6F6F6B] dark:text-[#A0A09C]">{paymentDialog.message}</p>
-            {paymentDialog.details && (
-              <p className="mt-2 text-xs font-medium text-[#1C1C1C] dark:text-white">{paymentDialog.details}</p>
-            )}
-            <div className="mt-5 flex gap-2 justify-end">
-              <Button type="button" variant="primary" size="sm" onClick={() => setPaymentDialog(null)}>
-                OK
-              </Button>
-            </div>
+        {/* Sticky Mobile Bar */}
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-[#E8E7E3] bg-white/95 backdrop-blur-xs p-3 shadow-modal sm:hidden flex items-center justify-between gap-3 dark:bg-[#121212]/95 dark:border-[#2E2E2E]">
+          <div>
+            <div className="text-[10px] uppercase font-bold text-[#6F6F6B]">Total</div>
+            <div className="text-base font-bold text-[#1C1C1C] dark:text-white">₹{totalPrice.toLocaleString('en-IN')}</div>
           </div>
+          <Button
+            type="button"
+            variant="primary"
+            size="sm"
+            onClick={() => {
+              const fakeEvent = { preventDefault: () => {} } as any;
+              handleSubmit(fakeEvent);
+            }}
+            disabled={loading}
+            className="rounded-lg text-xs"
+          >
+            {paymentMethod === 'razorpay' ? 'Pay Now' : 'WhatsApp'}
+          </Button>
         </div>
-      )}
-
-      {/* Sticky Mobile Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-[#E8E7E3] bg-white/95 backdrop-blur-xs p-3 shadow-modal sm:hidden flex items-center justify-between gap-3 dark:bg-[#121212]/95 dark:border-[#2E2E2E]">
-        <div>
-          <div className="text-[10px] uppercase font-bold text-[#6F6F6B]">Total</div>
-          <div className="text-base font-bold text-[#1C1C1C] dark:text-white">₹{totalPrice.toLocaleString('en-IN')}</div>
-        </div>
-        <Button
-          type="button"
-          variant="primary"
-          size="sm"
-          onClick={() => {
-            const fakeEvent = { preventDefault: () => {} } as any;
-            handleSubmit(fakeEvent);
-          }}
-          disabled={loading}
-          className="rounded-lg text-xs"
-        >
-          {paymentMethod === 'razorpay' ? 'Pay Now' : 'WhatsApp'}
-        </Button>
       </div>
     </div>
   );
 };
+
+export default BookingWizard;

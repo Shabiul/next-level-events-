@@ -367,7 +367,7 @@ function FAQ1({
 
       <section
         id={id}
-        className={`relative z-10 mx-auto flex max-w-4xl flex-col gap-10 px-6 py-20 lg:max-w-5xl lg:px-12 ${
+        className={`relative z-10 mx-auto flex max-w-6xl flex-col gap-10 px-6 py-20 lg:max-w-7xl lg:px-12 ${
           hasEntered ? "faq1-fade--ready" : "faq1-fade"
         }`}
       >

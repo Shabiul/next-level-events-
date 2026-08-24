@@ -17,6 +17,7 @@ export function useHeroSlider() {
           .filter((s: any) => s.active)
           .map((s: any) => ({
             img: s.image,
+            video: s.video || s.videoUrl,
             chip: s.chip,
             headline: s.headline,
             sub: s.subtext,

@@ -1,15 +1,26 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Heart, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Heart, ArrowRight, MapPin } from 'lucide-react';
 import type { AdminProduct } from '../../types';
 import { cn } from '../../utils/utils';
 import { useAuth } from '../../hooks/useAuth';
 import { getApiUrl } from '../../services/api.service';
 import { trackSelectItem, trackWishlistToggle } from '../../utils/analytics';
 
+const SUPPORT_PHONE = '917022058460';
+
+const WA_SVG = (
+  <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.105 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+  </svg>
+);
+
+import { resolveProductCardImage, resolveProductImagePosition } from '../../utils/imageUtils';
+
 export interface ProductCardProps {
   product: AdminProduct;
-  onViewDetails: (p: AdminProduct) => void;
+  onViewDetails?: (p: AdminProduct) => void;
   onBook?: (p: AdminProduct) => void;
   isAI?: boolean;
   isLanding?: boolean;
@@ -22,24 +33,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onViewDetails,
   onBook,
   isAI = false,
+  isLanding = false,
   className,
-  aspectRatio = 'aspect-[3/4]',
 }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const [wished, setWished] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const [glarePos, setGlarePos] = useState({ x: 0, y: 0 });
   const auth = useAuth();
-
-  // Mouse tilt spring coordinates
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const springConfig = { damping: 20, stiffness: 220, mass: 0.5 };
-  const mouseXSpring = useSpring(x, springConfig);
-  const mouseYSpring = useSpring(y, springConfig);
-
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], [10, -10]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], [-10, 10]);
 
   useEffect(() => {
     setWished(Boolean(auth.user?.wishlist?.includes(product._id)));
@@ -49,30 +48,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const discount = hasDiscount && product.originalPrice
     ? Math.round((1 - product.price / product.originalPrice) * 100)
     : 0;
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-
-    const xPct = mouseX / rect.width - 0.5;
-    const yPct = mouseY / rect.height - 0.5;
-
-    x.set(xPct);
-    y.set(yPct);
-    setGlarePos({ x: mouseX, y: mouseY });
-  };
-
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    x.set(0);
-    y.set(0);
-  };
 
   const handleCardClick = () => {
     trackSelectItem(
@@ -85,7 +60,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       },
       product.categoryName
     );
-    onViewDetails(product);
+    if (onViewDetails) {
+      onViewDetails(product);
+    } else {
+      navigate(`/product/${product._id}`, { state: { product } });
+    }
   };
 
   const handleWishlistToggle = async (e: React.MouseEvent) => {
@@ -120,171 +99,175 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     }
   };
 
-  const subtitleText = (product.subcategory || product.categoryName || 'DECORATION').toUpperCase();
-  const formattedSubtitle = `- ${subtitleText} -`;
+  const openWhatsApp = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const text = `Hi TheDecorParty! I'm interested in customizing the "${product.name}" package. Can you share availability and details?`;
+    const url = `https://wa.me/${SUPPORT_PHONE}?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const tagLabel = product.subcategory || product.categoryName || 'Bengaluru Setup';
+  const highlightInclusion = Array.isArray(product.inclusions) && product.inclusions[0]
+    ? product.inclusions[0]
+    : 'Includes on-site decorator setup, balloon arch styling & warm ambient spotlights.';
+
+  const cardImage = resolveProductCardImage(product, isLanding);
+  const imagePosition = resolveProductImagePosition(product);
 
   return (
-    <div
-      style={{ perspective: 1200 }}
-      className={cn('w-full select-none cursor-pointer', className)}
+    <motion.div
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      className={cn(
+        'group flex flex-col justify-between rounded-[32px] border border-[#DDD5C7] dark:border-[#483250] bg-white dark:bg-[#201325] text-[#34203C] dark:text-[#FAF8F5] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 text-left select-none cursor-pointer w-full h-full',
+        className
+      )}
       onClick={handleCardClick}
     >
-      <motion.div
-        ref={cardRef}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        style={{
-          rotateX,
-          rotateY,
-          transformStyle: 'preserve-3d',
-        }}
-        whileHover={{ scale: 1.02 }}
-        transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-        className={cn(
-          'group relative overflow-hidden rounded-[26px] sm:rounded-[30px] bg-[#1E1122] text-[#FAF8F5]',
-          'border border-white/10 shadow-[0_12px_32px_rgba(0,0,0,0.25)] hover:shadow-[0_24px_50px_rgba(0,0,0,0.45)] hover:border-white/25',
-          'transition-shadow duration-500 w-full',
-          aspectRatio
-        )}
-      >
-        {/* =================================================================== */}
-        {/* 1. FULL-BLEED BACKGROUND IMAGE WITH CLEAN GRADIENT VIGNETTE        */}
-        {/* =================================================================== */}
-        <div className="absolute inset-0 overflow-hidden" style={{ transform: 'translateZ(0px)' }}>
+      {/* Top Image Showcase with Overlaid Title & Category Pin (Murudeshwara Layout) */}
+      <div>
+        <div className="relative w-full h-[220px] sm:h-[240px] overflow-hidden bg-[#34203C]/10">
           <img
-            src={
-              product.image ||
-              'https://images.unsplash.com/photo-1513151233558-d860c5398176?w=700&auto=format&fit=crop&q=85'
-            }
+            src={cardImage}
             alt={product.name}
             loading="lazy"
-            className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-108"
+            className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-108 ${imagePosition}`}
           />
 
-          {/* Vignette Overlay */}
-          <div className="absolute inset-0 bg-black/10 pointer-events-none" />
+          {/* Vignette Scrim Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
 
-          {/* Clean Dark Gradient Overlay for optimal text readability */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                'linear-gradient(to top, rgba(15, 8, 18, 0.92) 0%, rgba(20, 10, 24, 0.55) 45%, rgba(0, 0, 0, 0.08) 80%, transparent 100%)',
-            }}
-          />
-        </div>
-
-        {/* =================================================================== */}
-        {/* 2. SPECULAR RADIAL GLARE REFLECTION                                 */}
-        {/* =================================================================== */}
-        {isHovered && (
-          <div
-            className="pointer-events-none absolute -inset-px rounded-[inherit] transition-opacity duration-300 z-20 mix-blend-screen"
-            style={{
-              transform: 'translateZ(15px)',
-              background: `radial-gradient(280px circle at ${glarePos.x}px ${glarePos.y}px, rgba(255, 255, 255, 0.25), rgba(201, 190, 171, 0.1), transparent 75%)`,
-            }}
-          />
-        )}
-
-        {/* =================================================================== */}
-        {/* 3. TOP ACTION BAR (Badges & Frosted Glass Heart Button)             */}
-        {/* =================================================================== */}
-        <div
-          style={{ transform: 'translateZ(40px)', transformStyle: 'preserve-3d' }}
-          className="absolute top-4 left-4 right-4 z-30 flex items-center justify-between pointer-events-none"
-        >
-          {/* Badge or Discount Tag */}
-          <div className="flex items-center gap-1.5">
-            {!isAI && product.badge && (
-              <span className="pointer-events-auto inline-flex items-center rounded-full bg-[#C9BEAB] text-[#25172C] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider shadow-md backdrop-blur-md">
-                {product.badge}
-              </span>
-            )}
-            {!isAI && discount > 0 && (
-              <span className="pointer-events-auto inline-flex items-center rounded-full bg-emerald-500/90 text-white px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-md backdrop-blur-md">
-                {discount}% OFF
-              </span>
-            )}
-          </div>
-
-          {/* 21st.dev Style Frosted Glass Heart Button */}
-          {!isAI && (
-            <motion.button
-              type="button"
-              aria-label={wished ? 'Remove from wishlist' : 'Add to wishlist'}
-              onClick={handleWishlistToggle}
-              whileTap={{ scale: 0.85 }}
-              animate={{ scale: wished ? [1, 1.25, 1] : 1 }}
-              transition={{ duration: 0.3 }}
-              className={cn(
-                'pointer-events-auto flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full',
-                'bg-white/20 hover:bg-white/35 border border-white/30 backdrop-blur-md shadow-lg',
-                'text-white transition-colors duration-200 cursor-pointer'
+          {/* Top Badges & Wishlist */}
+          <div className="absolute top-3.5 left-3.5 right-3.5 z-20 flex items-center justify-between pointer-events-none">
+            <div className="flex items-center gap-1.5 pointer-events-auto">
+              {!isAI && product.badge && (
+                <span className="rounded-full bg-[#C9BEAB] text-[#201325] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider shadow-md">
+                  {product.badge}
+                </span>
               )}
-            >
-              <Heart
-                size={18}
-                className={cn(
-                  'transition-all duration-200',
-                  wished ? 'fill-rose-400 text-rose-400 scale-110' : 'text-white/90 hover:text-white'
-                )}
-              />
-            </motion.button>
-          )}
-        </div>
-
-        {/* =================================================================== */}
-        {/* 4. BOTTOM CONTENT (Subtitle Eyebrow, Big Bold Title, Price & Book) */}
-        {/* =================================================================== */}
-        <div
-          style={{ transform: 'translateZ(35px)', transformStyle: 'preserve-3d' }}
-          className="absolute bottom-4 sm:bottom-5 left-4 sm:left-5 right-4 sm:right-5 z-30 text-left pointer-events-none"
-        >
-          {/* Eyebrow: - CATEGORY / SUBCATEGORY - */}
-          <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.22em] text-[#DDD5C7] drop-shadow-sm mb-1 font-sans">
-            {formattedSubtitle}
-          </p>
-
-          {/* Main Title (Big & Bold exactly like 21st.dev) */}
-          <h3 className="font-serif text-xl sm:text-2xl md:text-[26px] font-bold tracking-tight text-white drop-shadow-md leading-tight line-clamp-1 group-hover:text-[#C9BEAB] transition-colors">
-            {product.name}
-          </h3>
-
-          {/* Price & Action Row */}
-          <div className="mt-2.5 sm:mt-3 flex items-center justify-between gap-2 pointer-events-auto">
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-serif text-lg sm:text-xl font-bold tracking-tight text-[#FAF8F5] drop-shadow-sm">
-                ₹{product.price?.toLocaleString('en-IN')}
-              </span>
-              {hasDiscount && (
-                <span className="text-xs font-normal text-white/60 line-through">
-                  ₹{product.originalPrice?.toLocaleString('en-IN')}
+              {!isAI && discount > 0 && (
+                <span className="rounded-full bg-emerald-600 text-white px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-md">
+                  {discount}% OFF
                 </span>
               )}
             </div>
 
-            {/* Clean Book CTA Pill */}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (onBook) {
-                  onBook(product);
-                } else {
-                  handleCardClick();
-                }
-              }}
-              className="inline-flex items-center gap-1.5 rounded-full bg-white/95 hover:bg-white text-[#34203C] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider shadow-lg hover:scale-105 active:scale-95 transition-all cursor-pointer backdrop-blur-sm"
-            >
-              <span>Book</span>
-              <ArrowRight size={12} />
-            </button>
+            {!isAI && (
+              <motion.button
+                type="button"
+                aria-label={wished ? 'Remove from wishlist' : 'Add to wishlist'}
+                onClick={handleWishlistToggle}
+                whileTap={{ scale: 0.85 }}
+                animate={{ scale: wished ? [1, 1.25, 1] : 1 }}
+                className={cn(
+                  'pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full',
+                  'bg-black/40 hover:bg-black/70 border border-white/30 backdrop-blur-md shadow-md',
+                  'text-white transition-colors duration-200 cursor-pointer'
+                )}
+              >
+                <Heart
+                  size={16}
+                  className={cn(
+                    'transition-all duration-200',
+                    wished ? 'fill-rose-500 text-rose-500 scale-110' : 'text-white/90 hover:text-white'
+                  )}
+                />
+              </motion.button>
+            )}
+          </div>
+
+          {/* Bottom-Left Image Text Overlay (Matching Murudeshwara Resort Layout) */}
+          <div className="absolute bottom-3.5 left-4 right-4 z-20 text-left">
+            <div className="flex items-center gap-1 text-white/90 text-xs font-semibold mb-0.5">
+              <MapPin size={13} className="text-[#C9BEAB] shrink-0" />
+              <span className="text-[#C9BEAB] text-[10px] font-bold uppercase tracking-wider">
+                {tagLabel}
+              </span>
+            </div>
+            <h3 className="font-serif text-lg sm:text-xl font-bold tracking-tight text-white leading-tight line-clamp-1 group-hover:text-[#C9BEAB] transition-colors">
+              {product.name}
+            </h3>
           </div>
         </div>
-      </motion.div>
-    </div>
+
+        {/* Card Content Body */}
+        <div className="p-5 sm:p-6 flex flex-col">
+          {/* Description Paragraph */}
+          <p className="text-xs text-[#725D75] dark:text-[#C8B5C3] font-light leading-relaxed line-clamp-2 min-h-[36px]">
+            {product.description ||
+              'Complete turnkey celebration setup styled with customized props, balloon architecture, and fairy lighting.'}
+          </p>
+
+          {/* Inner Highlight Box with Star (Matching Murudeshwara Screenshot) */}
+          <div className="mt-3.5 rounded-2xl bg-[#FAF8F5] dark:bg-[#2A1830] p-3 border border-[#DDD5C7]/60 dark:border-[#483250]/60 flex items-start gap-2 text-xs text-[#34203C] dark:text-neutral-200">
+            <span className="text-[#C9BEAB] text-sm shrink-0 font-bold">★</span>
+            <span className="text-[11px] font-medium leading-relaxed line-clamp-2">
+              {highlightInclusion}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Card Actions Footer (Matching Murudeshwara Layout) */}
+      <div className="px-5 sm:px-6 pb-6 pt-0 flex flex-col gap-3">
+        <div className="flex items-center justify-between border-t border-[#DDD5C7]/50 dark:border-[#483250]/50 pt-4">
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#725D75] dark:text-[#A78A9F] block">
+              Starting Price
+            </span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-serif text-lg sm:text-xl font-bold text-[#34203C] dark:text-[#FAF8F5]">
+                ₹{product.price?.toLocaleString('en-IN')}
+              </span>
+              {hasDiscount && (
+                <span className="text-xs font-normal text-[#725D75]/60 line-through">
+                  ₹{product.originalPrice?.toLocaleString('en-IN')}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCardClick();
+            }}
+            className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#34203C] dark:text-[#C9BEAB] hover:text-[#A78A9F] group/btn cursor-pointer"
+          >
+            <span>VIEW DETAILS</span>
+            <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 mt-1">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onBook) {
+                onBook(product);
+              } else {
+                navigate(`/booking/${product._id}`, { state: { product, preferredMethod: 'razorpay' } });
+              }
+            }}
+            className="w-full flex items-center justify-center gap-1.5 rounded-full bg-[#34203C] dark:bg-[#C9BEAB] text-[#FAF8F5] dark:text-[#25172C] py-2.5 text-[11px] font-bold uppercase tracking-wider shadow-sm hover:bg-[#483250] dark:hover:bg-white transition-colors cursor-pointer"
+          >
+            <span>BOOK NOW</span>
+            <ArrowRight size={12} />
+          </button>
+
+          <button
+            type="button"
+            onClick={openWhatsApp}
+            className="w-full flex items-center justify-center gap-1.5 rounded-full border border-emerald-600/50 bg-emerald-50/50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 py-2.5 text-[11px] font-bold uppercase tracking-wider hover:bg-emerald-100/60 transition-colors cursor-pointer"
+          >
+            {WA_SVG}
+            <span>WHATSAPP</span>
+          </button>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 

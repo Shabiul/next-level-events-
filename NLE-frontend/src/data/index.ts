@@ -3,6 +3,7 @@ import type { HeroSlide, CatIcon, Occasion, Product } from '../types';
 export const HERO_SLIDES: HeroSlide[] = [
   {
     img: '/about-purple-banner.png',
+    video: '/lan.mp4',
     chip: 'CELEBRATIONS, BEAUTIFULLY CURATED',
     headline: 'Celebrations,\nThoughtfully Designed.',
     sub: 'From dreamy décor to memorable experiences — we create celebrations that feel personal, beautiful, and effortlessly unforgettable.',
@@ -43,13 +44,13 @@ export const CAT_ICONS: CatIcon[] = [
   { label: 'Birthday\nDecorations',   img: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=100&q=70' },
   { label: 'Same Day\nDelivery',      img: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100&q=70' },
   { label: 'Personalised\nGifts',     img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=100&q=70' },
-  { label: 'Kids Birthday\nDecors',   img: 'https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=100&q=70' },
+  { label: 'Kids Birthday\nDecors',   img: '/kids.jpeg' },
   { label: 'Corporate\nEvents',       img: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=100&q=70' },
   { label: 'Baby Shower',             img: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?w=100&q=70' },
   { label: 'Balloon\nGifts',          img: 'https://images.unsplash.com/photo-1567696153798-9111f9cd3d0d?w=100&q=70' },
   { label: 'Candlelight\nDinner',     img: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=100&q=70' },
   { label: 'Anniversary\nDecoration', img: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=100&q=70' },
-  { label: 'Games &\nActivities',     img: 'https://images.unsplash.com/photo-1551966775-a4ddc8df052b?w=100&q=70' },
+  { label: 'Games &\nActivities',     img: '/kids.jpeg' },
   { label: 'Proposal\nSetup',         img: 'https://images.unsplash.com/photo-1518049362265-d5b2a6467637?w=100&q=70' },
   { label: 'Festival\nDecors',        img: 'https://images.unsplash.com/photo-1602631985686-1bb0e6a8696e?w=100&q=70' },
 ];

@@ -177,7 +177,7 @@ export default function OrderDetailsPage() {
       authModalOpen={auth.isOpen}
       authModalTab={auth.tab}
     >
-      <main className="mx-auto max-w-[1100px] px-4 py-6 md:px-6 min-h-[80vh]">
+      <main className="mx-auto max-w-7xl px-4 py-6 md:px-6 min-h-[80vh]">
         <button
           type="button"
           onClick={() => navigate(-1)}

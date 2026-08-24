@@ -167,7 +167,7 @@ export function TabbedFAQ({
       data-nav-theme="light"
       className={`relative w-full bg-[#FAF8F5] dark:bg-[#1B101F] py-10 sm:py-12 lg:py-14 text-[#34203C] dark:text-[#FAF8F5] transition-colors duration-200 ${className}`}
     >
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* 1. Section Header (Image 2 style with centered clean layout) */}
         <div className="mx-auto max-w-2xl text-center mb-8 sm:mb-10">
           <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] text-[#725D75] dark:text-[#A78A9F] mb-2">

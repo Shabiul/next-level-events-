@@ -7,6 +7,9 @@ import { CartPage } from '../CartPage';
 import { Footer } from './Footer';
 import { Header } from './Header';
 import { FloatingActionMenu } from './FloatingActionMenu';
+import { ScrollProgressBar } from '../ui/ScrollProgressBar';
+import { BackToTopButton } from '../ui/BackToTopButton';
+import { useSmoothScroll } from '../../hooks/useSmoothScroll';
 import { cn } from '../../utils/utils';
 import type { AdminCategory, AuthTab, AuthUser, CartItem, Translations } from '../../types';
 import type { AuthRedirect } from '../../context/AuthContext';
@@ -92,6 +95,9 @@ export default function MainLayout({
   const handledAuthRedirect = useRef(false);
   const handledAdminLanding = useRef(false);
 
+  // Enable global smooth fluid scrolling
+  useSmoothScroll();
+
   useEffect(() => {
     if (!auth.initialized || !auth.isLoggedIn || auth.tab !== 'success') {
       handledAuthRedirect.current = false;
@@ -166,7 +172,7 @@ export default function MainLayout({
             categories={categories}
             onSelectCategory={onSelectCategory}
           />
-          <main className={cn("flex-1 w-full", location.pathname !== '/' && "pt-24 sm:pt-28")}>{children}</main>
+          <main className={cn("flex-1 w-full", (location.pathname !== '/' && location.pathname !== '/explore') && "pt-16 sm:pt-20")}>{children}</main>
           <Footer
             t={t}
             onPageOpen={handleTermsOpen}
@@ -194,7 +200,13 @@ export default function MainLayout({
           />
         </div>
       )}
-      {!hideShell && <FloatingActionMenu />}
+      {!hideShell && (
+        <>
+          <ScrollProgressBar />
+          <FloatingActionMenu />
+          <BackToTopButton />
+        </>
+      )}
     </>
   );
 }

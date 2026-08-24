@@ -1,5 +1,6 @@
 export interface HeroSlide {
   img: string;
+  video?: string;
   chip: string;
   headline: string;
   sub: string;

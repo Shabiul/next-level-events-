@@ -102,18 +102,16 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <div className={`w-full ${className}`}>
       <div
-        className={`mx-auto flex w-full max-w-[680px] items-center gap-3 rounded-full border px-4 sm:px-5 py-3 cursor-text transition-all duration-200 ${
+        className={`mx-auto flex w-full max-w-[680px] items-center gap-3 rounded-full border px-4 sm:px-5 py-3.5 cursor-text transition-all duration-200 backdrop-blur-md shadow-lg ${
           isFocused
-            ? 'bg-white border-[#5D2B54] shadow-md ring-2 ring-[#C9BEAB]/40 dark:bg-[#2E1D33] dark:border-[#C9BEAB]'
-            : 'bg-[#F2ECE1]/80 border-[#DDD5C7] hover:border-[#C9BEAB] dark:bg-[#241628] dark:border-[#442B4B]'
+            ? 'bg-white border-[#34203C] ring-2 ring-[#34203C]/20 shadow-xl'
+            : 'bg-white/90 border-[#DDD5C7] hover:border-[#34203C]'
         }`}
         onClick={() => inputRef.current?.focus()}
       >
         <Search
           size={18}
-          className={`flex-shrink-0 transition-colors duration-200 ${
-            isFocused ? 'text-[#5D2B54] dark:text-[#C9BEAB]' : 'text-[#725D75] dark:text-[#A78A9F]'
-          }`}
+          className="flex-shrink-0 transition-colors duration-200 text-[#34203C]"
         />
         <input
           ref={inputRef}
@@ -123,7 +121,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           onChange={e => onChange(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          className="w-full bg-transparent text-sm sm:text-base text-[#2C1B2E] dark:text-[#FAF7F5] outline-none placeholder:text-[#725D75]/70 dark:placeholder:text-[#A78A9F]/60 font-normal"
+          className="w-full bg-transparent text-sm sm:text-base text-[#34203C] outline-none placeholder:text-[#725D75]/70 font-medium"
         />
         {value && (
           <button
@@ -133,7 +131,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               inputRef.current?.focus();
             }}
             aria-label="Clear search"
-            className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full bg-[#DDD5C7] hover:bg-[#C9BEAB] dark:bg-[#442B4B] dark:hover:bg-[#5D2B54] text-[#2C1B2E] dark:text-white transition-all active:scale-90"
+            className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full bg-[#DDD5C7]/60 hover:bg-[#34203C] text-[#34203C] hover:text-white transition-all active:scale-90 cursor-pointer"
           >
             <X size={13} />
           </button>

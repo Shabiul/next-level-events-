@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react';
 import { Share2 } from 'lucide-react';
 import { EmptyState } from '../ui/EmptyState';
 import { BackButton } from '../ui/BackButton';
-import { SearchBar } from '../ui/SearchBar';
 import { useLanguage } from '../../hooks/useLanguage';
 
 interface SubcategoryScrollProps {
@@ -59,17 +58,7 @@ export const SubcategoryScroll: React.FC<SubcategoryScrollProps> = ({
         </p>
       </div>
 
-      {/* Search / Filter Input */}
-      {subcategories.length > 0 && (
-        <div className="mb-6">
-          <SearchBar
-            value={filterText}
-            onChange={setFilterText}
-            category={categoryName}
-            placeholder={`Filter ${categoryName} themes...`}
-          />
-        </div>
-      )}
+
 
       {/* Subcategory Grid */}
       {filteredSubcategories.length === 0 ? (

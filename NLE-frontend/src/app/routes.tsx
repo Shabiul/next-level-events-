@@ -70,6 +70,10 @@ export const AppRoutes: React.FC = () => {
   const cartOpen = location.pathname === '/cart';
 
   const handleSelectCategory = (catName: string, subName?: string) => {
+    if (catName.toUpperCase() === 'ALL' || catName.toLowerCase() === 'explore') {
+      navigate('/explore');
+      return;
+    }
     if (subName && subName !== '__all__') {
       navigate(`/category/${encodeURIComponent(catName)}/${encodeURIComponent(subName)}`);
     } else {
@@ -145,7 +149,43 @@ export const AppRoutes: React.FC = () => {
             }
           />
 
-          {/* Occasion & Category Routes */}
+          {/* Services, Activities, Occasion & Category Routes */}
+          <Route
+            path="/services/:categoryName"
+            element={
+              <OccasionPage
+                onViewProduct={handleViewProduct}
+                onBookProduct={handleBookProduct}
+              />
+            }
+          />
+          <Route
+            path="/services/:categoryName/:subcategoryName"
+            element={
+              <OccasionPage
+                onViewProduct={handleViewProduct}
+                onBookProduct={handleBookProduct}
+              />
+            }
+          />
+          <Route
+            path="/activities"
+            element={
+              <OccasionPage
+                onViewProduct={handleViewProduct}
+                onBookProduct={handleBookProduct}
+              />
+            }
+          />
+          <Route
+            path="/activities/:subcategoryName"
+            element={
+              <OccasionPage
+                onViewProduct={handleViewProduct}
+                onBookProduct={handleBookProduct}
+              />
+            }
+          />
           <Route
             path="/category/:categoryName"
             element={

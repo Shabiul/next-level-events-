@@ -1,498 +1,455 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Sparkles,
-  ArrowRight,
   Phone,
   Mail,
   MessageSquare,
   MapPin,
   CheckCircle2,
   Send,
-  HeartHandshake,
+  Copy,
+  Check,
+  Clock,
+  ChevronDown,
+  ShieldCheck,
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { SeoHead } from '../../components/layout/SeoHead';
 
 const SUPPORT_PHONE_PRIMARY = '+917022058460';
-const SUPPORT_PHONE_SECONDARY = '+919743200712';
+const SUPPORT_PHONE_SECONDARY = '+918660924212';
 const SUPPORT_EMAIL = 'thedecorparty.team@gmail.com';
-const WHATSAPP_DEFAULT_MSG = "Hi TheDecorParty! I'd like to plan an event. Can you help me with the details?";
+const WHATSAPP_DEFAULT_MSG =
+  "Hi TheDecorParty! I'd like to plan an event. Can you help me with the details?";
 
-const EVENT_TYPES = [
-  'Birthday Milestone',
-  'Romantic Cabana / Proposal',
-  'Baby Shower / Cradle',
-  'Welcome Baby',
+const OCCASION_TYPES = [
+  'Milestone Birthday',
+  'Romantic Proposal & Cabana',
+  'Baby Shower / Welcome Baby',
   'Anniversary Celebration',
   'Kids Theme Party',
-  'Terrace / Rooftop Setup',
+  'Pre & Post Wedding Decor',
   'Custom Experience',
 ];
 
-const BENGALURU_HUBS = [
-  'Indiranagar',
-  'Koramangala',
-  'Whitefield',
-  'HSR Layout',
-  'Jayanagar',
-  'JP Nagar',
-  'Sarjapur Road',
-  'Hebbal & Yelahanka',
-  'Electronic City',
-  'All Bengaluru & Suburbs',
+const SERVICE_PINCODES = [
+  '560038 (Indiranagar)',
+  '560034 (Koramangala)',
+  '560066 (Whitefield)',
+  '560102 (HSR Layout)',
+  '560011 (Jayanagar)',
+  '560078 (JP Nagar)',
+  '560103 (Sarjapur)',
+  '560024 (Hebbal)',
+  '560100 (E-City)',
+  'All Bengaluru Pincodes Covered',
 ];
 
 export const ContactPage: React.FC = () => {
-  const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     name: '',
-    phone: '',
-    eventType: 'Birthday Milestone',
-    date: '',
-    location: '',
-    idea: '',
+    contact: '', // Email or WhatsApp
+    occasion: 'Milestone Birthday',
+    message: '',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [showPincodes, setShowPincodes] = useState(false);
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(SUPPORT_EMAIL);
+    setCopiedEmail(true);
+    toast.success('Email copied to clipboard!');
+    setTimeout(() => setCopiedEmail(false), 2500);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name.trim() || !formData.phone.trim()) {
-      toast.error('Please provide your name and phone/WhatsApp number');
+    if (!formData.name.trim() || !formData.contact.trim()) {
+      toast.error('Please provide your name and email/WhatsApp number');
       return;
     }
 
     setIsSubmitting(true);
 
-    const message = `Hi TheDecorParty! I'd like to plan an event:%0A%0A• *Name:* ${encodeURIComponent(
+    const waMsg = `Hi TheDecorParty! New Enquiry:%0A%0A• *Name:* ${encodeURIComponent(
       formData.name
-    )}%0A• *Phone:* ${encodeURIComponent(formData.phone)}%0A• *Event Type:* ${encodeURIComponent(
-      formData.eventType
-    )}%0A• *Date:* ${encodeURIComponent(formData.date || 'To be decided')}%0A• *Location:* ${encodeURIComponent(
-      formData.location || 'Bengaluru'
-    )}%0A• *My Idea/Request:* ${encodeURIComponent(formData.idea || 'Need guidance from your stylist')}`;
+    )}%0A• *Contact:* ${encodeURIComponent(
+      formData.contact
+    )}%0A• *Occasion:* ${encodeURIComponent(
+      formData.occasion
+    )}%0A• *Message:* ${encodeURIComponent(
+      formData.message || 'I would like to discuss styling options.'
+    )}`;
 
-    const waUrl = `https://wa.me/${SUPPORT_PHONE_PRIMARY.replace('+', '')}?text=${message}`;
+    const waUrl = `https://wa.me/${SUPPORT_PHONE_PRIMARY.replace(
+      '+',
+      ''
+    )}?text=${waMsg}`;
 
     setTimeout(() => {
       setIsSubmitting(false);
-      toast.success('Enquiry received! Connecting you to our lead stylist on WhatsApp...');
+      toast.success(
+        'Enquiry submitted! Opening WhatsApp for instant stylist chat...'
+      );
       window.open(waUrl, '_blank', 'noopener,noreferrer');
     }, 400);
-  };
-
-  const scrollToEnquiry = () => {
-    const el = document.getElementById('enquiry-form');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
   };
 
   return (
     <>
       <SeoHead
-        title="Contact Us — TheDecorParty | Plan Your Celebration"
-        description="Have a celebration coming up in Bengaluru? Tell us what you're imagining. Reach out via WhatsApp, phone, or direct enquiry."
+        title="Contact Us — TheDecorParty | Modern Bespoke Event Styling"
+        description="Connect with Bengaluru's premier event styling team. Fast responses under 15 minutes, direct WhatsApp hotlines, and instant quotes."
       />
 
-      <div className="flex flex-col w-full bg-[#FAF8F5] dark:bg-[#1B101F] text-[#34203C] dark:text-[#FAF8F5] font-sans antialiased transition-colors overflow-hidden">
+      <div className="w-full min-h-screen bg-[#34203C] text-[#C9BEAB] font-sans antialiased selection:bg-[#A78A9F]/30 pb-16">
         
         {/* ========================================================================= */}
-        {/* 01 — HERO                                                                 */}
+        {/* SECTION 1 — HERO SPLIT FORM & EDITORIAL STATEMENT                        */}
         {/* ========================================================================= */}
-        <section
-          data-nav-theme="light"
-          className="relative w-full pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16 px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1440px] mx-auto text-center"
-        >
-          {/* Ambient Glows */}
-          <div className="absolute top-10 left-1/3 w-80 h-80 rounded-full bg-[#A78A9F]/12 blur-3xl pointer-events-none -z-10" />
-          <div className="absolute top-32 right-1/4 w-80 h-80 rounded-full bg-[#C9BEAB]/15 blur-3xl pointer-events-none -z-10" />
-
-          <div className="max-w-3xl mx-auto flex flex-col items-center">
-            {/* Eyebrow */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#34203C]/06 dark:bg-white/10 border border-[#34203C]/10 dark:border-white/15 text-xs font-bold uppercase tracking-[0.22em] text-[#725D75] dark:text-[#C9BEAB] mb-4 sm:mb-6"
-            >
-              <Sparkles size={13} className="text-[#A78A9F]" />
-              <span>CONTACT THEDECORPARTY</span>
-            </motion.div>
-
-            {/* H1 */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-normal tracking-tight text-[#34203C] dark:text-[#FAF8F5] leading-[1.12] mb-5 uppercase"
-            >
-              Let's plan something{' '}
-              <span className="font-serif italic text-[#725D75] dark:text-[#C9BEAB] lowercase">
-                beautiful.
-              </span>
-            </motion.h1>
-
-            {/* Text */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-sm sm:text-base md:text-lg font-light leading-relaxed text-[#725D75] dark:text-[#C8B5C3] max-w-xl mb-8"
-            >
-              Have a celebration coming up?
-              <br />
-              Tell us what you're imagining. We'll take it from there.
-            </motion.p>
-
-            {/* CTA */}
-            <motion.button
-              type="button"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              onClick={scrollToEnquiry}
-              className="inline-flex items-center gap-2 rounded-full bg-[#34203C] hover:bg-[#483250] text-[#FAF8F5] dark:bg-[#FAF8F5] dark:text-[#34203C] dark:hover:bg-[#C9BEAB] px-8 sm:px-10 py-3.5 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-lg hover:scale-103 active:scale-95 transition-all cursor-pointer"
-            >
-              <span>START PLANNING</span>
-              <ArrowRight size={15} />
-            </motion.button>
-          </div>
-        </section>
-
-        {/* ========================================================================= */}
-        {/* 02 & 03 — ENQUIRY FORM & DIRECT CONTACT (Side by Side Grid)              */}
-        {/* ========================================================================= */}
-        <section
-          id="enquiry-form"
-          data-nav-theme="light"
-          className="relative w-full py-12 sm:py-16 px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1440px] mx-auto"
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        <section data-nav-theme="dark" className="w-full max-w-7xl mx-auto pt-10 sm:pt-14 pb-12 px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
             
-            {/* 02 — ENQUIRY FORM (Span 7) */}
+            {/* LEFT COLUMN (lg:col-span-6 — Editorial Statement & Primary Contact) */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-              className="lg:col-span-7 rounded-[32px] sm:rounded-[36px] border border-[#DDD5C7] dark:border-[#483250] bg-[#FAF8F5] dark:bg-[#201325] p-6 sm:p-8 md:p-10 shadow-xl"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="lg:col-span-6 flex flex-col justify-between p-6 sm:p-10 rounded-[28px] bg-[#483250]/40 border border-[#A78A9F]/20 backdrop-blur-md relative overflow-hidden text-left"
             >
-              {/* Eyebrow & Headline */}
-              <div className="mb-6 sm:mb-8 text-left">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#725D75] dark:text-[#A78A9F] mb-2">
-                  <span className="w-5 h-[1.5px] bg-[#A78A9F]" />
-                  <span>TELL US A LITTLE ABOUT IT</span>
+              {/* Subtle Background Glow */}
+              <div className="absolute top-0 left-0 w-72 h-72 bg-[#A78A9F]/10 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="relative z-10 flex flex-col items-start text-left">
+                {/* Pill Badge */}
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#483250] border border-[#A78A9F]/40 text-[#A78A9F] font-bold text-xs uppercase tracking-[0.25em] shadow-md mb-6">
+                  <Sparkles size={13} className="text-[#A78A9F]" />
+                  <span>CONTACT US</span>
                 </div>
-                <h2 className="font-serif text-2xl sm:text-3xl font-normal text-[#34203C] dark:text-[#FAF8F5] tracking-tight">
-                  A few details are all we need to get started.
-                </h2>
+
+                {/* Serif Headline */}
+                <h1 className="font-serif text-4xl sm:text-5xl lg:text-[54px] font-bold leading-[1.12] text-[#C9BEAB] mb-6 tracking-tight">
+                  Let’s start the <br className="hidden sm:inline" />
+                  <span className="font-serif italic text-white">conversation.</span>
+                </h1>
+
+                {/* Sub-copy */}
+                <p className="text-base sm:text-lg text-[#C8B5C3] font-light leading-relaxed max-w-lg mb-8">
+                  Whether you are planning a milestone birthday, a romantic proposal, or a bespoke celebration, our master stylists are ready to craft your dream setup.
+                </p>
+
+                {/* Micro guarantees */}
+                <div className="flex flex-wrap gap-4 text-xs font-semibold text-[#A78A9F] mb-8">
+                  <span className="flex items-center gap-1.5 bg-[#34203C]/80 px-3.5 py-1.5 rounded-full border border-[#A78A9F]/30">
+                    <ShieldCheck size={14} className="text-[#C9BEAB]" />
+                    <span>Zero Hidden Fees</span>
+                  </span>
+                  <span className="flex items-center gap-1.5 bg-[#34203C]/80 px-3.5 py-1.5 rounded-full border border-[#A78A9F]/30">
+                    <CheckCircle2 size={14} className="text-[#C9BEAB]" />
+                    <span>100% Picture Match</span>
+                  </span>
+                </div>
               </div>
 
-              {/* Minimal Form */}
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-5 text-left">
-                {/* 1. Name & Phone */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#725D75] dark:text-[#C9BEAB]">
-                      Your Name *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Ananya Sharma"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full rounded-2xl border border-[#DDD5C7] dark:border-[#483250] bg-white dark:bg-[#180E1C] px-4 py-3 text-sm text-[#34203C] dark:text-[#FAF8F5] placeholder:text-[#725D75]/50 focus:border-[#A78A9F] focus:outline-none focus:ring-1 focus:ring-[#A78A9F] transition-all"
-                    />
+              {/* Lead Stylist Floating Glass Contact Chip */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="relative z-10 bg-[#483250]/80 border border-[#A78A9F]/30 rounded-2xl p-4 sm:p-5 flex items-center gap-4 shadow-xl backdrop-blur-md"
+              >
+                <div className="relative flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#A78A9F] to-[#725D75] flex items-center justify-center font-serif text-lg font-bold text-white border border-white/20">
+                    PB
                   </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#725D75] dark:text-[#C9BEAB]">
-                      Phone / WhatsApp *
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="+91 98765 43210"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full rounded-2xl border border-[#DDD5C7] dark:border-[#483250] bg-white dark:bg-[#180E1C] px-4 py-3 text-sm text-[#34203C] dark:text-[#FAF8F5] placeholder:text-[#725D75]/50 focus:border-[#A78A9F] focus:outline-none focus:ring-1 focus:ring-[#A78A9F] transition-all"
-                    />
-                  </div>
+                  <span className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-[#25D366] ring-2 ring-[#34203C]" />
                 </div>
 
-                {/* 2. Event Type Selection */}
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-[#725D75] dark:text-[#C9BEAB]">
-                    Event Type
+                <div className="flex flex-col text-left">
+                  <span className="font-serif text-base font-bold text-[#C9BEAB]">
+                    Prashanth B S &amp; Styling Team
+                  </span>
+                  <div className="flex items-center gap-2 text-xs text-[#A78A9F] font-medium mt-0.5">
+                    <Clock size={12} className="text-[#25D366]" />
+                    <span>Average response: &lt; 15 mins</span>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* RIGHT COLUMN (lg:col-span-6 — Floating Contact Form) */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="lg:col-span-6 bg-[#34203C] border border-[#A78A9F]/30 rounded-[28px] p-6 sm:p-10 shadow-2xl flex flex-col justify-between relative overflow-hidden"
+            >
+              <div className="relative z-10 text-left mb-6">
+                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#C9BEAB] tracking-tight mb-2">
+                  Send Us a Message
+                </h2>
+                <p className="text-xs sm:text-sm text-[#725D75] font-light">
+                  Fill in your details below and our creative team will connect with you right away.
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="relative z-10 flex flex-col gap-5 text-left">
+                {/* Name */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#C9BEAB]">
+                    Your Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Ananya Sharma"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full rounded-xl bg-[#483250] border border-[#725D75]/50 px-4 py-3.5 text-sm text-[#C9BEAB] placeholder:text-[#725D75] focus:border-[#A78A9F] focus:outline-none focus:ring-1 focus:ring-[#A78A9F] transition-all"
+                  />
+                </div>
+
+                {/* Email / WhatsApp Number */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#C9BEAB]">
+                    Email / WhatsApp Number *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. +91 98765 43210 or name@gmail.com"
+                    value={formData.contact}
+                    onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
+                    className="w-full rounded-xl bg-[#483250] border border-[#725D75]/50 px-4 py-3.5 text-sm text-[#C9BEAB] placeholder:text-[#725D75] focus:border-[#A78A9F] focus:outline-none focus:ring-1 focus:ring-[#A78A9F] transition-all"
+                  />
+                </div>
+
+                {/* Occasion Type */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#C9BEAB]">
+                    Occasion Type
                   </label>
                   <select
-                    value={formData.eventType}
-                    onChange={(e) => setFormData({ ...formData, eventType: e.target.value })}
-                    className="w-full rounded-2xl border border-[#DDD5C7] dark:border-[#483250] bg-white dark:bg-[#180E1C] px-4 py-3 text-sm text-[#34203C] dark:text-[#FAF8F5] focus:border-[#A78A9F] focus:outline-none focus:ring-1 focus:ring-[#A78A9F] transition-all cursor-pointer"
+                    value={formData.occasion}
+                    onChange={(e) => setFormData({ ...formData, occasion: e.target.value })}
+                    className="w-full rounded-xl bg-[#483250] border border-[#725D75]/50 px-4 py-3.5 text-sm text-[#C9BEAB] focus:border-[#A78A9F] focus:outline-none focus:ring-1 focus:ring-[#A78A9F] transition-all cursor-pointer"
                   >
-                    {EVENT_TYPES.map((type) => (
-                      <option key={type} value={type} className="bg-white dark:bg-[#201325] text-[#34203C] dark:text-[#FAF8F5]">
+                    {OCCASION_TYPES.map((type) => (
+                      <option key={type} value={type} className="bg-[#483250] text-[#C9BEAB]">
                         {type}
                       </option>
                     ))}
                   </select>
                 </div>
 
-                {/* 3. Date & Location */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#725D75] dark:text-[#C9BEAB]">
-                      Preferred Date
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="date"
-                        value={formData.date}
-                        onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                        className="w-full rounded-2xl border border-[#DDD5C7] dark:border-[#483250] bg-white dark:bg-[#180E1C] px-4 py-3 text-sm text-[#34203C] dark:text-[#FAF8F5] focus:border-[#A78A9F] focus:outline-none focus:ring-1 focus:ring-[#A78A9F] transition-all"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-[#725D75] dark:text-[#C9BEAB]">
-                      Area / Location (Bengaluru)
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Indiranagar, Home terrace"
-                      value={formData.location}
-                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                      className="w-full rounded-2xl border border-[#DDD5C7] dark:border-[#483250] bg-white dark:bg-[#180E1C] px-4 py-3 text-sm text-[#34203C] dark:text-[#FAF8F5] placeholder:text-[#725D75]/50 focus:border-[#A78A9F] focus:outline-none focus:ring-1 focus:ring-[#A78A9F] transition-all"
-                    />
-                  </div>
-                </div>
-
-                {/* 4. Tell us your idea */}
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-[#725D75] dark:text-[#C9BEAB]">
-                    Tell us your idea / Special requests
+                {/* Message */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#C9BEAB]">
+                    Your Message / Special Requests
                   </label>
                   <textarea
-                    rows={3}
-                    placeholder="Tell us about the surprise, preferred color palette, theme inspirations, or budget range..."
-                    value={formData.idea}
-                    onChange={(e) => setFormData({ ...formData, idea: e.target.value })}
-                    className="w-full rounded-2xl border border-[#DDD5C7] dark:border-[#483250] bg-white dark:bg-[#180E1C] px-4 py-3 text-sm text-[#34203C] dark:text-[#FAF8F5] placeholder:text-[#725D75]/50 focus:border-[#A78A9F] focus:outline-none focus:ring-1 focus:ring-[#A78A9F] transition-all resize-none"
+                    rows={4}
+                    placeholder="Tell us about your event date, preferred colors, theme ideas, or venue details..."
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    className="w-full rounded-xl bg-[#483250] border border-[#725D75]/50 px-4 py-3.5 text-sm text-[#C9BEAB] placeholder:text-[#725D75] focus:border-[#A78A9F] focus:outline-none focus:ring-1 focus:ring-[#A78A9F] transition-all resize-none"
                   />
                 </div>
 
-                {/* CTA Submit Button */}
-                <button
+                {/* Submit Button */}
+                <motion.button
+                  whileHover={{ scale: 1.015 }}
+                  whileTap={{ scale: 0.985 }}
                   type="submit"
                   disabled={isSubmitting}
-                  className="mt-2 flex w-full items-center justify-center gap-2 rounded-full bg-[#34203C] hover:bg-[#483250] dark:bg-[#C9BEAB] dark:hover:bg-[#FAF8F5] text-[#FAF8F5] dark:text-[#25172C] py-4 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-lg hover:scale-[1.01] active:scale-[0.98] transition-all cursor-pointer disabled:opacity-70"
+                  className="mt-2 w-full flex items-center justify-center gap-3 rounded-full bg-[#A78A9F] hover:bg-[#C9BEAB] text-[#34203C] py-4 text-sm font-extrabold uppercase tracking-wider shadow-lg hover:shadow-[#A78A9F]/20 transition-all cursor-pointer disabled:opacity-70"
                 >
-                  <Send size={15} />
-                  <span>{isSubmitting ? 'SENDING ENQUIRY...' : 'SEND ENQUIRY →'}</span>
-                </button>
+                  <Send size={16} />
+                  <span>{isSubmitting ? 'SENDING...' : 'SEND MESSAGE →'}</span>
+                </motion.button>
               </form>
-            </motion.div>
-
-            {/* 03 — DIRECT CONTACT (Span 5) */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.15 }}
-              className="lg:col-span-5 flex flex-col gap-6 text-left"
-            >
-              {/* Direct Contact Card */}
-              <div className="rounded-[32px] sm:rounded-[36px] border border-[#DDD5C7] dark:border-[#483250] bg-[#FAF8F5] dark:bg-[#201325] p-6 sm:p-8 shadow-xl flex flex-col gap-6">
-                <div>
-                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#725D75] dark:text-[#A78A9F] mb-2">
-                    <span className="w-5 h-[1.5px] bg-[#A78A9F]" />
-                    <span>WANT TO TALK NOW?</span>
-                  </div>
-                  <h2 className="font-serif text-2xl sm:text-3xl font-normal text-[#34203C] dark:text-[#FAF8F5] tracking-tight">
-                    Sometimes, a conversation is easier.
-                  </h2>
-                </div>
-
-                {/* Phone Numbers */}
-                <div className="flex flex-col gap-3">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#725D75] dark:text-[#C9BEAB]">
-                    Direct Call / Support:
-                  </span>
-                  <a
-                    href={`tel:${SUPPORT_PHONE_PRIMARY}`}
-                    className="flex items-center gap-3 p-3.5 rounded-2xl border border-[#DDD5C7] dark:border-[#483250] bg-white dark:bg-[#180E1C] hover:border-[#A78A9F] hover:shadow-md transition-all group"
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#34203C]/08 dark:bg-white/10 text-[#34203C] dark:text-[#C9BEAB] group-hover:bg-[#A78A9F] group-hover:text-white transition-colors">
-                      <Phone size={16} />
-                    </div>
-                    <div className="flex flex-col leading-none">
-                      <span className="font-serif text-sm sm:text-base font-bold text-[#34203C] dark:text-[#FAF8F5]">
-                        +91 70220 58460
-                      </span>
-                      <span className="text-[11px] text-[#725D75] dark:text-[#C8B5C3] mt-1 font-light">
-                        Primary Styling Desk
-                      </span>
-                    </div>
-                  </a>
-
-                  <a
-                    href={`tel:${SUPPORT_PHONE_SECONDARY}`}
-                    className="flex items-center gap-3 p-3.5 rounded-2xl border border-[#DDD5C7] dark:border-[#483250] bg-white dark:bg-[#180E1C] hover:border-[#A78A9F] hover:shadow-md transition-all group"
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#34203C]/08 dark:bg-white/10 text-[#34203C] dark:text-[#C9BEAB] group-hover:bg-[#A78A9F] group-hover:text-white transition-colors">
-                      <Phone size={16} />
-                    </div>
-                    <div className="flex flex-col leading-none">
-                      <span className="font-serif text-sm sm:text-base font-bold text-[#34203C] dark:text-[#FAF8F5]">
-                        +91 97432 00712
-                      </span>
-                      <span className="text-[11px] text-[#725D75] dark:text-[#C8B5C3] mt-1 font-light">
-                        Operations &amp; Express Setup
-                      </span>
-                    </div>
-                  </a>
-                </div>
-
-                {/* Email */}
-                <div className="flex flex-col gap-2">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#725D75] dark:text-[#C9BEAB]">
-                    Email Inquiries:
-                  </span>
-                  <a
-                    href={`mailto:${SUPPORT_EMAIL}`}
-                    className="flex items-center gap-3 p-3.5 rounded-2xl border border-[#DDD5C7] dark:border-[#483250] bg-white dark:bg-[#180E1C] hover:border-[#A78A9F] hover:shadow-md transition-all group"
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#34203C]/08 dark:bg-white/10 text-[#34203C] dark:text-[#C9BEAB] group-hover:bg-[#A78A9F] group-hover:text-white transition-colors">
-                      <Mail size={16} />
-                    </div>
-                    <div className="flex flex-col leading-none">
-                      <span className="font-serif text-xs sm:text-sm font-semibold text-[#34203C] dark:text-[#FAF8F5]">
-                        {SUPPORT_EMAIL}
-                      </span>
-                      <span className="text-[11px] text-[#725D75] dark:text-[#C8B5C3] mt-1 font-light">
-                        Replies within 2 hours
-                      </span>
-                    </div>
-                  </a>
-                </div>
-
-                {/* WhatsApp Action Button */}
-                <a
-                  href={`https://wa.me/${SUPPORT_PHONE_PRIMARY.replace('+', '')}?text=${encodeURIComponent(
-                    WHATSAPP_DEFAULT_MSG
-                  )}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center justify-center gap-2.5 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-md hover:scale-102 active:scale-95 transition-all"
-                >
-                  <MessageSquare size={16} />
-                  <span>WHATSAPP US →</span>
-                </a>
-              </div>
-
-              {/* 04 — LOCATION CARD */}
-              <div className="rounded-[32px] sm:rounded-[36px] border border-[#DDD5C7] dark:border-[#483250] bg-[#FAF8F5] dark:bg-[#201325] p-6 sm:p-8 shadow-xl flex flex-col gap-4">
-                <div>
-                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#725D75] dark:text-[#A78A9F] mb-1.5">
-                    <MapPin size={14} className="text-[#A78A9F]" />
-                    <span>BASED IN BENGALURU</span>
-                  </div>
-                  <h3 className="font-serif text-xl sm:text-2xl font-normal text-[#34203C] dark:text-[#FAF8F5]">
-                    Bengaluru, Karnataka, India
-                  </h3>
-                  <p className="text-xs sm:text-sm text-[#725D75] dark:text-[#C8B5C3] font-light mt-1 leading-relaxed">
-                    Creating beautiful spaces and memorable celebrations across Bengaluru.
-                  </p>
-                </div>
-
-                {/* Clean Bengaluru Hub Badges */}
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {BENGALURU_HUBS.map((hub) => (
-                    <span
-                      key={hub}
-                      className="rounded-full border border-[#DDD5C7] dark:border-[#483250] bg-white dark:bg-[#180E1C] px-3 py-1 text-[11px] font-medium text-[#34203C] dark:text-[#FAF8F5]"
-                    >
-                      {hub}
-                    </span>
-                  ))}
-                </div>
-              </div>
             </motion.div>
           </div>
         </section>
 
         {/* ========================================================================= */}
-        {/* 05 — FINAL CTA                                                            */}
+        {/* SECTION 2 — DIRECT CONTACT & LOCATION HUB (3-Card Grid)                   */}
         {/* ========================================================================= */}
-        <section
-          data-nav-theme="dark"
-          className="relative w-full py-16 sm:py-20 lg:py-24 px-4 sm:px-6 md:px-8 lg:px-12 text-[#FAF8F5] text-center border-t border-white/10"
-          style={{
-            background: 'linear-gradient(145deg, #26112A 0%, #371A3F 55%, #46224F 100%)',
-          }}
-        >
-          {/* Ambient Glows */}
-          <div className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-[#A78A9F]/10 blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-[#483250]/20 blur-3xl pointer-events-none" />
+        <section data-nav-theme="dark" className="w-full max-w-7xl mx-auto py-12 px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            {/* Card 1: Direct Stylist Hotline */}
+            <motion.div
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="bg-[#34203C] border border-[#A78A9F]/20 rounded-2xl p-6 shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between text-left group"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-[#483250] border border-[#A78A9F]/30 flex items-center justify-center text-[#A78A9F] group-hover:bg-[#A78A9F] group-hover:text-[#34203C] transition-colors">
+                    <Phone size={22} />
+                  </div>
+                  <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#25D366]/15 border border-[#25D366]/30 text-[#25D366] text-[11px] font-bold">
+                    <span className="w-2 h-2 rounded-full bg-[#25D366] animate-pulse" />
+                    Online for instant quotes
+                  </span>
+                </div>
 
-          <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center gap-5 sm:gap-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs font-bold uppercase tracking-[0.22em] text-[#C9BEAB]">
-              <HeartHandshake size={13} className="text-[#C9BEAB]" />
-              <span>EXPERIENCE THE DIFFERENCE</span>
-            </div>
+                <h3 className="font-serif text-xl font-bold text-[#C9BEAB] mb-2">
+                  Direct Stylist Hotline
+                </h3>
 
-            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-normal tracking-tight leading-[1.15] text-[#FAF8F5] uppercase">
-              YOU BRING THE OCCASION.{' '}
-              <span className="font-serif italic text-[#C9BEAB] block sm:inline lowercase">
-                We'll create the setting.
-              </span>
-            </h2>
+                <p className="text-xs text-[#725D75] leading-relaxed mb-4">
+                  Call or WhatsApp our team directly for instant pricing, custom themes, and same-day availability.
+                </p>
 
-            <p className="text-xs sm:text-sm md:text-base font-light text-[#F6EFF4]/85 max-w-xl leading-relaxed">
-              From milestone birthdays to rooftop proposals, our master stylists are ready to bring your dream celebration to life tonight.
-            </p>
+                <div className="flex flex-col gap-2 mb-6">
+                  <a
+                    href={`tel:${SUPPORT_PHONE_PRIMARY}`}
+                    className="text-sm font-bold text-[#C9BEAB] hover:text-[#A78A9F] transition-colors flex items-center gap-2"
+                  >
+                    <span>+91 70220 58460</span>
+                    <span className="text-[10px] text-[#725D75] font-normal uppercase">(Primary)</span>
+                  </a>
+                  <a
+                    href={`tel:${SUPPORT_PHONE_SECONDARY}`}
+                    className="text-sm font-bold text-[#C9BEAB] hover:text-[#A78A9F] transition-colors flex items-center gap-2"
+                  >
+                    <span>+91 86609 24212</span>
+                    <span className="text-[10px] text-[#725D75] font-normal uppercase">(Operations)</span>
+                  </a>
+                </div>
+              </div>
 
-            <div className="mt-3 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-              <button
-                type="button"
-                onClick={() => navigate('/explore')}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#A78A9F] to-[#725D75] hover:from-[#C9BEAB] hover:to-[#A78A9F] px-8 sm:px-10 py-3.5 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#FAF8F5] hover:text-[#25172C] shadow-xl hover:scale-103 active:scale-95 transition-all cursor-pointer"
+              <a
+                href={`https://wa.me/${SUPPORT_PHONE_PRIMARY.replace('+', '')}?text=${encodeURIComponent(
+                  WHATSAPP_DEFAULT_MSG
+                )}`}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full flex items-center justify-center gap-2.5 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white py-3 text-xs font-bold uppercase tracking-wider shadow-md transition-all"
               >
-                <span>PLAN YOUR CELEBRATION</span>
-                <ArrowRight size={15} />
-              </button>
+                <MessageSquare size={16} />
+                <span>CHAT ON WHATSAPP →</span>
+              </a>
+            </motion.div>
 
-              <button
-                type="button"
-                onClick={scrollToEnquiry}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white transition-all cursor-pointer"
+            {/* Card 2: Studio Location & Coverage */}
+            <motion.div
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="bg-[#34203C] border border-[#A78A9F]/20 rounded-2xl p-6 shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between text-left group"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-[#483250] border border-[#A78A9F]/30 flex items-center justify-center text-[#A78A9F] group-hover:bg-[#A78A9F] group-hover:text-[#34203C] transition-colors">
+                    <MapPin size={22} />
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-[#483250] border border-[#A78A9F]/30 text-[#C9BEAB] text-[11px] font-bold">
+                    HQ: Bengaluru
+                  </span>
+                </div>
+
+                <h3 className="font-serif text-xl font-bold text-[#C9BEAB] mb-2">
+                  Studio Location &amp; Coverage
+                </h3>
+
+                <p className="text-xs text-[#725D75] leading-relaxed mb-4">
+                  Serving Indiranagar, Koramangala, Whitefield, HSR Layout, Jayanagar, and all neighborhoods across Bengaluru.
+                </p>
+              </div>
+
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setShowPincodes(!showPincodes)}
+                  className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl bg-[#483250] border border-[#A78A9F]/30 text-xs font-bold text-[#C9BEAB] hover:text-white transition-colors cursor-pointer mb-2"
+                >
+                  <span>View Service Pincodes</span>
+                  <ChevronDown
+                    size={14}
+                    className={`transition-transform duration-300 ${
+                      showPincodes ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+
+                <AnimatePresence>
+                  {showPincodes && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="overflow-hidden bg-[#483250]/70 rounded-xl p-3 border border-[#A78A9F]/20 text-[11px] text-[#C8B5C3] grid grid-cols-2 gap-1.5"
+                    >
+                      {SERVICE_PINCODES.map((pin) => (
+                        <span key={pin} className="text-left truncate">
+                          • {pin}
+                        </span>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+
+            {/* Card 3: Email & Enquiries */}
+            <motion.div
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="bg-[#34203C] border border-[#A78A9F]/20 rounded-2xl p-6 shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between text-left group"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-[#483250] border border-[#A78A9F]/30 flex items-center justify-center text-[#A78A9F] group-hover:bg-[#A78A9F] group-hover:text-[#34203C] transition-colors">
+                    <Mail size={22} />
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-[#483250] border border-[#A78A9F]/30 text-[#A78A9F] text-[11px] font-bold">
+                    Official Inquiries
+                  </span>
+                </div>
+
+                <h3 className="font-serif text-xl font-bold text-[#C9BEAB] mb-2">
+                  Email &amp; Enquiries
+                </h3>
+
+                <p className="text-xs text-[#725D75] leading-relaxed mb-4">
+                  For corporate bookings, vendor partnerships, or detailed mood boards, email our design leads directly.
+                </p>
+
+                <div className="p-3.5 rounded-xl bg-[#483250] border border-[#725D75]/40 flex items-center justify-between mb-4">
+                  <span className="text-xs font-bold text-[#C9BEAB] truncate">
+                    {SUPPORT_EMAIL}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleCopyEmail}
+                    className="p-1.5 rounded-lg bg-[#34203C] hover:bg-[#A78A9F] text-[#C9BEAB] hover:text-[#34203C] transition-colors cursor-pointer"
+                    title="Copy Email"
+                  >
+                    {copiedEmail ? <Check size={14} className="text-[#25D366]" /> : <Copy size={14} />}
+                  </button>
+                </div>
+              </div>
+
+              <a
+                href={`mailto:${SUPPORT_EMAIL}`}
+                className="w-full flex items-center justify-center gap-2 rounded-full bg-[#483250] hover:bg-[#A78A9F] border border-[#A78A9F]/40 text-[#C9BEAB] hover:text-[#34203C] py-3 text-xs font-bold uppercase tracking-wider transition-all"
               >
-                <span>SEND ENQUIRY FORM</span>
-              </button>
-            </div>
+                <span>SEND AN EMAIL →</span>
+              </a>
+            </motion.div>
 
-            {/* Micro guarantees */}
-            <div className="mt-4 pt-6 border-t border-white/10 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-[11px] sm:text-xs text-[#FAF8F5]/75 font-medium tracking-wide">
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 size={13} className="text-[#C9BEAB]" />
-                <span>Express 3-Hour Setup</span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 size={13} className="text-[#C9BEAB]" />
-                <span>100% Picture-Match</span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 size={13} className="text-[#C9BEAB]" />
-                <span>No Hidden Fees</span>
-              </span>
-            </div>
           </div>
         </section>
 

@@ -14,24 +14,33 @@ export const BookingPage: React.FC<BookingPageRouteProps> = ({ onConfirmBooking 
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
-  const { products } = useProducts();
+  const { products, loading: productsLoading } = useProducts();
 
-  const [product, setProduct] = useState<AdminProduct | null>(null);
-  const [loading, setLoading] = useState(true);
-
+  const stateProduct = (location.state as any)?.product as AdminProduct | undefined;
   const preferredMethod = (location.state as any)?.preferredMethod || 'razorpay';
   const selectedAddOns: BookingAddonSnapshot[] = (location.state as any)?.selectedAddOns || [];
 
+  const [product, setProduct] = useState<AdminProduct | null>(stateProduct || null);
+  const [loading, setLoading] = useState(!stateProduct);
+
   useEffect(() => {
+    if (stateProduct) {
+      setProduct(stateProduct);
+      setLoading(false);
+      return;
+    }
+
     if (!id) {
       if (products.length > 0) {
         setProduct(products[0]);
+        setLoading(false);
+      } else if (!productsLoading) {
         setLoading(false);
       }
       return;
     }
 
-    const found = products.find((p: AdminProduct) => p._id === id);
+    const found = products.find((p: AdminProduct) => p._id === id || p.name.toLowerCase() === id.toLowerCase());
     if (found) {
       setProduct(found);
       setLoading(false);
@@ -46,12 +55,16 @@ export const BookingPage: React.FC<BookingPageRouteProps> = ({ onConfirmBooking 
         setProduct(data);
       })
       .catch(() => {
-        setProduct(null);
+        if (products.length > 0) {
+          setProduct(products[0]);
+        } else {
+          setProduct(null);
+        }
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [id, products]);
+  }, [id, products, productsLoading, stateProduct]);
 
   if (loading) {
     return (

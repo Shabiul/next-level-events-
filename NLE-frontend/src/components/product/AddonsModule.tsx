@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, Maximize2, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { CatalogActivity, CatalogAddon, CatalogSelectionItem } from '../../types';
 import { getApiUrl } from '../../services/api.service';
 import { cn } from '../../utils/utils';
@@ -78,6 +79,7 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
   const [selectedActivityIds, setSelectedActivityIds] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<TabKey>('addons');
   const [activeCategory, setActiveCategory] = useState('All');
+  const [previewItem, setPreviewItem] = useState<{ url: string; title: string; price: string } | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -174,27 +176,27 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
 
   if (loading) {
     return (
-      <div className="rounded-xl border border-[#E8E7E3] bg-[#FAFAF8] p-4 text-xs text-[#6F6F6B] dark:bg-[#1E1E1E] dark:border-[#2E2E2E]">
+      <div className="rounded-2xl border border-[#DDD5C7] bg-[#FAF8F5] p-5 text-xs text-[#725D75] dark:bg-[#1E1E1E] dark:border-[#483250]">
         Loading add-ons and activities...
       </div>
     );
   }
 
   return (
-    <div className="space-y-4 rounded-xl border border-[#E8E7E3] bg-[#FAFAF8] p-4 sm:p-5 dark:bg-[#191919] dark:border-[#2E2E2E]">
+    <div className="space-y-4">
       {/* Tab Switcher */}
       <div className="flex items-center justify-between">
-        <div className="inline-flex rounded-full bg-[#E8E7E3] dark:bg-[#2A2A2A] p-0.5">
+        <div className="inline-flex rounded-full bg-[#E8E7E3] dark:bg-[#25172C] p-1 border border-[#DDD5C7] dark:border-[#483250]">
           {TABS.map((tab) => (
             <button
               key={tab.key}
               type="button"
               onClick={() => setActiveTab(tab.key)}
               className={cn(
-                'rounded-full px-3.5 py-1 text-xs font-semibold transition-all cursor-pointer',
+                'rounded-full px-4 py-1.5 text-xs font-bold transition-all cursor-pointer',
                 activeTab === tab.key
-                  ? 'bg-white text-[#1C1C1C] shadow-xs dark:bg-[#1E1E1E] dark:text-white'
-                  : 'text-[#6F6F6B] hover:text-[#1C1C1C] dark:text-[#A0A09C]'
+                  ? 'bg-[#34203C] text-[#FAF8F5] shadow-sm dark:bg-[#C9BEAB] dark:text-[#201325]'
+                  : 'text-[#725D75] hover:text-[#34203C] dark:text-[#C8B5C3]'
               )}
             >
               {tab.label}
@@ -202,22 +204,22 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
           ))}
         </div>
 
-        <div className="hidden sm:flex items-center gap-1">
+        <div className="hidden sm:flex items-center gap-1.5">
           <button
             type="button"
             onClick={() => scrollItems('left')}
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-[#E8E7E3] bg-white text-[#1C1C1C] hover:bg-[#F4F3F0] dark:bg-[#1E1E1E] dark:border-[#2E2E2E] dark:text-white cursor-pointer"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DDD5C7] bg-white text-[#34203C] hover:bg-[#FAF8F5] dark:bg-[#1E1E1E] dark:border-[#483250] dark:text-white cursor-pointer"
             aria-label="Scroll left"
           >
-            <ChevronLeft size={14} />
+            <ChevronLeft size={16} />
           </button>
           <button
             type="button"
             onClick={() => scrollItems('right')}
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-[#E8E7E3] bg-white text-[#1C1C1C] hover:bg-[#F4F3F0] dark:bg-[#1E1E1E] dark:border-[#2E2E2E] dark:text-white cursor-pointer"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DDD5C7] bg-white text-[#34203C] hover:bg-[#FAF8F5] dark:bg-[#1E1E1E] dark:border-[#483250] dark:text-white cursor-pointer"
             aria-label="Scroll right"
           >
-            <ChevronRight size={14} />
+            <ChevronRight size={16} />
           </button>
         </div>
       </div>
@@ -232,10 +234,10 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
               type="button"
               onClick={() => setActiveCategory(category)}
               className={cn(
-                'whitespace-nowrap rounded-full px-3 py-1 text-xs font-medium transition cursor-pointer border',
+                'whitespace-nowrap rounded-full px-3.5 py-1 text-xs font-semibold transition cursor-pointer border',
                 isActive
-                  ? 'border-[#1C1C1C] bg-[#1C1C1C] text-white dark:border-white dark:bg-white dark:text-black'
-                  : 'border-[#E8E7E3] bg-white text-[#6F6F6B] hover:border-[#1C1C1C] dark:bg-[#1E1E1E] dark:border-[#2E2E2E] dark:text-neutral-300'
+                  ? 'border-[#34203C] bg-[#34203C] text-white dark:border-[#C9BEAB] dark:bg-[#C9BEAB] dark:text-[#201325]'
+                  : 'border-[#DDD5C7] bg-white text-[#725D75] hover:border-[#34203C] dark:bg-[#1E1E1E] dark:border-[#483250] dark:text-neutral-300'
               )}
             >
               {category}
@@ -244,73 +246,141 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
         })}
       </div>
 
-      {/* Scrollable Row */}
+      {/* Scrollable Row with 3D Animated Cards */}
       <div
         ref={scrollRef}
-        className="flex gap-3 overflow-x-auto pb-2 pt-1 hide-scrollbar snap-x snap-mandatory"
+        className="flex gap-4 overflow-x-auto pb-3 pt-1 hide-scrollbar snap-x snap-mandatory perspective-[1000px]"
       >
         {visibleItems.length > 0 ? (
-          visibleItems.map((item) => {
+          visibleItems.map((item, idx) => {
             const itemId = getItemId(item);
             const selected = activeTab === 'addons'
               ? selectedAddonIds.includes(itemId)
               : selectedActivityIds.includes(itemId);
 
+            const imgUrl = item.image || 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&q=80';
+
             return (
-              <div
+              <motion.div
                 key={itemId}
-                className="flex-none w-[180px] sm:w-[200px] snap-start"
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.3, delay: Math.min(idx * 0.04, 0.3) }}
+                whileHover={{ y: -6, rotateX: 2, scale: 1.02 }}
+                className="flex-none w-[200px] sm:w-[220px] snap-start transform-gpu"
               >
-                <div className="flex h-full flex-col overflow-hidden rounded-lg border border-[#E8E7E3] bg-white dark:bg-[#1E1E1E] dark:border-[#2E2E2E] shadow-card transition-all hover:border-[#1C1C1C]">
-                  <div className="h-[110px] w-full overflow-hidden bg-[#F4F3F0] relative dark:bg-[#141414]">
+                <div className={cn(
+                  'flex h-full flex-col overflow-hidden rounded-2xl border bg-white dark:bg-[#1E1E1E] shadow-card hover:shadow-2xl transition-all duration-300',
+                  selected
+                    ? 'border-[#34203C] ring-2 ring-[#34203C]/50 dark:border-amber-400 dark:ring-amber-400/50'
+                    : 'border-[#E8E7E3] dark:border-[#2E2E2E] hover:border-[#A78A9F]'
+                )}>
+                  {/* Clickable Image for Full View */}
+                  <div
+                    className="h-[135px] w-full overflow-hidden bg-[#FAF8F5] relative dark:bg-[#141414] cursor-pointer group"
+                    onClick={() => setPreviewItem({
+                      url: imgUrl,
+                      title: item.name,
+                      price: getItemPriceLabel(item)
+                    })}
+                  >
                     <img
-                      src={item.image || 'https://via.placeholder.com/400x300?text=Experience'}
+                      src={imgUrl}
                       alt={item.name}
                       loading="lazy"
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold gap-1.5 backdrop-blur-[2px]">
+                      <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 border border-white/30 backdrop-blur-md">
+                        <Maximize2 size={13} />
+                        <span>Full View</span>
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="flex flex-1 flex-col justify-between p-2.5">
+                  <div className="flex flex-1 flex-col justify-between p-3.5">
                     <div>
-                      <h4 className="line-clamp-1 text-xs font-semibold text-[#1C1C1C] dark:text-white">
+                      <h4 className="line-clamp-1 font-serif text-xs font-bold text-[#1C1C1C] dark:text-white">
                         {item.name}
                       </h4>
-                      <p className="mt-0.5 text-xs font-bold text-[#1C1C1C] dark:text-white">
+                      <p className="mt-1 text-xs font-extrabold text-[#725D75] dark:text-[#C9BEAB]">
                         {getItemPriceLabel(item)}
                       </p>
                     </div>
 
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.04 }}
+                      whileTap={{ scale: 0.95 }}
                       type="button"
                       onClick={() => activeTab === 'addons' ? toggleAddon(itemId) : toggleActivity(itemId)}
                       className={cn(
-                        'mt-2.5 flex items-center justify-center gap-1 rounded-md py-1 px-2 text-xs font-semibold transition-all cursor-pointer',
+                        'mt-3 flex items-center justify-center gap-1.5 rounded-full py-1.5 px-3 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs',
                         selected
-                          ? 'bg-[#1C1C1C] text-white dark:bg-white dark:text-black'
-                          : 'border border-[#E8E7E3] bg-white text-[#1C1C1C] hover:bg-[#F4F3F0] dark:bg-[#262626] dark:border-[#333] dark:text-white'
+                          ? 'bg-[#34203C] text-white dark:bg-amber-400 dark:text-slate-950 shadow-md'
+                          : 'border border-[#DDD5C7] bg-[#FAF8F5] text-[#34203C] hover:bg-[#34203C] hover:text-white dark:bg-[#262626] dark:border-[#483250] dark:text-white dark:hover:bg-amber-400 dark:hover:text-slate-950'
                       )}
                     >
                       {selected ? (
                         <>
-                          <Check size={12} />
+                          <Check size={14} />
                           <span>Added</span>
                         </>
                       ) : (
                         <span>+ Add</span>
                       )}
-                    </button>
+                    </motion.button>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })
         ) : (
-          <div className="w-full rounded-lg border border-[#E8E7E3] bg-white p-4 text-xs text-[#6F6F6B] dark:bg-[#1E1E1E] dark:border-[#2E2E2E]">
+          <div className="w-full rounded-2xl border border-[#DDD5C7] bg-white p-5 text-xs text-[#725D75] dark:bg-[#1E1E1E] dark:border-[#483250]">
             No {activeTab === 'addons' ? 'add-ons' : 'activities'} available in this category.
           </div>
         )}
       </div>
+
+      {/* Full-Size Image Preview Lightbox Modal */}
+      <AnimatePresence>
+        {previewItem && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/90 backdrop-blur-md p-4"
+            onClick={() => setPreviewItem(null)}
+          >
+            <div className="absolute top-5 right-5 flex items-center gap-3 text-white">
+              <button
+                type="button"
+                onClick={() => setPreviewItem(null)}
+                className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-white transition-colors cursor-pointer"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative max-w-4xl max-h-[85vh] flex flex-col items-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={previewItem.url}
+                alt={previewItem.title}
+                className="max-h-[75vh] max-w-[90vw] object-contain rounded-2xl border border-white/20 shadow-2xl"
+              />
+              <div className="mt-4 text-center text-white">
+                <h3 className="font-serif text-xl font-bold">{previewItem.title}</h3>
+                <p className="text-sm font-semibold text-[#C9BEAB]">{previewItem.price}</p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

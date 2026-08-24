@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import {
   Sparkles,
   ArrowUpRight,
@@ -8,6 +8,7 @@ import {
   ChevronRight,
   Maximize2,
 } from 'lucide-react';
+import { cn } from '../../utils/utils';
 import { SeoHead } from '../../components/layout/SeoHead';
 import { useProducts } from '../../hooks/useProducts';
 import {
@@ -204,6 +205,187 @@ const mapCategoryToFilter = (catName?: string, name?: string): GalleryCategory =
   if (c.includes('wedding') || n.includes('wedding') || n.includes('haldi') || n.includes('mehendi') || n.includes('sangeet') || c.includes('festival')) return 'WEDDINGS';
   if (c.includes('anniversary') || n.includes('anniversary') || c.includes('romantic') || n.includes('cabana') || n.includes('candlelight') || c.includes('dinner')) return 'ANNIVERSARIES';
   return 'CUSTOM THEMES';
+};
+
+interface InteractiveGalleryCardProps {
+  item: GalleryImageItem;
+  onClick: () => void;
+}
+
+const InteractiveGalleryCard: React.FC<InteractiveGalleryCardProps> = ({ item, onClick }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  // 3D Parallax Tilt motion values with smooth spring physics
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const tiltSpringConfig = { damping: 30, stiffness: 180, mass: 0.6 };
+  const mouseXSpring = useSpring(x, tiltSpringConfig);
+  const mouseYSpring = useSpring(y, tiltSpringConfig);
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], [6, -6]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], [-6, 6]);
+
+  // Smooth magnet cursor spring follower coordinates
+  const cursorX = useMotionValue(0);
+  const cursorY = useMotionValue(0);
+  const cursorSpringConfig = { damping: 28, stiffness: 220 };
+  const badgeX = useSpring(cursorX, cursorSpringConfig);
+  const badgeY = useSpring(cursorY, cursorSpringConfig);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const posX = e.clientX - rect.left;
+    const posY = e.clientY - rect.top;
+
+    const xPct = posX / rect.width - 0.5;
+    const yPct = posY / rect.height - 0.5;
+
+    x.set(xPct);
+    y.set(yPct);
+    cursorX.set(posX);
+    cursorY.set(posY);
+    setMousePos({ x: posX, y: posY });
+  };
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      const posX = e.clientX - rect.left;
+      const posY = e.clientY - rect.top;
+      cursorX.set(posX);
+      cursorY.set(posY);
+      setMousePos({ x: posX, y: posY });
+    }
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <div style={{ perspective: 1200 }} className="break-inside-avoid w-full mb-3.5 sm:mb-4 select-none">
+      <motion.div
+        ref={cardRef}
+        layout
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.92 }}
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: 'preserve-3d',
+        }}
+        whileHover={{ y: -5, scale: 1.015 }}
+        transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={onClick}
+        className={cn(
+          'group relative cursor-pointer overflow-hidden rounded-2xl sm:rounded-3xl',
+          'border border-[#DDD5C7]/70 dark:border-[#483250]/70 bg-[#FAF8F5] dark:bg-[#25172C]',
+          'shadow-sm hover:shadow-2xl hover:border-[#C9BEAB] dark:hover:border-[#A78A9F]',
+          'transition-all duration-500 ease-out p-[1px]'
+        )}
+      >
+        {/* 1. Animated Conic Gradient Border Beam */}
+        <div className="pointer-events-none absolute inset-0 rounded-2xl sm:rounded-3xl overflow-hidden">
+          <motion.div
+            className="absolute -inset-[100%] opacity-0 group-hover:opacity-75 transition-opacity duration-700"
+            style={{
+              background:
+                'conic-gradient(from 0deg, transparent 0deg, transparent 270deg, #483250 310deg, #A78A9F 340deg, #C9BEAB 360deg)',
+            }}
+            animate={{
+              rotate: [0, 360],
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: 9,
+              ease: 'linear',
+            }}
+          />
+        </div>
+
+        {/* 2. Main Card Content Inner Body */}
+        <div className="relative z-10 w-full h-full rounded-[inherit] overflow-hidden bg-[#FAF8F5] dark:bg-[#201325]">
+          {/* Natural aspect ratio image with smooth zoom */}
+          <img
+            src={item.image}
+            alt={item.title}
+            loading="lazy"
+            className="w-full h-auto object-cover object-center transition-transform duration-700 ease-out group-hover:scale-104"
+          />
+
+          {/* 3. Follow-Cursor Radial Spotlight Glare Effect */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-screen"
+            style={{
+              background: `radial-gradient(320px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,255,255,0.28), rgba(201,190,171,0.15), transparent 70%)`,
+            }}
+          />
+
+          {/* 4. Smooth Spring Follower Magnet Cursor Badge */}
+          {isHovered && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              transition={{ duration: 0.2 }}
+              className="pointer-events-none absolute z-30 hidden sm:flex items-center gap-1.5 rounded-full bg-[#34203C]/90 text-[#FAF8F5] dark:bg-[#FAF8F5]/92 dark:text-[#34203C] px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider shadow-2xl backdrop-blur-md border border-white/20"
+              style={{
+                x: badgeX,
+                y: badgeY,
+                translateX: '-50%',
+                translateY: '-50%',
+              }}
+            >
+              <Maximize2 size={12} />
+              <span>View</span>
+            </motion.div>
+          )}
+
+          {/* 5. Soft Elegant Overlay on Hover */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-between p-3.5 sm:p-4">
+            {/* Top Right Action Icon (Mobile fallback) */}
+            <div className="self-end sm:hidden flex h-7 w-7 items-center justify-center rounded-full bg-black/40 backdrop-blur-md text-white border border-white/20">
+              <Maximize2 size={13} />
+            </div>
+
+            <div />
+
+            {/* Bottom Label, Tag & Arrow */}
+            <div className="flex items-end justify-between gap-2 pt-6">
+              <div className="flex flex-col gap-0.5">
+                <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#C9BEAB]">
+                  <Sparkles size={11} className="text-[#C9BEAB]" />
+                  <span>{item.tag}</span>
+                </span>
+                <p className="text-xs sm:text-sm font-serif font-semibold text-white leading-tight line-clamp-2">
+                  {item.title}
+                </p>
+                {item.price && (
+                  <span className="text-[11px] font-semibold text-[#DDD5C7]/90">
+                    {item.price}
+                  </span>
+                )}
+              </div>
+              <div className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-full bg-[#FAF8F5] text-[#34203C] shadow-md group-hover:scale-110 group-hover:bg-[#C9BEAB] transition-all duration-300">
+                <ArrowUpRight size={14} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
 };
 
 export const GalleryPage: React.FC = () => {
@@ -454,52 +636,11 @@ export const GalleryPage: React.FC = () => {
           >
             <AnimatePresence>
               {filteredImages.map((item, index) => (
-                <motion.div
+                <InteractiveGalleryCard
                   key={item.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.4 }}
-                  className="break-inside-avoid group relative cursor-pointer overflow-hidden rounded-2xl sm:rounded-3xl border border-[#DDD5C7]/70 dark:border-[#483250]/70 bg-[#FAF8F5] dark:bg-[#25172C] shadow-sm hover:shadow-xl transition-all duration-300"
+                  item={item}
                   onClick={() => openLightbox(index)}
-                >
-                  {/* Image with natural aspect ratio */}
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    loading="lazy"
-                    className="w-full h-auto object-cover object-center transition-transform duration-700 ease-out group-hover:scale-103"
-                  />
-
-                  {/* Soft Elegant Overlay on Hover */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-3 sm:p-4">
-                    {/* Top Right Action Icon */}
-                    <div className="self-end flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-black/40 backdrop-blur-md text-white border border-white/20">
-                      <Maximize2 size={13} />
-                    </div>
-
-                    {/* Bottom Label & Category */}
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex flex-col">
-                        <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#C9BEAB]">
-                          {item.tag}
-                        </span>
-                        <p className="text-xs sm:text-sm font-serif font-semibold text-white leading-tight line-clamp-1">
-                          {item.title}
-                        </p>
-                        {item.price && (
-                          <span className="text-[11px] font-semibold text-[#DDD5C7]/90 mt-0.5">
-                            {item.price}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#FAF8F5] text-[#34203C]">
-                        <ArrowUpRight size={12} />
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
+                />
               ))}
             </AnimatePresence>
           </motion.div>

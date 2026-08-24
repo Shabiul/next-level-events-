@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useProducts } from '../../hooks/useProducts';
 import { ProductDetailView } from '../../components/product/ProductDetailView';
 import { LoadingState, EmptyState } from '../../components/ui/EmptyState';
@@ -13,13 +13,26 @@ interface ProductPageProps {
 export const ProductPage: React.FC<ProductPageProps> = ({ onBookProduct }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { products, loading: productsLoading } = useProducts();
-  const [product, setProduct] = useState<AdminProduct | null>(null);
-  const [loading, setLoading] = useState(true);
+
+  const stateProduct = (location.state as any)?.product as AdminProduct | undefined;
+  const [product, setProduct] = useState<AdminProduct | null>(stateProduct || null);
+  const [loading, setLoading] = useState(!stateProduct);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [id]);
+
+  useEffect(() => {
+    if (stateProduct && stateProduct._id === id) {
+      setProduct(stateProduct);
+      setLoading(false);
+      return;
+    }
+
     if (!id) return;
-    const found = products.find((p: AdminProduct) => p._id === id);
+    const found = products.find((p: AdminProduct) => p._id === id || p.name.toLowerCase() === id.toLowerCase());
     if (found) {
       setProduct(found);
       setLoading(false);
@@ -39,7 +52,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({ onBookProduct }) => {
       .finally(() => {
         setLoading(false);
       });
-  }, [id, products]);
+  }, [id, products, stateProduct]);
 
   if (loading || (productsLoading && !product)) {
     return (
@@ -70,7 +83,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({ onBookProduct }) => {
     if (onBookProduct) {
       onBookProduct(p, method, selectedAddOns);
     } else {
-      navigate(`/booking/${p._id}`, { state: { preferredMethod: method, selectedAddOns } });
+      navigate(`/booking/${p._id}`, { state: { product: p, preferredMethod: method, selectedAddOns } });
     }
   };
 

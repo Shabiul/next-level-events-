@@ -36,7 +36,7 @@ export const TermsPage: React.FC<TermsPageProps> = ({ pageKey, onClose }) => {
           {loading
             ? <div className="py-10 text-center text-sm text-ink-muted">Loading...</div>
             : <div
-                className="text-sm leading-relaxed text-ink [&_h1]:mb-2 [&_h1]:mt-4 [&_h1]:text-lg [&_h1]:font-bold [&_h2]:mb-2 [&_h2]:mt-4 [&_h2]:text-base [&_h2]:font-bold [&_p]:mb-3 [&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1"
+                className="text-sm leading-relaxed text-[#1F2937] dark:text-[#E5E7EB] [&_h1]:mb-3 [&_h1]:mt-4 [&_h1]:text-lg [&_h1]:font-bold [&_h1]:text-[#111827] dark:[&_h1]:text-white [&_h2]:mb-2 [&_h2]:mt-4 [&_h2]:text-base [&_h2]:font-bold [&_h2]:text-[#111827] dark:[&_h2]:text-white [&_p]:mb-3 [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-2 [&_li]:font-medium [&_li::marker]:text-amber-500 [&_li::marker]:font-bold"
                 dangerouslySetInnerHTML={{ __html: content }}
               />
           }

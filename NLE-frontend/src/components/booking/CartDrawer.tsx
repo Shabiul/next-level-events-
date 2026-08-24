@@ -1,7 +1,9 @@
 import React from 'react';
-import { ShoppingCart, X, Minus, Plus, Trash2, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ShoppingCart, X, Minus, Plus, Trash2, ArrowRight, CalendarCheck } from 'lucide-react';
 import type { CartItem } from '../../types';
 import { Button } from '../ui/Button';
+import { resolveProductCardImage } from '../../utils/imageUtils';
 
 interface CartDrawerProps {
   items: CartItem[];
@@ -17,6 +19,24 @@ interface CartDrawerProps {
 export const CartDrawer: React.FC<CartDrawerProps> = ({
   items, total, onRemove, onUpdateQty, onClear, onClose, isLoggedIn, onLoginClick,
 }) => {
+  const navigate = useNavigate();
+
+  const handleBookNowItem = (item: CartItem) => {
+    const selectedAddOns = item.bookingDetails?.[0]?.addOns || [];
+    navigate(`/booking/${item._id}`, {
+      state: { product: item, preferredMethod: 'razorpay', selectedAddOns },
+    });
+  };
+
+  const handleBookNowAll = () => {
+    if (items.length === 0) return;
+    const primaryItem = items[0];
+    const allAddons = items.flatMap(i => (i.bookingDetails || []).flatMap(b => b.addOns || []));
+    navigate(`/booking/${primaryItem._id}`, {
+      state: { product: primaryItem, preferredMethod: 'razorpay', selectedAddOns: allAddons },
+    });
+  };
+
   const handleCheckout = () => {
     if (!isLoggedIn) { onLoginClick(); return; }
 
@@ -74,7 +94,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             <ShoppingCart size={18} />
             <span>Your Cart</span>
             {items.length > 0 && (
-              <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#1C1C1C] px-1.5 text-[10px] font-bold text-white dark:bg-white dark:text-black">
+              <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#34203C] px-1.5 text-[10px] font-bold text-white dark:bg-[#C9BEAB] dark:text-[#1B101F]">
                 {items.reduce((s, i) => s + i.qty, 0)}
               </span>
             )}
@@ -103,25 +123,37 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             <div className="flex-1 overflow-y-auto px-5 py-4">
               <div className="flex flex-col gap-3">
                 {items.map(item => (
-                  <div className="flex gap-3 rounded-xl border border-[#E8E7E3] p-3 dark:border-[#2E2E2E] bg-[#FAFAF8] dark:bg-[#181818]" key={item._id}>
-                    <img src={item.image} alt={item.name} className="h-16 w-16 flex-shrink-0 rounded-lg object-cover bg-white" />
-                    <div className="min-w-0 flex-1">
-                      <div className="truncate text-xs font-semibold text-[#1C1C1C] dark:text-white">{item.name}</div>
-                      <div className="text-[11px] text-[#6F6F6B] dark:text-[#A0A09C]">{item.categoryName}</div>
-                      <div className="mt-1 text-xs font-bold text-[#1C1C1C] dark:text-white">₹{item.price.toLocaleString('en-IN')}</div>
+                  <div className="flex gap-3 rounded-2xl border border-[#E8E7E3] p-3.5 dark:border-[#2E2E2E] bg-[#FAFAF8] dark:bg-[#181818] shadow-2xs hover:border-[#DDD5C7] transition-all" key={item._id}>
+                    <img src={resolveProductCardImage(item)} alt={item.name} className="h-18 w-18 flex-shrink-0 rounded-xl object-cover bg-white" />
+                    <div className="min-w-0 flex-1 flex flex-col justify-between">
+                      <div>
+                        <div className="truncate text-xs font-bold text-[#1C1C1C] dark:text-white">{item.name}</div>
+                        <div className="text-[11px] text-[#6F6F6B] dark:text-[#A0A09C]">{item.categoryName}</div>
+                        <div className="mt-1 text-xs font-extrabold text-[#34203C] dark:text-[#C9BEAB]">₹{item.price.toLocaleString('en-IN')}</div>
+                      </div>
+                      <div className="mt-2 flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleBookNowItem(item)}
+                          className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-[#34203C] dark:text-[#C9BEAB] hover:underline cursor-pointer"
+                        >
+                          <span>Book Now</span>
+                          <ArrowRight size={11} />
+                        </button>
+                      </div>
                     </div>
                     <div className="flex flex-col items-end justify-between">
-                      <button className="text-[#6F6F6B] hover:text-red-500 cursor-pointer" onClick={() => onRemove(item._id)} aria-label="Remove item">
+                      <button className="text-[#6F6F6B] hover:text-rose-500 cursor-pointer transition-colors p-1" onClick={() => onRemove(item._id)} aria-label="Remove item">
                         <Trash2 size={15} />
                       </button>
-                      <div className="flex items-center gap-1.5 rounded-md border border-[#E8E7E3] bg-white dark:bg-[#262626] dark:border-[#333] px-1 py-0.5">
+                      <div className="flex items-center gap-1.5 rounded-md border border-[#E8E7E3] bg-white dark:bg-[#262626] dark:border-[#333] px-1 py-0.5 shadow-2xs">
                         <button
                           className="flex h-5 w-5 items-center justify-center text-[#1C1C1C] dark:text-white cursor-pointer"
                           onClick={() => item.qty === 1 ? onRemove(item._id) : onUpdateQty(item._id, item.qty - 1)}
                         >
                           <Minus size={11} />
                         </button>
-                        <span className="w-3 text-center text-xs font-medium">{item.qty}</span>
+                        <span className="w-3 text-center text-xs font-bold">{item.qty}</span>
                         <button
                           className="flex h-5 w-5 items-center justify-center text-[#1C1C1C] dark:text-white cursor-pointer"
                           onClick={() => onUpdateQty(item._id, item.qty + 1)}
@@ -135,27 +167,38 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               </div>
             </div>
 
-            <div className="border-t border-[#E8E7E3] dark:border-[#2E2E2E] p-5">
+            <div className="border-t border-[#E8E7E3] dark:border-[#2E2E2E] p-5 bg-white/95 dark:bg-[#1E1E1E]/95 backdrop-blur-md">
               <div className="mb-4 flex items-center justify-between text-base font-bold text-[#1C1C1C] dark:text-white">
                 <span>Total Amount</span>
-                <span>₹{total.toLocaleString('en-IN')}</span>
+                <span className="font-serif text-lg font-bold text-[#34203C] dark:text-[#C9BEAB]">₹{total.toLocaleString('en-IN')}</span>
               </div>
-              <Button
-                variant="primary"
-                size="lg"
-                className="w-full justify-center rounded-xl"
-                onClick={handleCheckout}
-              >
-                {isLoggedIn ? (
-                  <>
-                    <span>Confirm via WhatsApp</span>
-                    <ArrowRight size={15} />
-                  </>
-                ) : 'Login to Checkout'}
-              </Button>
+              
+              <div className="flex flex-col gap-2.5">
+                {/* 1. Primary Direct Online Book Now Button */}
+                <button
+                  type="button"
+                  onClick={handleBookNowAll}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#34203C] hover:bg-[#483250] text-[#FAF8F5] dark:bg-[#C9BEAB] dark:hover:bg-white dark:text-[#1B101F] py-3 px-4 text-xs font-bold uppercase tracking-wider shadow-md hover:shadow-lg transition-all cursor-pointer"
+                >
+                  <CalendarCheck size={16} />
+                  <span>Book Now (Proceed to Checkout)</span>
+                  <ArrowRight size={14} />
+                </button>
+
+                {/* 2. Secondary WhatsApp Checkout Button */}
+                <button
+                  type="button"
+                  onClick={handleCheckout}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl border border-emerald-600/60 bg-emerald-50 dark:bg-emerald-950/30 hover:bg-emerald-100/70 text-emerald-700 dark:text-emerald-300 py-2.5 px-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
+                >
+                  <span>Confirm via WhatsApp</span>
+                  <ArrowRight size={13} />
+                </button>
+              </div>
+
               <button
                 type="button"
-                className="mt-2 w-full py-2 text-xs font-medium text-[#6F6F6B] hover:text-red-500 transition-colors cursor-pointer text-center"
+                className="mt-3 w-full py-1 text-xs font-medium text-[#6F6F6B] hover:text-rose-500 transition-colors cursor-pointer text-center"
                 onClick={onClear}
               >
                 Clear Cart

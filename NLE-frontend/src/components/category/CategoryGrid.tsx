@@ -115,7 +115,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onSelect
                 key={cat._id || cat.name}
                 id={cat._id}
                 name={cat.name}
-                image={cat.image}
+                image={cat.image || '/exploreee.jpeg'}
                 icon={cat.icon}
                 tag={meta.tag}
                 subtitle={meta.subtitle}
@@ -126,6 +126,19 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onSelect
               />
             );
           })}
+
+          <AutoLayoutCard
+            key="explore-all-card"
+            id="explore-all"
+            name="Explore All Setups"
+            image="/exploreee.jpeg"
+            tag="Full Catalog"
+            subtitle="Browse All Handcrafted Packages"
+            price="All Prices"
+            setupsCount="50+ Setups"
+            onSelect={() => onSelect('ALL')}
+            className="h-full"
+          />
         </div>
       </LayoutGroup>
     </div>
