@@ -143,20 +143,22 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       </div>
                     </div>
                     <div className="flex flex-col items-end justify-between">
-                      <button className="text-[#6F6F6B] hover:text-rose-500 cursor-pointer transition-colors p-1" onClick={() => onRemove(item._id)} aria-label="Remove item">
+                      <button className="text-[#6F6F6B] hover:text-rose-500 cursor-pointer transition-colors p-2 -m-1" onClick={() => onRemove(item._id)} aria-label="Remove item">
                         <Trash2 size={15} />
                       </button>
-                      <div className="flex items-center gap-1.5 rounded-md border border-[#E8E7E3] bg-white dark:bg-[#262626] dark:border-[#333] px-1 py-0.5 shadow-2xs">
+                      <div className="flex items-center gap-1 rounded-md border border-[#E8E7E3] bg-white dark:bg-[#262626] dark:border-[#333] px-0.5 py-0.5 shadow-2xs">
                         <button
-                          className="flex h-5 w-5 items-center justify-center text-[#1C1C1C] dark:text-white cursor-pointer"
+                          className="flex h-8 w-8 items-center justify-center text-[#1C1C1C] dark:text-white cursor-pointer"
                           onClick={() => item.qty === 1 ? onRemove(item._id) : onUpdateQty(item._id, item.qty - 1)}
+                          aria-label="Decrease quantity"
                         >
                           <Minus size={11} />
                         </button>
                         <span className="w-3 text-center text-xs font-bold">{item.qty}</span>
                         <button
-                          className="flex h-5 w-5 items-center justify-center text-[#1C1C1C] dark:text-white cursor-pointer"
+                          className="flex h-8 w-8 items-center justify-center text-[#1C1C1C] dark:text-white cursor-pointer"
                           onClick={() => onUpdateQty(item._id, item.qty + 1)}
+                          aria-label="Increase quantity"
                         >
                           <Plus size={11} />
                         </button>

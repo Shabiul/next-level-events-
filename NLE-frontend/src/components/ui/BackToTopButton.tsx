@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUp } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
 export const BackToTopButton: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const location = useLocation();
+  // FloatingActionMenu sits lower-right and, on product pages, shifts up to
+  // clear the sticky booking bar -- match that here so the two buttons don't
+  // overlap/collide on small screens.
+  const isProductPage = location.pathname.startsWith('/product/');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,7 +46,7 @@ export const BackToTopButton: React.FC = () => {
           onClick={scrollToTop}
           type="button"
           aria-label="Scroll to top"
-          className="fixed bottom-24 right-5 sm:bottom-28 sm:right-8 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/90 dark:bg-[#201325]/90 text-[#34203C] dark:text-[#FAF8F5] shadow-xl backdrop-blur-md border border-[#DDD5C7]/70 dark:border-[#483250] transition-colors cursor-pointer group"
+          className={`fixed ${isProductPage ? 'bottom-36 sm:bottom-40' : 'bottom-24 sm:bottom-28'} right-5 sm:right-8 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/90 dark:bg-[#201325]/90 text-[#34203C] dark:text-[#FAF8F5] shadow-xl backdrop-blur-md border border-[#DDD5C7]/70 dark:border-[#483250] transition-colors cursor-pointer group`}
         >
           {/* Circular Progress Ring */}
           <svg className="absolute inset-0 h-full w-full -rotate-90 pointer-events-none" viewBox="0 0 44 44">

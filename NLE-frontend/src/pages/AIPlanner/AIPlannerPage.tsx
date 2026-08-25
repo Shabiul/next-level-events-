@@ -51,7 +51,7 @@ export const AIPlannerPage: React.FC = () => {
       </div>
 
       {/* Main Chat & Recommendation Interface */}
-      <div className="rounded-2xl border border-[#E8E7E3] bg-white shadow-card overflow-hidden dark:bg-[#1E1E1E] dark:border-[#2E2E2E] flex flex-col h-[650px]">
+      <div className="rounded-2xl border border-[#E8E7E3] bg-white shadow-card overflow-hidden dark:bg-[#1E1E1E] dark:border-[#2E2E2E] flex flex-col h-[min(72dvh,650px)] sm:h-[650px]">
         {/* Messages Feed */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
           {messages.length === 0 ? (
