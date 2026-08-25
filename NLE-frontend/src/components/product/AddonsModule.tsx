@@ -304,7 +304,7 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
                         {item.name}
                       </h4>
                       {item.description && (
-                        <p className="mt-1 text-[11px] text-[#6B6B76] dark:text-[#C8B5C3] font-light leading-snug line-clamp-2">
+                        <p className="mt-1 text-[11px] text-[#6B6B76] dark:text-[#C8B5C3] font-light leading-snug line-clamp-1">
                           {item.description}
                         </p>
                       )}

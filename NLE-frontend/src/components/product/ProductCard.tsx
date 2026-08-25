@@ -187,10 +187,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             {product.name}
           </h3>
 
-          {/* Description Paragraph */}
-          <p className="text-xs text-[#6B6B76] dark:text-[#C8B5C3] font-light leading-relaxed line-clamp-2 min-h-[36px]">
+          {/* Description -- short, single line */}
+          <p className="text-xs text-[#6B6B76] dark:text-[#C8B5C3] font-light leading-relaxed line-clamp-1">
             {product.description ||
-              'Complete turnkey celebration setup styled with customized props, balloon architecture, and fairy lighting.'}
+              'Complete turnkey celebration setup styled with customized props.'}
           </p>
 
           {/* Inner Highlight Box with Star */}
