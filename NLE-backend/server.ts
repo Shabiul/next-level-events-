@@ -1,9 +1,6 @@
 import "dotenv/config";
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
-import mongoose from "mongoose";
-import path from "path";
-import fs from "fs";
 import crypto from "crypto";
 
 import authRoutes from "./routes/authRoutes";
@@ -20,7 +17,6 @@ import addonRoutes from "./routes/addonRoutes";
 import activityRoutes from "./routes/activityRoutes";
 import catalogRoutes from "./routes/catalogRoutes";
 import orderRoutes from "./routes/orderRoutes";
-import { initializeAI } from "./src/ai";
 import { connectDatabase } from "./src/db/connection";
 import Product from "./models/Product";
 
@@ -32,8 +28,6 @@ interface ProductShareData {
   description?: string;
   image?: string;
 }
-
-console.log("===== SHARE ROUTE BUILD v2 =====");
 
 const defaultSeoDescription = "Premium surprise and decoration experiences curated for every celebration.";
 
@@ -106,26 +100,13 @@ app.use((req, res, next) => {
   console.log("➡️", req.method, req.originalUrl);
   next();
 });
+// cors() already sends Access-Control-Allow-Origin: * by default; the
+// duplicate manual header block that used to sit here was redundant.
 app.use(cors());
-
-app.use((req: Request, res: Response, next: NextFunction) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
-  next();
-});
 
 app.use(express.json());
 
-
 app.get("/", (_req, res) => {
-  console.log("🔥 ROOT ROUTE HIT");
-
   res.send("THIS IS MY NEW SERVER");
 });
 
@@ -139,36 +120,18 @@ app.get("/api/health", (_req: Request, res: Response) => {
 });
 
 app.get("/share/product/:productId", async (req: Request, res: Response) => {
-  console.log("==================================");
-  console.log("[SHARE] ROUTE START");
-  console.log("[SHARE] URL:", req.originalUrl);
-  console.log("[SHARE] Product ID:", req.params.productId);
-
   try {
     const productId = req.params.productId;
-
-    console.log("[SHARE] Looking up product...");
-
     const product = await Product.findById(productId).lean<ProductShareData | null>();
 
-    console.log("[SHARE] Lookup completed");
-
     if (!product) {
-      console.log("[SHARE] PRODUCT NOT FOUND:", productId);
       return res
         .status(404)
         .type("html")
         .send("<!DOCTYPE html><html><body>Product not found</body></html>");
     }
 
-    console.log("[SHARE] PRODUCT FOUND");
-    console.log("[SHARE] Name:", product.name);
-    console.log("[SHARE] Image:", product.image);
-
     const html = buildProductSharePage(req, product);
-
-    console.log("[SHARE] HTML Generated");
-    console.log("[SHARE] Sending response");
 
     // Add crawler-friendly headers
     res.type("html");
@@ -180,14 +143,9 @@ app.get("/share/product/:productId", async (req: Request, res: Response) => {
 
     return res.send(html);
   } catch (err) {
-    console.error("==================================");
-    console.error("[SHARE] ERROR");
-    console.error(err);
-
-    return res.status(500).send(`
-      <h1>Share Route Error</h1>
-      <pre>${String(err)}</pre>
-    `);
+    console.error("[SHARE] Failed to render share page:", err);
+    // Don't leak internal error details to the client.
+    return res.status(500).type("html").send("<!DOCTYPE html><html><body>Something went wrong</body></html>");
   }
 });
 
