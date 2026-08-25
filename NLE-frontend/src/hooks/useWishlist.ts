@@ -150,7 +150,7 @@ export function useWishlist() {
           wishlist: payload.wishlist.map((item) => String(item._id)),
         });
         return true;
-      } catch (err) {
+      } catch {
         setItems((prevItems) => {
           if (!shouldAdd) {
             if (prevItems.some((item) => String(item._id) === String(product._id))) return prevItems;

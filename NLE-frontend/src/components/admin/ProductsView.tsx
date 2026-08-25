@@ -63,7 +63,7 @@ export const ProductsView = () => {
       const res = await fetch(API);
       const data = await res.json();
       setProducts(data);
-    } catch (err) {
+    } catch {
       toast.error("Failed to load products");
     }
   };
@@ -73,7 +73,7 @@ export const ProductsView = () => {
       const res = await fetch(CAT_API);
       const data = await res.json();
       setCategories(data);
-    } catch (err) {
+    } catch {
       toast.error("Failed to load categories");
     }
   };
@@ -390,7 +390,7 @@ export const ProductsView = () => {
       setNewCategoryName("");
       setShowAddCategoryModal(false);
       toast.success("Category added successfully!");
-    } catch (err) {
+    } catch {
       toast.error("Failed to add category");
     }
   };

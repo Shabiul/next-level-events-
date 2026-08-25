@@ -26,7 +26,7 @@ export function useHeroSlider() {
             ctaLink: s.ctaLink || '#',
           }));
         setSlides(apiSliders.length > 0 ? apiSliders : HERO_SLIDES);
-      } catch (err) {
+      } catch {
         setSlides(HERO_SLIDES); // fallback if API is down
       }
     };

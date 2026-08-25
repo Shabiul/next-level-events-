@@ -22,7 +22,9 @@ export const HeroSlider: React.FC = () => {
         onTouchStart={e => { touchX.current = e.touches[0].clientX; }}
         onTouchEnd={e => {
           const dx = touchX.current - e.changedTouches[0].clientX;
-          if (Math.abs(dx) > 40) dx > 0 ? handleNext() : handlePrev();
+          if (Math.abs(dx) > 40) {
+            if (dx > 0) handleNext(); else handlePrev();
+          }
         }}
       >
         {/* Slides Track */}

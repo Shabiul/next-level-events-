@@ -26,7 +26,7 @@ export default function ForgotPassword() {
   const validateEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
   const submit = async (e?: React.FormEvent) => {
-    e && e.preventDefault();
+    e?.preventDefault();
     setError(null);
     if (!validateEmail(email)) { setError('Please enter a valid email address'); return; }
     setLoading(true);
@@ -38,7 +38,7 @@ export default function ForgotPassword() {
       });
       const data = await res.json();
       setMessage(data.msg || 'If an account exists, a password reset link has been sent to your email.');
-    } catch (err) {
+    } catch {
       setError('Failed to send reset link. Please check your connection and try again.');
     } finally {
       setLoading(false);

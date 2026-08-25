@@ -117,7 +117,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
           totalPages: 1,
         }
       );
-    } catch (err) {
+    } catch {
       setOrders([]);
     } finally {
       setLoadingOrders(false);

@@ -60,7 +60,7 @@ export const SlidersView = () => {
       const res = await fetch(API);
       const data = await res.json();
       setSliders(data);
-    } catch (err) {
+    } catch {
       toast.error("Failed to load sliders");
     }
   };
@@ -70,7 +70,7 @@ export const SlidersView = () => {
       const res = await fetch(CATEGORY_API);
       const data = await res.json();
       setCategories(Array.isArray(data) ? data.filter((c) => c.active) : []);
-    } catch (err) {
+    } catch {
       toast.error("Failed to load categories");
     }
   };
@@ -80,7 +80,7 @@ export const SlidersView = () => {
       const res = await fetch(PRODUCT_API);
       const data = await res.json();
       setProducts(Array.isArray(data) ? data.filter((p) => p.active) : []);
-    } catch (err) {
+    } catch {
       toast.error("Failed to load products");
     }
   };

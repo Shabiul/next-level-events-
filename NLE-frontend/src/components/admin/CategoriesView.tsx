@@ -148,7 +148,7 @@ export const CategoriesView = () => {
       const res = await fetch(API);
       const data = await res.json();
       setCats(data);
-    } catch (err) {
+    } catch {
       toast.error("Failed to load categories");
     }
   };

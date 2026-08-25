@@ -55,7 +55,7 @@ export default function ResetPassword() {
         setSuccess('Password reset successful. You can now login with your new password.');
         setTimeout(() => navigate('/'), 1500);
       }
-    } catch (err) {
+    } catch {
       setError('Reset failed. Please try again later.');
     } finally {
       setLoading(false);

@@ -306,7 +306,7 @@ function FAQ1({
     try {
       window.localStorage?.setItem("bento-theme", next);
       window.localStorage?.setItem("theme", next);
-    } catch (_err) {
+    } catch {
       /* ignore */
     }
   };
