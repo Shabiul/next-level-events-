@@ -176,7 +176,7 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-[#DDD5C7] bg-[#FAF8F5] p-5 text-xs text-[#725D75] dark:bg-[#1E1E1E] dark:border-[#483250]">
+      <div className="rounded-2xl border border-[#E4DEF2] bg-[#FAF8F5] p-5 text-xs text-[#6B6B76] dark:bg-[#1E1E1E] dark:border-[#483250]">
         Loading add-ons and activities...
       </div>
     );
@@ -186,7 +186,7 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
     <div className="space-y-4">
       {/* Tab Switcher */}
       <div className="flex items-center justify-between">
-        <div className="inline-flex rounded-full bg-[#E8E7E3] dark:bg-[#25172C] p-1 border border-[#DDD5C7] dark:border-[#483250]">
+        <div className="inline-flex rounded-full bg-[#E8E7E3] dark:bg-[#25172C] p-1 border border-[#E4DEF2] dark:border-[#483250]">
           {TABS.map((tab) => (
             <button
               key={tab.key}
@@ -195,8 +195,8 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
               className={cn(
                 'rounded-full px-4 py-1.5 text-xs font-bold transition-all cursor-pointer',
                 activeTab === tab.key
-                  ? 'bg-[#34203C] text-[#FAF8F5] shadow-sm dark:bg-[#C9BEAB] dark:text-[#201325]'
-                  : 'text-[#725D75] hover:text-[#34203C] dark:text-[#C8B5C3]'
+                  ? 'bg-[#8F6FC4] text-[#FAF8F5] shadow-sm dark:bg-[#C9BEAB] dark:text-[#201325]'
+                  : 'text-[#6B6B76] hover:text-[#1C1B22] dark:text-[#C8B5C3]'
               )}
             >
               {tab.label}
@@ -208,7 +208,7 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
           <button
             type="button"
             onClick={() => scrollItems('left')}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DDD5C7] bg-white text-[#34203C] hover:bg-[#FAF8F5] dark:bg-[#1E1E1E] dark:border-[#483250] dark:text-white cursor-pointer"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E4DEF2] bg-white text-[#1C1B22] hover:bg-[#FAF8F5] dark:bg-[#1E1E1E] dark:border-[#483250] dark:text-white cursor-pointer"
             aria-label="Scroll left"
           >
             <ChevronLeft size={16} />
@@ -216,7 +216,7 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
           <button
             type="button"
             onClick={() => scrollItems('right')}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DDD5C7] bg-white text-[#34203C] hover:bg-[#FAF8F5] dark:bg-[#1E1E1E] dark:border-[#483250] dark:text-white cursor-pointer"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E4DEF2] bg-white text-[#1C1B22] hover:bg-[#FAF8F5] dark:bg-[#1E1E1E] dark:border-[#483250] dark:text-white cursor-pointer"
             aria-label="Scroll right"
           >
             <ChevronRight size={16} />
@@ -236,8 +236,8 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
               className={cn(
                 'whitespace-nowrap rounded-full px-3.5 py-1 text-xs font-semibold transition cursor-pointer border',
                 isActive
-                  ? 'border-[#34203C] bg-[#34203C] text-white dark:border-[#C9BEAB] dark:bg-[#C9BEAB] dark:text-[#201325]'
-                  : 'border-[#DDD5C7] bg-white text-[#725D75] hover:border-[#34203C] dark:bg-[#1E1E1E] dark:border-[#483250] dark:text-neutral-300'
+                  ? 'border-[#8F6FC4] bg-[#8F6FC4] text-white dark:border-[#C9BEAB] dark:bg-[#C9BEAB] dark:text-[#201325]'
+                  : 'border-[#E4DEF2] bg-white text-[#6B6B76] hover:border-[#8F6FC4] dark:bg-[#1E1E1E] dark:border-[#483250] dark:text-neutral-300'
               )}
             >
               {category}
@@ -272,8 +272,8 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
                 <div className={cn(
                   'flex h-full flex-col overflow-hidden rounded-2xl border bg-white dark:bg-[#1E1E1E] shadow-card hover:shadow-2xl transition-all duration-300',
                   selected
-                    ? 'border-[#34203C] ring-2 ring-[#34203C]/50 dark:border-amber-400 dark:ring-amber-400/50'
-                    : 'border-[#E8E7E3] dark:border-[#2E2E2E] hover:border-[#A78A9F]'
+                    ? 'border-[#8F6FC4] ring-2 ring-[#8F6FC4]/50 dark:border-amber-400 dark:ring-amber-400/50'
+                    : 'border-[#E8E7E3] dark:border-[#2E2E2E] hover:border-[#8F6FC4]'
                 )}>
                   {/* Clickable Image for Full View */}
                   <div
@@ -303,7 +303,7 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
                       <h4 className="line-clamp-1 font-serif text-xs font-bold text-[#1C1C1C] dark:text-white">
                         {item.name}
                       </h4>
-                      <p className="mt-1 text-xs font-extrabold text-[#725D75] dark:text-[#C9BEAB]">
+                      <p className="mt-1 text-xs font-extrabold text-[#6B6B76] dark:text-[#C9BEAB]">
                         {getItemPriceLabel(item)}
                       </p>
                     </div>
@@ -316,8 +316,8 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
                       className={cn(
                         'mt-3 flex items-center justify-center gap-1.5 rounded-full py-1.5 px-3 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs',
                         selected
-                          ? 'bg-[#34203C] text-white dark:bg-amber-400 dark:text-slate-950 shadow-md'
-                          : 'border border-[#DDD5C7] bg-[#FAF8F5] text-[#34203C] hover:bg-[#34203C] hover:text-white dark:bg-[#262626] dark:border-[#483250] dark:text-white dark:hover:bg-amber-400 dark:hover:text-slate-950'
+                          ? 'bg-[#8F6FC4] text-white dark:bg-amber-400 dark:text-slate-950 shadow-md'
+                          : 'border border-[#E4DEF2] bg-[#FAF8F5] text-[#1C1B22] hover:bg-[#8F6FC4] hover:text-white dark:bg-[#262626] dark:border-[#483250] dark:text-white dark:hover:bg-amber-400 dark:hover:text-slate-950'
                       )}
                     >
                       {selected ? (
@@ -335,7 +335,7 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
             );
           })
         ) : (
-          <div className="w-full rounded-2xl border border-[#DDD5C7] bg-white p-5 text-xs text-[#725D75] dark:bg-[#1E1E1E] dark:border-[#483250]">
+          <div className="w-full rounded-2xl border border-[#E4DEF2] bg-white p-5 text-xs text-[#6B6B76] dark:bg-[#1E1E1E] dark:border-[#483250]">
             No {activeTab === 'addons' ? 'add-ons' : 'activities'} available in this category.
           </div>
         )}
@@ -375,7 +375,7 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
               />
               <div className="mt-4 text-center text-white">
                 <h3 className="font-serif text-xl font-bold">{previewItem.title}</h3>
-                <p className="text-sm font-semibold text-[#C9BEAB]">{previewItem.price}</p>
+                <p className="text-sm font-semibold text-[#C7B8E8]">{previewItem.price}</p>
               </div>
             </motion.div>
           </motion.div>

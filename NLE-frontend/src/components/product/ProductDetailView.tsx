@@ -255,7 +255,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
             transition={{ duration: 0.5, ease: 'easeOut' }}
             className="w-full flex flex-col gap-4 perspective-[1200px] transform-gpu"
           >
-            <div className="relative aspect-[4/3] sm:aspect-[16/9] max-h-[460px] md:max-h-[500px] w-full overflow-hidden rounded-3xl border border-[#DDD5C7]/80 bg-gradient-to-b from-[#FAFAF8] to-[#F5F2EA] shadow-[0_20px_50px_rgba(52,32,60,0.12)] transition-shadow duration-500 hover:shadow-[0_30px_70px_rgba(52,32,60,0.18)] dark:bg-gradient-to-b dark:from-[#1A1A1A] dark:to-[#121212] dark:border-[#483250]">
+            <div className="relative aspect-[4/3] sm:aspect-[16/9] max-h-[460px] md:max-h-[500px] w-full overflow-hidden rounded-3xl border border-[#E4DEF2]/80 bg-gradient-to-b from-[#FAFAF8] to-[#F5F2EA] shadow-[0_20px_50px_rgba(52,32,60,0.12)] transition-shadow duration-500 hover:shadow-[0_30px_70px_rgba(52,32,60,0.18)] dark:bg-gradient-to-b dark:from-[#1A1A1A] dark:to-[#121212] dark:border-[#483250]">
               {/* Fullscreen Button Pill */}
               <div className="absolute right-4 top-4 z-10">
                 <motion.button
@@ -265,7 +265,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                   onClick={() => openFullScreen(activeIdx)}
                   className="flex items-center gap-2 rounded-full border border-white/40 bg-white/80 px-4 py-2 text-xs font-bold text-[#1C1C1C] shadow-lg backdrop-blur-md hover:bg-white hover:shadow-xl transition-all dark:bg-[#1E1E1E]/80 dark:border-white/20 dark:text-white cursor-pointer"
                 >
-                  <Maximize2 size={14} className="text-[#34203C] dark:text-amber-400" />
+                  <Maximize2 size={14} className="text-[#1C1B22] dark:text-amber-400" />
                   <span>Full View</span>
                 </motion.button>
               </div>
@@ -305,7 +305,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                     whileTap={{ scale: 0.9 }}
                     type="button"
                     aria-label="Previous"
-                    className="absolute left-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#DDD5C7] bg-white/90 text-[#34203C] shadow-lg backdrop-blur-md disabled:opacity-30 cursor-pointer dark:bg-[#1E1E1E]/90 dark:border-[#483250] dark:text-white"
+                    className="absolute left-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#E4DEF2] bg-white/90 text-[#1C1B22] shadow-lg backdrop-blur-md disabled:opacity-30 cursor-pointer dark:bg-[#1E1E1E]/90 dark:border-[#483250] dark:text-white"
                     onClick={() => scrollToIdx(activeIdx - 1)}
                     disabled={activeIdx === 0}
                   >
@@ -316,7 +316,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                     whileTap={{ scale: 0.9 }}
                     type="button"
                     aria-label="Next"
-                    className="absolute right-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#DDD5C7] bg-white/90 text-[#34203C] shadow-lg backdrop-blur-md disabled:opacity-30 cursor-pointer dark:bg-[#1E1E1E]/90 dark:border-[#483250] dark:text-white"
+                    className="absolute right-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#E4DEF2] bg-white/90 text-[#1C1B22] shadow-lg backdrop-blur-md disabled:opacity-30 cursor-pointer dark:bg-[#1E1E1E]/90 dark:border-[#483250] dark:text-white"
                     onClick={() => scrollToIdx(activeIdx + 1)}
                     disabled={activeIdx === allImages.length - 1}
                   >
@@ -338,8 +338,8 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                     className={cn(
                       'h-16 w-16 sm:h-20 sm:w-20 flex-shrink-0 overflow-hidden rounded-2xl border bg-white p-1 transition-all cursor-pointer dark:bg-[#1E1E1E] shadow-sm',
                       i === activeIdx
-                        ? 'border-[#34203C] ring-2 ring-[#34203C] dark:border-amber-400 dark:ring-amber-400 shadow-md scale-105'
-                        : 'border-[#DDD5C7] dark:border-[#483250] opacity-70 hover:opacity-100'
+                        ? 'border-[#8F6FC4] ring-2 ring-[#8F6FC4] dark:border-amber-400 dark:ring-amber-400 shadow-md scale-105'
+                        : 'border-[#E4DEF2] dark:border-[#483250] opacity-70 hover:opacity-100'
                     )}
                     onClick={() => scrollToIdx(i)}
                   >
@@ -359,7 +359,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
             className="w-full rounded-3xl border border-white/80 bg-white/90 p-6 sm:p-9 shadow-[0_20px_50px_rgba(52,32,60,0.08)] backdrop-blur-md dark:bg-[#201325]/90 dark:border-[#483250] dark:shadow-none"
           >
             {/* Category Breadcrumb */}
-            <div className="mb-3 flex items-center gap-2 text-xs text-[#725D75] dark:text-[#A78A9F] uppercase font-bold tracking-wider">
+            <div className="mb-3 flex items-center gap-2 text-xs text-[#6B6B76] dark:text-[#A78A9F] uppercase font-bold tracking-wider">
               <span className="flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
                 {product.categoryName}
@@ -367,22 +367,22 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
               {product.subcategory && (
                 <>
                   <span>/</span>
-                  <span className="font-semibold text-[#34203C] dark:text-[#FAF8F5]">{product.subcategory}</span>
+                  <span className="font-semibold text-[#1C1B22] dark:text-[#FAF8F5]">{product.subcategory}</span>
                 </>
               )}
             </div>
 
-            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#34203C] dark:text-[#FAF8F5] leading-snug">
+            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#1C1B22] dark:text-[#FAF8F5] leading-snug">
               {product.name}
             </h1>
 
             {/* Price Line */}
-            <div className="mt-6 flex flex-wrap items-baseline gap-4 border-t border-[#DDD5C7]/60 pt-6 dark:border-[#483250]/60">
+            <div className="mt-6 flex flex-wrap items-baseline gap-4 border-t border-[#E4DEF2]/60 pt-6 dark:border-[#483250]/60">
               <span className="font-serif text-4xl sm:text-5xl font-extrabold text-[#1C1C1C] dark:text-[#FAF8F5]">
                 ₹{product.price.toLocaleString('en-IN')}
               </span>
               {Boolean(product.originalPrice && product.originalPrice > product.price) && (
-                <span className="text-lg text-[#725D75] line-through dark:text-[#A78A9F]">
+                <span className="text-lg text-[#6B6B76] line-through dark:text-[#A78A9F]">
                   ₹{product.originalPrice?.toLocaleString('en-IN')}
                 </span>
               )}
@@ -391,19 +391,19 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                   {discount}% OFF
                 </span>
               )}
-              <span className="ml-auto hidden sm:inline-flex items-center gap-1.5 text-xs font-extrabold text-[#34203C] bg-[#FAF8F5] border border-[#DDD5C7] dark:text-amber-300 dark:bg-amber-400/15 dark:border-amber-400/30 px-3.5 py-1.5 rounded-full shadow-2xs">
+              <span className="ml-auto hidden sm:inline-flex items-center gap-1.5 text-xs font-extrabold text-[#1C1B22] bg-[#FAF8F5] border border-[#E4DEF2] dark:text-amber-300 dark:bg-amber-400/15 dark:border-amber-400/30 px-3.5 py-1.5 rounded-full shadow-2xs">
                 ⚡ Best Price Guaranteed
               </span>
             </div>
 
-            <p className="mt-2 text-xs sm:text-sm text-[#725D75] dark:text-[#C8B5C3] font-medium">
+            <p className="mt-2 text-xs sm:text-sm text-[#6B6B76] dark:text-[#C8B5C3] font-medium">
               Includes on-site decorator setup, balloon artist labor &amp; teardown across Bengaluru.
             </p>
 
             {/* Description */}
             {product.description && (
-              <div className="mt-6 border-t border-[#DDD5C7]/60 pt-6 dark:border-[#483250]/60">
-                <h2 className="text-xs font-bold uppercase tracking-wider text-[#725D75] dark:text-[#A78A9F] mb-2">
+              <div className="mt-6 border-t border-[#E4DEF2]/60 pt-6 dark:border-[#483250]/60">
+                <h2 className="text-xs font-bold uppercase tracking-wider text-[#6B6B76] dark:text-[#A78A9F] mb-2">
                   About This Experience
                 </h2>
                 <p className="text-xs sm:text-sm text-[#2C2C2C] dark:text-[#FAF8F5] leading-relaxed font-medium">
@@ -413,7 +413,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
             )}
 
             {/* Service Promises */}
-            <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 border-t border-[#DDD5C7]/60 pt-6 text-xs dark:border-[#483250]/60">
+            <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 border-t border-[#E4DEF2]/60 pt-6 text-xs dark:border-[#483250]/60">
               {[
                 { icon: Zap, label: 'Express 2-Hr Setup' },
                 { icon: Lock, label: 'Instant Confirmation' },
@@ -423,9 +423,9 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                 <motion.div
                   key={idx}
                   whileHover={{ y: -3, scale: 1.03 }}
-                  className="flex items-center gap-2.5 rounded-xl border border-[#EDECE8] bg-[#FAF9F5] p-3 text-[#34203C] dark:border-[#3A2443] dark:bg-[#2A1830] dark:text-[#FAF8F5] shadow-2xs transition-all"
+                  className="flex items-center gap-2.5 rounded-xl border border-[#EDECE8] bg-[#FAF9F5] p-3 text-[#1C1B22] dark:border-[#3A2443] dark:bg-[#2A1830] dark:text-[#FAF8F5] shadow-2xs transition-all"
                 >
-                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#34203C]/08 text-[#34203C] dark:bg-amber-400/15 dark:text-amber-400">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#8F6FC4]/08 text-[#1C1B22] dark:bg-amber-400/15 dark:text-amber-400">
                     <item.icon size={16} />
                   </div>
                   <span className="font-semibold text-xs">{item.label}</span>
@@ -439,7 +439,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                 <button
                   type="button"
                   onClick={() => handleBookNow('razorpay')}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-2xl border border-transparent bg-[#34203C] hover:bg-[#4D2F57] text-white dark:bg-amber-400 dark:text-slate-950 dark:hover:bg-amber-300 py-4 px-4 text-xs sm:text-sm font-extrabold uppercase tracking-wider shadow-lg hover:shadow-xl transition-all cursor-pointer"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-2xl border border-transparent bg-[#8F6FC4] hover:bg-[#7D5DB2] text-white dark:bg-amber-400 dark:text-slate-950 dark:hover:bg-amber-300 py-4 px-4 text-xs sm:text-sm font-extrabold uppercase tracking-wider shadow-lg hover:shadow-xl transition-all cursor-pointer"
                 >
                   <span className="text-white dark:text-slate-950 font-extrabold">Book Package Online</span>
                   <ArrowRight size={17} className="text-white dark:text-slate-950" />
@@ -451,7 +451,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 onClick={handleAddToCart}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[#DDD5C7] dark:border-[#483250] bg-[#FAF5EE] hover:bg-[#A78A9F]/20 text-[#34203C] dark:bg-[#2A1830] dark:hover:bg-[#34203C] dark:text-[#FAF8F5] py-4 px-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-md"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[#E4DEF2] dark:border-[#483250] bg-[#FAF5EE] hover:bg-[#8F6FC4]/20 text-[#1C1B22] dark:bg-[#2A1830] dark:hover:bg-[#34203C] dark:text-[#FAF8F5] py-4 px-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-md"
               >
                 <ShoppingCart size={17} />
                 <span>Add to Cart</span>
@@ -489,12 +489,12 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                     <h2 className="font-editorial text-xl font-bold text-[#1C1C1C] dark:text-white">
                       {t?.whats_included || "What's Included in this Setup"}
                     </h2>
-                    <p className="text-xs text-[#725D75] dark:text-[#C8B5C3] font-medium mt-0.5">
+                    <p className="text-xs text-[#6B6B76] dark:text-[#C8B5C3] font-medium mt-0.5">
                       Full service setup components &amp; labor guarantees
                     </p>
                   </div>
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#34203C] bg-[#34203C]/08 dark:text-amber-300 dark:bg-amber-400/15 px-3 py-1.5 rounded-full">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#1C1B22] bg-[#8F6FC4]/08 dark:text-amber-300 dark:bg-amber-400/15 px-3 py-1.5 rounded-full">
                   Full Setup Inclusions
                 </span>
               </div>
@@ -539,23 +539,23 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                 onClick={() => setTermsOpen((o: boolean) => !o)}
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#34203C]/08 text-[#34203C] dark:bg-amber-400/15 dark:text-amber-400 transition-colors group-hover:bg-[#34203C]/15">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#8F6FC4]/08 text-[#1C1B22] dark:bg-amber-400/15 dark:text-amber-400 transition-colors group-hover:bg-[#8F6FC4]/15">
                     <ShieldCheck size={22} />
                   </div>
                   <div>
                     <h2 className="font-editorial text-xl font-bold text-[#1C1C1C] dark:text-white">
                       Cancellation &amp; Service Terms
                     </h2>
-                    <p className="text-xs text-[#725D75] dark:text-[#C8B5C3] font-medium mt-0.5">
+                    <p className="text-xs text-[#6B6B76] dark:text-[#C8B5C3] font-medium mt-0.5">
                       Clear booking rules, refund timelines &amp; venue guidelines
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="hidden sm:inline-block text-[10px] font-bold uppercase tracking-wider text-[#34203C] bg-[#34203C]/08 dark:text-amber-300 dark:bg-amber-400/15 px-3 py-1 rounded-full">
+                  <span className="hidden sm:inline-block text-[10px] font-bold uppercase tracking-wider text-[#1C1B22] bg-[#8F6FC4]/08 dark:text-amber-300 dark:bg-amber-400/15 px-3 py-1 rounded-full">
                     10 Key Terms
                   </span>
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#FAF8F5] text-[#34203C] dark:bg-[#2A2A2A] dark:text-white group-hover:bg-[#EAE7DF] transition-colors">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#FAF8F5] text-[#1C1B22] dark:bg-[#2A2A2A] dark:text-white group-hover:bg-[#EAE7DF] transition-colors">
                     {termsOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                   </div>
                 </div>
@@ -570,7 +570,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                         whileHover={{ y: -3, scale: 1.015 }}
                         className="flex items-start gap-3.5 rounded-2xl border border-[#EDECE8] bg-[#FAF9F6] p-4 text-xs sm:text-sm font-semibold text-[#1C1C1C] dark:border-[#2E2E2E] dark:bg-[#252525] dark:text-[#F3F4F6] shadow-2xs hover:border-[#DCD8CC] dark:hover:border-[#3E3E3E] transition-all hover:shadow-sm"
                       >
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#34203C] text-xs font-bold text-white dark:bg-amber-400 dark:text-slate-950 shadow-xs mt-0.5">
+                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#8F6FC4] text-xs font-bold text-white dark:bg-amber-400 dark:text-slate-950 shadow-xs mt-0.5">
                           {i + 1}
                         </div>
                         <div className="flex items-start gap-2.5 flex-1 min-w-0">
@@ -602,7 +602,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                   <h2 className="font-editorial text-2xl font-bold tracking-tight text-[#1C1C1C] dark:text-white">
                     Similar Celebration Experiences
                   </h2>
-                  <p className="mt-1 text-xs sm:text-sm text-[#725D75] dark:text-[#A0A09C] font-medium">
+                  <p className="mt-1 text-xs sm:text-sm text-[#6B6B76] dark:text-[#A0A09C] font-medium">
                     Explore related setups in {product.categoryName}
                   </p>
                 </div>

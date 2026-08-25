@@ -56,9 +56,9 @@ export const Footer: React.FC<FooterProps> = ({
   onSelectCategory,
 }) => {
   const linkClass =
-    'text-xs sm:text-[13px] font-normal tracking-wide text-[#FAF8F5]/75 hover:text-[#C9BEAB] transition-colors duration-200 cursor-pointer text-left flex items-center gap-1.5 group';
+    'text-xs sm:text-[13px] font-normal tracking-wide text-[#FAF8F5]/75 hover:text-[#C7B8E8] transition-colors duration-200 cursor-pointer text-left flex items-center gap-1.5 group';
   const colTitleClass =
-    'mb-4 text-xs font-bold uppercase tracking-[0.18em] text-[#C9BEAB] font-serif';
+    'mb-4 text-xs font-bold uppercase tracking-[0.18em] text-[#C7B8E8] font-serif';
 
   const quickLinks: { label: string; key: 'about' | 'privacy' | 'terms' | 'refund' }[] = [
     { label: 'About Us', key: 'about' },
@@ -87,7 +87,7 @@ export const Footer: React.FC<FooterProps> = ({
     <footer id="footer" className="relative bg-[#201024] text-[#FAF8F5] border-t border-white/10 overflow-hidden scroll-mt-24 sm:scroll-mt-28">
       
       {/* Ambient background glows in locked Japanese Violet & Lilac */}
-      <div className="pointer-events-none absolute -top-40 -right-40 h-96 w-96 rounded-full bg-[#A78A9F]/10 blur-3xl" />
+      <div className="pointer-events-none absolute -top-40 -right-40 h-96 w-96 rounded-full bg-[#8F6FC4]/10 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#483250]/20 blur-3xl" />
 
 
@@ -176,18 +176,18 @@ export const Footer: React.FC<FooterProps> = ({
               <li>
                 <Link
                   to="/ai-planner"
-                  className={`${linkClass} text-[#C9BEAB] hover:text-[#FAF8F5] font-medium`}
+                  className={`${linkClass} text-[#C7B8E8] hover:text-[#FAF8F5] font-medium`}
                 >
-                  <Sparkles size={13} className="text-[#C9BEAB]" />
+                  <Sparkles size={13} className="text-[#C7B8E8]" />
                   <span>AI Party Planner ✨</span>
                 </Link>
               </li>
               <li>
                 <Link
                   to="/admin/login"
-                  className={`${linkClass} text-[#C9BEAB] hover:text-[#FAF8F5] font-medium`}
+                  className={`${linkClass} text-[#C7B8E8] hover:text-[#FAF8F5] font-medium`}
                 >
-                  <Shield size={12} className="text-[#C9BEAB]" />
+                  <Shield size={12} className="text-[#C7B8E8]" />
                   <span>Admin Portal</span>
                 </Link>
               </li>
@@ -246,32 +246,32 @@ export const Footer: React.FC<FooterProps> = ({
               <a
                 href="tel:+917022058460"
                 onClick={() => trackContactClick('phone', 'footer')}
-                className="flex items-center gap-2.5 text-xs text-[#FAF8F5]/80 hover:text-[#C9BEAB] transition-colors"
+                className="flex items-center gap-2.5 text-xs text-[#FAF8F5]/80 hover:text-[#C7B8E8] transition-colors"
               >
-                <Phone size={14} className="text-[#A78A9F] shrink-0" />
+                <Phone size={14} className="text-[#8F6FC4] shrink-0" />
                 <span className="font-medium">+91 70220 58460</span>
               </a>
 
               <a
                 href="tel:+918660924212"
                 onClick={() => trackContactClick('phone', 'footer')}
-                className="flex items-center gap-2.5 text-xs text-[#FAF8F5]/80 hover:text-[#C9BEAB] transition-colors"
+                className="flex items-center gap-2.5 text-xs text-[#FAF8F5]/80 hover:text-[#C7B8E8] transition-colors"
               >
-                <Phone size={14} className="text-[#A78A9F] shrink-0" />
+                <Phone size={14} className="text-[#8F6FC4] shrink-0" />
                 <span className="font-medium">+91 86609 24212</span>
               </a>
 
               <a
                 href="mailto:thedecorparty.team@gmail.com"
                 onClick={() => trackContactClick('email', 'footer')}
-                className="flex items-center gap-2.5 text-xs text-[#FAF8F5]/80 hover:text-[#C9BEAB] transition-colors"
+                className="flex items-center gap-2.5 text-xs text-[#FAF8F5]/80 hover:text-[#C7B8E8] transition-colors"
               >
-                <Mail size={14} className="text-[#A78A9F] shrink-0" />
+                <Mail size={14} className="text-[#8F6FC4] shrink-0" />
                 <span className="truncate">thedecorparty.team@gmail.com</span>
               </a>
 
               <div className="flex items-start gap-2.5 text-xs text-[#FAF8F5]/80 pt-0.5">
-                <MapPin size={14} className="text-[#A78A9F] shrink-0 mt-0.5" />
+                <MapPin size={14} className="text-[#8F6FC4] shrink-0 mt-0.5" />
                 <div className="flex flex-col gap-1">
                   <span className="text-[11px] leading-relaxed text-[#FAF8F5]/70">
                     Indiranagar &amp; HSR Layout Hubs, Bengaluru, Karnataka 560038
@@ -280,7 +280,7 @@ export const Footer: React.FC<FooterProps> = ({
                     href="https://maps.google.com/?q=Bengaluru"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[11px] font-semibold text-[#C9BEAB] hover:underline transition-colors"
+                    className="text-[11px] font-semibold text-[#C7B8E8] hover:underline transition-colors"
                   >
                     Get Directions
                   </a>
@@ -289,7 +289,7 @@ export const Footer: React.FC<FooterProps> = ({
 
               <Link
                 to="/contact"
-                className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#C9BEAB] hover:text-white transition-colors pt-1"
+                className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#C7B8E8] hover:text-white transition-colors pt-1"
               >
                 <span>Send Custom Enquiry →</span>
               </Link>
@@ -303,8 +303,8 @@ export const Footer: React.FC<FooterProps> = ({
         {/* =================================================================== */}
         <div className="mt-8 pt-5 border-t border-white/10">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[#C9BEAB] shrink-0">
-              <MapPin size={13} className="text-[#A78A9F]" />
+            <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[#C7B8E8] shrink-0">
+              <MapPin size={13} className="text-[#8F6FC4]" />
               <span>Direct Setup Zones:</span>
             </div>
 
@@ -312,7 +312,7 @@ export const Footer: React.FC<FooterProps> = ({
               {BENGALURU_HUBS.map((hub) => (
                 <span
                   key={hub}
-                  className="rounded-full bg-white/5 border border-white/10 px-2.5 py-0.5 text-[10px] font-medium text-[#FAF8F5]/75 hover:border-[#C9BEAB]/40 hover:text-[#FAF8F5] transition-colors cursor-default"
+                  className="rounded-full bg-white/5 border border-white/10 px-2.5 py-0.5 text-[10px] font-medium text-[#FAF8F5]/75 hover:border-[#C7B8E8]/40 hover:text-[#FAF8F5] transition-colors cursor-default"
                 >
                   {hub}
                 </span>
@@ -333,28 +333,28 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="flex items-center gap-4 text-[11px]">
             <button
               onClick={() => onPageOpen?.('privacy')}
-              className="hover:text-[#C9BEAB] transition-colors"
+              className="hover:text-[#C7B8E8] transition-colors"
             >
               Privacy Policy
             </button>
             <span>•</span>
             <button
               onClick={() => onPageOpen?.('terms')}
-              className="hover:text-[#C9BEAB] transition-colors"
+              className="hover:text-[#C7B8E8] transition-colors"
             >
               Terms of Service
             </button>
             <span>•</span>
             <button
               onClick={() => onPageOpen?.('refund')}
-              className="hover:text-[#C9BEAB] transition-colors"
+              className="hover:text-[#C7B8E8] transition-colors"
             >
               Refund Policy
             </button>
           </div>
 
-          <p className="flex items-center gap-1.5 text-[#C9BEAB]">
-            <Sparkles size={11} className="text-[#A78A9F]" />
+          <p className="flex items-center gap-1.5 text-[#C7B8E8]">
+            <Sparkles size={11} className="text-[#8F6FC4]" />
             <span>Curated celebrations &amp; luxury event styling</span>
           </p>
         </div>

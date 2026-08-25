@@ -315,7 +315,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   }, [location.hash]);
 
   return (
-    <div className="flex flex-col pb-0 bg-[#FAF8F5] dark:bg-[#1B101F] text-[#34203C] dark:text-[#FAF8F5] font-sans antialiased transition-colors">
+    <div className="flex flex-col pb-0 bg-[#FAF8F5] dark:bg-[#1B101F] text-[#1C1B22] dark:text-[#FAF8F5] font-sans antialiased transition-colors">
 
       {/* ========================================================================= */}
       {/* 1. CINEMATIC LUXURY FULL-SCREEN HERO SECTION                             */}
@@ -347,12 +347,12 @@ export const HomePage: React.FC<HomePageProps> = ({
         {/* Hero Editorial Content */}
         <div className="relative z-10 max-w-4xl mx-auto w-full flex flex-col items-center justify-center text-center px-4 my-auto pt-16 sm:pt-20">
           <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-black/50 border border-white/25 text-[#FAF8F5] text-[10px] sm:text-xs font-semibold uppercase tracking-[0.22em] backdrop-blur-md mb-4 shadow-md">
-            <Sparkles className="w-3.5 h-3.5 text-[#C9BEAB]" />
+            <Sparkles className="w-3.5 h-3.5 text-[#C7B8E8]" />
             Bespoke Event Styling &amp; Surprise Setups
           </span>
 
           <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-[76px] font-normal text-[#FAF8F5] leading-[1.04] tracking-tight uppercase max-w-4xl drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)]">
-            CELEBRATE <span className="text-[#C9BEAB] font-normal italic font-['Great_Vibes'] lowercase text-[1.2em] tracking-normal">Unforgettable</span> MOMENTS
+            CELEBRATE <span className="text-[#C7B8E8] font-normal italic font-['Great_Vibes'] lowercase text-[1.2em] tracking-normal">Unforgettable</span> MOMENTS
           </h1>
 
           <p className="mt-4 max-w-2xl text-xs sm:text-sm md:text-base text-[#FAF8F5]/90 font-sans font-light leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
@@ -363,7 +363,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <button
               type="button"
               onClick={() => navigate('/explore')}
-              className="inline-flex items-center gap-2 rounded-full bg-[#FAF8F5] text-[#1B101F] hover:bg-[#C9BEAB] px-7 py-3.5 text-xs font-extrabold uppercase tracking-wider shadow-xl transition-all duration-300 hover:scale-103 cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-full bg-[#FAF8F5] text-[#1B101F] hover:bg-[#C7B8E8] px-7 py-3.5 text-xs font-extrabold uppercase tracking-wider shadow-xl transition-all duration-300 hover:scale-103 cursor-pointer"
             >
               <span>Explore Themes &amp; Setups</span>
               <ArrowRight size={14} />
@@ -382,7 +382,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* ========================================================================= */}
       {/* 3. TRUST MARQUEE SECTION                                                 */}
       {/* ========================================================================= */}
-      <div id="trust-marquee" data-nav-theme="light" className="relative z-10 overflow-hidden bg-[#C9BEAB] py-3.5 text-[#34203C] border-y border-[#B8AC98] shadow-xs">
+      <div id="trust-marquee" data-nav-theme="light" className="relative z-10 overflow-hidden bg-[#C7B8E8] py-3.5 text-[#1C1B22] border-y border-[#B8AC98] shadow-xs">
         <div className="animate-marquee whitespace-nowrap text-[13px] font-medium tracking-wide">
           <span className="mx-6 inline-flex items-center gap-2">
             <Shield size={16} /> Verified Master Stylists
@@ -434,17 +434,17 @@ export const HomePage: React.FC<HomePageProps> = ({
             className="lg:col-span-7 flex flex-col justify-center text-left"
           >
             {/* Small Eyebrow */}
-            <p className="text-[12px] sm:text-[13px] font-bold uppercase tracking-[0.22em] text-[#C9BEAB] dark:text-[#C9BEAB] mb-3 sm:mb-4">
+            <p className="text-[12px] sm:text-[13px] font-bold uppercase tracking-[0.22em] text-[#C7B8E8] dark:text-[#C9BEAB] mb-3 sm:mb-4">
               ABOUT THEDECORPARTY
             </p>
 
             {/* Headline */}
-            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[46px] xl:text-[50px] font-normal leading-[1.12] tracking-tight text-[#34203C] dark:text-[#FAF8F5] mb-5 sm:mb-6">
-              We create celebrations that feel <span className="font-serif italic font-normal text-[#725D75] dark:text-[#C9BEAB]">personal</span>, <span className="font-serif italic font-normal text-[#725D75] dark:text-[#C9BEAB]">beautiful</span>, and <span className="font-serif italic font-normal text-[#725D75] dark:text-[#C9BEAB]">unforgettable</span>.
+            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[46px] xl:text-[50px] font-normal leading-[1.12] tracking-tight text-[#1C1B22] dark:text-[#FAF8F5] mb-5 sm:mb-6">
+              We create celebrations that feel <span className="font-serif italic font-normal text-[#6B6B76] dark:text-[#C9BEAB]">personal</span>, <span className="font-serif italic font-normal text-[#6B6B76] dark:text-[#C9BEAB]">beautiful</span>, and <span className="font-serif italic font-normal text-[#6B6B76] dark:text-[#C9BEAB]">unforgettable</span>.
             </h2>
 
             {/* Body Copy */}
-            <div className="flex flex-col gap-3.5 text-xs sm:text-sm md:text-[15px] leading-relaxed text-[#725D75] dark:text-[#C8B5C3] font-normal max-w-2xl mb-8 sm:mb-10">
+            <div className="flex flex-col gap-3.5 text-xs sm:text-sm md:text-[15px] leading-relaxed text-[#6B6B76] dark:text-[#C8B5C3] font-normal max-w-2xl mb-8 sm:mb-10">
               <p>
                 TheDecorParty is a Bengaluru-based celebration and décor studio creating thoughtfully styled experiences for birthdays, proposals, weddings, baby showers, anniversaries, and special occasions.
               </p>
@@ -455,60 +455,60 @@ export const HomePage: React.FC<HomePageProps> = ({
 
             {/* 4-Column Horizontal Stats Bar with Vertical Dividers & Rolling Animated Counters */}
             <div
-              className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-0 sm:divide-x divide-[#DDD5C7] dark:divide-[#483250] py-4 border-y border-[#DDD5C7]/70 dark:border-[#483250]/80"
+              className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-0 sm:divide-x divide-[#E4DEF2] dark:divide-[#483250] py-4 border-y border-[#E4DEF2]/70 dark:border-[#483250]/80"
             >
               <div className="sm:pr-5 sm:pl-0">
-                <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#34203C] dark:text-[#C9BEAB] tracking-tight">
+                <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#1C1B22] dark:text-[#C9BEAB] tracking-tight">
                   <AnimatedNumber
                     value={4.9}
                     decimalPlaces={1}
                     springOptions={{ bounce: 0, duration: 2000 }}
                   />
-                  <span className="text-[#A78A9F] ml-1 text-xl sm:text-2xl">★</span>
+                  <span className="text-[#8F6FC4] ml-1 text-xl sm:text-2xl">★</span>
                 </div>
-                <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#725D75] dark:text-[#A78A9F] mt-1">
+                <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#6B6B76] dark:text-[#A78A9F] mt-1">
                   Guest Rating
                 </p>
               </div>
 
               <div className="sm:px-5">
-                <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#34203C] dark:text-[#C9BEAB] tracking-tight">
+                <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#1C1B22] dark:text-[#C9BEAB] tracking-tight">
                   <AnimatedNumber
                     value={5200}
                     decimalPlaces={0}
                     springOptions={{ bounce: 0, duration: 2000 }}
                   />
-                  <span className="text-[#A78A9F] font-serif text-xl sm:text-2xl">+</span>
+                  <span className="text-[#8F6FC4] font-serif text-xl sm:text-2xl">+</span>
                 </div>
-                <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#725D75] dark:text-[#A78A9F] mt-1">
+                <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#6B6B76] dark:text-[#A78A9F] mt-1">
                   Happy Guests
                 </p>
               </div>
 
               <div className="sm:px-5">
-                <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#34203C] dark:text-[#C9BEAB] tracking-tight">
+                <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#1C1B22] dark:text-[#C9BEAB] tracking-tight">
                   <AnimatedNumber
                     value={100}
                     decimalPlaces={0}
                     springOptions={{ bounce: 0, duration: 2000 }}
                   />
-                  <span className="text-[#A78A9F] font-serif text-xl sm:text-2xl">%</span>
+                  <span className="text-[#8F6FC4] font-serif text-xl sm:text-2xl">%</span>
                 </div>
-                <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#725D75] dark:text-[#A78A9F] mt-1">
+                <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#6B6B76] dark:text-[#A78A9F] mt-1">
                   Real-to-Photo
                 </p>
               </div>
 
               <div className="sm:pl-5 sm:pr-0">
-                <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#34203C] dark:text-[#C9BEAB] tracking-tight">
+                <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#1C1B22] dark:text-[#C9BEAB] tracking-tight">
                   <AnimatedNumber
                     value={3}
                     decimalPlaces={0}
                     springOptions={{ bounce: 0, duration: 2000 }}
                   />
-                  <span className="text-[#A78A9F] font-serif text-lg sm:text-xl ml-0.5">-Hour</span>
+                  <span className="text-[#8F6FC4] font-serif text-lg sm:text-xl ml-0.5">-Hour</span>
                 </div>
-                <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#725D75] dark:text-[#A78A9F] mt-1">
+                <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#6B6B76] dark:text-[#A78A9F] mt-1">
                   Express Setup
                 </p>
               </div>
@@ -535,7 +535,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="lg:col-span-5 w-full flex justify-center"
           >
-            <div className="relative w-full overflow-hidden rounded-[32px] sm:rounded-[40px] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.14)] border border-[#DDD5C7]/70 dark:border-[#483250] aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] max-h-[560px] lg:max-h-[620px] group bg-[#FAF8F5] dark:bg-[#2D1C34]">
+            <div className="relative w-full overflow-hidden rounded-[32px] sm:rounded-[40px] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.14)] border border-[#E4DEF2]/70 dark:border-[#483250] aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] max-h-[560px] lg:max-h-[620px] group bg-[#FAF8F5] dark:bg-[#2D1C34]">
               <img
                 src="/about-aesthetic.png"
                 alt="TheDecorParty Aesthetic Celebration Setup"
@@ -557,32 +557,32 @@ export const HomePage: React.FC<HomePageProps> = ({
         <div
           className="relative overflow-hidden rounded-none w-full py-12 sm:py-16 lg:py-20 px-6 sm:px-10 md:px-14 lg:px-16 xl:px-20 text-[#FAF8F5] shadow-2xl border-y border-white/10"
           style={{
-            background: 'linear-gradient(145deg, #34203C 0%, #483250 55%, #5A3E62 100%)',
+            background: 'linear-gradient(145deg, #8F6FC4 0%, #483250 55%, #5A3E62 100%)',
           }}
         >
           {/* Ambient Glows */}
-          <div className="absolute -top-32 -right-32 w-80 h-80 bg-[#C9BEAB]/15 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-[#A78A9F]/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -top-32 -right-32 w-80 h-80 bg-[#C7B8E8]/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-[#8F6FC4]/15 rounded-full blur-3xl pointer-events-none" />
 
           <div className="w-full max-w-[1800px] mx-auto">
             {/* Editorial Section Header */}
             <div className="relative z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-14">
               <div className="flex flex-col gap-2.5">
-                <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-[#C9BEAB]">
-                  <span className="eyebrow-line bg-[#C9BEAB]" />
+                <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-[#C7B8E8]">
+                  <span className="eyebrow-line bg-[#C7B8E8]" />
                   Signature Packages &amp; Services
                 </p>
                 <h2 className="font-serif text-3xl sm:text-4xl lg:text-[48px] font-normal tracking-tight text-[#FAF8F5] leading-[1.08]">
                   Our Services
                 </h2>
-                <p className="max-w-2xl text-xs sm:text-sm md:text-[15px] font-light leading-relaxed text-[#F6EFF4]/90">
+                <p className="max-w-2xl text-xs sm:text-sm md:text-[15px] font-light leading-relaxed text-[#F2EEFA]/90">
                   Experience luxury and effortless celebrations with our curated selection of bespoke packages.
                 </p>
               </div>
 
               <a
                 href="/explore"
-                className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#C9BEAB] hover:text-[#FAF8F5] hover:underline whitespace-nowrap self-start sm:self-auto transition-colors"
+                className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#C7B8E8] hover:text-[#FAF8F5] hover:underline whitespace-nowrap self-start sm:self-auto transition-colors"
               >
                 <span>View All Packages</span>
                 <ArrowRight size={14} />
@@ -632,14 +632,14 @@ export const HomePage: React.FC<HomePageProps> = ({
         <div id="detailed-services" className="scroll-mt-36 sm:scroll-mt-44" />
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-12">
           <div className="flex flex-col gap-2.5">
-            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#725D75] dark:text-[#A78A9F]">
+            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#6B6B76] dark:text-[#A78A9F]">
               <span className="eyebrow-line" />
               Transparent Pricing
             </p>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-[46px] font-normal uppercase tracking-tight text-[#34203C] dark:text-[#FAF8F5] leading-[1.08]">
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-[46px] font-normal uppercase tracking-tight text-[#1C1B22] dark:text-[#FAF8F5] leading-[1.08]">
               Detailed Service Inclusions
             </h2>
-            <p className="max-w-2xl text-xs sm:text-sm md:text-[15px] font-light leading-relaxed text-[#725D75] dark:text-[#C8B5C3]">
+            <p className="max-w-2xl text-xs sm:text-sm md:text-[15px] font-light leading-relaxed text-[#6B6B76] dark:text-[#C8B5C3]">
               Every package is delivered turnkey with verified decorators, premium props, and transparent fixed pricing.
             </p>
           </div>
@@ -647,7 +647,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           <button
             type="button"
             onClick={() => navigate('/packages')}
-            className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#34203C] hover:text-[#725D75] dark:text-[#C9BEAB] hover:underline whitespace-nowrap self-start sm:self-auto cursor-pointer"
+            className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#1C1B22] hover:text-[#6B6B76] dark:text-[#C9BEAB] hover:underline whitespace-nowrap self-start sm:self-auto cursor-pointer"
           >
             <span>Explore All Packages</span>
             <ArrowRight size={14} />
@@ -674,15 +674,15 @@ export const HomePage: React.FC<HomePageProps> = ({
               >
                 <div className="flex flex-col h-full">
                   {/* Top Inner Header Box (Matching Champagne Gold Palette from Image 2) */}
-                  <div className="rounded-2xl p-4 sm:p-5 mb-5 border border-[#A78A9F]/25 bg-[#34203C]/85 shadow-inner backdrop-blur-md transition-all duration-300 group-hover:border-[#C9BEAB]/40 group-hover:bg-[#483250]/90">
+                  <div className="rounded-2xl p-4 sm:p-5 mb-5 border border-[#8F6FC4]/25 bg-[#8F6FC4]/85 shadow-inner backdrop-blur-md transition-all duration-300 group-hover:border-[#C7B8E8]/40 group-hover:bg-[#483250]/90">
                     {/* Tag & Popular Badge */}
                     <div className="flex items-center justify-between gap-2 min-h-[24px]">
-                      <div className="flex items-center gap-1.5 text-[#C9BEAB] text-[11px] font-bold uppercase tracking-wider min-w-0">
-                        <Icon size={13} className="text-[#C9BEAB] flex-shrink-0" />
+                      <div className="flex items-center gap-1.5 text-[#C7B8E8] text-[11px] font-bold uppercase tracking-wider min-w-0">
+                        <Icon size={13} className="text-[#C7B8E8] flex-shrink-0" />
                         <span className="whitespace-nowrap">{srv.tag}</span>
                       </div>
                       {srv.popular && (
-                        <span className="rounded-full border border-[#C9BEAB]/40 bg-[#483250]/80 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#C9BEAB] shadow-xs flex-shrink-0">
+                        <span className="rounded-full border border-[#C7B8E8]/40 bg-[#483250]/80 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#C7B8E8] shadow-xs flex-shrink-0">
                           Popular
                         </span>
                       )}
@@ -691,7 +691,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                     {/* Price Display */}
                     <div className="flex items-baseline justify-between mt-3 mb-4">
                       <div className="flex flex-col">
-                        <span className="text-[10px] font-semibold text-[#DDD5C7]/75 uppercase tracking-wider">
+                        <span className="text-[10px] font-semibold text-[#E4DEF2]/75 uppercase tracking-wider">
                           {srv.pricePrefix}
                         </span>
                         <span className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#FAF8F5]">
@@ -704,7 +704,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                     <button
                       type="button"
                       onClick={() => onSelectCategory(srv.category)}
-                      className="flex items-center justify-center gap-1.5 w-full rounded-full bg-[#C9BEAB] hover:bg-[#FAF8F5] text-[#34203C] py-2.5 px-4 text-xs font-bold uppercase tracking-wider shadow-md transition-all duration-300 hover:scale-103 active:scale-95 cursor-pointer"
+                      className="flex items-center justify-center gap-1.5 w-full rounded-full bg-[#C7B8E8] hover:bg-[#FAF8F5] text-[#1C1B22] py-2.5 px-4 text-xs font-bold uppercase tracking-wider shadow-md transition-all duration-300 hover:scale-103 active:scale-95 cursor-pointer"
                     >
                       <span>Book This Package</span>
                       <ArrowRight size={13} />
@@ -712,24 +712,24 @@ export const HomePage: React.FC<HomePageProps> = ({
                   </div>
 
                   {/* Package Title */}
-                  <h3 className="font-serif text-sm sm:text-base font-bold uppercase tracking-[0.03em] leading-snug text-[#FAF8F5] mb-2 group-hover:text-[#C9BEAB] transition-colors min-h-[48px] flex items-start">
+                  <h3 className="font-serif text-sm sm:text-base font-bold uppercase tracking-[0.03em] leading-snug text-[#FAF8F5] mb-2 group-hover:text-[#C7B8E8] transition-colors min-h-[48px] flex items-start">
                     {srv.title}
                   </h3>
 
                   {/* Subtitle / Description */}
-                  <p className="text-xs font-light leading-relaxed text-[#DDD5C7]/85 mb-5 min-h-[52px]">
+                  <p className="text-xs font-light leading-relaxed text-[#E4DEF2]/85 mb-5 min-h-[52px]">
                     {srv.desc}
                   </p>
 
                   {/* What's Included / Circular Checkmarks List */}
                   <div className="border-t border-white/10 pt-4 mb-5 flex-1">
-                    <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#C9BEAB] block mb-3">
+                    <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#C7B8E8] block mb-3">
                       What's Included:
                     </span>
                     <div className="space-y-2.5">
                       {srv.inclusions.map((inc, incIdx) => (
-                        <div key={incIdx} className="flex items-start gap-2 text-xs font-light leading-snug text-[#F6EFF4]/90">
-                          <CheckCircle2 size={14} className="text-[#C9BEAB] flex-shrink-0 mt-0.5" />
+                        <div key={incIdx} className="flex items-start gap-2 text-xs font-light leading-snug text-[#F2EEFA]/90">
+                          <CheckCircle2 size={14} className="text-[#C7B8E8] flex-shrink-0 mt-0.5" />
                           <span>{inc}</span>
                         </div>
                       ))}
@@ -743,7 +743,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                     href="https://wa.me/917022058460"
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center justify-center gap-1.5 w-full text-[11px] font-semibold tracking-wider uppercase text-[#DDD5C7]/80 hover:text-[#C9BEAB] hover:underline transition-colors"
+                    className="inline-flex items-center justify-center gap-1.5 w-full text-[11px] font-semibold tracking-wider uppercase text-[#E4DEF2]/80 hover:text-[#C7B8E8] hover:underline transition-colors"
                   >
                     <MessageSquare size={12} />
                     <span>Customize on WhatsApp</span>
@@ -761,14 +761,14 @@ export const HomePage: React.FC<HomePageProps> = ({
       <section id="gallery" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-12">
           <div className="flex flex-col gap-2.5">
-            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#725D75] dark:text-[#A78A9F]">
+            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#6B6B76] dark:text-[#A78A9F]">
               <span className="eyebrow-line" />
               Visual Inspiration
             </p>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-[44px] font-bold uppercase tracking-tight text-[#34203C] dark:text-[#FAF8F5] leading-[1.1]">
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-[44px] font-bold uppercase tracking-tight text-[#1C1B22] dark:text-[#FAF8F5] leading-[1.1]">
               Real Celebrations. Real Setups.
             </h2>
-            <p className="max-w-2xl text-xs sm:text-sm md:text-[15px] font-normal leading-relaxed text-[#725D75] dark:text-[#C8B5C3]">
+            <p className="max-w-2xl text-xs sm:text-sm md:text-[15px] font-normal leading-relaxed text-[#6B6B76] dark:text-[#C8B5C3]">
               Tap any celebration snapshot to explore matching packages and customized accessories.
             </p>
           </div>
@@ -812,18 +812,18 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* 10. HOW IT WORKS / BOOKING JOURNEY (Full Width & Squared)                 */}
       {/* ========================================================================= */}
       <section id="process" data-nav-theme="light" className="w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
-        <div className="w-full rounded-none border-y border-[#DDD5C7] dark:border-[#483250] bg-[#F5EFE6] dark:bg-[#25172C] py-12 sm:py-16 lg:py-18 px-5 sm:px-8 lg:px-12 shadow-xs">
+        <div className="w-full rounded-none border-y border-[#E4DEF2] dark:border-[#483250] bg-[#F2EEFA] dark:bg-[#25172C] py-12 sm:py-16 lg:py-18 px-5 sm:px-8 lg:px-12 shadow-xs">
           <div className="mx-auto max-w-[1720px]">
             <div className="mb-8 sm:mb-10 text-center max-w-2xl mx-auto">
-              <p className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-[#725D75] dark:text-[#A78A9F] mb-2.5">
-                <span className="eyebrow-line bg-[#725D75] dark:bg-[#A78A9F]" />
+              <p className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-[#6B6B76] dark:text-[#A78A9F] mb-2.5">
+                <span className="eyebrow-line bg-[#A48ED0] dark:bg-[#A78A9F]" />
                 Seamless Booking Flow
-                <span className="eyebrow-line bg-[#725D75] dark:bg-[#A78A9F]" />
+                <span className="eyebrow-line bg-[#A48ED0] dark:bg-[#A78A9F]" />
               </p>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-[44px] font-normal uppercase tracking-tight text-[#34203C] dark:text-[#FAF8F5] leading-[1.08]">
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-[44px] font-normal uppercase tracking-tight text-[#1C1B22] dark:text-[#FAF8F5] leading-[1.08]">
                 How It Works
               </h2>
-              <p className="text-xs sm:text-sm md:text-[15px] font-light leading-relaxed text-[#725D75] dark:text-[#C8B5C3] mt-2 max-w-md mx-auto">
+              <p className="text-xs sm:text-sm md:text-[15px] font-light leading-relaxed text-[#6B6B76] dark:text-[#C8B5C3] mt-2 max-w-md mx-auto">
                 From discovering your aesthetic to verified decorators setting up at your door.
               </p>
             </div>
@@ -871,7 +871,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             background: 'linear-gradient(145deg, #26112A 0%, #371A3F 55%, #46224F 100%)',
           }}
         >
-          <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-[#A78A9F]/10 blur-3xl pointer-events-none" />
+          <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-[#8F6FC4]/10 blur-3xl pointer-events-none" />
           <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-[#483250]/20 blur-3xl pointer-events-none" />
 
           <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center gap-4 sm:gap-5">
@@ -880,7 +880,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               Planning Your Next Celebration?
             </h2>
 
-            <p className="text-xs sm:text-sm md:text-[15px] font-light text-[#F6EFF4]/85 max-w-2xl leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-[15px] font-light text-[#F2EEFA]/85 max-w-2xl leading-relaxed">
               Tell us where you&apos;re celebrating, how many guests are attending and what theme you need — we&apos;ll help you plan the setup and share a clear quotation.
             </p>
 
@@ -889,9 +889,9 @@ export const HomePage: React.FC<HomePageProps> = ({
               <button
                 type="button"
                 onClick={() => navigate('/explore')}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#A78A9F] to-[#725D75] px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#FAF8F5] shadow-lg hover:opacity-95 hover:scale-103 active:scale-95 transition-all cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#8F6FC4] to-[#A48ED0] px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#FAF8F5] shadow-lg hover:opacity-95 hover:scale-103 active:scale-95 transition-all cursor-pointer"
               >
-                <Sparkles size={15} className="text-[#C9BEAB]" />
+                <Sparkles size={15} className="text-[#C7B8E8]" />
                 <span>Book Now</span>
               </button>
 
@@ -916,15 +916,15 @@ export const HomePage: React.FC<HomePageProps> = ({
 
             <div className="mt-4 pt-4 border-t border-white/10 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-[11px] sm:text-xs text-[#FAF8F5]/75 font-medium tracking-wide">
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 size={13} className="text-[#C9BEAB]" />
+                <CheckCircle2 size={13} className="text-[#C7B8E8]" />
                 <span>Zero Hidden Fees</span>
               </span>
               <span className="flex items-center gap-1.5">
-                <Clock size={13} className="text-[#C9BEAB]" />
+                <Clock size={13} className="text-[#C7B8E8]" />
                 <span>Express 3-Hour Setup</span>
               </span>
               <span className="flex items-center gap-1.5">
-                <Shield size={13} className="text-[#C9BEAB]" />
+                <Shield size={13} className="text-[#C7B8E8]" />
                 <span>100% Picture-Match Guarantee</span>
               </span>
             </div>

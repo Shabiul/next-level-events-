@@ -102,8 +102,8 @@ export const ParallaxTourCard: React.FC<ParallaxTourCardProps> = ({
         whileHover={{ scale: 1.02 }}
         transition={{ type: 'spring', damping: 20, stiffness: 300 }}
         className={cn(
-          'group relative overflow-hidden rounded-[28px] sm:rounded-[32px] bg-[#34203C] border border-[#A78A9F]/25 text-[#FAF8F5]',
-          'shadow-[0_16px_36px_rgba(52,32,60,0.4)] hover:shadow-[0_26px_60px_rgba(167,138,159,0.35)] hover:border-[#A78A9F]/65',
+          'group relative overflow-hidden rounded-[28px] sm:rounded-[32px] bg-[#8F6FC4] border border-[#8F6FC4]/25 text-[#FAF8F5]',
+          'shadow-[0_16px_36px_rgba(52,32,60,0.4)] hover:shadow-[0_26px_60px_rgba(167,138,159,0.35)] hover:border-[#8F6FC4]/65',
           'transition-shadow duration-500',
           aspectRatio
         )}
@@ -153,7 +153,7 @@ export const ParallaxTourCard: React.FC<ParallaxTourCardProps> = ({
           className="absolute top-4 left-4 right-4 z-30 flex items-center justify-between pointer-events-none"
         >
           {badge ? (
-            <span className="pointer-events-auto inline-flex items-center rounded-full bg-[#34203C]/80 border border-[#A78A9F]/40 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#C9BEAB] backdrop-blur-md shadow-md">
+            <span className="pointer-events-auto inline-flex items-center rounded-full bg-[#8F6FC4]/80 border border-[#8F6FC4]/40 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#C7B8E8] backdrop-blur-md shadow-md">
               {badge}
             </span>
           ) : (
@@ -170,7 +170,7 @@ export const ParallaxTourCard: React.FC<ParallaxTourCardProps> = ({
             transition={{ duration: 0.3 }}
             className={cn(
               'pointer-events-auto flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full',
-              'bg-[#34203C]/80 hover:bg-[#483250] border border-[#A78A9F]/40 backdrop-blur-md shadow-lg',
+              'bg-[#8F6FC4]/80 hover:bg-[#483250] border border-[#8F6FC4]/40 backdrop-blur-md shadow-lg',
               'text-[#FAF8F5] transition-colors duration-200 cursor-pointer'
             )}
           >
@@ -178,7 +178,7 @@ export const ParallaxTourCard: React.FC<ParallaxTourCardProps> = ({
               size={18}
               className={cn(
                 'transition-all duration-200',
-                isLiked ? 'fill-rose-400 text-rose-400 scale-110' : 'text-[#C9BEAB] hover:text-[#FAF8F5]'
+                isLiked ? 'fill-rose-400 text-rose-400 scale-110' : 'text-[#C7B8E8] hover:text-[#FAF8F5]'
               )}
             />
           </motion.button>
@@ -193,20 +193,20 @@ export const ParallaxTourCard: React.FC<ParallaxTourCardProps> = ({
         >
           {/* Subtitle / Category with dashes in Radiant Lilac */}
           {subtitle && (
-            <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.22em] text-[#C9BEAB] drop-shadow-sm mb-1.5 font-sans">
+            <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.22em] text-[#C7B8E8] drop-shadow-sm mb-1.5 font-sans">
               {formattedSubtitle}
             </p>
           )}
 
           {/* Main Title */}
-          <h3 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#FAF8F5] drop-shadow-md leading-tight group-hover:text-[#C9BEAB] transition-colors">
+          <h3 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#FAF8F5] drop-shadow-md leading-tight group-hover:text-[#C7B8E8] transition-colors">
             {title}
           </h3>
 
           {/* Optional Price Pill in Khaki Shell */}
           {price && (
             <div className="mt-2.5 flex items-center gap-2">
-              <span className="inline-flex items-center rounded-full bg-[#483250]/90 border border-[#A78A9F]/40 px-3 py-1 text-xs font-bold text-[#C9BEAB] backdrop-blur-md">
+              <span className="inline-flex items-center rounded-full bg-[#483250]/90 border border-[#8F6FC4]/40 px-3 py-1 text-xs font-bold text-[#C7B8E8] backdrop-blur-md">
                 {price}
               </span>
             </div>

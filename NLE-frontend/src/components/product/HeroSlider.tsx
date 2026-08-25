@@ -60,10 +60,10 @@ export const HeroSlider: React.FC = () => {
               >
                 {/* Eyebrow */}
                 <div
-                  className="inline-flex items-center gap-2 rounded-full border border-[#C9BEAB]/30 bg-[#34203C]/35 px-4 py-1.5 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.24em] text-[#FAF8F5] backdrop-blur-md"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#C7B8E8]/30 bg-[#8F6FC4]/35 px-4 py-1.5 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.24em] text-[#FAF8F5] backdrop-blur-md"
                   style={{ animation: 'fadeIn 0.35s ease both' }}
                 >
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#A78A9F] animate-pulse" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#8F6FC4] animate-pulse" />
                   <span>{slide.chip || 'CELEBRATIONS, BEAUTIFULLY CURATED'}</span>
                 </div>
 
@@ -79,7 +79,7 @@ export const HeroSlider: React.FC = () => {
                     <>
                       Celebrations,<br className="hidden sm:inline" />
                       Thoughtfully{' '}
-                      <span className="font-['Great_Vibes'] text-[#A78A9F] lowercase text-[1.18em] font-normal tracking-normal italic ml-1">
+                      <span className="font-['Great_Vibes'] text-[#8F6FC4] lowercase text-[1.18em] font-normal tracking-normal italic ml-1">
                         Designed.
                       </span>
                     </>
@@ -90,7 +90,7 @@ export const HeroSlider: React.FC = () => {
 
                 {/* Supporting Subtitle */}
                 <p
-                  className="max-w-2xl text-balance text-xs sm:text-sm md:text-base leading-relaxed text-[#DDD5C7]/95 font-light"
+                  className="max-w-2xl text-balance text-xs sm:text-sm md:text-base leading-relaxed text-[#E4DEF2]/95 font-light"
                   style={{
                     textShadow: '0 2px 12px rgba(0,0,0,0.6)',
                     animation: 'fadeInUp 0.4s ease 0.12s both',
@@ -107,7 +107,7 @@ export const HeroSlider: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => navigate('/explore')}
-                    className="inline-flex items-center gap-2 rounded-full bg-[#A78A9F] text-[#34203C] hover:bg-[#C9BEAB] px-7 py-3.5 text-xs font-bold uppercase tracking-wider shadow-lg hover:shadow-xl hover:scale-104 active:scale-95 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#8F6FC4] text-[#1C1B22] hover:bg-[#C7B8E8] px-7 py-3.5 text-xs font-bold uppercase tracking-wider shadow-lg hover:shadow-xl hover:scale-104 active:scale-95 transition-all cursor-pointer"
                   >
                     <span>Plan Your Celebration</span>
                     <ArrowRight size={14} />
@@ -139,7 +139,7 @@ export const HeroSlider: React.FC = () => {
           type="button"
           aria-label="Previous slide"
           onClick={handlePrev}
-          className="absolute left-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-[#34203C]/60 text-[#FAF8F5] backdrop-blur-xs border border-[#C9BEAB]/30 transition-all hover:bg-[#34203C] hover:scale-105 active:scale-90 cursor-pointer sm:left-6 sm:h-11 sm:w-11"
+          className="absolute left-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-[#8F6FC4]/60 text-[#FAF8F5] backdrop-blur-xs border border-[#C7B8E8]/30 transition-all hover:bg-[#8F6FC4] hover:scale-105 active:scale-90 cursor-pointer sm:left-6 sm:h-11 sm:w-11"
         >
           <ChevronLeft size={20} />
         </button>
@@ -149,7 +149,7 @@ export const HeroSlider: React.FC = () => {
           type="button"
           aria-label="Next slide"
           onClick={handleNext}
-          className="absolute right-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-[#34203C]/60 text-[#FAF8F5] backdrop-blur-xs border border-[#C9BEAB]/30 transition-all hover:bg-[#34203C] hover:scale-105 active:scale-90 cursor-pointer sm:right-6 sm:h-11 sm:w-11"
+          className="absolute right-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-[#8F6FC4]/60 text-[#FAF8F5] backdrop-blur-xs border border-[#C7B8E8]/30 transition-all hover:bg-[#8F6FC4] hover:scale-105 active:scale-90 cursor-pointer sm:right-6 sm:h-11 sm:w-11"
         >
           <ChevronRight size={20} />
         </button>
@@ -165,7 +165,7 @@ export const HeroSlider: React.FC = () => {
               className={cn(
                 'h-1.5 rounded-full transition-all duration-300 cursor-pointer',
                 i === index
-                  ? 'w-6 bg-[#A78A9F]'
+                  ? 'w-6 bg-[#8F6FC4]'
                   : 'w-1.5 bg-[#FAF8F5]/50 hover:bg-[#FAF8F5]/80'
               )}
             />

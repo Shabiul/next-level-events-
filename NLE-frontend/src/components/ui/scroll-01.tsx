@@ -80,15 +80,15 @@ export const Scroll01: React.FC<Scroll01Props> = ({ items, className = '' }) => 
           {/* 1. SECTION HEADER (From Reference Screenshot)                             */}
           {/* ========================================================================= */}
           <div className="text-center mb-6 sm:mb-8">
-            <p className="flex items-center justify-center gap-3 text-xs font-bold uppercase tracking-[0.24em] text-[#725D75] dark:text-[#A78A9F] mb-2">
-              <span className="h-px w-8 bg-[#725D75]/40 dark:bg-[#A78A9F]/40" />
+            <p className="flex items-center justify-center gap-3 text-xs font-bold uppercase tracking-[0.24em] text-[#6B6B76] dark:text-[#A78A9F] mb-2">
+              <span className="h-px w-8 bg-[#A48ED0]/40 dark:bg-[#A78A9F]/40" />
               The TheDecorParty Standard
-              <span className="h-px w-8 bg-[#725D75]/40 dark:bg-[#A78A9F]/40" />
+              <span className="h-px w-8 bg-[#A48ED0]/40 dark:bg-[#A78A9F]/40" />
             </p>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-[44px] font-normal uppercase tracking-tight text-[#34203C] dark:text-[#FAF8F5] leading-tight">
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-[44px] font-normal uppercase tracking-tight text-[#1C1B22] dark:text-[#FAF8F5] leading-tight">
               Why Choose TheDecorParty?
             </h2>
-            <p className="text-xs sm:text-sm md:text-[15px] font-light leading-relaxed text-[#725D75] dark:text-[#C8B5C3] mt-2 max-w-xl mx-auto">
+            <p className="text-xs sm:text-sm md:text-[15px] font-light leading-relaxed text-[#6B6B76] dark:text-[#C8B5C3] mt-2 max-w-xl mx-auto">
               Uncompromising craftsmanship, punctual master stylists, and 100% picture-accurate execution.
             </p>
           </div>
@@ -109,8 +109,8 @@ export const Scroll01: React.FC<Scroll01Props> = ({ items, className = '' }) => 
                       onClick={() => handleSelect(idx)}
                       className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer shadow-xs ${
                         isActive
-                          ? 'bg-[#A78A9F] text-[#34203C] shadow-md scale-103'
-                          : 'bg-[#483250]/70 hover:bg-[#483250] text-[#DDD5C7]/80 hover:text-[#FAF8F5] border border-[#A78A9F]/20'
+                          ? 'bg-[#8F6FC4] text-[#1C1B22] shadow-md scale-103'
+                          : 'bg-[#483250]/70 hover:bg-[#483250] text-[#E4DEF2]/80 hover:text-[#FAF8F5] border border-[#8F6FC4]/20'
                       }`}
                     >
                       <span>{item.categoryTag || item.badge || `0${idx + 1}`}</span>
@@ -121,10 +121,10 @@ export const Scroll01: React.FC<Scroll01Props> = ({ items, className = '' }) => 
 
               {/* Counter & Arrow Nav Controls */}
               <div className="flex items-center gap-2 ml-auto">
-                <span className="px-3 py-1.5 rounded-full bg-[#483250] border border-[#A78A9F]/25 text-xs font-serif font-bold text-[#FAF8F5]">
+                <span className="px-3 py-1.5 rounded-full bg-[#483250] border border-[#8F6FC4]/25 text-xs font-serif font-bold text-[#FAF8F5]">
                   {`0${activeIndex + 1}`} / {`0${items.length}`}
                 </span>
-                <div className="flex items-center rounded-full bg-[#483250] border border-[#A78A9F]/25 p-0.5">
+                <div className="flex items-center rounded-full bg-[#483250] border border-[#8F6FC4]/25 p-0.5">
                   <button
                     type="button"
                     onClick={handlePrev}
@@ -146,10 +146,10 @@ export const Scroll01: React.FC<Scroll01Props> = ({ items, className = '' }) => 
             </div>
 
             {/* Moving Scroll Progress Bar Underneath Tabs */}
-            <div className="w-full h-1 rounded-full bg-[#DDD5C7]/40 dark:bg-[#483250] overflow-hidden">
+            <div className="w-full h-1 rounded-full bg-[#E4DEF2]/40 dark:bg-[#483250] overflow-hidden">
               <motion.div
                 style={{ width: progressPercentage }}
-                className="h-full bg-gradient-to-r from-[#A78A9F] via-[#C9BEAB] to-[#A78A9F] rounded-full"
+                className="h-full bg-gradient-to-r from-[#8F6FC4] via-[#C7B8E8] to-[#8F6FC4] rounded-full"
               />
             </div>
           </div>
@@ -157,15 +157,15 @@ export const Scroll01: React.FC<Scroll01Props> = ({ items, className = '' }) => 
           {/* ========================================================================= */}
           {/* 3. MAIN SHOWCASE CARD (Single Sticky Showcase)                            */}
           {/* ========================================================================= */}
-          <div className="rounded-[32px] bg-[#34203C] border border-[#A78A9F]/30 p-6 sm:p-8 lg:p-10 shadow-2xl text-[#FAF8F5] relative overflow-hidden">
+          <div className="rounded-[32px] bg-[#8F6FC4] border border-[#8F6FC4]/30 p-6 sm:p-8 lg:p-10 shadow-2xl text-[#FAF8F5] relative overflow-hidden">
             {/* Ambient Lighting */}
-            <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-[#A78A9F]/15 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-[#C9BEAB]/10 blur-3xl" />
+            <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-[#8F6FC4]/15 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-[#C7B8E8]/10 blur-3xl" />
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
               
               {/* LEFT HALF: Contained Image Frame */}
-              <div className="lg:col-span-5 relative w-full aspect-[4/3] sm:aspect-[16/11] lg:aspect-auto lg:h-[400px] rounded-2xl overflow-hidden bg-[#24132B] border border-[#A78A9F]/20 shadow-xl">
+              <div className="lg:col-span-5 relative w-full aspect-[4/3] sm:aspect-[16/11] lg:aspect-auto lg:h-[400px] rounded-2xl overflow-hidden bg-[#24132B] border border-[#8F6FC4]/20 shadow-xl">
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={activeItem.media}
@@ -180,12 +180,12 @@ export const Scroll01: React.FC<Scroll01Props> = ({ items, className = '' }) => 
                 </AnimatePresence>
 
                 {/* Subtle vignette gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#34203C]/90 via-transparent to-black/30 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#8F6FC4]/90 via-transparent to-black/30 pointer-events-none" />
 
                 {/* Bottom Left Badge */}
                 <div className="absolute bottom-4 left-4 z-10">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-black/65 border border-white/20 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-[#C9BEAB] backdrop-blur-md shadow-md">
-                    <Sparkles size={11} className="text-[#C9BEAB]" />
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-black/65 border border-white/20 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-[#C7B8E8] backdrop-blur-md shadow-md">
+                    <Sparkles size={11} className="text-[#C7B8E8]" />
                     <span>{activeItem.imageBadge || activeItem.badge || 'Bengaluru Standard'}</span>
                   </span>
                 </div>
@@ -211,10 +211,10 @@ export const Scroll01: React.FC<Scroll01Props> = ({ items, className = '' }) => 
                   >
                     {/* Top Tag Row */}
                     <div className="flex items-center justify-between gap-3 mb-3">
-                      <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#A78A9F]">
+                      <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#8F6FC4]">
                         {activeItem.categoryTag || activeItem.badge}
                       </span>
-                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#C9BEAB]">
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#C7B8E8]">
                         <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                         Guaranteed Standard
                       </span>
@@ -226,21 +226,21 @@ export const Scroll01: React.FC<Scroll01Props> = ({ items, className = '' }) => 
                     </h3>
 
                     {/* Description */}
-                    <p className="text-xs sm:text-sm md:text-[15px] font-light text-[#DDD5C7]/95 leading-relaxed mb-6">
+                    <p className="text-xs sm:text-sm md:text-[15px] font-light text-[#E4DEF2]/95 leading-relaxed mb-6">
                       {activeItem.desc || activeItem.description}
                     </p>
 
                     {/* Inclusions Checklist Box */}
                     {activeItem.whyUsPoints && activeItem.whyUsPoints.length > 0 && (
-                      <div className="rounded-2xl bg-[#483250] border border-[#A78A9F]/25 p-4 sm:p-5 mb-6">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#A78A9F] mb-3 flex items-center gap-1.5">
-                          <Sparkles size={12} className="text-[#C9BEAB]" />
+                      <div className="rounded-2xl bg-[#483250] border border-[#8F6FC4]/25 p-4 sm:p-5 mb-6">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8F6FC4] mb-3 flex items-center gap-1.5">
+                          <Sparkles size={12} className="text-[#C7B8E8]" />
                           Why Choose TheDecorParty
                         </p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           {activeItem.whyUsPoints.map((pt, pIdx) => (
-                            <div key={pIdx} className="flex items-start gap-2.5 text-xs font-light text-[#F6EFF4]/90 leading-snug">
-                              <CheckCircle2 size={15} className="text-[#C9BEAB] shrink-0 mt-0.5" />
+                            <div key={pIdx} className="flex items-start gap-2.5 text-xs font-light text-[#F2EEFA]/90 leading-snug">
+                              <CheckCircle2 size={15} className="text-[#C7B8E8] shrink-0 mt-0.5" />
                               <span>{pt}</span>
                             </div>
                           ))}
@@ -249,12 +249,12 @@ export const Scroll01: React.FC<Scroll01Props> = ({ items, className = '' }) => 
                     )}
 
                     {/* Bottom Row: Metrics & CTA Button */}
-                    <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-[#A78A9F]/20">
+                    <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-[#8F6FC4]/20">
                       <div className="flex flex-wrap items-center gap-2">
                         {activeItem.metrics?.map((m, mIdx) => (
                           <span
                             key={mIdx}
-                            className="inline-flex items-center rounded-full bg-[#483250] border border-[#725D75]/40 px-3.5 py-1 text-[11px] font-semibold text-[#C9BEAB]"
+                            className="inline-flex items-center rounded-full bg-[#483250] border border-[#A48ED0]/40 px-3.5 py-1 text-[11px] font-semibold text-[#C7B8E8]"
                           >
                             {m}
                           </span>
@@ -264,7 +264,7 @@ export const Scroll01: React.FC<Scroll01Props> = ({ items, className = '' }) => 
                       <button
                         type="button"
                         onClick={() => navigate(activeItem.ctaLink || '/explore')}
-                        className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#C9BEAB] hover:text-[#FAF8F5] transition-colors cursor-pointer group"
+                        className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#C7B8E8] hover:text-[#FAF8F5] transition-colors cursor-pointer group"
                       >
                         <span>{activeItem.ctaText || 'EXPLORE BIRTHDAY SETUPS →'}</span>
                         <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />

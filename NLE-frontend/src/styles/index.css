@@ -6,20 +6,20 @@
 
 @layer base {
   :root {
-    --color-khaki-shell: #C9BEAB;
-    --color-radiant-lilac: #A78A9F;
-    --color-banished-brown: #725D75;
+    --color-khaki-shell: #C7B8E8;
+    --color-radiant-lilac: #8F6FC4;
+    --color-banished-brown: #6B6B76;
     --color-shadow-purple: #483250;
-    --color-japanese-violet: #34203C;
+    --color-japanese-violet: #1C1B22;
 
     --color-bg-canvas: #FAF8F5;
-    --color-bg-subtle: #F5EFE6;
+    --color-bg-subtle: #F2EEFA;
     --color-bg-card: #FAF8F5;
-    --color-border: #DDD5C7;
-    --color-border-light: #E6DFD5;
-    --color-ink: #34203C;
-    --color-ink-muted: #725D75;
-    --color-ink-light: #A78A9F;
+    --color-border: #E4DEF2;
+    --color-border-light: #EAE5F5;
+    --color-ink: #1C1B22;
+    --color-ink-muted: #6B6B76;
+    --color-ink-light: #8F6FC4;
   }
 
   html.dark {
@@ -142,28 +142,28 @@
 
   /* Luxury Pill Button Classes */
   .pill-btn-lilac {
-    background: linear-gradient(135deg, #A78A9F 0%, #8E6F86 100%);
+    background: linear-gradient(135deg, #8F6FC4 0%, #7D5DB2 100%);
     color: #FAF8F5;
-    border: 1px solid rgba(201, 190, 171, 0.4);
-    box-shadow: 0 4px 14px rgba(167, 138, 159, 0.35);
+    border: 1px solid rgba(199, 184, 232, 0.4);
+    box-shadow: 0 4px 14px rgba(143, 111, 196, 0.35);
     transition: all 0.25s ease;
   }
   .pill-btn-lilac:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(167, 138, 159, 0.5);
+    box-shadow: 0 6px 20px rgba(143, 111, 196, 0.5);
     filter: brightness(1.06);
   }
 
   .pill-btn-khaki {
-    background: linear-gradient(135deg, #C9BEAB 0%, #B8AC98 100%);
-    color: #34203C;
-    border: 1px solid rgba(52, 32, 60, 0.15);
-    box-shadow: 0 4px 14px rgba(201, 190, 171, 0.4);
+    background: linear-gradient(135deg, #C7B8E8 0%, #B0A0D8 100%);
+    color: #1C1B22;
+    border: 1px solid rgba(28, 27, 34, 0.15);
+    box-shadow: 0 4px 14px rgba(199, 184, 232, 0.4);
     transition: all 0.25s ease;
   }
   .pill-btn-khaki:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(201, 190, 171, 0.6);
+    box-shadow: 0 6px 20px rgba(199, 184, 232, 0.6);
     filter: brightness(1.05);
   }
 
@@ -203,8 +203,8 @@
   }
 
   .card-clean {
-    background-color: #FCFAF6;
-    border: 1px solid #E8DFD3;
+    background-color: #FDFCFE;
+    border: 1px solid #E4DEF2;
     border-radius: 20px;
     box-shadow: 0 2px 10px rgba(45, 34, 38, 0.03);
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
@@ -266,19 +266,19 @@
     animation: balloonFloatC 8s ease-in-out infinite;
   }
 
-  /* Blended Luxury Gradients using strictly the 5 locked palette colors */
+  /* Blended Luxury Gradients using the locked palette colors */
   .bg-luxury-gradient {
-    background: linear-gradient(145deg, #34203C 0%, #483250 50%, #725D75 100%);
+    background: linear-gradient(145deg, #8F6FC4 0%, #7D5DB2 50%, #6B6B76 100%);
   }
 
   .bg-khaki-gradient {
-    background: linear-gradient(180deg, #FAF8F5 0%, #F5EFE6 100%);
+    background: linear-gradient(180deg, #FAF8F5 0%, #F2EEFA 100%);
   }
 
   .badge-khaki {
-    background-color: rgba(201, 190, 171, 0.25);
-    color: #34203C;
-    border: 1px solid rgba(201, 190, 171, 0.5);
+    background-color: rgba(199, 184, 232, 0.25);
+    color: #1C1B22;
+    border: 1px solid rgba(199, 184, 232, 0.5);
   }
 
   html.dark .badge-khaki {
@@ -288,9 +288,9 @@
   }
 
   .badge-lilac {
-    background-color: rgba(167, 138, 159, 0.18);
-    color: #34203C;
-    border: 1px solid rgba(167, 138, 159, 0.4);
+    background-color: rgba(143, 111, 196, 0.18);
+    color: #1C1B22;
+    border: 1px solid rgba(143, 111, 196, 0.4);
   }
 
   html.dark .badge-lilac {

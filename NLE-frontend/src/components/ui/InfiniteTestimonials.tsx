@@ -292,12 +292,12 @@ export default function InfiniteTestimonials({
             <>
               Loved by Over{' '}
               <AnimatedNumber
-                className="inline-flex font-serif text-[#34203C] dark:text-[#C9BEAB]"
+                className="inline-flex font-serif text-[#1C1B22] dark:text-[#C9BEAB]"
                 value={5200}
                 decimalPlaces={0}
                 springOptions={{ bounce: 0, duration: 2000 }}
               />
-              <span className="text-[#A78A9F]">+</span> Bengaluru Hosts
+              <span className="text-[#8F6FC4]">+</span> Bengaluru Hosts
             </>
           )}
         </h2>

@@ -75,8 +75,8 @@ export const TiltGlareCard: React.FC<TiltGlareCardProps> = ({
         }}
         className={cn(
           'group relative flex flex-col justify-between rounded-2xl p-5 sm:py-6 sm:px-5 min-h-[220px] h-full overflow-hidden transition-shadow duration-500 cursor-pointer',
-          'bg-[#34203C] border border-[#A78A9F]/20',
-          'shadow-[0_12px_28px_-6px_rgba(52,32,60,0.35)] hover:shadow-[0_20px_45px_-8px_rgba(167,138,159,0.3)] hover:border-[#A78A9F]/50'
+          'bg-[#8F6FC4] border border-[#8F6FC4]/20',
+          'shadow-[0_12px_28px_-6px_rgba(52,32,60,0.35)] hover:shadow-[0_20px_45px_-8px_rgba(167,138,159,0.3)] hover:border-[#8F6FC4]/50'
         )}
       >
         {/* 1. Dynamic Radial Glare Spot that follows mouse on hover */}
@@ -93,7 +93,7 @@ export const TiltGlareCard: React.FC<TiltGlareCardProps> = ({
         <div
           className="pointer-events-none absolute -top-8 -right-8 h-32 w-32 rounded-full opacity-20 blur-[35px]"
           style={{
-            background: 'radial-gradient(circle, #A78A9F 0%, rgba(167,138,159,0) 70%)',
+            background: 'radial-gradient(circle, #8F6FC4 0%, rgba(167,138,159,0) 70%)',
           }}
         />
 
@@ -106,12 +106,12 @@ export const TiltGlareCard: React.FC<TiltGlareCardProps> = ({
           <div className="flex items-center justify-between mb-4">
             <span
               style={{ transform: 'translateZ(35px)' }}
-              className="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-[#725D75]/40 border border-[#A78A9F]/50 text-[#C9BEAB] font-serif text-sm font-bold shadow-xs backdrop-blur-xs group-hover:bg-[#A78A9F]/30 group-hover:border-[#C9BEAB]/60 group-hover:text-[#FAF8F5] transition-all duration-300"
+              className="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-[#A48ED0]/40 border border-[#8F6FC4]/50 text-[#C7B8E8] font-serif text-sm font-bold shadow-xs backdrop-blur-xs group-hover:bg-[#8F6FC4]/30 group-hover:border-[#C7B8E8]/60 group-hover:text-[#FAF8F5] transition-all duration-300"
             >
               {step}
             </span>
 
-            <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#A78A9F]/80">
+            <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8F6FC4]/80">
               Step {step}
             </span>
           </div>
@@ -120,13 +120,13 @@ export const TiltGlareCard: React.FC<TiltGlareCardProps> = ({
           <div>
             <h3
               style={{ transform: 'translateZ(25px)' }}
-              className="font-serif text-base sm:text-lg font-bold uppercase tracking-[0.03em] leading-snug text-[#C9BEAB] mb-2 group-hover:text-[#FAF8F5] transition-colors"
+              className="font-serif text-base sm:text-lg font-bold uppercase tracking-[0.03em] leading-snug text-[#C7B8E8] mb-2 group-hover:text-[#FAF8F5] transition-colors"
             >
               {title}
             </h3>
             <p
               style={{ transform: 'translateZ(15px)' }}
-              className="text-xs sm:text-[13px] font-light leading-relaxed text-[#F6EFF4]/85"
+              className="text-xs sm:text-[13px] font-light leading-relaxed text-[#F2EEFA]/85"
             >
               {desc}
             </p>

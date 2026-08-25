@@ -162,7 +162,7 @@ export default function MainLayout({
       {hideShell ? (
         children
       ) : (
-        <div className="min-h-screen flex flex-col bg-[#FAF8F5] dark:bg-[#1B101F] text-[#34203C] dark:text-[#FAF8F5] transition-colors duration-200">
+        <div className="min-h-screen flex flex-col bg-[#FAF8F5] dark:bg-[#1B101F] text-[#1C1B22] dark:text-[#FAF8F5] transition-colors duration-200">
           <Header
             auth={auth}
             t={t}

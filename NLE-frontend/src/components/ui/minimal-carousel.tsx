@@ -66,8 +66,8 @@ export const MinimalCarousel: React.FC<MinimalCarouselProps> = ({
                 >
                   {/* Top Row: Icon & View Guarantee Pill */}
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-[#A78A9F]/20 border border-[#A78A9F]/30 text-[#C9BEAB] shrink-0">
-                      <activeCard.icon size={30} className="sm:w-8 sm:h-8 text-[#C9BEAB]" />
+                    <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-[#8F6FC4]/20 border border-[#8F6FC4]/30 text-[#C7B8E8] shrink-0">
+                      <activeCard.icon size={30} className="sm:w-8 sm:h-8 text-[#C7B8E8]" />
                     </div>
 
                     <motion.button
@@ -84,11 +84,11 @@ export const MinimalCarousel: React.FC<MinimalCarouselProps> = ({
                           navigate('/explore');
                         }
                       }}
-                      className="flex items-center gap-1.5 rounded-full bg-[#A78A9F]/20 text-[#C9BEAB] border border-[#A78A9F]/40
+                      className="flex items-center gap-1.5 rounded-full bg-[#8F6FC4]/20 text-[#C7B8E8] border border-[#8F6FC4]/40
                                  px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-bold uppercase tracking-wider backdrop-blur-md 
-                                 hover:bg-[#A78A9F]/30 hover:border-[#C9BEAB]/60 transition-all cursor-pointer shadow-xs"
+                                 hover:bg-[#8F6FC4]/30 hover:border-[#C7B8E8]/60 transition-all cursor-pointer shadow-xs"
                     >
-                      <CheckCircle2 size={14} className="text-[#C9BEAB]" />
+                      <CheckCircle2 size={14} className="text-[#C7B8E8]" />
                       <span>View Guarantee</span>
                     </motion.button>
                   </div>
@@ -96,10 +96,10 @@ export const MinimalCarousel: React.FC<MinimalCarouselProps> = ({
                   {/* Bottom Row: Title, Sub-value, & Learn More Button */}
                   <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mt-6">
                     <div className="overflow-hidden mr-2">
-                      <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#C9BEAB] leading-tight truncate">
+                      <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#C7B8E8] leading-tight truncate">
                         {activeCard.title}
                       </h3>
-                      <p className="text-sm sm:text-base font-semibold text-[#A78A9F] tracking-wide mt-1">
+                      <p className="text-sm sm:text-base font-semibold text-[#8F6FC4] tracking-wide mt-1">
                         {activeCard.value}
                       </p>
                     </div>
@@ -116,7 +116,7 @@ export const MinimalCarousel: React.FC<MinimalCarouselProps> = ({
                           navigate('/explore');
                         }
                       }}
-                      className="inline-flex items-center justify-center gap-2 rounded-full bg-[#A78A9F] text-[#34203C] hover:bg-[#C9BEAB]
+                      className="inline-flex items-center justify-center gap-2 rounded-full bg-[#8F6FC4] text-[#1C1B22] hover:bg-[#C7B8E8]
                                  px-5 py-2.5 sm:px-6 sm:py-3 text-xs sm:text-sm font-bold uppercase tracking-wider backdrop-blur-md 
                                  shadow-md hover:scale-103 active:scale-95 transition-all shrink-0 cursor-pointer"
                     >
@@ -148,15 +148,15 @@ export const MinimalCarousel: React.FC<MinimalCarouselProps> = ({
                   className={`group relative flex flex-col justify-between cursor-pointer
                              rounded-2xl sm:rounded-3xl border p-4 sm:p-5 text-[#FAF8F5] shadow-lg
                              ${card.color}
-                             hover:scale-102 hover:border-[#C9BEAB]/50 transition-all duration-300
+                             hover:scale-102 hover:border-[#C7B8E8]/50 transition-all duration-300
                              ${activeId ? 'h-28 sm:h-32' : 'h-36 sm:h-40'}`}
                 >
                   <div className="flex justify-between items-start">
-                    <div className="text-[#C9BEAB] group-hover:scale-110 transition-transform">
-                      <card.icon size={activeId ? 22 : 28} className="shrink-0 text-[#C9BEAB]" />
+                    <div className="text-[#C7B8E8] group-hover:scale-110 transition-transform">
+                      <card.icon size={activeId ? 22 : 28} className="shrink-0 text-[#C7B8E8]" />
                     </div>
-                    <div className="rounded-full border border-white/20 bg-white/10 p-1 sm:p-1.5 group-hover:bg-[#A78A9F]/30 transition-colors">
-                      <MoreHorizontal size={15} className="text-[#DDD5C7]" />
+                    <div className="rounded-full border border-white/20 bg-white/10 p-1 sm:p-1.5 group-hover:bg-[#8F6FC4]/30 transition-colors">
+                      <MoreHorizontal size={15} className="text-[#E4DEF2]" />
                     </div>
                   </div>
 
@@ -164,14 +164,14 @@ export const MinimalCarousel: React.FC<MinimalCarouselProps> = ({
                     <h4
                       className={`font-serif ${
                         activeId ? 'text-xs sm:text-sm' : 'text-sm sm:text-base'
-                      } font-bold text-[#C9BEAB] truncate leading-tight group-hover:text-[#FAF8F5] transition-colors`}
+                      } font-bold text-[#C7B8E8] truncate leading-tight group-hover:text-[#FAF8F5] transition-colors`}
                     >
                       {card.title}
                     </h4>
                     <p
                       className={`${
                         activeId ? 'text-[11px] sm:text-xs' : 'text-xs sm:text-sm'
-                      } font-medium text-[#A78A9F] truncate mt-0.5`}
+                      } font-medium text-[#8F6FC4] truncate mt-0.5`}
                     >
                       {card.value}
                     </p>

@@ -119,14 +119,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       whileHover={{ y: -6 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        'group flex flex-col justify-between rounded-[32px] border border-[#DDD5C7] dark:border-[#483250] bg-white dark:bg-[#201325] text-[#34203C] dark:text-[#FAF8F5] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 text-left select-none cursor-pointer w-full h-full',
+        'group flex flex-col justify-between rounded-2xl border border-[#E4DEF2] dark:border-[#483250] bg-white dark:bg-[#201325] text-[#1C1B22] dark:text-[#FAF8F5] overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 text-left select-none cursor-pointer w-full h-full',
         className
       )}
       onClick={handleCardClick}
     >
-      {/* Top Image Showcase with Overlaid Title & Category Pin (Murudeshwara Layout) */}
+      {/* Top Image Showcase -- clean product shot, no text overlay (badge + wishlist heart only) */}
       <div>
-        <div className="relative w-full h-[220px] sm:h-[240px] overflow-hidden bg-[#34203C]/10">
+        <div className="relative w-full h-[220px] sm:h-[240px] overflow-hidden bg-[#8F6FC4]/10">
           <img
             src={cardImage}
             alt={product.name}
@@ -134,14 +134,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-108 ${imagePosition}`}
           />
 
-          {/* Vignette Scrim Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent" />
-
           {/* Top Badges & Wishlist */}
           <div className="absolute top-3.5 left-3.5 right-3.5 z-20 flex items-center justify-between pointer-events-none">
             <div className="flex items-center gap-1.5 pointer-events-auto">
               {!isAI && product.badge && (
-                <span className="rounded-full bg-[#C9BEAB] text-[#201325] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider shadow-md">
+                <span className="rounded-full bg-[#8F6FC4] text-white px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider shadow-md">
                   {product.badge}
                 </span>
               )}
@@ -161,46 +158,44 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 animate={{ scale: wished ? [1, 1.25, 1] : 1 }}
                 className={cn(
                   'pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full',
-                  'bg-black/40 hover:bg-black/70 border border-white/30 backdrop-blur-md shadow-md',
-                  'text-white transition-colors duration-200 cursor-pointer'
+                  'bg-white/90 hover:bg-white border border-[#E4DEF2] backdrop-blur-md shadow-md',
+                  'text-[#1C1B22] transition-colors duration-200 cursor-pointer'
                 )}
               >
                 <Heart
                   size={16}
                   className={cn(
                     'transition-all duration-200',
-                    wished ? 'fill-rose-500 text-rose-500 scale-110' : 'text-white/90 hover:text-white'
+                    wished ? 'fill-rose-500 text-rose-500 scale-110' : 'text-[#1C1B22]/70 hover:text-[#1C1B22]'
                   )}
                 />
               </motion.button>
             )}
           </div>
-
-          {/* Bottom-Left Image Text Overlay (Matching Murudeshwara Resort Layout) */}
-          <div className="absolute bottom-3.5 left-4 right-4 z-20 text-left">
-            <div className="flex items-center gap-1 text-white/90 text-xs font-semibold mb-0.5">
-              <MapPin size={13} className="text-[#C9BEAB] shrink-0" />
-              <span className="text-[#C9BEAB] text-[10px] font-bold uppercase tracking-wider">
-                {tagLabel}
-              </span>
-            </div>
-            <h3 className="font-serif text-lg sm:text-xl font-bold tracking-tight text-white leading-tight line-clamp-1 group-hover:text-[#C9BEAB] transition-colors">
-              {product.name}
-            </h3>
-          </div>
         </div>
 
         {/* Card Content Body */}
         <div className="p-5 sm:p-6 flex flex-col">
+          {/* Category / Location Tag */}
+          <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-[#8F6FC4] mb-1.5">
+            <MapPin size={11} className="shrink-0" />
+            <span>{tagLabel}</span>
+          </div>
+
+          {/* Title */}
+          <h3 className="font-serif text-lg sm:text-xl font-bold tracking-tight text-[#1C1B22] dark:text-white leading-tight line-clamp-1 mb-1.5">
+            {product.name}
+          </h3>
+
           {/* Description Paragraph */}
-          <p className="text-xs text-[#725D75] dark:text-[#C8B5C3] font-light leading-relaxed line-clamp-2 min-h-[36px]">
+          <p className="text-xs text-[#6B6B76] dark:text-[#C8B5C3] font-light leading-relaxed line-clamp-2 min-h-[36px]">
             {product.description ||
               'Complete turnkey celebration setup styled with customized props, balloon architecture, and fairy lighting.'}
           </p>
 
-          {/* Inner Highlight Box with Star (Matching Murudeshwara Screenshot) */}
-          <div className="mt-3.5 rounded-2xl bg-[#FAF8F5] dark:bg-[#2A1830] p-3 border border-[#DDD5C7]/60 dark:border-[#483250]/60 flex items-start gap-2 text-xs text-[#34203C] dark:text-neutral-200">
-            <span className="text-[#C9BEAB] text-sm shrink-0 font-bold">★</span>
+          {/* Inner Highlight Box with Star */}
+          <div className="mt-3.5 rounded-2xl bg-[#FAF8F5] dark:bg-[#2A1830] p-3 border border-[#E4DEF2]/60 dark:border-[#483250]/60 flex items-start gap-2 text-xs text-[#1C1B22] dark:text-neutral-200">
+            <span className="text-[#8F6FC4] text-sm shrink-0 font-bold">★</span>
             <span className="text-[11px] font-medium leading-relaxed line-clamp-2">
               {highlightInclusion}
             </span>
@@ -208,19 +203,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </div>
       </div>
 
-      {/* Card Actions Footer (Matching Murudeshwara Layout) */}
+      {/* Card Actions Footer */}
       <div className="px-5 sm:px-6 pb-6 pt-0 flex flex-col gap-3">
-        <div className="flex items-center justify-between border-t border-[#DDD5C7]/50 dark:border-[#483250]/50 pt-4">
+        <div className="flex items-center justify-between border-t border-[#E4DEF2]/50 dark:border-[#483250]/50 pt-4">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#725D75] dark:text-[#A78A9F] block">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#6B6B76] dark:text-[#A78A9F] block">
               Starting Price
             </span>
             <div className="flex items-baseline gap-1.5">
-              <span className="font-serif text-lg sm:text-xl font-bold text-[#34203C] dark:text-[#FAF8F5]">
+              <span className="font-serif text-lg sm:text-xl font-bold text-[#1C1B22] dark:text-[#FAF8F5]">
                 ₹{product.price?.toLocaleString('en-IN')}
               </span>
               {hasDiscount && (
-                <span className="text-xs font-normal text-[#725D75]/60 line-through">
+                <span className="text-xs font-normal text-[#6B6B76]/60 line-through">
                   ₹{product.originalPrice?.toLocaleString('en-IN')}
                 </span>
               )}
@@ -233,7 +228,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               e.stopPropagation();
               handleCardClick();
             }}
-            className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#34203C] dark:text-[#C9BEAB] hover:text-[#A78A9F] group/btn cursor-pointer"
+            className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#1C1B22] dark:text-[#C9BEAB] hover:text-[#8F6FC4] group/btn cursor-pointer"
           >
             <span>VIEW DETAILS</span>
             <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
@@ -251,7 +246,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 navigate(`/booking/${product._id}`, { state: { product, preferredMethod: 'razorpay' } });
               }
             }}
-            className="w-full flex items-center justify-center gap-1.5 rounded-full bg-[#34203C] dark:bg-[#C9BEAB] text-[#FAF8F5] dark:text-[#25172C] py-2.5 text-[11px] font-bold uppercase tracking-wider shadow-sm hover:bg-[#483250] dark:hover:bg-white transition-colors cursor-pointer"
+            className="w-full flex items-center justify-center gap-1.5 rounded-lg bg-[#8F6FC4] dark:bg-[#C9BEAB] text-white dark:text-[#25172C] py-2.5 text-[11px] font-bold uppercase tracking-wider shadow-sm hover:bg-[#7D5DB2] dark:hover:bg-white transition-colors cursor-pointer"
           >
             <span>BOOK NOW</span>
             <ArrowRight size={12} />
@@ -260,7 +255,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <button
             type="button"
             onClick={openWhatsApp}
-            className="w-full flex items-center justify-center gap-1.5 rounded-full border border-emerald-600/50 bg-emerald-50/50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 py-2.5 text-[11px] font-bold uppercase tracking-wider hover:bg-emerald-100/60 transition-colors cursor-pointer"
+            className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-emerald-600/50 bg-emerald-50/50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 py-2.5 text-[11px] font-bold uppercase tracking-wider hover:bg-emerald-100/60 transition-colors cursor-pointer"
           >
             {WA_SVG}
             <span>WHATSAPP</span>

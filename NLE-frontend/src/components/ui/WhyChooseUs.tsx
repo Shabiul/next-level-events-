@@ -66,13 +66,13 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
       data-nav-theme="dark"
       className="relative w-full overflow-hidden border-y border-[#483250]/40 text-[#FAF8F5] py-16 sm:py-20 lg:py-24 transition-colors duration-300"
       style={{
-        background: 'linear-gradient(150deg, #1F1224 0%, #2A1732 45%, #34203C 85%, #25172C 100%)',
+        background: 'linear-gradient(150deg, #1F1224 0%, #2A1732 45%, #8F6FC4 85%, #25172C 100%)',
       }}
     >
       {/* Ambient website-themed luxury purple & champagne glow effects */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-[#725D75]/20 rounded-full blur-3xl pointer-events-none -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute top-0 left-0 w-96 h-96 bg-[#A48ED0]/20 rounded-full blur-3xl pointer-events-none -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[#483250]/25 rounded-full blur-3xl pointer-events-none translate-x-1/3 translate-y-1/3" />
-      <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-[#C9BEAB]/5 rounded-full blur-2xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-[#C7B8E8]/5 rounded-full blur-2xl pointer-events-none" />
 
       <div className="relative mx-auto max-w-[1600px] px-6 sm:px-10 lg:px-16 xl:px-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 xl:gap-20 items-center">
@@ -82,8 +82,8 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
           {/* ========================================================================= */}
           <div className="lg:col-span-7 flex flex-col justify-center">
             {/* Eyebrow with horizontal dash */}
-            <div className="flex items-center gap-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.22em] text-[#C9BEAB] mb-4">
-              <span className="w-6 sm:w-8 h-[1.5px] bg-[#C9BEAB]" />
+            <div className="flex items-center gap-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.22em] text-[#C7B8E8] mb-4">
+              <span className="w-6 sm:w-8 h-[1.5px] bg-[#C7B8E8]" />
               <span>{eyebrow}</span>
             </div>
 
@@ -93,7 +93,7 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
             </h2>
 
             {/* Subheadline narrative */}
-            <p className="text-sm sm:text-base md:text-[16px] font-light leading-relaxed text-[#C8B5C3] max-w-2xl mb-10 sm:mb-12">
+            <p className="text-sm sm:text-base md:text-[16px] font-light leading-relaxed text-[#B9A6D9] max-w-2xl mb-10 sm:mb-12">
               {description}
             </p>
 
@@ -111,17 +111,17 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
                     className="group flex flex-col items-start"
                   >
                     {/* Circular Icon with website brand color accents */}
-                    <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-[#A78A9F]/40 bg-[#34203C]/80 flex items-center justify-center text-[#C9BEAB] mb-3.5 group-hover:border-[#C9BEAB] group-hover:bg-[#483250] group-hover:text-[#FAF8F5] transition-all duration-300 shadow-md">
+                    <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-[#8F6FC4]/40 bg-[#8F6FC4]/80 flex items-center justify-center text-[#C7B8E8] mb-3.5 group-hover:border-[#C7B8E8] group-hover:bg-[#483250] group-hover:text-[#FAF8F5] transition-all duration-300 shadow-md">
                       <IconComponent className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-base sm:text-[17px] font-semibold text-[#FAF8F5] mb-1.5 tracking-tight group-hover:text-[#C9BEAB] transition-colors">
+                    <h3 className="text-base sm:text-[17px] font-semibold text-[#FAF8F5] mb-1.5 tracking-tight group-hover:text-[#C7B8E8] transition-colors">
                       {item.title}
                     </h3>
 
                     {/* Description */}
-                    <p className="text-xs sm:text-[13.5px] font-light text-[#C8B5C3] leading-relaxed">
+                    <p className="text-xs sm:text-[13.5px] font-light text-[#B9A6D9] leading-relaxed">
                       {item.description}
                     </p>
                   </motion.div>
@@ -139,7 +139,7 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="relative w-full h-[460px] sm:h-[520px] lg:h-[580px] xl:h-[620px] rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl border border-[#A78A9F]/30 group"
+              className="relative w-full h-[460px] sm:h-[520px] lg:h-[580px] xl:h-[620px] rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl border border-[#8F6FC4]/30 group"
             >
               {/* Showcase Image */}
               <img
@@ -153,25 +153,25 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
               <div className="absolute inset-0 bg-gradient-to-t from-[#1F1224]/90 via-[#25172C]/20 to-black/20 pointer-events-none" />
 
               {/* Top floating trust badge */}
-              <div className="absolute top-4 right-4 sm:top-5 sm:right-5 bg-[#25172C]/90 backdrop-blur-md border border-[#A78A9F]/35 px-3.5 py-1.5 rounded-full flex items-center gap-2 shadow-lg">
-                <Star className="w-3.5 h-3.5 text-[#C9BEAB] fill-[#C9BEAB]" />
+              <div className="absolute top-4 right-4 sm:top-5 sm:right-5 bg-[#25172C]/90 backdrop-blur-md border border-[#8F6FC4]/35 px-3.5 py-1.5 rounded-full flex items-center gap-2 shadow-lg">
+                <Star className="w-3.5 h-3.5 text-[#C7B8E8] fill-[#C7B8E8]" />
                 <span className="text-xs font-medium text-[#FAF8F5] tracking-wide">
                   4.98/5 Rated (2,400+ Events)
                 </span>
               </div>
 
               {/* Bottom detail card */}
-              <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 bg-[#25172C]/90 backdrop-blur-md border border-[#A78A9F]/35 rounded-xl p-4 sm:p-5 flex items-center justify-between shadow-xl">
+              <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 bg-[#25172C]/90 backdrop-blur-md border border-[#8F6FC4]/35 rounded-xl p-4 sm:p-5 flex items-center justify-between shadow-xl">
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#C9BEAB] flex items-center gap-1.5 mb-0.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#C9BEAB]" />
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-[#C7B8E8] flex items-center gap-1.5 mb-0.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#C7B8E8]" />
                     Picture-Accurate Guarantee
                   </p>
                   <p className="text-xs sm:text-sm font-light text-[#FAF8F5]/90">
                     What you see in catalogue is exactly what is staged.
                   </p>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-[#34203C] border border-[#A78A9F]/30 flex items-center justify-center text-[#C9BEAB] shrink-0 ml-3 group-hover:bg-[#C9BEAB] group-hover:text-[#34203C] transition-all">
+                <div className="w-8 h-8 rounded-full bg-[#8F6FC4] border border-[#8F6FC4]/30 flex items-center justify-center text-[#C7B8E8] shrink-0 ml-3 group-hover:bg-[#C7B8E8] group-hover:text-[#1C1B22] transition-all">
                   <ArrowUpRight className="w-4 h-4" />
                 </div>
               </div>

@@ -62,7 +62,7 @@ export const GlowingImageCard: React.FC<GlowingImageCardProps> = ({
           className="absolute -inset-[100%] opacity-45 group-hover:opacity-100 transition-opacity duration-500"
           style={{
             background:
-              'conic-gradient(from 0deg, transparent 0deg, transparent 270deg, #483250 310deg, #A78A9F 340deg, #C9BEAB 360deg)',
+              'conic-gradient(from 0deg, transparent 0deg, transparent 270deg, #483250 310deg, #8F6FC4 340deg, #C7B8E8 360deg)',
           }}
           animate={{
             rotate: [0, 360],
@@ -74,7 +74,7 @@ export const GlowingImageCard: React.FC<GlowingImageCardProps> = ({
           }}
         />
         {/* Subtle static border layer */}
-        <div className="absolute inset-0 rounded-[28px] border border-[#A78A9F]/20 group-hover:border-[#C9BEAB]/40 transition-colors" />
+        <div className="absolute inset-0 rounded-[28px] border border-[#8F6FC4]/20 group-hover:border-[#C7B8E8]/40 transition-colors" />
       </div>
 
       {/* 2. Main Card Body Container */}
@@ -83,13 +83,13 @@ export const GlowingImageCard: React.FC<GlowingImageCardProps> = ({
         <div
           className="pointer-events-none absolute -top-10 -right-10 h-44 w-44 rounded-full opacity-20 blur-[45px] transition-all duration-700 group-hover:scale-135 group-hover:opacity-45"
           style={{
-            background: 'radial-gradient(circle, #A78A9F 0%, rgba(167,138,159,0) 70%)',
+            background: 'radial-gradient(circle, #8F6FC4 0%, rgba(167,138,159,0) 70%)',
           }}
         />
         <div
           className="pointer-events-none absolute -bottom-10 -left-10 h-48 w-48 rounded-full opacity-20 blur-[50px] transition-all duration-700 group-hover:scale-135 group-hover:opacity-40"
           style={{
-            background: 'radial-gradient(circle, #725D75 0%, #483250 50%, rgba(52,32,60,0) 75%)',
+            background: 'radial-gradient(circle, #A48ED0 0%, #483250 50%, rgba(52,32,60,0) 75%)',
           }}
         />
 
@@ -118,8 +118,8 @@ export const GlowingImageCard: React.FC<GlowingImageCardProps> = ({
           {/* Top-Left Category Tag Badge */}
           {tag && (
             <div className="absolute top-2.5 left-2.5 z-20">
-              <span className="inline-flex items-center gap-1 rounded-full bg-black/50 border border-white/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#C9BEAB] backdrop-blur-md shadow-md">
-                <Sparkles size={10} className="text-[#C9BEAB]" />
+              <span className="inline-flex items-center gap-1 rounded-full bg-black/50 border border-white/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#C7B8E8] backdrop-blur-md shadow-md">
+                <Sparkles size={10} className="text-[#C7B8E8]" />
                 <span>{tag}</span>
               </span>
             </div>
@@ -143,19 +143,19 @@ export const GlowingImageCard: React.FC<GlowingImageCardProps> = ({
               </div>
             ) : popularSetup ? (
               <div className="flex flex-wrap items-center gap-1.5 mb-2.5">
-                <span className="inline-flex items-center gap-1 rounded-full bg-white/06 border border-white/12 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-medium text-[#C9BEAB] backdrop-blur-xs">
+                <span className="inline-flex items-center gap-1 rounded-full bg-white/06 border border-white/12 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-medium text-[#C7B8E8] backdrop-blur-xs">
                   ✨ {popularSetup}
                 </span>
               </div>
             ) : null}
 
             {/* Package Title in Serif Typography */}
-            <h3 className="font-serif text-lg sm:text-xl font-bold tracking-tight text-white group-hover:text-[#C9BEAB] transition-colors leading-snug mb-1.5 line-clamp-1">
+            <h3 className="font-serif text-lg sm:text-xl font-bold tracking-tight text-white group-hover:text-[#C7B8E8] transition-colors leading-snug mb-1.5 line-clamp-1">
               {title}
             </h3>
 
             {/* Description */}
-            <p className="text-xs sm:text-[13px] font-light leading-relaxed text-[#DDD5C7]/80 line-clamp-3 mb-4">
+            <p className="text-xs sm:text-[13px] font-light leading-relaxed text-[#E4DEF2]/80 line-clamp-3 mb-4">
               {description}
             </p>
           </div>
@@ -163,10 +163,10 @@ export const GlowingImageCard: React.FC<GlowingImageCardProps> = ({
           {/* 5. Bottom Action Footer Row */}
           <div className="pt-3.5 border-t border-white/10 mt-auto flex items-center justify-between">
             <div>
-              <span className="text-[9px] font-semibold uppercase tracking-wider text-[#A78A9F] block leading-none mb-1">
+              <span className="text-[9px] font-semibold uppercase tracking-wider text-[#8F6FC4] block leading-none mb-1">
                 {pricePrefix}
               </span>
-              <span className="font-serif text-sm sm:text-base font-bold text-[#C9BEAB] leading-none">
+              <span className="font-serif text-sm sm:text-base font-bold text-[#C7B8E8] leading-none">
                 {price}
               </span>
             </div>
@@ -174,12 +174,12 @@ export const GlowingImageCard: React.FC<GlowingImageCardProps> = ({
             {/* Action Link with Animated Arrow */}
             <button
               type="button"
-              className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#C9BEAB] group-hover:text-[#FAF8F5] transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#C7B8E8] group-hover:text-[#FAF8F5] transition-colors cursor-pointer"
             >
               <span>{buttonText}</span>
               <ArrowRight
                 size={13}
-                className="transition-transform duration-300 group-hover:translate-x-1 text-[#C9BEAB] group-hover:text-[#FAF8F5]"
+                className="transition-transform duration-300 group-hover:translate-x-1 text-[#C7B8E8] group-hover:text-[#FAF8F5]"
               />
             </button>
           </div>

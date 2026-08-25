@@ -140,7 +140,7 @@ export const AboutPage: React.FC = () => {
 
       <div
         ref={containerRef}
-        className="w-full bg-[#F8F6F2] text-[#34203C] font-sans antialiased selection:bg-[#A78A9F]/20 overflow-x-hidden"
+        className="w-full bg-[#F8F6F2] text-[#1C1B22] font-sans antialiased selection:bg-[#8F6FC4]/20 overflow-x-hidden"
       >
         {/* ========================================================================= */}
         {/* SECTION 1 — HERO HEADER BANNER (3D Parallax Scroll)                      */}
@@ -152,7 +152,7 @@ export const AboutPage: React.FC = () => {
               rotateX: heroRotateX,
               transformStyle: 'preserve-3d',
             }}
-            className="relative w-full h-[280px] sm:h-[380px] rounded-[32px] sm:rounded-[40px] overflow-hidden shadow-2xl border border-[#A78A9F]/30 bg-[#34203C]"
+            className="relative w-full h-[280px] sm:h-[380px] rounded-[32px] sm:rounded-[40px] overflow-hidden shadow-2xl border border-[#8F6FC4]/30 bg-[#8F6FC4]"
           >
             {/* Background Image with 3D Parallax */}
             <motion.img
@@ -163,7 +163,7 @@ export const AboutPage: React.FC = () => {
             />
 
             {/* Gradient Overlay matching Reference */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#2A1732]/90 via-[#34203C]/60 to-black/35 backdrop-blur-[1px]" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#2A1732]/90 via-[#8F6FC4]/60 to-black/35 backdrop-blur-[1px]" />
 
             {/* Centered Headline matching Murudeshwara layout */}
             <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-6 z-10">
@@ -180,9 +180,9 @@ export const AboutPage: React.FC = () => {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.35 }}
-                className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-[0.3em] text-[#C9BEAB] drop-shadow-md"
+                className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-[0.3em] text-[#C7B8E8] drop-shadow-md"
               >
-                <Sparkles size={14} className="text-[#C9BEAB]" />
+                <Sparkles size={14} className="text-[#C7B8E8]" />
                 <span>OUR STORY</span>
               </motion.div>
             </div>
@@ -206,18 +206,18 @@ export const AboutPage: React.FC = () => {
               transition={{ duration: 0.8 }}
               className="lg:col-span-7 flex flex-col text-left"
             >
-              <div className="flex items-center gap-2 text-sm sm:text-base font-extrabold uppercase tracking-[0.32em] text-[#A78A9F] mb-4">
+              <div className="flex items-center gap-2 text-sm sm:text-base font-extrabold uppercase tracking-[0.32em] text-[#8F6FC4] mb-4">
                 <span>WHO WE ARE</span>
               </div>
 
-              <h2 className="font-serif text-4xl sm:text-5xl lg:text-[56px] font-semibold leading-[1.12] text-[#34203C] mb-7">
+              <h2 className="font-serif text-4xl sm:text-5xl lg:text-[56px] font-semibold leading-[1.12] text-[#1C1B22] mb-7">
                 Providing the Best Bespoke Celebration Experience in{' '}
-                <span className="font-serif italic text-[#725D75]">
+                <span className="font-serif italic text-[#6B6B76]">
                   Bengaluru
                 </span>
               </h2>
 
-              <div className="space-y-5 text-lg sm:text-xl text-[#725D75] leading-relaxed font-normal">
+              <div className="space-y-5 text-lg sm:text-xl text-[#6B6B76] leading-relaxed font-normal">
                 <p>
                   At TheDecorParty, we are committed to delivering top-tier styling and surprise celebration services. From intimate residential anniversaries to grand milestone extravagances, we ensure every aspect of your event is handled with absolute professionalism.
                 </p>
@@ -236,13 +236,13 @@ export const AboutPage: React.FC = () => {
               }}
               className="lg:col-span-5 w-full perspective-[1000px]"
             >
-              <div className="relative w-full rounded-[32px] sm:rounded-[36px] overflow-hidden shadow-2xl border border-[#A78A9F]/25 aspect-[4/5] bg-[#34203C]">
+              <div className="relative w-full rounded-[32px] sm:rounded-[36px] overflow-hidden shadow-2xl border border-[#8F6FC4]/25 aspect-[4/5] bg-[#8F6FC4]">
                 <img
                   src="/about-aesthetic.png"
                   alt="Bespoke Celebration Experience"
                   className="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#34203C]/70 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#8F6FC4]/70 via-transparent to-transparent pointer-events-none" />
               </div>
             </motion.div>
           </div>
@@ -253,7 +253,7 @@ export const AboutPage: React.FC = () => {
         {/* ========================================================================= */}
         <section
           data-nav-theme="light"
-          className="w-full py-20 px-6 bg-[#FAF8F5] border-y border-[#A78A9F]/15"
+          className="w-full py-20 px-6 bg-[#FAF8F5] border-y border-[#8F6FC4]/15"
         >
           <div className="max-w-7xl mx-auto">
             {/* Centered Title matching Reference Image 3 */}
@@ -263,11 +263,11 @@ export const AboutPage: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="font-serif text-3xl sm:text-4xl lg:text-[48px] font-normal text-[#34203C] mb-4 tracking-tight"
+                className="font-serif text-3xl sm:text-4xl lg:text-[48px] font-normal text-[#1C1B22] mb-4 tracking-tight"
               >
                 Why Bengaluru Chooses Us
               </motion.h2>
-              <p className="text-base text-[#725D75] max-w-xl mx-auto">
+              <p className="text-base text-[#6B6B76] max-w-xl mx-auto">
                 Discover the foundational standards that make every celebration with us effortless and unforgettable.
               </p>
             </div>
@@ -278,18 +278,18 @@ export const AboutPage: React.FC = () => {
                 const Icon = pillar.icon;
                 return (
                   <ThreeDCard key={pillar.title} delay={idx * 0.1}>
-                    <div className="h-full bg-white rounded-[28px] p-8 border border-[#A78A9F]/20 shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group">
+                    <div className="h-full bg-white rounded-[28px] p-8 border border-[#8F6FC4]/20 shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group">
                       <div>
                         {/* Circular Icon Pill Badge */}
-                        <div className="w-12 h-12 rounded-full bg-[#FAF8F5] border border-[#A78A9F]/25 flex items-center justify-center text-[#A78A9F] mb-6 shadow-sm group-hover:bg-[#34203C] group-hover:text-[#C9BEAB] transition-colors">
+                        <div className="w-12 h-12 rounded-full bg-[#FAF8F5] border border-[#8F6FC4]/25 flex items-center justify-center text-[#8F6FC4] mb-6 shadow-sm group-hover:bg-[#8F6FC4] group-hover:text-[#C7B8E8] transition-colors">
                           <Icon size={20} />
                         </div>
 
-                        <h3 className="font-serif text-xl font-bold text-[#34203C] mb-3">
+                        <h3 className="font-serif text-xl font-bold text-[#1C1B22] mb-3">
                           {pillar.title}
                         </h3>
 
-                        <p className="text-sm sm:text-[15px] text-[#725D75] leading-relaxed font-light">
+                        <p className="text-sm sm:text-[15px] text-[#6B6B76] leading-relaxed font-light">
                           {pillar.description}
                         </p>
                       </div>
@@ -306,14 +306,14 @@ export const AboutPage: React.FC = () => {
         {/* ========================================================================= */}
         <section data-nav-theme="dark" className="w-full max-w-6xl mx-auto py-16 px-6">
           <ThreeDCard delay={0.1}>
-            <div className="bg-[#34203C] rounded-[32px] p-8 sm:p-14 border border-[#A78A9F]/30 text-center flex flex-col items-center gap-6 shadow-2xl relative overflow-hidden">
+            <div className="bg-[#8F6FC4] rounded-[32px] p-8 sm:p-14 border border-[#8F6FC4]/30 text-center flex flex-col items-center gap-6 shadow-2xl relative overflow-hidden">
               {/* Soft Ambient Radial Glows */}
-              <div className="absolute top-0 right-0 w-80 h-80 bg-[#A78A9F]/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute top-0 right-0 w-80 h-80 bg-[#8F6FC4]/10 rounded-full blur-3xl pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#483250]/40 rounded-full blur-3xl pointer-events-none" />
 
               <div className="relative z-10 flex flex-col items-center gap-5">
                 {/* Quote Icon */}
-                <div className="w-12 h-12 rounded-full bg-[#A78A9F]/20 text-[#C9BEAB] border border-[#A78A9F]/30 flex items-center justify-center shadow-inner">
+                <div className="w-12 h-12 rounded-full bg-[#8F6FC4]/20 text-[#C7B8E8] border border-[#8F6FC4]/30 flex items-center justify-center shadow-inner">
                   <Quote size={20} />
                 </div>
 
@@ -322,18 +322,18 @@ export const AboutPage: React.FC = () => {
                   “Every celebration is someone’s once-in-a-lifetime moment. We started TheDecorParty to ensure every setup feels effortless, personal, and impeccably styled.”
                 </blockquote>
 
-                <div className="w-24 h-[1px] bg-[#A78A9F]/40 my-2" />
+                <div className="w-24 h-[1px] bg-[#8F6FC4]/40 my-2" />
 
                 {/* Founder Identity */}
                 <div className="flex flex-col items-center gap-1">
-                  <span className="font-serif text-xl sm:text-2xl font-semibold text-[#C9BEAB]">
+                  <span className="font-serif text-xl sm:text-2xl font-semibold text-[#C7B8E8]">
                     Prashanth B S
                   </span>
-                  <span className="text-xs sm:text-sm font-medium tracking-wider text-[#A78A9F] uppercase">
+                  <span className="text-xs sm:text-sm font-medium tracking-wider text-[#8F6FC4] uppercase">
                     Founders &amp; Creative Directors, TheDecorParty
                   </span>
 
-                  <div className="font-serif italic text-2xl text-[#C9BEAB] opacity-80 tracking-widest mt-2 select-none">
+                  <div className="font-serif italic text-2xl text-[#C7B8E8] opacity-80 tracking-widest mt-2 select-none">
                     Prashanth B S
                   </div>
                 </div>

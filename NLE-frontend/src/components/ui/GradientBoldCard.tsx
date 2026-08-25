@@ -18,8 +18,8 @@ export const GradientBoldCard: React.FC<GradientBoldCardProps> = ({
   className,
   popular = false,
   glowColors = {
-    gold: '#C9BEAB',
-    rose: '#A78A9F',
+    gold: '#C7B8E8',
+    rose: '#8F6FC4',
     violet: '#483250',
   },
 }) => {
@@ -65,11 +65,11 @@ export const GradientBoldCard: React.FC<GradientBoldCardProps> = ({
           }}
         />
         {/* Subtle static border layer */}
-        <div className="absolute inset-0 rounded-[28px] border border-[#A78A9F]/20 group-hover:border-[#C9BEAB]/40 transition-colors" />
+        <div className="absolute inset-0 rounded-[28px] border border-[#8F6FC4]/20 group-hover:border-[#C7B8E8]/40 transition-colors" />
       </div>
 
       {/* 2. Main Card Body Container */}
-      <div className="relative z-10 flex h-full w-full flex-col justify-between rounded-[27px] bg-gradient-to-b from-[#26142D] via-[#34203C] to-[#25132B] p-5 sm:p-6 overflow-hidden backdrop-blur-xl text-[#FAF8F5]">
+      <div className="relative z-10 flex h-full w-full flex-col justify-between rounded-[27px] bg-gradient-to-b from-[#26142D] via-[#8F6FC4] to-[#25132B] p-5 sm:p-6 overflow-hidden backdrop-blur-xl text-[#FAF8F5]">
         
         {/* 3. Ambient Inner Glows (Dynamic Radial Blur Blobs) */}
         {/* Top-Right Champagne Gold Ambient Blob */}
