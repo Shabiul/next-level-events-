@@ -303,6 +303,11 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
                       <h4 className="line-clamp-1 font-serif text-xs font-bold text-[#1C1C1C] dark:text-white">
                         {item.name}
                       </h4>
+                      {item.description && (
+                        <p className="mt-1 text-[11px] text-[#6B6B76] dark:text-[#C8B5C3] font-light leading-snug line-clamp-2">
+                          {item.description}
+                        </p>
+                      )}
                       <p className="mt-1 text-xs font-extrabold text-[#6B6B76] dark:text-[#C9BEAB]">
                         {getItemPriceLabel(item)}
                       </p>
