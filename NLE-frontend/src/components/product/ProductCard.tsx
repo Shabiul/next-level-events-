@@ -107,9 +107,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   };
 
   const tagLabel = product.subcategory || product.categoryName || 'Bengaluru Setup';
-  const highlightInclusion = Array.isArray(product.inclusions) && product.inclusions[0]
-    ? product.inclusions[0]
-    : 'Includes on-site decorator setup, balloon arch styling & warm ambient spotlights.';
 
   const cardImage = resolveProductCardImage(product, isLanding);
   const imagePosition = resolveProductImagePosition(product);
@@ -183,23 +180,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </div>
 
           {/* Title */}
-          <h3 className="font-serif text-lg sm:text-xl font-bold tracking-tight text-[#1C1B22] dark:text-white leading-tight line-clamp-1 mb-1.5">
+          <h3 className="font-serif text-lg sm:text-xl font-bold tracking-tight text-[#1C1B22] dark:text-white leading-tight line-clamp-1">
             {product.name}
           </h3>
-
-          {/* Description -- short, single line */}
-          <p className="text-xs text-[#6B6B76] dark:text-[#C8B5C3] font-light leading-relaxed line-clamp-1">
-            {product.description ||
-              'Complete turnkey celebration setup styled with customized props.'}
-          </p>
-
-          {/* Inner Highlight Box with Star */}
-          <div className="mt-3.5 rounded-2xl bg-[#FAF8F5] dark:bg-[#2A1830] p-3 border border-[#E4DEF2]/60 dark:border-[#483250]/60 flex items-start gap-2 text-xs text-[#1C1B22] dark:text-neutral-200">
-            <span className="text-[#8F6FC4] text-sm shrink-0 font-bold">★</span>
-            <span className="text-[11px] font-medium leading-relaxed line-clamp-2">
-              {highlightInclusion}
-            </span>
-          </div>
         </div>
       </div>
 
