@@ -567,12 +567,14 @@ export const Header: React.FC<HeaderProps> = ({
           {/* 3. Right Action Items */}
           <div className="flex items-center gap-1.5 sm:gap-2">
             
-            {/* Quick Search Action Button (visible on md to xl) */}
+            {/* Quick Search Action Button (visible on sm to xl -- below sm, the
+                mobile Sheet menu has its own search field, and this icon was
+                one of the culprits pushing the hamburger trigger off-screen) */}
             <button
               type="button"
               onClick={() => navigate('/explore')}
               className={cn(
-                'flex xl:hidden h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full transition-all duration-300 cursor-pointer',
+                'hidden sm:flex xl:hidden h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full transition-all duration-300 cursor-pointer',
                 isDark ? 'text-[#FAF8F5] hover:bg-white/15' : 'text-[#34203C] hover:bg-[#34203C]/08'
               )}
               aria-label="Search"
@@ -689,15 +691,17 @@ export const Header: React.FC<HeaderProps> = ({
                 <button
                   type="button"
                   onClick={() => auth.open('login')}
+                  aria-label="Login"
                   className={cn(
-                    'inline-flex items-center gap-1 px-3.5 py-1.5 text-xs font-bold rounded-full border transition-all duration-300 cursor-pointer',
+                    'inline-flex items-center gap-1 rounded-full border transition-all duration-300 cursor-pointer',
+                    'h-8 w-8 justify-center px-0 sm:h-auto sm:w-auto sm:justify-start sm:px-3.5 sm:py-1.5 text-xs font-bold',
                     isDark
                       ? 'text-[#FAF8F5] bg-white/15 hover:bg-white/25 border-white/30'
                       : 'text-[#34203C] bg-[#34203C]/08 hover:bg-[#34203C]/15 border-[#34203C]/20'
                   )}
                 >
                   <LogIn size={13} />
-                  <span>Login</span>
+                  <span className="hidden sm:inline">Login</span>
                 </button>
               )}
 

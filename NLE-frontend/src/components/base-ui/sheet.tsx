@@ -1,4 +1,5 @@
 import * as React from 'react';
+import ReactDOM from 'react-dom';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -90,7 +91,14 @@ export function SheetContent({
     right: 'inset-y-0 right-0 h-full border-l',
   };
 
-  return (
+  // Portal to document.body: `fixed inset-0` only covers the true viewport
+  // when nothing else defines the fixed-position containing block. Any
+  // ancestor with a backdrop-filter/filter/transform (e.g. the header pill's
+  // backdrop-blur) would otherwise re-anchor this overlay to that ancestor's
+  // box instead of the screen, squashing the whole drawer down to it.
+  if (typeof document === 'undefined') return null;
+
+  return ReactDOM.createPortal(
     <div className="fixed inset-0 z-50 flex">
       {/* Backdrop */}
       <div
@@ -116,6 +124,7 @@ export function SheetContent({
         </button>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
