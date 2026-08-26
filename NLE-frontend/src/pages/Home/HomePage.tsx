@@ -14,13 +14,11 @@ import {
   MapPin,
 } from 'lucide-react';
 import { CategoryGrid } from '../../components/category/CategoryGrid';
-import { Button } from '../../components/ui/Button';
 import TabbedFAQ from '../../components/ui/TabbedFAQ';
 import { WhyChooseUs } from '../../components/ui/WhyChooseUs';
 import InfiniteTestimonials from '../../components/ui/InfiniteTestimonials';
 import { GradientBoldCard } from '../../components/ui/GradientBoldCard';
 import { GlowingImageCard } from '../../components/ui/GlowingImageCard';
-import { ParallaxTourCard } from '../../components/ui/ParallaxTourCard';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import type { AdminCategory, AdminProduct } from '../../types';
 
@@ -111,81 +109,6 @@ const SIGNATURE_COLLECTIONS = [
   },
 ];
 
-// 5. PINTEREST-STYLE MASONRY GALLERY ITEMS
-const GALLERY_ITEMS = [
-  {
-    id: 'g1',
-    title: 'Pastel Lilac Ring Arch',
-    category: 'Birthdays',
-    image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&auto=format&fit=crop&q=80',
-    aspect: 'aspect-[3/4]',
-    tag: '1st Birthday',
-    price: '₹2,499',
-  },
-  {
-    id: 'g2',
-    title: 'Rooftop Candlelight Cabana',
-    category: 'Romantic Experiences',
-    image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&auto=format&fit=crop&q=80',
-    aspect: 'aspect-[4/3]',
-    tag: 'Anniversary',
-    price: '₹3,499',
-  },
-  {
-    id: 'g3',
-    title: 'Teddy Clouds Baby Welcome',
-    category: 'Baby Shower',
-    image: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?w=600&auto=format&fit=crop&q=80',
-    aspect: 'aspect-[3/4]',
-    tag: 'Baby Shower',
-    price: '₹2,999',
-  },
-  {
-    id: 'g4',
-    title: 'Haldi Marigold Canopy',
-    category: 'Festivals',
-    image: 'https://images.unsplash.com/photo-1602631985686-1bb0e6a8696e?w=600&auto=format&fit=crop&q=80',
-    aspect: 'aspect-[4/5]',
-    tag: 'Haldi Special',
-    price: '₹3,999',
-  },
-  {
-    id: 'g5',
-    title: 'Metallic Chrome Backdrop Arch',
-    category: 'Balloon Decor',
-    image: 'https://images.unsplash.com/photo-1513151233558-d860c5398176?w=600&auto=format&fit=crop&q=80',
-    aspect: 'aspect-[3/4]',
-    tag: 'Chrome Ring',
-    price: '₹2,799',
-  },
-  {
-    id: 'g6',
-    title: 'Marry Me 4FT Giant Letters',
-    category: 'Anniversary',
-    image: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=600&auto=format&fit=crop&q=80',
-    aspect: 'aspect-[4/3]',
-    tag: 'Proposal',
-    price: '₹4,999',
-  },
-  {
-    id: 'g7',
-    title: 'Boho Pampas Grass Backdrop',
-    category: 'Weddings',
-    image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&auto=format&fit=crop&q=80',
-    aspect: 'aspect-[3/4]',
-    tag: 'Boho Luxe',
-    price: '₹4,499',
-  },
-  {
-    id: 'g8',
-    title: 'Grand Floral Entrance Tunnel',
-    category: 'Weddings',
-    image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&auto=format&fit=crop&q=80',
-    aspect: 'aspect-[4/5]',
-    tag: 'Grand Wedding',
-    price: '₹7,999',
-  },
-];
 
 // 6. DETAILED SERVICES INCLUSIONS BREAKDOWN
 const DETAILED_SERVICES = [
@@ -595,54 +518,6 @@ export const HomePage: React.FC<HomePageProps> = ({
               </GradientBoldCard>
             );
           })}
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 8. REAL CELEBRATIONS / MASONRY GALLERY                                   */}
-      {/* ========================================================================= */}
-      <section id="gallery" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-12">
-          <div className="flex flex-col gap-2.5">
-            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#6B6B76] dark:text-[#A78A9F]">
-              <span className="eyebrow-line" />
-              Visual Inspiration
-            </p>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-[44px] font-bold uppercase tracking-tight text-[#1C1B22] dark:text-[#FAF8F5] leading-[1.1]">
-              Real Celebrations. Real Setups.
-            </h2>
-            <p className="max-w-2xl text-xs sm:text-sm md:text-[15px] font-normal leading-relaxed text-[#6B6B76] dark:text-[#C8B5C3]">
-              Tap any celebration snapshot to explore matching packages and customized accessories.
-            </p>
-          </div>
-
-          <Button
-            variant="primary"
-            size="md"
-            onClick={() => navigate('/gallery')}
-            className="self-start sm:self-auto rounded-full text-xs font-semibold tracking-wider uppercase px-6 py-3"
-          >
-            <span>Browse Full Gallery</span>
-            <ArrowRight size={14} />
-          </Button>
-        </div>
-
-        {/* Responsive Multi-Column Masonry Grid with 3D Parallax Tour Cards */}
-        <div className="masonry-4-col">
-          {GALLERY_ITEMS.map((item) => (
-            <div key={item.id} className="masonry-item mb-6">
-              <ParallaxTourCard
-                image={item.image}
-                imageAlt={item.title}
-                subtitle={item.category}
-                title={item.title}
-                badge={item.tag}
-                price={item.price}
-                aspectRatio={item.aspect}
-                onClick={() => onSelectCategory(item.category)}
-              />
-            </div>
-          ))}
         </div>
       </section>
 

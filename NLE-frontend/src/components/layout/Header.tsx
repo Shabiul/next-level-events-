@@ -106,7 +106,7 @@ export const Header: React.FC<HeaderProps> = ({
       return;
     }
 
-    const sectionIds = ['services', 'curated-decors', 'packages', 'gallery', 'contact', 'footer'];
+    const sectionIds = ['services', 'curated-decors', 'packages', 'contact', 'footer'];
     const elements = sectionIds
       .map(id => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);
