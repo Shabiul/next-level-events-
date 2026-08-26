@@ -741,7 +741,7 @@ export const OccasionPage: React.FC<{
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="relative overflow-hidden rounded-[32px] sm:rounded-[40px] bg-[#120A16] text-[#F9F6F2] p-8 sm:p-12 lg:p-16 shadow-2xl border border-[#725D75]/20 mb-12 min-h-[380px] md:min-h-[460px] flex items-center"
+            className="relative overflow-hidden rounded-2xl text-[#F9F6F2] p-8 sm:p-12 lg:p-16 shadow-sm mb-12 min-h-[360px] md:min-h-[440px] flex items-center"
           >
             {/* Background Image: High-Resolution 1920x716 Landscape Photography */}
             <img
@@ -749,23 +749,20 @@ export const OccasionPage: React.FC<{
               alt="Curated Celebration Setup"
               className={`absolute inset-0 w-full h-full opacity-100 pointer-events-none transition-transform duration-700 ${heroImageClass}`}
             />
-            {/* Neutral Text Contrast Gradient Scrim (No Purple Tint) */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#120A16] via-[#120A16]/65 to-transparent z-10 pointer-events-none" />
+            {/* Text Contrast Gradient Scrim */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#2F2930] via-[#2F2930]/55 to-transparent z-10 pointer-events-none" />
 
             <div className="relative z-20 max-w-xl text-left">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#482E54]/60 border border-[#725D75]/30 text-[#A78A9F] text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] shadow-md mb-5 backdrop-blur-xs">
-                <Sparkles size={13} className="text-[#A78A9F]" />
-                <span>YOUR CELEBRATION SANCTUARY</span>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-xs font-medium tracking-wide mb-5 backdrop-blur-xs">
+                <Sparkles size={13} className="text-[#C9BEAB]" />
+                <span>Your Celebration Sanctuary</span>
               </div>
-              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-normal tracking-tight text-white uppercase leading-[1.05] mb-4">
-                {decodedSubcategory || decodedCategory}
-                <br />
-                <span className="font-serif italic text-[#E5D7C2] lowercase text-[0.88em]">
-                  theme setups
-                </span>
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-semibold tracking-tight text-white leading-[1.05] mb-4">
+                {decodedSubcategory || decodedCategory},{' '}
+                <span className="italic text-[#C9BEAB]">celebrated beautifully.</span>
               </h1>
-              <p className="text-xs sm:text-sm md:text-base text-[#F9F6F2]/90 font-light leading-relaxed max-w-lg mb-8">
-                Select from our meticulously designed celebration theme sanctuaries handcrafted by verified master decorators across Bengaluru.
+              <p className="text-sm md:text-base text-white/85 font-normal leading-relaxed max-w-lg mb-8">
+                Select from our meticulously designed celebration theme setups, handcrafted by verified master decorators across Bengaluru.
               </p>
               <button
                 type="button"
@@ -773,9 +770,9 @@ export const OccasionPage: React.FC<{
                   const el = document.getElementById('curated-accommodations');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="inline-flex items-center gap-2.5 rounded-full px-8 py-3.5 text-xs font-extrabold uppercase tracking-wider text-[#2F2930] bg-[#E5D7C2] hover:bg-white shadow-xl hover:scale-102 transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-medium tracking-wide text-[#725D75] bg-white hover:bg-[#C9BEAB] transition-colors cursor-pointer"
               >
-                <span>EXPLORE THEMES NOW</span>
+                <span>Explore Themes</span>
                 <ArrowRight size={15} />
               </button>
             </div>
@@ -791,27 +788,27 @@ export const OccasionPage: React.FC<{
             className="mb-14 scroll-mt-28"
           >
             <div className="text-center max-w-2xl mx-auto mb-8">
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-[#746B72] dark:text-[#A78A9F] mb-2">
-                PREMIUM CELEBRATION LIVING
+              <p className="text-xs font-semibold tracking-wide text-[#A78A9F] mb-2">
+                Premium Celebration Living
               </p>
-              <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-normal text-[#2F2930] dark:text-[#FAF8F5] tracking-tight uppercase leading-tight">
+              <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold text-[#725D75] dark:text-[#C9BEAB] tracking-tight leading-tight">
                 Our Curated Theme Setups
               </h2>
-              <p className="text-xs sm:text-sm text-[#746B72] dark:text-[#C8B5C3] font-light mt-2">
+              <p className="text-sm text-[#746B72] dark:text-[#C8B5C3] font-normal mt-2">
                 Select from our meticulously designed celebration theme setups in {decodedCategory}.
               </p>
             </div>
 
             {subcategories.length > 0 && (
               <div className="mb-8 w-full overflow-x-auto pb-3 pt-1 scrollbar-none smooth-horizontal-rail">
-                <div className="flex items-center justify-start md:justify-center gap-2.5 min-w-max px-4 mx-auto">
+                <div className="flex items-center justify-start md:justify-center gap-2 min-w-max px-4 mx-auto">
                   <button
                     type="button"
                     onClick={() => handleSubcategorySelect('__all__')}
-                    className={`whitespace-nowrap rounded-full px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer border shadow-xs shrink-0 ${
+                    className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200 cursor-pointer border shrink-0 ${
                       !decodedSubcategory || decodedSubcategory === '__all__'
-                        ? 'border-[#725D75] bg-[#725D75] text-[#F9F6F2] dark:bg-[#C9BEAB] dark:text-[#25172C] dark:border-[#C9BEAB]'
-                        : 'border-[#E4DCD2] bg-[#FAF6F0] text-[#746B72] hover:bg-[#F9F6F2] hover:border-[#725D75] hover:text-[#2F2930] dark:bg-[#201325] dark:border-[#483250] dark:text-[#C8B5C3]'
+                        ? 'border-[#725D75] bg-[#725D75] text-white dark:bg-[#C9BEAB] dark:text-[#25172C] dark:border-[#C9BEAB]'
+                        : 'border-[#E4DCD2] bg-white text-[#746B72] hover:border-[#A78A9F] hover:text-[#725D75] dark:bg-[#201325] dark:border-[#483250] dark:text-[#C8B5C3]'
                     }`}
                   >
                     All {decodedCategory} Themes
@@ -826,10 +823,10 @@ export const OccasionPage: React.FC<{
                         key={sub.name}
                         type="button"
                         onClick={() => handleSubcategorySelect(sub.name)}
-                        className={`whitespace-nowrap rounded-full px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer border shadow-xs shrink-0 ${
+                        className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200 cursor-pointer border shrink-0 ${
                           isSelected
-                            ? 'border-[#725D75] bg-[#725D75] text-[#F9F6F2] dark:bg-[#C9BEAB] dark:text-[#25172C] dark:border-[#C9BEAB]'
-                            : 'border-[#E4DCD2] bg-[#FAF6F0] text-[#746B72] hover:bg-[#F9F6F2] hover:border-[#725D75] hover:text-[#2F2930] dark:bg-[#201325] dark:border-[#483250] dark:text-[#C8B5C3]'
+                            ? 'border-[#725D75] bg-[#725D75] text-white dark:bg-[#C9BEAB] dark:text-[#25172C] dark:border-[#C9BEAB]'
+                            : 'border-[#E4DCD2] bg-white text-[#746B72] hover:border-[#A78A9F] hover:text-[#725D75] dark:bg-[#201325] dark:border-[#483250] dark:text-[#C8B5C3]'
                         }`}
                       >
                         {sub.name}
@@ -880,13 +877,13 @@ export const OccasionPage: React.FC<{
             className="mb-14 mx-auto max-w-4xl"
           >
             <div className="text-center mb-8">
-              <p className="text-[11px] font-extrabold uppercase tracking-[0.25em] text-[#746B72] dark:text-[#A78A9F] mb-2">
-                — {decodedCategory.toUpperCase()} FAQS —
+              <p className="text-xs font-semibold tracking-wide text-[#A78A9F] mb-2">
+                {decodedCategory} FAQs
               </p>
-              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#2F2930] dark:text-[#FAF8F5] tracking-tight">
+              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#725D75] dark:text-[#FAF8F5] tracking-tight">
                 {decodedCategory} Frequently Asked Questions
               </h2>
-              <p className="mt-2 text-xs sm:text-sm text-[#746B72] dark:text-[#C8B5C3] font-light max-w-xl mx-auto">
+              <p className="mt-2 text-sm text-[#746B72] dark:text-[#C8B5C3] font-normal max-w-xl mx-auto">
                 Everything you need to know about booking, timing, balloon customization, and decorator setup for {decodedCategory}.
               </p>
             </div>
