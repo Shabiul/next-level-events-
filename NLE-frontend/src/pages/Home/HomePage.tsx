@@ -20,6 +20,7 @@ import {
   Candy,
   Droplets,
   Smile,
+  MapPin,
 } from 'lucide-react';
 import TabbedFAQ from '../../components/ui/TabbedFAQ';
 import InfiniteTestimonials from '../../components/ui/InfiniteTestimonials';
@@ -39,6 +40,18 @@ interface HomePageProps {
 // second ₹39,999 tier so pricing reads as a clean staircase); full list
 // with badges lives on /packages via EVENT_PACKAGES.
 const HOME_PACKAGE_INDICES = [0, 1, 2, 3, 5, 6];
+
+// Real decor photos already used elsewhere in this app (verified to exist
+// and to actually depict the celebration/decor imagery they're used for),
+// keyed by EVENT_PACKAGES id.
+const HOME_PACKAGE_IMAGES: Record<string, string> = {
+  'essential-celebration': '/kkkk-landscape.jpeg',
+  'fun-fiesta': '/hero-balloons.jpg',
+  'premium-carnival': '/explore2-landscape.jpeg',
+  '30k-theme-decor': '/tearce-landscape.jpeg',
+  'grand-celebration': '/cabana.jpeg',
+  '1-lakh-custom-stage': '/romantic-dinner-landscape.jpg',
+};
 
 const SERVICE_COLUMN_VISUALS: Record<string, string> = {
   'curated-decors': '/romantic-dinner.jpg',
@@ -105,80 +118,96 @@ export const HomePage: React.FC<HomePageProps> = ({
     <div className="flex flex-col pb-0 bg-[#FAF8F5] text-[#1C1B22] font-sans antialiased transition-colors">
 
       {/* ========================================================================= */}
-      {/* 1. HERO -- light split layout                                            */}
+      {/* 1. CINEMATIC LUXURY FULL-SCREEN HERO SECTION (original video hero)       */}
       {/* ========================================================================= */}
-      <section data-nav-theme="light" className="w-full bg-gradient-to-b from-[#F2EEFA] to-[#FAF8F5] pt-8 sm:pt-12 pb-10 sm:pb-14">
-        <div className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-            {/* Left: Copy */}
-            <div className="lg:col-span-6 flex flex-col">
-              <span className="inline-flex w-fit items-center gap-1.5 px-4 py-1.5 rounded-full bg-white border border-[#8F6FC4]/20 text-[#8F6FC4] text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] shadow-xs mb-5">
-                <Sparkles size={13} />
-                Celebrate Every Moment
-              </span>
+      <section
+        data-nav-theme="dark"
+        className="relative w-full min-h-[100vh] sm:min-h-[100svh] overflow-hidden flex flex-col justify-center items-center text-center shadow-2xl bg-[#0F0A12] px-4 sm:px-6"
+      >
+        {/* Background Video Media with Scrim & Vignette Overlays */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            disablePictureInPicture
+            disableRemotePlayback
+            controls={false}
+            className="w-full h-full object-cover object-center transform-gpu will-change-transform transition-all duration-700"
+          >
+            <source src="/lan.mp4" type="video/mp4" />
+            <source src="/landing page.mp4" type="video/mp4" />
+          </video>
+          {/* Ambient vignette & gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/45 pointer-events-none" />
+        </div>
 
-              <h1 className="font-serif text-4xl sm:text-5xl md:text-[56px] font-normal text-[#1C1B22] leading-[1.12] tracking-tight mb-4">
-                Beautiful Décor.
-                <br />
-                Joyful Moments.
-                <br />
-                <span className="italic text-[#8F6FC4]">Unforgettable Celebrations.</span>
-              </h1>
+        {/* Hero Editorial Content */}
+        <div className="relative z-10 max-w-4xl mx-auto w-full flex flex-col items-center justify-center text-center px-4 my-auto pt-16 sm:pt-20">
+          <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-black/50 border border-white/25 text-[#FAF8F5] text-[10px] sm:text-xs font-semibold uppercase tracking-[0.22em] backdrop-blur-md mb-4 shadow-md">
+            <Sparkles className="w-3.5 h-3.5 text-[#C7B8E8]" />
+            Bespoke Event Styling &amp; Surprise Setups
+          </span>
 
-              <p className="text-sm sm:text-base text-[#6B6B76] font-light leading-relaxed max-w-lg mb-7">
-                From stunning decorations to fun activities and live treats — we create magical experiences for every celebration.
-              </p>
+          <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-[76px] font-normal text-[#FAF8F5] leading-[1.04] tracking-tight uppercase max-w-4xl drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)]">
+            CELEBRATE <span className="text-[#C7B8E8] font-normal italic font-['Great_Vibes'] lowercase text-[1.2em] tracking-normal">Unforgettable</span> MOMENTS
+          </h1>
 
-              <div className="flex flex-wrap items-center gap-3 mb-8">
-                <button
-                  type="button"
-                  onClick={() => navigate('/explore')}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#8F6FC4] hover:bg-[#7D5DB2] text-white px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-lg hover:scale-103 transition-all cursor-pointer"
-                >
-                  Explore Services
-                  <ArrowRight size={15} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => navigate('/packages')}
-                  className="inline-flex items-center gap-2 rounded-full bg-white border border-[#E4DEF2] text-[#1C1B22] hover:bg-[#F2EEFA] px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-sm transition-all cursor-pointer"
-                >
-                  View Packages
-                </button>
-              </div>
+          <p className="mt-4 max-w-2xl text-xs sm:text-sm md:text-base text-[#FAF8F5]/90 font-sans font-light leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+            Signature balloon arches, romantic candlelight cabanas, bespoke birthday themes, and live entertainment styled across Bengaluru.
+          </p>
 
-              {/* Trust icon row */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 pt-6 border-t border-[#E4DEF2]">
-                {[
-                  { icon: Sparkles, label: 'Custom Themes' },
-                  { icon: Shield, label: 'Premium Quality' },
-                  { icon: Truck, label: 'On-Time Delivery' },
-                  { icon: CheckCircle2, label: 'Hassle Free Setup' },
-                ].map(({ icon: Icon, label }) => (
-                  <div key={label} className="flex flex-col items-center sm:items-start gap-1.5 text-center sm:text-left">
-                    <Icon size={20} className="text-[#8F6FC4]" />
-                    <span className="text-[11px] font-semibold text-[#6B6B76]">{label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: Image */}
-            <div className="lg:col-span-6">
-              <div className="relative w-full aspect-[4/3] rounded-[32px] overflow-hidden shadow-2xl border border-[#E4DEF2]">
-                <img
-                  src="/1ss.jpeg"
-                  alt="Beautifully decorated birthday celebration"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+            <button
+              type="button"
+              onClick={() => navigate('/explore')}
+              className="inline-flex items-center gap-2 rounded-full bg-[#FAF8F5] text-[#1B101F] hover:bg-[#C7B8E8] px-7 py-3.5 text-xs font-extrabold uppercase tracking-wider shadow-xl transition-all duration-300 hover:scale-103 cursor-pointer"
+            >
+              <span>Explore Themes &amp; Setups</span>
+              <ArrowRight size={14} />
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/packages')}
+              className="inline-flex items-center gap-2 rounded-full bg-black/50 hover:bg-white/20 text-[#FAF8F5] border border-white/30 backdrop-blur-md px-7 py-3.5 text-xs font-bold uppercase tracking-wider shadow-xl transition-all duration-300 hover:scale-103 cursor-pointer"
+            >
+              <span>View All Packages</span>
+            </button>
           </div>
         </div>
       </section>
 
+      {/* ========================================================================= */}
+      {/* TRUST MARQUEE SECTION                                                    */}
+      {/* ========================================================================= */}
+      <div id="trust-marquee" data-nav-theme="light" className="relative z-10 overflow-hidden bg-[#C7B8E8] py-3.5 text-[#1C1B22] border-y border-[#B8AC98] shadow-xs">
+        <div className="animate-marquee whitespace-nowrap text-[13px] font-medium tracking-wide">
+          {[0, 1].map((rep) => (
+            <React.Fragment key={rep}>
+              <span className="mx-6 inline-flex items-center gap-2">
+                <Shield size={16} /> Verified Master Stylists
+              </span>
+              <span className="mx-6 inline-flex items-center gap-2">
+                <Clock size={16} /> Express 3-Hour Setup
+              </span>
+              <span className="mx-6 inline-flex items-center gap-2">
+                <MapPin size={16} /> All Bengaluru Locations
+              </span>
+              <span className="mx-6 inline-flex items-center gap-2">
+                <CheckCircle2 size={16} /> 100% Picture-Match Guarantee
+              </span>
+              <span className="mx-6 inline-flex items-center gap-2">
+                <Sparkles size={16} /> Zero Hidden Fees
+              </span>
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+
       {/* Main Content Sections Container */}
-      <div className="flex flex-col gap-14 sm:gap-16 lg:gap-20 pt-4 pb-14 sm:pb-16">
+      <div className="flex flex-col gap-14 sm:gap-16 lg:gap-20 pt-10 sm:pt-12 lg:pt-14 pb-14 sm:pb-16">
 
         {/* ========================================================================= */}
         {/* 2. SHOP BY OCCASION                                                       */}
@@ -286,9 +315,13 @@ export const HomePage: React.FC<HomePageProps> = ({
                 onClick={() => navigate('/packages')}
                 className="group relative flex flex-col rounded-[24px] border border-[#E4DEF2] bg-white p-5 text-left shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer"
               >
-                <div className="relative -mx-5 -mt-5 mb-4 h-28 rounded-t-[24px] overflow-hidden bg-gradient-to-br from-[#F2EEFA] via-[#EAE1F7] to-[#F2EEFA]">
-                  <div className="absolute -top-6 -right-6 h-24 w-24 rounded-full bg-[#8F6FC4]/20 blur-2xl" />
-                  <Sparkles size={16} className="absolute bottom-3 left-5 text-[#8F6FC4]/40" />
+                <div className="relative -mx-5 -mt-5 mb-4 h-36 rounded-t-[24px] overflow-hidden bg-[#F2EEFA]">
+                  <img
+                    src={HOME_PACKAGE_IMAGES[pkg.id]}
+                    alt={pkg.name}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
                   {pkg.badge === 'Most Popular' && (
                     <span className="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full bg-[#8F6FC4] text-white px-2.5 py-1 text-[9px] font-extrabold uppercase tracking-wider shadow-md">
                       <Crown size={10} />
