@@ -211,7 +211,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               </button>
             </div>
 
-            <div className="flex gap-4 sm:gap-5 overflow-x-auto pb-2 smooth-horizontal-rail hide-scrollbar snap-x sm:grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 sm:overflow-visible">
+            <div className="flex gap-4 sm:gap-6 overflow-x-auto pb-2 smooth-horizontal-rail hide-scrollbar snap-x sm:grid sm:grid-cols-3 sm:overflow-visible">
               {occasions.map((cat) => (
                 <button
                   key={cat._id || cat.name}
