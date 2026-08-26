@@ -11,6 +11,7 @@ import {
   Quote,
 } from 'lucide-react';
 import { SeoHead } from '../../components/layout/SeoHead';
+import { AnimatedNumber } from '../../components/core/animated-number';
 
 // Interactive 3D Tilt Card Component
 const ThreeDCard: React.FC<{
@@ -224,6 +225,49 @@ export const AboutPage: React.FC = () => {
                 <p>
                   Our team of experienced master stylists and friendly event coordinators work around the clock to create seamless, memorable journeys and picture-perfect backdrops across Bengaluru.
                 </p>
+              </div>
+
+              {/* Trust Stats Bar */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-0 sm:divide-x divide-[#8F6FC4]/25 mt-9 py-4 border-y border-[#8F6FC4]/20">
+                <div className="sm:pr-5 sm:pl-0">
+                  <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#1C1B22] tracking-tight">
+                    <AnimatedNumber value={4.9} decimalPlaces={1} springOptions={{ bounce: 0, duration: 2000 }} />
+                    <span className="text-[#8F6FC4] ml-1 text-xl sm:text-2xl">★</span>
+                  </div>
+                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#6B6B76] mt-1">
+                    Guest Rating
+                  </p>
+                </div>
+
+                <div className="sm:px-5">
+                  <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#1C1B22] tracking-tight">
+                    <AnimatedNumber value={5200} decimalPlaces={0} springOptions={{ bounce: 0, duration: 2000 }} />
+                    <span className="text-[#8F6FC4] font-serif text-xl sm:text-2xl">+</span>
+                  </div>
+                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#6B6B76] mt-1">
+                    Happy Guests
+                  </p>
+                </div>
+
+                <div className="sm:px-5">
+                  <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#1C1B22] tracking-tight">
+                    <AnimatedNumber value={100} decimalPlaces={0} springOptions={{ bounce: 0, duration: 2000 }} />
+                    <span className="text-[#8F6FC4] font-serif text-xl sm:text-2xl">%</span>
+                  </div>
+                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#6B6B76] mt-1">
+                    Real-to-Photo
+                  </p>
+                </div>
+
+                <div className="sm:pl-5 sm:pr-0">
+                  <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#1C1B22] tracking-tight">
+                    <AnimatedNumber value={3} decimalPlaces={0} springOptions={{ bounce: 0, duration: 2000 }} />
+                    <span className="text-[#8F6FC4] font-serif text-lg sm:text-xl ml-0.5">-Hour</span>
+                  </div>
+                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#6B6B76] mt-1">
+                    Express Setup
+                  </p>
+                </div>
               </div>
             </motion.div>
 

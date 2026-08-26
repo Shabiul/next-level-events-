@@ -13,12 +13,10 @@ import {
   Flame,
   MapPin,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { CategoryGrid } from '../../components/category/CategoryGrid';
 import { Button } from '../../components/ui/Button';
 import TabbedFAQ from '../../components/ui/TabbedFAQ';
 import { WhyChooseUs } from '../../components/ui/WhyChooseUs';
-import { AnimatedNumber } from '../../components/core/animated-number';
 import InfiniteTestimonials from '../../components/ui/InfiniteTestimonials';
 import { GradientBoldCard } from '../../components/ui/GradientBoldCard';
 import { GlowingImageCard } from '../../components/ui/GlowingImageCard';
@@ -419,134 +417,6 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       {/* Main Content Sections Container with compact, clean vertical spacing */}
       <div className="flex flex-col gap-8 sm:gap-10 lg:gap-12 pt-6 sm:pt-8 lg:pt-10">
-
-      {/* ========================================================================= */}
-      {/* 4. ABOUT THEDECORPARTY (Exact Redesign Section)                          */}
-      {/* ========================================================================= */}
-      <section id="about" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-20 items-center">
-          {/* Left Column: Story & Narrative Content */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:col-span-7 flex flex-col justify-center text-left"
-          >
-            {/* Small Eyebrow */}
-            <p className="text-[12px] sm:text-[13px] font-bold uppercase tracking-[0.22em] text-[#C7B8E8] dark:text-[#C9BEAB] mb-3 sm:mb-4">
-              ABOUT THEDECORPARTY
-            </p>
-
-            {/* Headline */}
-            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[46px] xl:text-[50px] font-normal leading-[1.12] tracking-tight text-[#1C1B22] dark:text-[#FAF8F5] mb-5 sm:mb-6">
-              We create celebrations that feel <span className="font-serif italic font-normal text-[#6B6B76] dark:text-[#C9BEAB]">personal</span>, <span className="font-serif italic font-normal text-[#6B6B76] dark:text-[#C9BEAB]">beautiful</span>, and <span className="font-serif italic font-normal text-[#6B6B76] dark:text-[#C9BEAB]">unforgettable</span>.
-            </h2>
-
-            {/* Body Copy */}
-            <div className="flex flex-col gap-3.5 text-xs sm:text-sm md:text-[15px] leading-relaxed text-[#6B6B76] dark:text-[#C8B5C3] font-normal max-w-2xl mb-8 sm:mb-10">
-              <p>
-                TheDecorParty is a Bengaluru-based celebration and décor studio creating thoughtfully styled experiences for birthdays, proposals, weddings, baby showers, anniversaries, and special occasions.
-              </p>
-              <p>
-                From elegant décor and immersive setups to fun activities and meaningful details, we bring every element together with creativity and care — turning your ideas into celebrations worth remembering.
-              </p>
-            </div>
-
-            {/* 4-Column Horizontal Stats Bar with Vertical Dividers & Rolling Animated Counters */}
-            <div
-              className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-0 sm:divide-x divide-[#E4DEF2] dark:divide-[#483250] py-4 border-y border-[#E4DEF2]/70 dark:border-[#483250]/80"
-            >
-              <div className="sm:pr-5 sm:pl-0">
-                <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#1C1B22] dark:text-[#C9BEAB] tracking-tight">
-                  <AnimatedNumber
-                    value={4.9}
-                    decimalPlaces={1}
-                    springOptions={{ bounce: 0, duration: 2000 }}
-                  />
-                  <span className="text-[#8F6FC4] ml-1 text-xl sm:text-2xl">★</span>
-                </div>
-                <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#6B6B76] dark:text-[#A78A9F] mt-1">
-                  Guest Rating
-                </p>
-              </div>
-
-              <div className="sm:px-5">
-                <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#1C1B22] dark:text-[#C9BEAB] tracking-tight">
-                  <AnimatedNumber
-                    value={5200}
-                    decimalPlaces={0}
-                    springOptions={{ bounce: 0, duration: 2000 }}
-                  />
-                  <span className="text-[#8F6FC4] font-serif text-xl sm:text-2xl">+</span>
-                </div>
-                <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#6B6B76] dark:text-[#A78A9F] mt-1">
-                  Happy Guests
-                </p>
-              </div>
-
-              <div className="sm:px-5">
-                <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#1C1B22] dark:text-[#C9BEAB] tracking-tight">
-                  <AnimatedNumber
-                    value={100}
-                    decimalPlaces={0}
-                    springOptions={{ bounce: 0, duration: 2000 }}
-                  />
-                  <span className="text-[#8F6FC4] font-serif text-xl sm:text-2xl">%</span>
-                </div>
-                <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#6B6B76] dark:text-[#A78A9F] mt-1">
-                  Real-to-Photo
-                </p>
-              </div>
-
-              <div className="sm:pl-5 sm:pr-0">
-                <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#1C1B22] dark:text-[#C9BEAB] tracking-tight">
-                  <AnimatedNumber
-                    value={3}
-                    decimalPlaces={0}
-                    springOptions={{ bounce: 0, duration: 2000 }}
-                  />
-                  <span className="text-[#8F6FC4] font-serif text-lg sm:text-xl ml-0.5">-Hour</span>
-                </div>
-                <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#6B6B76] dark:text-[#A78A9F] mt-1">
-                  Express Setup
-                </p>
-              </div>
-            </div>
-
-            {/* Bottom Actions Row */}
-            <div className="flex items-center mt-7 sm:mt-8">
-              <button
-                type="button"
-                onClick={() => navigate('/about')}
-                className="pill-btn-khaki inline-flex items-center justify-center rounded-full px-8 sm:px-10 py-3 sm:py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider cursor-pointer shadow-md hover:scale-103 active:scale-95 transition-all"
-              >
-                <span>Know More</span>
-                <ArrowRight size={15} className="ml-2" />
-              </button>
-            </div>
-          </motion.div>
-
-          {/* Right Column: Aesthetic Large Rounded Portrait Image with "The Decor Party" neon */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:col-span-5 w-full flex justify-center"
-          >
-            <div className="relative w-full overflow-hidden rounded-[32px] sm:rounded-[40px] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.14)] border border-[#E4DEF2]/70 dark:border-[#483250] aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] max-h-[560px] lg:max-h-[620px] group bg-[#FAF8F5] dark:bg-[#2D1C34]">
-              <img
-                src="/about-aesthetic.png"
-                alt="TheDecorParty Aesthetic Celebration Setup"
-                loading="lazy"
-                className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-103"
-              />
-              <div className="absolute inset-0 ring-1 ring-inset ring-black/5 dark:ring-white/10 rounded-[32px] sm:rounded-[40px] pointer-events-none" />
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
       {/* ========================================================================= */}
       {/* 5. OUR SERVICES & PACKAGES (Luxury Full-Width Section)                   */}
