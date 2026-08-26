@@ -315,20 +315,30 @@ export const HomePage: React.FC<HomePageProps> = ({
                 key={activity.name}
                 type="button"
                 onClick={() => onSelectCategory('Kids Activities', activity.name)}
-                className="group flex-none w-[190px] sm:w-auto snap-start flex flex-col gap-3 cursor-pointer"
+                className="group flex-none w-[190px] sm:w-auto snap-start cursor-pointer"
               >
-                <div className="relative aspect-square rounded-xl overflow-hidden shadow-sm border border-[#E4DCD2] bg-[#F3EFE7] flex items-center justify-center group-hover:border-[#725D75]/40 transition-all">
+                <div className="relative aspect-square rounded-xl overflow-hidden shadow-sm border border-[#E4DCD2] flex items-center justify-center group-hover:border-[#725D75]/40 transition-all">
                   {activity.image ? (
-                    <img
-                      src={activity.image}
-                      alt={activity.name}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
+                    <>
+                      <img
+                        src={activity.image}
+                        alt={activity.name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                      <span className="absolute inset-x-0 bottom-0 p-3.5 text-left text-sm font-medium text-white">
+                        {activity.name}
+                      </span>
+                    </>
                   ) : (
-                    <activity.icon size={44} className="text-[#725D75] transition-transform duration-300 group-hover:scale-110" />
+                    <>
+                      <activity.icon size={44} className="text-[#725D75] transition-transform duration-300 group-hover:scale-110" />
+                      <span className="absolute inset-x-0 bottom-0 p-3.5 text-left text-sm font-medium text-[#2F2930]">
+                        {activity.name}
+                      </span>
+                    </>
                   )}
                 </div>
-                <span className="text-sm font-medium text-[#2F2930] text-center">{activity.name}</span>
               </button>
             ))}
           </div>
