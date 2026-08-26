@@ -376,7 +376,7 @@ export const Header: React.FC<HeaderProps> = ({
                       </div>
 
                       {/* Express Callout Strip */}
-                      <div className="mt-5 flex items-center justify-between gap-4 rounded-2xl bg-gradient-to-r from-[#725D75] to-[#483250] px-5 py-3.5 text-[#F9F6F2] shadow-lg">
+                      <div className="mt-5 flex items-center justify-between gap-4 rounded-xl bg-[#725D75] px-5 py-3.5 text-[#F9F6F2] shadow-sm">
                         <div className="flex items-center gap-2.5 min-w-0">
                           <Gift size={16} className="text-[#A78A9F] shrink-0" />
                           <p className="text-xs font-semibold leading-snug truncate">

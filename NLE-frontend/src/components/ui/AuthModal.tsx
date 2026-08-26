@@ -71,7 +71,7 @@ function getStrength(val: string): { score: number; label: string; color: string
   if (/[0-9]/.test(val)) score++;
   if (/[^A-Za-z0-9]/.test(val)) score++;
   const map = [
-    { label: '', color: '#483250', bg: 'bg-[#483250]', width: '0%' },
+    { label: '', color: '#E4DCD2', bg: 'bg-[#E4DCD2]', width: '0%' },
     { label: 'Weak', color: '#f87171', bg: 'bg-rose-500', width: '25%' },
     { label: 'Fair', color: '#fbbf24', bg: 'bg-amber-400', width: '50%' },
     { label: 'Good', color: '#34d399', bg: 'bg-emerald-400', width: '75%' },
