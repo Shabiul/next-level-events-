@@ -309,13 +309,13 @@ export const HomePage: React.FC<HomePageProps> = ({
             </button>
           </div>
 
-          <div className="flex gap-4 overflow-x-auto pb-2 smooth-horizontal-rail hide-scrollbar snap-x sm:grid sm:grid-cols-4 lg:grid-cols-8 sm:overflow-visible">
+          <div className="flex gap-5 overflow-x-auto pb-2 smooth-horizontal-rail hide-scrollbar snap-x sm:grid sm:grid-cols-4 sm:overflow-visible">
             {TOP_ACTIVITIES.map((activity) => (
               <button
                 key={activity.name}
                 type="button"
                 onClick={() => onSelectCategory('Kids Activities', activity.name)}
-                className="group flex-none w-[130px] sm:w-auto snap-start flex flex-col gap-2 cursor-pointer"
+                className="group flex-none w-[190px] sm:w-auto snap-start flex flex-col gap-3 cursor-pointer"
               >
                 <div className="relative aspect-square rounded-xl overflow-hidden shadow-sm border border-[#E4DCD2] bg-[#F3EFE7] flex items-center justify-center group-hover:border-[#725D75]/40 transition-all">
                   {activity.image ? (
@@ -325,10 +325,10 @@ export const HomePage: React.FC<HomePageProps> = ({
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   ) : (
-                    <activity.icon size={30} className="text-[#725D75] transition-transform duration-300 group-hover:scale-110" />
+                    <activity.icon size={44} className="text-[#725D75] transition-transform duration-300 group-hover:scale-110" />
                   )}
                 </div>
-                <span className="text-xs font-semibold text-[#2F2930] text-center">{activity.name}</span>
+                <span className="text-sm font-medium text-[#2F2930] text-center">{activity.name}</span>
               </button>
             ))}
           </div>
