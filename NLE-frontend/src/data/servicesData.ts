@@ -105,6 +105,36 @@ export const SERVICE_COLUMNS: ServiceColumn[] = [
 const ALL_SERVICE_LINKS: ServiceLink[] = [...CURATED_DECORS, ...ACTIVITIES_ENTERTAINMENT];
 
 /**
+ * Real photos from public/ that were individually opened and verified to
+ * actually depict the named service (see the review notes in
+ * OccasionPage.tsx for the mismatches that were caught and avoided --
+ * e.g. tattoo.jpeg / tatoo.jpeg both actually show face painting, so they
+ * back "Face Painting" here and are deliberately NOT used for either
+ * "Tattoo Artist" entry). Keyed by lower-cased service name.
+ */
+const SUB_SERVICE_IMAGES: Record<string, string> = {
+  'face painting': '/tattoo.jpeg',
+  'balloon modelling': '/hero-balloons.jpg',
+  'balloon shooting': '/hero-balloons.jpg',
+  'popcorn': '/popcorn.jpeg',
+  'cotton candy': '/cotton candy.jpeg',
+  'chocolate fountain': '/chocolate fountain.jpeg',
+  'ice gola': '/ice gola.jpeg',
+  'ice cream flavours': '/ice gola.jpeg',
+  'sweet corn': '/sweet corn.jpeg',
+  'potato twister': '/potato twister.jpeg',
+};
+
+/** Generic celebration photo used when no verified photo exists for a
+ * specific sub-service -- keeps every card populated with a real, on-brand
+ * image rather than a blank/broken `<img>` (never a guessed/mismatched one). */
+const DEFAULT_SUB_SERVICE_IMAGE = '/hero-balloons.jpg';
+
+export function getSubServiceImage(name: string): string {
+  return SUB_SERVICE_IMAGES[name.trim().toLowerCase()] || DEFAULT_SUB_SERVICE_IMAGE;
+}
+
+/**
  * Looks up sub-service names for a top-level category by fuzzy
  * (case-insensitive, either-direction substring) label match, so it
  * still resolves whether the route was built from the exact label,

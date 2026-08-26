@@ -12,7 +12,7 @@ import { EmptyState } from '../../components/ui/EmptyState';
 import { BackButton } from '../../components/ui/BackButton';
 import { ShareDialog } from '../../components/ui/ShareDialog';
 import { SeoHead } from '../../components/layout/SeoHead';
-import { findServiceSubItems } from '../../data/servicesData';
+import { findServiceSubItems, getSubServiceImage } from '../../data/servicesData';
 import type { AdminProduct } from '../../types';
 
 const ACTIVITIES_FALLBACK_MAP: Record<string, AdminProduct[]> = {
@@ -27,10 +27,7 @@ const ACTIVITIES_FALLBACK_MAP: Record<string, AdminProduct[]> = {
       originalPrice: 4500,
       description: 'Dreamy sheer drape cabana with fairy lights, plush floor seating, rose petals, and warm candle illumination.',
       image: '/kkkk.jpeg',
-      moreImages: [
-        'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=800&q=80',
-        'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=800&q=80',
-      ],
+      moreImages: ['/cabana.jpeg'],
       inclusions: ['4-Pillar Weather Canopy', '100+ LED Battery Candles', 'Fresh Red Rose Petal Pathway', 'Fairy Light Drapes'],
       addOns: [],
       badge: 'Bestseller',
@@ -51,7 +48,7 @@ const ACTIVITIES_FALLBACK_MAP: Record<string, AdminProduct[]> = {
       price: 4999,
       originalPrice: 6500,
       description: 'Chic boho macrame cabana with pampas grass, warm lanterns, and low-table candlelight dining arrangement.',
-      image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=800&q=80',
+      image: '/cabana.jpeg',
       moreImages: [],
       inclusions: ['Boho Canopy Frame', 'Macrame & Cushion Seating', 'Pampas Floral Vases', 'Warm Lantern Pathway'],
       addOns: [],
@@ -76,9 +73,7 @@ const ACTIVITIES_FALLBACK_MAP: Record<string, AdminProduct[]> = {
       originalPrice: 11000,
       description: 'Grand proposal setup featuring 4-foot illuminated MARRY ME marquee letters, plush red carpet aisle, and heart arch.',
       image: '/tearce.jpeg',
-      moreImages: [
-        'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=800&q=80',
-      ],
+      moreImages: ['/terrace-proposal.jpeg'],
       inclusions: ['4ft MARRY ME Illuminated Letters', '20ft Plush Red Carpet Aisle', 'Heart Floral Arch', 'Cold Pyro Sparklers (4 Shots)'],
       addOns: [],
       badge: 'Most Romantic',
@@ -125,7 +120,7 @@ const ACTIVITIES_FALLBACK_MAP: Record<string, AdminProduct[]> = {
       price: 3499,
       originalPrice: 4500,
       description: 'Dreamy pastel balloon arch with 3D teddy bear mascot cutouts, cloud stands, and personalized name board.',
-      image: 'https://images.unsplash.com/photo-1559827291-72ee739d0d9a?auto=format&fit=crop&w=800&q=80',
+      image: '/kids theme.jpeg',
       moreImages: [],
       inclusions: ['Organic Pastel Balloon Arch', 'Giant Plush Teddy Bear Props', 'Customized Name Board', 'LED Warm Backdrop Lights'],
       addOns: [],
@@ -133,74 +128,6 @@ const ACTIVITIES_FALLBACK_MAP: Record<string, AdminProduct[]> = {
       badgeColor: 'pink',
       rating: 4.9,
       reviewCount: 280,
-      active: true,
-      featured: true,
-      createdAt: '2026-01-01',
-      updatedAt: '2026-01-01',
-    },
-  ],
-  'experiences': [
-    {
-      _id: 'exp_gen_1',
-      categoryId: 'cat_exp',
-      name: 'Rooftop Candlelight Cabana Dining',
-      categoryName: 'Experiences',
-      subcategory: 'Cabana Setups',
-      price: 3499,
-      originalPrice: 4500,
-      description: 'Dreamy sheer drape cabana with fairy lights, plush floor seating, rose petals, and warm candle illumination.',
-      image: '/kkkk.jpeg',
-      moreImages: [],
-      inclusions: ['4-Pillar Weather Canopy', '100+ LED Battery Candles', 'Fresh Red Rose Petal Pathway', 'Fairy Light Drapes'],
-      addOns: [],
-      badge: 'Popular',
-      badgeColor: 'purple',
-      rating: 4.9,
-      reviewCount: 230,
-      active: true,
-      featured: true,
-      createdAt: '2026-01-01',
-      updatedAt: '2026-01-01',
-    },
-    {
-      _id: 'exp_gen_2',
-      categoryId: 'cat_exp',
-      name: '4ft MARRY ME LED Marquee Proposal',
-      categoryName: 'Experiences',
-      subcategory: 'Terrace Proposals',
-      price: 8999,
-      originalPrice: 11000,
-      description: 'Grand proposal setup featuring 4-foot illuminated MARRY ME marquee letters, plush red carpet aisle, and heart arch.',
-      image: '/tearce.jpeg',
-      moreImages: [],
-      inclusions: ['4ft MARRY ME Illuminated Letters', '20ft Plush Red Carpet Aisle', 'Heart Floral Arch'],
-      addOns: [],
-      badge: 'Most Romantic',
-      badgeColor: 'pink',
-      rating: 5.0,
-      reviewCount: 310,
-      active: true,
-      featured: true,
-      createdAt: '2026-01-01',
-      updatedAt: '2026-01-01',
-    },
-    {
-      _id: 'exp_gen_3',
-      categoryId: 'cat_exp',
-      name: 'Midnight Car Boot Surprise Decor',
-      categoryName: 'Experiences',
-      subcategory: 'Car Boot Surprises',
-      price: 1999,
-      originalPrice: 2800,
-      description: 'Surprise car trunk styling with fairy light stringing, helium balloons, customized photo bunting, and gift boxes.',
-      image: '/car bot.jpeg',
-      moreImages: [],
-      inclusions: ['Custom Car Trunk Styling', 'Fairy Light Garland', '10 Printed Memories Photo Bunting'],
-      addOns: [],
-      badge: 'Surprise',
-      badgeColor: 'purple',
-      rating: 4.85,
-      reviewCount: 195,
       active: true,
       featured: true,
       createdAt: '2026-01-01',
@@ -217,7 +144,7 @@ const ACTIVITIES_FALLBACK_MAP: Record<string, AdminProduct[]> = {
       price: 1299,
       originalPrice: 1850,
       description: 'Elegant balloon ring arch backdrop with gold metallic chrome accent balloons, LED fairy lights, and happy birthday neon foil letters.',
-      image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=800&q=80',
+      image: '/simple-wall-decor.jpg',
       moreImages: [],
       inclusions: ['Circular Ring Backdrop Stand', '150+ Metallic & Chrome Balloons', 'LED Fairy String Lights', 'Happy Birthday Foil Banner'],
       addOns: [],
@@ -395,75 +322,18 @@ const ACTIVITIES_FALLBACK_MAP: Record<string, AdminProduct[]> = {
       updatedAt: '2026-01-01',
     },
   ],
-  'photography & videography': [
-    {
-      _id: 'act_7',
-      categoryId: 'cat_media',
-      name: 'Milestone Event Photography (3 Hours)',
-      categoryName: 'Photography & Videography',
-      subcategory: 'Event Photography',
-      price: 2999,
-      originalPrice: 4000,
-      description: 'Professional event photographer capturing candid moments, stage portraits, and color-graded HD gallery.',
-      image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=80',
-      moreImages: [],
-      inclusions: ['3 Hours On-Site Coverage', 'All Raw Photos', '50 Color-Graded Retouched Images'],
-      addOns: [],
-      badge: '4K Capture',
-      badgeColor: 'purple',
-      rating: 4.9,
-      reviewCount: 260,
-      active: true,
-      featured: true,
-      createdAt: '2026-01-01',
-      updatedAt: '2026-01-01',
-    },
-    {
-      _id: 'act_8',
-      categoryId: 'cat_media',
-      name: 'Cinematic Event Videography & Teaser Reel (4 Hours)',
-      categoryName: 'Photography & Videography',
-      subcategory: 'Cinematic Videography',
-      price: 4999,
-      originalPrice: 6500,
-      description: '4K ultra HD cinematic video recording with gimbal stabilization, curated music overlay, and 60-second teaser reel for Instagram.',
-      image: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=600&q=80',
-      moreImages: [],
-      inclusions: ['4 Hours Cinematic Shoot', '4K Edited Full Video (3-5 Mins)', '60-Sec Instagram Teaser Reel', 'Licensed Music Overlay'],
-      addOns: [],
-      badge: 'Trending',
-      badgeColor: 'gold',
-      rating: 4.95,
-      reviewCount: 185,
-      active: true,
-      featured: true,
-      createdAt: '2026-01-01',
-      updatedAt: '2026-01-01',
-    },
-    {
-      _id: 'act_9',
-      categoryId: 'cat_media',
-      name: 'Complete Photo + Video Combo Package (Full Event)',
-      categoryName: 'Photography & Videography',
-      subcategory: 'Photo + Video Combo',
-      price: 6999,
-      originalPrice: 9500,
-      description: 'Dedicated 2-member crew (1 candid photographer + 1 cinematic videographer) covering the entire celebration with full editing.',
-      image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80',
-      moreImages: [],
-      inclusions: ['2 Professional Crew Members', 'Unlimited High-Res Photos', 'Full 4K Cinematic Film', 'Express 5-Day Delivery'],
-      addOns: [],
-      badge: 'Best Value',
-      badgeColor: 'green',
-      rating: 5.0,
-      reviewCount: 310,
-      active: true,
-      featured: true,
-      createdAt: '2026-01-01',
-      updatedAt: '2026-01-01',
-    },
-  ],
 };
+
+// Alias lookup keys that describe the exact same items under a different
+// name onto the same array reference (rather than duplicating the data),
+// so the `allMocks`/dedupe-by-_id logic below never has to reconcile two
+// copies of the same service with different ids.
+ACTIVITIES_FALLBACK_MAP['photography & videography'] = ACTIVITIES_FALLBACK_MAP['photography'];
+ACTIVITIES_FALLBACK_MAP['experiences'] = [
+  ...ACTIVITIES_FALLBACK_MAP['cabana setups'],
+  ...ACTIVITIES_FALLBACK_MAP['terrace proposals'],
+  ...ACTIVITIES_FALLBACK_MAP['car boot surprises'],
+];
 
 const THEME_FAQS_MAP: Record<string, { question: string; answer: string }[]> = {
   birthday: [
@@ -714,35 +584,35 @@ export const OccasionPage: React.FC<{
 
     const servicesDataSubs = findServiceSubItems(decodedCategory);
     if (servicesDataSubs && servicesDataSubs.length > 0) {
-      return servicesDataSubs.map((name) => ({ name, image: '' }));
+      return servicesDataSubs.map((name) => ({ name, image: getSubServiceImage(name) }));
     }
 
     if (normCat.includes('photo') || normCat.includes('video')) {
       return [
-        { name: 'Event Photography', image: '' },
-        { name: 'Cinematic Videography', image: '' },
-        { name: 'Photo + Video Combo', image: '' },
+        { name: 'Event Photography', image: getSubServiceImage('Event Photography') },
+        { name: 'Cinematic Videography', image: getSubServiceImage('Cinematic Videography') },
+        { name: 'Photo + Video Combo', image: getSubServiceImage('Photo + Video Combo') },
       ];
     }
     if (normCat.includes('kids') || normCat.includes('activit')) {
       return [
-        { name: 'Caricature Artist', image: '' },
-        { name: 'Emcee / Anchor', image: '' },
-        { name: 'Birthday Tattoo Artist', image: '' },
+        { name: 'Caricature Artist', image: getSubServiceImage('Caricature Artist') },
+        { name: 'Emcee / Anchor', image: getSubServiceImage('Emcee / Anchor') },
+        { name: 'Birthday Tattoo Artist', image: getSubServiceImage('Birthday Tattoo Artist') },
       ];
     }
     if (normCat.includes('eateries') || normCat.includes('live')) {
       return [
-        { name: 'Turkish Ice Cream', image: '' },
-        { name: 'Popcorn', image: '' },
-        { name: 'Chocolate Fountain', image: '' },
+        { name: 'Turkish Ice Cream', image: getSubServiceImage('Turkish Ice Cream') },
+        { name: 'Popcorn', image: getSubServiceImage('Popcorn') },
+        { name: 'Chocolate Fountain', image: getSubServiceImage('Chocolate Fountain') },
       ];
     }
     if (normCat.includes('experience')) {
       return [
-        { name: 'Cabana Setups', image: '' },
-        { name: 'Terrace Proposals', image: '' },
-        { name: 'Car Boot Surprises', image: '' },
+        { name: 'Cabana Setups', image: '/kkkk.jpeg' },
+        { name: 'Terrace Proposals', image: '/tearce.jpeg' },
+        { name: 'Car Boot Surprises', image: '/car bot.jpeg' },
       ];
     }
     if (!currentCategory?.subcategories) return [];
@@ -787,7 +657,19 @@ export const OccasionPage: React.FC<{
     if (list.length === 0) {
       const key = normSub || normCat;
       const cleanKey = key.replace(/[^a-z0-9]/g, '');
-      const allMocks = Object.values(ACTIVITIES_FALLBACK_MAP).flat();
+      // Several fallback buckets intentionally reuse the same experience
+      // items under different lookup keys (e.g. "experiences" vs the
+      // specific "cabana setups"/"terrace proposals"/"car boot surprises"
+      // keys) so category matching resolves either way -- dedupe by _id
+      // here so a shared item never renders as two identical cards.
+      const seenIds = new Set<string>();
+      const allMocks = Object.values(ACTIVITIES_FALLBACK_MAP)
+        .flat()
+        .filter((p) => {
+          if (seenIds.has(p._id)) return false;
+          seenIds.add(p._id);
+          return true;
+        });
 
       if (key.includes('activit') || key.includes('entert')) {
         list = allMocks;
