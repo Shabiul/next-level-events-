@@ -26,7 +26,6 @@ import TabbedFAQ from '../../components/ui/TabbedFAQ';
 import InfiniteTestimonials from '../../components/ui/InfiniteTestimonials';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { EVENT_PACKAGES } from '../../components/packages/eventPackages.data';
-import { SERVICE_COLUMNS } from '../../data/servicesData';
 import type { AdminCategory, AdminProduct } from '../../types';
 
 interface HomePageProps {
@@ -51,11 +50,6 @@ const HOME_PACKAGE_IMAGES: Record<string, string> = {
   '30k-theme-decor': '/tearce-landscape.jpeg',
   'grand-celebration': '/cabana.jpeg',
   '1-lakh-custom-stage': '/romantic-dinner-landscape.jpg',
-};
-
-const SERVICE_COLUMN_VISUALS: Record<string, string> = {
-  'curated-decors': '/romantic-dinner.jpg',
-  'activities-entertainment': 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=900&auto=format&fit=crop&q=80',
 };
 
 // Icon tiles rather than stock photos: reliable and on-brand, and avoids
@@ -249,47 +243,6 @@ export const HomePage: React.FC<HomePageProps> = ({
             </div>
           </section>
         )}
-
-        {/* ========================================================================= */}
-        {/* 3. OUR SERVICES -- two curated columns                                    */}
-        {/* ========================================================================= */}
-        <section id="services" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal scroll-mt-24">
-          <div className="text-center mb-8 sm:mb-10">
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#1C1B22]">Our Services</h2>
-            <p className="text-sm text-[#6B6B76] font-light mt-1">Everything you need for a perfect celebration</p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {SERVICE_COLUMNS.map((column) => (
-              <button
-                key={column.key}
-                type="button"
-                onClick={() => onSelectCategory(column.title)}
-                className="group relative flex items-center gap-5 rounded-[28px] border border-[#E4DEF2] bg-[#F2EEFA] p-6 sm:p-7 overflow-hidden text-left shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
-              >
-                <div className="flex-1 min-w-0">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#8F6FC4] shadow-sm mb-3">
-                    <column.icon size={20} />
-                  </span>
-                  <h3 className="font-serif text-lg font-bold uppercase tracking-wide text-[#1C1B22] mb-2">
-                    {column.title}
-                  </h3>
-                  <span className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#8F6FC4] group-hover:underline">
-                    View All {column.key === 'curated-decors' ? 'Décors' : 'Activities'}
-                    <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
-                  </span>
-                </div>
-                <div className="hidden sm:block h-28 w-28 shrink-0 rounded-2xl overflow-hidden shadow-md">
-                  <img
-                    src={SERVICE_COLUMN_VISUALS[column.key]}
-                    alt={column.title}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              </button>
-            ))}
-          </div>
-        </section>
 
         {/* ========================================================================= */}
         {/* 4. POPULAR PACKAGES                                                       */}
