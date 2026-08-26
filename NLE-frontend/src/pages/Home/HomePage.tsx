@@ -96,7 +96,7 @@ export const HomePage: React.FC<HomePageProps> = ({
     }
   }, [location.hash]);
 
-  const occasions = categories.slice(0, 9);
+  const occasions = categories.slice(0, 8);
   const homePackages = HOME_PACKAGE_INDICES.map((i) => EVENT_PACKAGES[i]).filter(Boolean);
 
   return (
@@ -211,25 +211,24 @@ export const HomePage: React.FC<HomePageProps> = ({
               </button>
             </div>
 
-            <div className="flex gap-3 sm:gap-5 overflow-x-auto pb-2 smooth-horizontal-rail hide-scrollbar snap-x sm:grid sm:grid-cols-3 sm:max-w-[760px] sm:mx-auto sm:overflow-visible">
+            <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 smooth-horizontal-rail hide-scrollbar snap-x sm:grid sm:grid-cols-4 md:grid-cols-8 sm:overflow-visible">
               {occasions.map((cat) => (
                 <button
                   key={cat._id || cat.name}
                   type="button"
                   onClick={() => onSelectCategory(cat.name)}
-                  className="group flex-none w-[110px] sm:w-auto snap-start cursor-pointer"
+                  className="group flex-none w-[100px] sm:w-auto snap-start cursor-pointer"
                 >
-                  <div className="relative aspect-square w-full rounded-lg overflow-hidden border border-[#E4DCD2] bg-[#F3EFE7] shadow-sm group-hover:shadow-md group-hover:border-[#A78A9F] transition-all duration-300">
+                  <div className="aspect-square w-full rounded-xl overflow-hidden border border-[#E4DCD2] bg-[#F3EFE7] shadow-sm group-hover:shadow-md group-hover:border-[#A78A9F] transition-all duration-300">
                     <img
                       src={cat.image || FALLBACK_OCCASION_IMAGE}
                       alt={cat.name}
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent" />
-                    <span className="absolute inset-x-0 bottom-0 p-2 sm:p-2.5 text-left text-[11px] sm:text-xs font-semibold text-white leading-tight line-clamp-2">
-                      {cat.name}
-                    </span>
                   </div>
+                  <span className="mt-2 block text-center text-xs font-semibold text-[#2F2930] leading-tight line-clamp-1">
+                    {cat.name}
+                  </span>
                 </button>
               ))}
             </div>
@@ -252,34 +251,33 @@ export const HomePage: React.FC<HomePageProps> = ({
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-5">
             {homePackages.map((pkg) => (
               <button
                 key={pkg.id}
                 type="button"
                 onClick={() => navigate('/packages')}
-                className="group relative flex flex-col rounded-xl border border-[#E4DCD2] bg-white p-5 text-left shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+                className="group relative flex flex-col rounded-xl border border-[#E4DCD2] bg-white p-3.5 text-left shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
               >
-                <div className="relative -mx-5 -mt-5 mb-4 h-36 rounded-t-xl overflow-hidden bg-[#F9F6F2]">
+                <div className="relative -mx-3.5 -mt-3.5 mb-3 h-28 rounded-t-xl overflow-hidden bg-[#F9F6F2]">
                   <img
                     src={HOME_PACKAGE_IMAGES[pkg.id]}
                     alt={pkg.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
                   {pkg.badge === 'Most Popular' && (
-                    <span className="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full bg-[#725D75] text-white px-2.5 py-1 text-[9px] font-extrabold uppercase tracking-wider shadow-md">
-                      <Crown size={10} />
+                    <span className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-[#725D75] text-white px-2 py-0.5 text-[8px] font-bold uppercase tracking-wide shadow-sm">
+                      <Crown size={9} />
                       Most Popular
                     </span>
                   )}
                 </div>
-                <h3 className="font-serif text-base font-bold text-[#2F2930] mb-1">{pkg.name}</h3>
-                <span className="font-serif text-xl font-bold text-[#725D75] mb-2">{pkg.price}</span>
-                <p className="text-xs text-[#746B72] font-light leading-relaxed line-clamp-2 mb-3">{pkg.description}</p>
-                <span className="mt-auto inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#2F2930] group-hover:text-[#725D75]">
+                <h3 className="font-serif text-sm font-bold text-[#2F2930] mb-0.5 line-clamp-1">{pkg.name}</h3>
+                <span className="text-base font-bold text-[#725D75] mb-1.5">{pkg.price}</span>
+                <p className="text-[11px] text-[#746B72] font-light leading-relaxed line-clamp-2 mb-2">{pkg.description}</p>
+                <span className="mt-auto inline-flex items-center gap-1 text-[11px] font-semibold text-[#2F2930] group-hover:text-[#725D75]">
                   View Details
-                  <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
+                  <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform" />
                 </span>
               </button>
             ))}
@@ -347,24 +345,19 @@ export const HomePage: React.FC<HomePageProps> = ({
         {/* ========================================================================= */}
         {/* 9. FINAL CTA BANNER                                                       */}
         {/* ========================================================================= */}
-        <section id="contact" data-nav-theme="dark" className="w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
+        <section id="contact" data-nav-theme="light" className="w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
           <div id="final-cta" className="scroll-mt-24 sm:scroll-mt-28" />
-          <div
-            className="relative overflow-hidden rounded-none py-14 sm:py-16 md:py-20 px-6 sm:px-10 text-[#F9F6F2] shadow-lg border-y border-white/10 text-center w-full"
-            style={{
-              background: 'linear-gradient(145deg, #58445B 0%, #725D75 100%)',
-            }}
-          >
-            <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-[#C9BEAB]/10 blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-[#A78A9F]/15 blur-3xl pointer-events-none" />
+          <div className="relative overflow-hidden bg-[#F3EFE7] py-14 sm:py-16 md:py-20 px-6 sm:px-10 text-center w-full">
+            <Sparkles className="absolute left-[8%] top-10 h-6 w-6 text-[#A78A9F]/40 hidden sm:block" />
+            <Sparkles className="absolute right-[8%] bottom-10 h-8 w-8 text-[#C9BEAB]/60 hidden sm:block" />
 
             <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center gap-4 sm:gap-5">
 
-              <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[50px] font-normal tracking-tight leading-[1.12] text-[#F9F6F2]">
+              <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[50px] font-semibold tracking-tight leading-[1.12] text-[#725D75]">
                 Let&apos;s Plan Your Perfect Celebration!
               </h2>
 
-              <p className="text-xs sm:text-sm md:text-[15px] font-light text-[#F9F6F2]/85 max-w-2xl leading-relaxed">
+              <p className="text-xs sm:text-sm md:text-[15px] font-normal text-[#746B72] max-w-2xl leading-relaxed">
                 Share your ideas and we&apos;ll bring them to life — tell us where you&apos;re celebrating, how many guests are attending and what theme you need.
               </p>
 
@@ -372,7 +365,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <button
                   type="button"
                   onClick={() => navigate('/explore')}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#F9F6F2] px-7 py-3 text-xs sm:text-sm font-medium tracking-wide text-[#725D75] shadow-sm hover:bg-[#C9BEAB] transition-colors duration-300 cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#725D75] px-7 py-3 text-xs sm:text-sm font-medium tracking-wide text-white shadow-sm hover:bg-[#A78A9F] transition-colors duration-300 cursor-pointer"
                 >
                   <Sparkles size={15} />
                   <span>Get a Free Quote</span>
@@ -382,7 +375,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   href="https://wa.me/917022058460"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-transparent border border-white/50 px-7 py-3 text-xs sm:text-sm font-medium tracking-wide text-[#F9F6F2] hover:bg-white/10 transition-colors duration-300"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-white border border-[#A78A9F] px-7 py-3 text-xs sm:text-sm font-medium tracking-wide text-[#725D75] hover:bg-[#725D75]/08 transition-colors duration-300"
                 >
                   <MessageSquare size={16} className="text-[#25D366]" />
                   <span>Chat on WhatsApp</span>
@@ -390,24 +383,24 @@ export const HomePage: React.FC<HomePageProps> = ({
 
                 <a
                   href="tel:+917022058460"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-transparent border border-white/50 px-7 py-3 text-xs sm:text-sm font-medium tracking-wide text-[#F9F6F2] hover:bg-white/10 transition-colors duration-300"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-white border border-[#A78A9F] px-7 py-3 text-xs sm:text-sm font-medium tracking-wide text-[#725D75] hover:bg-[#725D75]/08 transition-colors duration-300"
                 >
                   <Phone size={14} />
                   <span>Call Now</span>
                 </a>
               </div>
 
-              <div className="mt-4 pt-4 border-t border-white/10 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-[11px] sm:text-xs text-[#F9F6F2]/75 font-medium tracking-wide">
+              <div className="mt-4 pt-4 border-t border-[#E4DCD2] flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-[11px] sm:text-xs text-[#746B72] font-medium tracking-wide">
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 size={13} className="text-[#A78A9F]" />
+                  <CheckCircle2 size={13} className="text-[#725D75]" />
                   <span>Zero Hidden Fees</span>
                 </span>
                 <span id="express" className="flex items-center gap-1.5 scroll-mt-24">
-                  <Clock size={13} className="text-[#A78A9F]" />
+                  <Clock size={13} className="text-[#725D75]" />
                   <span>Express 3-Hour Setup</span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <Shield size={13} className="text-[#A78A9F]" />
+                  <Shield size={13} className="text-[#725D75]" />
                   <span>100% Picture-Match Guarantee</span>
                 </span>
               </div>
