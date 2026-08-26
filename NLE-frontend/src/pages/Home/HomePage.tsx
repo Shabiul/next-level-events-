@@ -49,17 +49,20 @@ const HOME_PACKAGE_IMAGES: Record<string, string> = {
   '1-lakh-custom-stage': '/romantic-dinner-landscape.jpg',
 };
 
-// Icon tiles rather than stock photos: reliable and on-brand, and avoids
-// gambling on a specific stock photo actually depicting a niche activity
-// like "chocolate fountain" or "mascot" correctly.
+// Real photos from public/ where one genuinely exists and matches the
+// activity (checked each candidate file before using it -- e.g. tattoo.jpeg
+// / tatoo.jpeg both actually show face painting, not a tattoo artist, so
+// that mislabeled file was used for Face Painting instead). No photo in
+// public/ actually depicts Tattoo Artist, Magician, or Mascot, so those
+// three keep the icon-tile fallback rather than using a mismatched image.
 const TOP_ACTIVITIES = [
   { name: 'Tattoo Artist', icon: PenTool },
-  { name: 'Balloon Modelling', icon: PartyPopper },
+  { name: 'Balloon Modelling', icon: PartyPopper, image: '/hero-balloons.jpg' },
   { name: 'Magician', icon: Wand2 },
-  { name: 'Face Painting', icon: Palette },
-  { name: 'Popcorn', icon: Popcorn },
-  { name: 'Cotton Candy', icon: Candy },
-  { name: 'Chocolate Fountain', icon: Droplets },
+  { name: 'Face Painting', icon: Palette, image: '/tattoo.jpeg' },
+  { name: 'Popcorn', icon: Popcorn, image: '/popcorn.jpeg' },
+  { name: 'Cotton Candy', icon: Candy, image: '/cotton candy.jpeg' },
+  { name: 'Chocolate Fountain', icon: Droplets, image: '/chocolate fountain.jpeg' },
   { name: 'Mascot', icon: Smile },
 ];
 
@@ -307,7 +310,15 @@ export const HomePage: React.FC<HomePageProps> = ({
                 className="group flex-none w-[130px] sm:w-auto snap-start flex flex-col gap-2 cursor-pointer"
               >
                 <div className="relative aspect-square rounded-2xl overflow-hidden shadow-sm border border-[#E4DEF2] bg-gradient-to-br from-[#F2EEFA] via-[#EAE1F7] to-[#F2EEFA] flex items-center justify-center group-hover:shadow-md group-hover:border-[#8F6FC4]/40 transition-all">
-                  <activity.icon size={30} className="text-[#8F6FC4] transition-transform duration-300 group-hover:scale-110" />
+                  {activity.image ? (
+                    <img
+                      src={activity.image}
+                      alt={activity.name}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <activity.icon size={30} className="text-[#8F6FC4] transition-transform duration-300 group-hover:scale-110" />
+                  )}
                 </div>
                 <span className="text-xs font-semibold text-[#1C1B22] text-center">{activity.name}</span>
               </button>
