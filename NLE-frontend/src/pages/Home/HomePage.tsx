@@ -20,7 +20,6 @@ import { WhyChooseUs } from '../../components/ui/WhyChooseUs';
 import InfiniteTestimonials from '../../components/ui/InfiniteTestimonials';
 import { GradientBoldCard } from '../../components/ui/GradientBoldCard';
 import { GlowingImageCard } from '../../components/ui/GlowingImageCard';
-import { TiltGlareCard } from '../../components/ui/TiltGlareCard';
 import { ParallaxTourCard } from '../../components/ui/ParallaxTourCard';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import type { AdminCategory, AdminProduct } from '../../types';
@@ -255,32 +254,6 @@ const DETAILED_SERVICES = [
     ],
   },
 ];
-
-// 7. STEP-BY-STEP PROCESS JOURNEY
-const PROCESS_STEPS = [
-  {
-    step: '01',
-    title: 'Choose Your Occasion',
-    desc: 'Browse our curated collection of verified balloon arches, candlelight cabanas, and festive setups.',
-  },
-  {
-    step: '02',
-    title: 'Select Date & Location',
-    desc: 'Choose your event date and Bengaluru area. Select express 3-hour same-day or future schedule.',
-  },
-  {
-    step: '03',
-    title: 'Bespoke Customization',
-    desc: 'Add personalized neon signs, color choices, milestone numbers, or talk directly with lead stylists on WhatsApp.',
-  },
-  {
-    step: '04',
-    title: 'Flawless Setup at Your Door',
-    desc: 'Certified master decorators arrive on-time with all props and transform your venue into a dream celebration.',
-  },
-];
-
-
 
 
 
@@ -677,41 +650,6 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* 9. WHY CHOOSE THEDECORPARTY (SPLIT-LAYOUT LUXURY TRUST SECTION)           */}
       {/* ========================================================================= */}
       <WhyChooseUs />
-
-      {/* ========================================================================= */}
-      {/* 10. HOW IT WORKS / BOOKING JOURNEY (Full Width & Squared)                 */}
-      {/* ========================================================================= */}
-      <section id="process" data-nav-theme="light" className="w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
-        <div className="w-full rounded-none border-y border-[#E4DEF2] dark:border-[#483250] bg-[#F2EEFA] dark:bg-[#25172C] py-12 sm:py-16 lg:py-18 px-5 sm:px-8 lg:px-12 shadow-xs">
-          <div className="mx-auto max-w-[1720px]">
-            <div className="mb-8 sm:mb-10 text-center max-w-2xl mx-auto">
-              <p className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-[#6B6B76] dark:text-[#A78A9F] mb-2.5">
-                <span className="eyebrow-line bg-[#A48ED0] dark:bg-[#A78A9F]" />
-                Seamless Booking Flow
-                <span className="eyebrow-line bg-[#A48ED0] dark:bg-[#A78A9F]" />
-              </p>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-[44px] font-normal uppercase tracking-tight text-[#1C1B22] dark:text-[#FAF8F5] leading-[1.08]">
-                How It Works
-              </h2>
-              <p className="text-xs sm:text-sm md:text-[15px] font-light leading-relaxed text-[#6B6B76] dark:text-[#C8B5C3] mt-2 max-w-md mx-auto">
-                From discovering your aesthetic to verified decorators setting up at your door.
-              </p>
-            </div>
-
-            {/* 4-Step 3D Tilt + Glare Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
-              {PROCESS_STEPS.map((step) => (
-                <TiltGlareCard
-                  key={step.step}
-                  step={step.step}
-                  title={step.title}
-                  desc={step.desc}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ========================================================================= */}
       {/* 12. CUSTOMER REVIEWS & TESTIMONIALS (Infinite Scrolling Section)          */}

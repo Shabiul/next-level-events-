@@ -12,6 +12,30 @@ import {
 } from 'lucide-react';
 import { SeoHead } from '../../components/layout/SeoHead';
 import { AnimatedNumber } from '../../components/core/animated-number';
+import { TiltGlareCard } from '../../components/ui/TiltGlareCard';
+
+const PROCESS_STEPS = [
+  {
+    step: '01',
+    title: 'Choose Your Occasion',
+    desc: 'Browse our curated collection of verified balloon arches, candlelight cabanas, and festive setups.',
+  },
+  {
+    step: '02',
+    title: 'Select Date & Location',
+    desc: 'Choose your event date and Bengaluru area. Select express 3-hour same-day or future schedule.',
+  },
+  {
+    step: '03',
+    title: 'Bespoke Customization',
+    desc: 'Add personalized neon signs, color choices, milestone numbers, or talk directly with lead stylists on WhatsApp.',
+  },
+  {
+    step: '04',
+    title: 'Flawless Setup at Your Door',
+    desc: 'Certified master decorators arrive on-time with all props and transform your venue into a dream celebration.',
+  },
+];
 
 // Interactive 3D Tilt Card Component
 const ThreeDCard: React.FC<{
@@ -341,6 +365,39 @@ export const AboutPage: React.FC = () => {
                   </ThreeDCard>
                 );
               })}
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* SECTION 3.5 — HOW IT WORKS / BOOKING JOURNEY                             */}
+        {/* ========================================================================= */}
+        <section id="process" data-nav-theme="light" className="w-full py-20 px-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center max-w-2xl mx-auto mb-12">
+              <p className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-[#6B6B76] mb-2.5">
+                <span className="eyebrow-line bg-[#8F6FC4]" />
+                Seamless Booking Flow
+                <span className="eyebrow-line bg-[#8F6FC4]" />
+              </p>
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-[44px] font-normal uppercase tracking-tight text-[#1C1B22] leading-[1.08]">
+                How It Works
+              </h2>
+              <p className="text-sm sm:text-base font-light leading-relaxed text-[#6B6B76] mt-2 max-w-md mx-auto">
+                From discovering your aesthetic to verified decorators setting up at your door.
+              </p>
+            </div>
+
+            {/* 4-Step 3D Tilt + Glare Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+              {PROCESS_STEPS.map((step) => (
+                <TiltGlareCard
+                  key={step.step}
+                  step={step.step}
+                  title={step.title}
+                  desc={step.desc}
+                />
+              ))}
             </div>
           </div>
         </section>
