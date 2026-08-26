@@ -9,6 +9,11 @@ import {
   Palette,
   HeartHandshake,
   Quote,
+  Shield,
+  Truck,
+  Users,
+  CheckCircle2,
+  ThumbsUp,
 } from 'lucide-react';
 import { SeoHead } from '../../components/layout/SeoHead';
 import { AnimatedNumber } from '../../components/core/animated-number';
@@ -35,6 +40,15 @@ const PROCESS_STEPS = [
     title: 'Flawless Setup at Your Door',
     desc: 'Certified master decorators arrive on-time with all props and transform your venue into a dream celebration.',
   },
+];
+
+const WHY_CHOOSE_US = [
+  { icon: Palette, title: 'Custom Themes', description: 'Tailored to your vision' },
+  { icon: Shield, title: 'Premium Quality', description: 'Best materials & setup' },
+  { icon: Users, title: 'Experienced Team', description: 'Trained & creative experts' },
+  { icon: Truck, title: 'On-Time Delivery', description: 'Punctual & reliable' },
+  { icon: CheckCircle2, title: 'End-to-End Service', description: 'We handle everything' },
+  { icon: ThumbsUp, title: '100% Satisfaction', description: 'Your happiness matters' },
 ];
 
 // Interactive 3D Tilt Card Component
@@ -313,6 +327,28 @@ export const AboutPage: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#8F6FC4]/70 via-transparent to-transparent pointer-events-none" />
               </div>
             </motion.div>
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* SECTION 2.5 — WHY CHOOSE THE DECOR PARTY -- simple icon row              */}
+        {/* ========================================================================= */}
+        <section data-nav-theme="light" className="w-full bg-[#F2EEFA] py-12 sm:py-14 border-y border-[#8F6FC4]/15">
+          <div className="mx-auto max-w-7xl px-6">
+            <h2 className="text-center font-serif text-2xl sm:text-3xl font-bold text-[#1C1B22] mb-8 sm:mb-10">
+              Why Choose The Decor Party?
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8">
+              {WHY_CHOOSE_US.map(({ icon: Icon, title, description }) => (
+                <div key={title} className="flex flex-col items-center text-center gap-2">
+                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-[#8F6FC4] shadow-sm">
+                    <Icon size={22} />
+                  </span>
+                  <span className="text-xs font-bold text-[#1C1B22]">{title}</span>
+                  <span className="text-[11px] text-[#6B6B76] font-light">{description}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 

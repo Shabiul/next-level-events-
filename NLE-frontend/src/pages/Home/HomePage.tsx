@@ -9,10 +9,7 @@ import {
   CheckCircle2,
   Phone,
   Palette,
-  Truck,
-  Users,
   Crown,
-  ThumbsUp,
   PenTool,
   PartyPopper,
   Wand2,
@@ -64,15 +61,6 @@ const TOP_ACTIVITIES = [
   { name: 'Cotton Candy', icon: Candy },
   { name: 'Chocolate Fountain', icon: Droplets },
   { name: 'Mascot', icon: Smile },
-];
-
-const WHY_CHOOSE_US = [
-  { icon: Palette, title: 'Custom Themes', description: 'Tailored to your vision' },
-  { icon: Shield, title: 'Premium Quality', description: 'Best materials & setup' },
-  { icon: Users, title: 'Experienced Team', description: 'Trained & creative experts' },
-  { icon: Truck, title: 'On-Time Delivery', description: 'Punctual & reliable' },
-  { icon: CheckCircle2, title: 'End-to-End Service', description: 'We handle everything' },
-  { icon: ThumbsUp, title: '100% Satisfaction', description: 'Your happiness matters' },
 ];
 
 const FALLBACK_OCCASION_IMAGE = '/final_logo.jpeg';
@@ -291,28 +279,6 @@ export const HomePage: React.FC<HomePageProps> = ({
                 </span>
               </button>
             ))}
-          </div>
-        </section>
-
-        {/* ========================================================================= */}
-        {/* 5. WHY CHOOSE THE DECOR PARTY -- simple icon row                          */}
-        {/* ========================================================================= */}
-        <section data-nav-theme="light" className="w-full bg-[#F2EEFA] py-12 sm:py-14 border-y border-[#E4DEF2]">
-          <div className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12">
-            <h2 className="text-center font-serif text-2xl sm:text-3xl font-bold text-[#1C1B22] mb-8 sm:mb-10">
-              Why Choose The Decor Party?
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8">
-              {WHY_CHOOSE_US.map(({ icon: Icon, title, description }) => (
-                <div key={title} className="flex flex-col items-center text-center gap-2">
-                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-[#8F6FC4] shadow-sm">
-                    <Icon size={22} />
-                  </span>
-                  <span className="text-xs font-bold text-[#1C1B22]">{title}</span>
-                  <span className="text-[11px] text-[#6B6B76] font-light">{description}</span>
-                </div>
-              ))}
-            </div>
           </div>
         </section>
 
