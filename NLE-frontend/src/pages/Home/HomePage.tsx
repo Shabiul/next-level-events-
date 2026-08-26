@@ -266,15 +266,15 @@ export const HomePage: React.FC<HomePageProps> = ({
                 key={pkg.id}
                 type="button"
                 onClick={() => navigate('/packages')}
-                className="group relative flex flex-col rounded-xl border border-[#E4DCD2] overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer text-left"
+                className="group relative self-start block w-full rounded-xl border border-[#E4DCD2] overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer text-left"
               >
-                <div className="relative aspect-[4/5] w-full">
+                <div className="relative h-72 sm:h-80 w-full">
                   <img
                     src={HOME_PACKAGE_IMAGES[pkg.id]}
                     alt={pkg.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
                   {pkg.badge === 'Most Popular' && (
                     <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-[#725D75] text-white px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-sm">
                       <Crown size={11} />
@@ -283,13 +283,12 @@ export const HomePage: React.FC<HomePageProps> = ({
                   )}
                   <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
                     <h3 className="font-serif text-lg font-bold text-white mb-1 line-clamp-1">{pkg.name}</h3>
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="text-lg font-bold text-white">{pkg.price}</span>
-                      <span className="inline-flex items-center gap-1 text-xs font-semibold text-white/90 group-hover:text-[#C9BEAB] transition-colors">
-                        View Details
-                        <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform" />
-                      </span>
-                    </div>
+                    <span className="text-lg font-bold text-white block mb-1.5">{pkg.price}</span>
+                    <p className="text-xs text-white/80 leading-relaxed line-clamp-2 mb-2.5">{pkg.description}</p>
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-white group-hover:text-[#C9BEAB] transition-colors">
+                      View Details
+                      <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform" />
+                    </span>
                   </div>
                 </div>
               </button>
