@@ -167,25 +167,30 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* ========================================================================= */}
       {/* TRUST MARQUEE SECTION                                                    */}
       {/* ========================================================================= */}
-      <div id="trust-marquee" data-nav-theme="light" className="relative z-10 overflow-hidden bg-[#C9BEAB] py-3.5 text-[#2F2930] border-y border-[#B8AC98] shadow-xs">
-        <div className="animate-marquee whitespace-nowrap text-[13px] font-medium tracking-wide">
+      <div id="trust-marquee" data-nav-theme="light" className="relative z-10 overflow-hidden bg-[#F9F6F2] py-3 text-[#746B72] border-y border-[#E4DCD2]">
+        <div className="animate-marquee whitespace-nowrap text-xs sm:text-[13px] font-medium tracking-wide">
           {[0, 1].map((rep) => (
             <React.Fragment key={rep}>
-              <span className="mx-6 inline-flex items-center gap-2">
-                <Shield size={16} /> Verified Master Stylists
+              <span className="mx-5 inline-flex items-center gap-2">
+                <Shield size={14} className="text-[#A78A9F]" /> Verified Master Stylists
               </span>
-              <span className="mx-6 inline-flex items-center gap-2">
-                <Clock size={16} /> Express 3-Hour Setup
+              <span className="mx-1.5 text-[#E4DCD2]">|</span>
+              <span className="mx-5 inline-flex items-center gap-2">
+                <Clock size={14} className="text-[#A78A9F]" /> Express 3-Hour Setup
               </span>
-              <span className="mx-6 inline-flex items-center gap-2">
-                <MapPin size={16} /> All Bengaluru Locations
+              <span className="mx-1.5 text-[#E4DCD2]">|</span>
+              <span className="mx-5 inline-flex items-center gap-2">
+                <MapPin size={14} className="text-[#A78A9F]" /> All Bengaluru Locations
               </span>
-              <span className="mx-6 inline-flex items-center gap-2">
-                <CheckCircle2 size={16} /> 100% Picture-Match Guarantee
+              <span className="mx-1.5 text-[#E4DCD2]">|</span>
+              <span className="mx-5 inline-flex items-center gap-2">
+                <CheckCircle2 size={14} className="text-[#A78A9F]" /> 100% Picture-Match Guarantee
               </span>
-              <span className="mx-6 inline-flex items-center gap-2">
-                <Sparkles size={16} /> Zero Hidden Fees
+              <span className="mx-1.5 text-[#E4DCD2]">|</span>
+              <span className="mx-5 inline-flex items-center gap-2">
+                <Sparkles size={14} className="text-[#A78A9F]" /> Zero Hidden Fees
               </span>
+              <span className="mx-1.5 text-[#E4DCD2]">|</span>
             </React.Fragment>
           ))}
         </div>
@@ -199,8 +204,11 @@ export const HomePage: React.FC<HomePageProps> = ({
         {/* ========================================================================= */}
         {occasions.length > 0 && (
           <section id="curated-decors" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal scroll-mt-24">
-            <div className="flex items-end justify-between gap-4 mb-6 sm:mb-8">
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#2F2930]">Shop by Occasion</h2>
+            <div className="flex items-end justify-between gap-4 mb-2">
+              <div>
+                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#2F2930]">Shop by Occasion</h2>
+                <p className="mt-1.5 text-sm text-[#746B72]">Beautiful setups for every moment worth celebrating.</p>
+              </div>
               <button
                 type="button"
                 onClick={() => navigate('/explore')}
@@ -211,22 +219,23 @@ export const HomePage: React.FC<HomePageProps> = ({
               </button>
             </div>
 
-            <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 smooth-horizontal-rail hide-scrollbar snap-x sm:grid sm:grid-cols-4 md:grid-cols-8 sm:overflow-visible">
+            <div className="flex gap-4 sm:gap-6 overflow-x-auto pb-2 pt-6 smooth-horizontal-rail hide-scrollbar snap-x sm:grid sm:grid-cols-4 sm:overflow-visible">
               {occasions.map((cat) => (
                 <button
                   key={cat._id || cat.name}
                   type="button"
                   onClick={() => onSelectCategory(cat.name)}
-                  className="group flex-none w-[100px] sm:w-auto snap-start cursor-pointer"
+                  className="group flex-none w-[150px] sm:w-auto snap-start cursor-pointer"
                 >
-                  <div className="aspect-square w-full rounded-xl overflow-hidden border border-[#E4DCD2] bg-[#F3EFE7] shadow-sm group-hover:shadow-md group-hover:border-[#A78A9F] transition-all duration-300">
+                  <div className="relative aspect-square w-full rounded-xl overflow-hidden">
                     <img
                       src={cat.image || FALLBACK_OCCASION_IMAGE}
                       alt={cat.name}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="h-full w-full object-cover transition-transform duration-[250ms] ease-out group-hover:scale-[1.03]"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-[250ms]" />
                   </div>
-                  <span className="mt-2 block text-center text-xs font-semibold text-[#2F2930] leading-tight line-clamp-1">
+                  <span className="mt-3 block text-center text-sm font-medium text-[#2F2930] group-hover:text-[#725D75] leading-tight line-clamp-1 transition-colors duration-[250ms]">
                     {cat.name}
                   </span>
                 </button>
@@ -331,7 +340,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         <div id="testimonials" data-nav-theme="light" className="w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
           <InfiniteTestimonials
             badgeText="Verified Reviews"
-            subtitle="Real reviews from Indiranagar, Koramangala, Whitefield, HSR, and all across Bengaluru."
+            subtitle="Real celebrations. Real people. Real moments."
           />
         </div>
 

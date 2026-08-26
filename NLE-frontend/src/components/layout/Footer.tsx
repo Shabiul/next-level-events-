@@ -56,9 +56,9 @@ export const Footer: React.FC<FooterProps> = ({
   onSelectCategory,
 }) => {
   const linkClass =
-    'text-xs sm:text-[13px] font-normal tracking-wide text-[#F9F6F2]/75 hover:text-[#A78A9F] transition-colors duration-200 cursor-pointer text-left flex items-center gap-1.5 group';
+    'text-xs sm:text-[13px] font-normal tracking-wide text-[#2F2930] hover:text-[#725D75] transition-colors duration-200 cursor-pointer text-left flex items-center gap-1.5 group';
   const colTitleClass =
-    'mb-4 text-xs font-bold uppercase tracking-[0.18em] text-[#A78A9F] font-serif';
+    'mb-4 text-xs font-semibold uppercase tracking-wider text-[#A78A9F] font-serif';
 
   const quickLinks: { label: string; key: 'about' | 'privacy' | 'terms' | 'refund' }[] = [
     { label: 'About Us', key: 'about' },
@@ -84,11 +84,11 @@ export const Footer: React.FC<FooterProps> = ({
   )}`;
 
   return (
-    <footer id="footer" className="relative bg-[#201024] text-[#F9F6F2] border-t border-white/10 overflow-hidden scroll-mt-24 sm:scroll-mt-28">
-      
-      {/* Ambient background glows in locked Japanese Violet & Lilac */}
-      <div className="pointer-events-none absolute -top-40 -right-40 h-96 w-96 rounded-full bg-[#725D75]/10 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#A78A9F]/15 blur-3xl" />
+    <footer id="footer" className="relative bg-[#F9F6F2] text-[#2F2930] border-t border-[#E4DCD2] overflow-hidden scroll-mt-24 sm:scroll-mt-28">
+
+      {/* Ambient background glows -- very low intensity Khaki/Lilac */}
+      <div className="pointer-events-none absolute -top-40 -right-40 h-96 w-96 rounded-full bg-[#C9BEAB]/15 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#A78A9F]/10 blur-3xl" />
 
 
 
@@ -105,27 +105,27 @@ export const Footer: React.FC<FooterProps> = ({
                 <img
                   src="/final_logo.jpeg"
                   alt="TheDecorParty"
-                  className="h-8 w-8 rounded-lg object-contain shadow-xs border border-white/15"
+                  className="h-8 w-8 rounded-lg object-contain shadow-xs border border-[#E4DCD2]"
                 />
-                <span className="font-serif text-lg font-bold tracking-[0.06em] uppercase text-[#F9F6F2]">
+                <span className="font-serif text-lg font-semibold tracking-wide text-[#725D75]">
                   TheDecorParty
                 </span>
               </div>
 
-              <p className="mb-5 text-xs sm:text-[13px] font-light leading-relaxed text-[#F9F6F2]/70 max-w-xs">
+              <p className="mb-5 text-xs sm:text-[13px] font-normal leading-relaxed text-[#746B72] max-w-xs">
                 {t?.footer_copy ||
                   'A Bangalore-based celebration and décor studio offering bespoke balloon styling, romantic candlelight setups, milestone themes, and custom party experiences across Karnataka.'}
               </p>
             </div>
 
-            {/* Social Icons Row (Image 2 square/rounded style) */}
+            {/* Social Icons Row */}
             <div className="flex items-center gap-2.5 pt-1">
               <a
                 href="https://www.facebook.com"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Facebook"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-[#F9F6F2]/80 hover:bg-white/15 hover:text-[#F9F6F2] transition-all hover:scale-105"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#E4DCD2] bg-white text-[#746B72] hover:bg-[#F3EFE7] hover:text-[#725D75] transition-colors"
               >
                 <FacebookIcon />
               </a>
@@ -134,7 +134,7 @@ export const Footer: React.FC<FooterProps> = ({
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Instagram"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-[#F9F6F2]/80 hover:bg-white/15 hover:text-[#F9F6F2] transition-all hover:scale-105"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#E4DCD2] bg-white text-[#746B72] hover:bg-[#F3EFE7] hover:text-[#725D75] transition-colors"
               >
                 <InstagramIcon />
               </a>
@@ -144,7 +144,7 @@ export const Footer: React.FC<FooterProps> = ({
                 rel="noreferrer"
                 aria-label="WhatsApp"
                 onClick={() => trackWhatsappClick('footer')}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-[#25D366] hover:bg-white/15 transition-all hover:scale-105"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#E4DCD2] bg-white text-[#25D366] hover:bg-[#F3EFE7] transition-colors"
               >
                 <WhatsAppIcon />
               </a>
@@ -152,7 +152,7 @@ export const Footer: React.FC<FooterProps> = ({
                 href="mailto:thedecorparty.team@gmail.com"
                 aria-label="Email"
                 onClick={() => trackContactClick('email', 'footer')}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-[#F9F6F2]/80 hover:bg-white/15 hover:text-[#F9F6F2] transition-all hover:scale-105"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#E4DCD2] bg-white text-[#746B72] hover:bg-[#F3EFE7] hover:text-[#725D75] transition-colors"
               >
                 <Mail size={14} />
               </a>
@@ -176,7 +176,7 @@ export const Footer: React.FC<FooterProps> = ({
               <li>
                 <Link
                   to="/ai-planner"
-                  className={`${linkClass} text-[#A78A9F] hover:text-[#F9F6F2] font-medium`}
+                  className={`${linkClass} text-[#725D75] hover:text-[#A78A9F] font-medium`}
                 >
                   <Sparkles size={13} className="text-[#A78A9F]" />
                   <span>AI Party Planner ✨</span>
@@ -185,7 +185,7 @@ export const Footer: React.FC<FooterProps> = ({
               <li>
                 <Link
                   to="/admin/login"
-                  className={`${linkClass} text-[#A78A9F] hover:text-[#F9F6F2] font-medium`}
+                  className={`${linkClass} text-[#725D75] hover:text-[#A78A9F] font-medium`}
                 >
                   <Shield size={12} className="text-[#A78A9F]" />
                   <span>Admin Portal</span>
@@ -246,7 +246,7 @@ export const Footer: React.FC<FooterProps> = ({
               <a
                 href="tel:+917022058460"
                 onClick={() => trackContactClick('phone', 'footer')}
-                className="flex items-center gap-2.5 text-xs text-[#F9F6F2]/80 hover:text-[#A78A9F] transition-colors"
+                className="flex items-center gap-2.5 text-xs text-[#2F2930] hover:text-[#725D75] transition-colors"
               >
                 <Phone size={14} className="text-[#725D75] shrink-0" />
                 <span className="font-medium">+91 70220 58460</span>
@@ -255,7 +255,7 @@ export const Footer: React.FC<FooterProps> = ({
               <a
                 href="tel:+918660924212"
                 onClick={() => trackContactClick('phone', 'footer')}
-                className="flex items-center gap-2.5 text-xs text-[#F9F6F2]/80 hover:text-[#A78A9F] transition-colors"
+                className="flex items-center gap-2.5 text-xs text-[#2F2930] hover:text-[#725D75] transition-colors"
               >
                 <Phone size={14} className="text-[#725D75] shrink-0" />
                 <span className="font-medium">+91 86609 24212</span>
@@ -264,23 +264,23 @@ export const Footer: React.FC<FooterProps> = ({
               <a
                 href="mailto:thedecorparty.team@gmail.com"
                 onClick={() => trackContactClick('email', 'footer')}
-                className="flex items-center gap-2.5 text-xs text-[#F9F6F2]/80 hover:text-[#A78A9F] transition-colors"
+                className="flex items-center gap-2.5 text-xs text-[#2F2930] hover:text-[#725D75] transition-colors"
               >
                 <Mail size={14} className="text-[#725D75] shrink-0" />
                 <span className="truncate">thedecorparty.team@gmail.com</span>
               </a>
 
-              <div className="flex items-start gap-2.5 text-xs text-[#F9F6F2]/80 pt-0.5">
+              <div className="flex items-start gap-2.5 text-xs text-[#2F2930] pt-0.5">
                 <MapPin size={14} className="text-[#725D75] shrink-0 mt-0.5" />
                 <div className="flex flex-col gap-1">
-                  <span className="text-[11px] leading-relaxed text-[#F9F6F2]/70">
+                  <span className="text-[11px] leading-relaxed text-[#746B72]">
                     Indiranagar &amp; HSR Layout Hubs, Bengaluru, Karnataka 560038
                   </span>
                   <a
                     href="https://maps.google.com/?q=Bengaluru"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[11px] font-semibold text-[#A78A9F] hover:underline transition-colors"
+                    className="text-[11px] font-semibold text-[#725D75] hover:underline transition-colors"
                   >
                     Get Directions
                   </a>
@@ -289,7 +289,7 @@ export const Footer: React.FC<FooterProps> = ({
 
               <Link
                 to="/contact"
-                className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#A78A9F] hover:text-white transition-colors pt-1"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[#725D75] hover:text-[#A78A9F] transition-colors pt-1"
               >
                 <span>Send Custom Enquiry →</span>
               </Link>
@@ -301,9 +301,9 @@ export const Footer: React.FC<FooterProps> = ({
         {/* =================================================================== */}
         {/* 3. BENGALURU SERVICE HUBS PILL RIBBON                               */}
         {/* =================================================================== */}
-        <div className="mt-8 pt-5 border-t border-white/10">
+        <div className="mt-8 pt-5 border-t border-[#E4DCD2]">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-[#A78A9F] shrink-0">
+            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-[#746B72] shrink-0">
               <MapPin size={13} className="text-[#725D75]" />
               <span>Direct Setup Zones:</span>
             </div>
@@ -312,7 +312,7 @@ export const Footer: React.FC<FooterProps> = ({
               {BENGALURU_HUBS.map((hub) => (
                 <span
                   key={hub}
-                  className="rounded-full bg-white/5 border border-white/10 px-2.5 py-0.5 text-[10px] font-medium text-[#F9F6F2]/75 hover:border-[#C9BEAB]/40 hover:text-[#F9F6F2] transition-colors cursor-default"
+                  className="rounded-full bg-white border border-[#E4DCD2] px-2.5 py-0.5 text-[10px] font-medium text-[#746B72] hover:border-[#A78A9F] hover:text-[#725D75] transition-colors cursor-default"
                 >
                   {hub}
                 </span>
@@ -324,37 +324,37 @@ export const Footer: React.FC<FooterProps> = ({
       </div>
 
       {/* ===================================================================== */}
-      {/* 4. BOTTOM COPYRIGHT & LEGAL BAR (Image 2 style)                       */}
+      {/* 4. BOTTOM COPYRIGHT & LEGAL BAR                                       */}
       {/* ===================================================================== */}
-      <div className="border-t border-white/10 bg-[#190C1C] px-5 sm:px-8 lg:px-12 py-3.5">
-        <div className="mx-auto flex max-w-[1720px] flex-col sm:flex-row items-center justify-between gap-2.5 text-center text-[11px] text-[#F9F6F2]/60">
+      <div className="border-t border-[#E4DCD2] bg-[#F3EFE7] px-5 sm:px-8 lg:px-12 py-3.5">
+        <div className="mx-auto flex max-w-[1720px] flex-col sm:flex-row items-center justify-between gap-2.5 text-center text-[11px] text-[#746B72]">
           <p>© 2026 TheDecorParty. All rights reserved. Registered celebration partner.</p>
 
           <div className="flex items-center gap-4 text-[11px]">
             <button
               onClick={() => onPageOpen?.('privacy')}
-              className="hover:text-[#A78A9F] transition-colors"
+              className="hover:text-[#725D75] transition-colors"
             >
               Privacy Policy
             </button>
             <span>•</span>
             <button
               onClick={() => onPageOpen?.('terms')}
-              className="hover:text-[#A78A9F] transition-colors"
+              className="hover:text-[#725D75] transition-colors"
             >
               Terms of Service
             </button>
             <span>•</span>
             <button
               onClick={() => onPageOpen?.('refund')}
-              className="hover:text-[#A78A9F] transition-colors"
+              className="hover:text-[#725D75] transition-colors"
             >
               Refund Policy
             </button>
           </div>
 
-          <p className="flex items-center gap-1.5 text-[#A78A9F]">
-            <Sparkles size={11} className="text-[#725D75]" />
+          <p className="flex items-center gap-1.5 text-[#725D75]">
+            <Sparkles size={11} className="text-[#A78A9F]" />
             <span>Curated celebrations &amp; luxury event styling</span>
           </p>
         </div>

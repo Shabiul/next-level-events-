@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Star, CheckCircle, Quote, MapPin } from 'lucide-react';
+import { Star, CheckCircle, MapPin } from 'lucide-react';
 import { AnimatedNumber } from '@/components/core/animated-number';
 
 export interface Testimonial {
@@ -172,47 +172,44 @@ interface TestimonialCardProps {
 function TestimonialCard({ testimonial }: TestimonialCardProps) {
   return (
     <motion.div
-      whileHover={{ y: -4, scale: 1.01 }}
+      whileHover={{ y: -3 }}
       transition={{ duration: 0.2 }}
-      className="flex h-[230px] w-[340px] flex-shrink-0 flex-col justify-between rounded-2xl border border-[#C6BFAB] bg-[#D8D2BE] p-6 shadow-sm select-none transition-shadow hover:shadow-md"
+      className="flex h-[250px] w-[380px] flex-shrink-0 flex-col justify-between rounded-xl border border-[#E4DCD2] bg-white p-6 shadow-sm select-none transition-shadow hover:shadow-md"
     >
       <div>
-        {/* Rating Stars & Accent Quote */}
-        <div className="flex items-center justify-between pb-2.5">
-          <div className="flex items-center gap-1">
-            {Array.from({ length: testimonial.rating }).map((_, i) => (
-              <Star key={i} className="h-3.5 w-3.5 fill-[#1E2229] text-[#1E2229]" />
-            ))}
-            <span className="ml-1 text-[11px] font-bold text-[#1E2229]">5.0</span>
-          </div>
-          <Quote className="h-4.5 w-4.5 text-[#1E2229]/25" />
+        {/* Rating Stars */}
+        <div className="flex items-center gap-1 pb-3">
+          {Array.from({ length: testimonial.rating }).map((_, i) => (
+            <Star key={i} className="h-3.5 w-3.5 fill-[#725D75] text-[#725D75]" />
+          ))}
+          <span className="ml-1 text-[11px] font-semibold text-[#746B72]">{testimonial.rating.toFixed(1)}</span>
         </div>
 
         {/* Real Review Content */}
-        <p className="line-clamp-3 text-xs leading-relaxed font-normal text-[#4F5561]">
-          &ldquo;{testimonial.content}&rdquo;
+        <p className="line-clamp-4 text-sm leading-relaxed font-normal text-[#2F2930]">
+          {testimonial.content}
         </p>
       </div>
 
       {/* Verified Customer Details Footer */}
-      <div className="flex items-center gap-3 pt-3.5 border-t border-[#C6BFAB]/70">
+      <div className="flex items-center gap-3 pt-3.5 border-t border-[#E4DCD2]">
         <img
           src={testimonial.avatar}
           alt={testimonial.name}
-          className="h-10 w-10 flex-shrink-0 rounded-full border border-[#C6BFAB] object-cover object-center"
+          className="h-10 w-10 flex-shrink-0 rounded-full object-cover object-center"
           loading="lazy"
         />
         <div className="flex flex-col min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="truncate text-sm font-semibold tracking-tight text-[#1E2229]">
+            <span className="truncate text-sm font-semibold tracking-tight text-[#2F2930]">
               {testimonial.name}
             </span>
             {testimonial.verified && (
-              <CheckCircle className="h-3.5 w-3.5 flex-shrink-0 text-[#1E2229]" />
+              <CheckCircle className="h-3.5 w-3.5 flex-shrink-0 text-[#A78A9F]" />
             )}
           </div>
-          <div className="flex items-center gap-1 truncate text-[11px] font-medium text-[#4F5561]">
-            <MapPin className="h-3 w-3 flex-shrink-0 text-[#1E2229]/60" />
+          <div className="flex items-center gap-1 truncate text-[11px] font-medium text-[#746B72]">
+            <MapPin className="h-3 w-3 flex-shrink-0 text-[#A78A9F]" />
             <span className="truncate">{testimonial.location}</span>
           </div>
         </div>
@@ -272,27 +269,27 @@ export interface InfiniteTestimonialsProps {
 
 export default function InfiniteTestimonials({
   title,
-  subtitle = 'Verified 5-star celebration reviews from Indiranagar, Koramangala, Whitefield, HSR, Jayanagar, and across Bengaluru.',
-  badgeText = 'VERIFIED CUSTOMER REVIEWS',
+  subtitle = 'Real celebrations. Real people. Real moments.',
+  badgeText,
   className = '',
 }: InfiniteTestimonialsProps) {
   return (
-    <section className={`relative w-full overflow-hidden bg-[#F7F6F2] dark:bg-[#1B101F] py-10 sm:py-12 lg:py-14 transition-colors duration-300 ${className}`}>
+    <section className={`relative w-full overflow-hidden bg-[#F9F6F2] dark:bg-[#1B101F] py-10 sm:py-12 lg:py-14 transition-colors duration-300 ${className}`}>
       {/* Header Section */}
       <div className="mx-auto max-w-7xl px-6 text-center mb-8 sm:mb-10">
         {badgeText && (
-          <span className="inline-block rounded-full border border-[#C6BFAB] dark:border-[#483250] bg-[#D8D2BE]/60 dark:bg-[#2D1C34] px-3.5 py-1 text-[11px] font-bold tracking-widest text-[#1E2229] dark:text-[#C9BEAB] uppercase mb-3">
+          <span className="inline-block rounded-full border border-[#E4DCD2] dark:border-[#483250] bg-[#F3EFE7] dark:bg-[#2D1C34] px-3.5 py-1 text-[11px] font-semibold tracking-wide text-[#725D75] dark:text-[#C9BEAB] mb-3">
             {badgeText}
           </span>
         )}
-        <h2 className="text-3xl font-serif font-bold tracking-tight text-[#1E2229] dark:text-[#FAF8F5] sm:text-4xl md:text-5xl mb-3">
+        <h2 className="text-3xl font-serif font-semibold tracking-tight text-[#725D75] dark:text-[#FAF8F5] sm:text-4xl md:text-5xl mb-3">
           {title ? (
             title
           ) : (
             <>
-              Loved by Over{' '}
+              Loved by{' '}
               <AnimatedNumber
-                className="inline-flex font-serif text-[#2F2930] dark:text-[#C9BEAB]"
+                className="inline-flex font-serif text-[#725D75] dark:text-[#C9BEAB]"
                 value={5200}
                 decimalPlaces={0}
                 springOptions={{ bounce: 0, duration: 2000 }}
@@ -301,7 +298,7 @@ export default function InfiniteTestimonials({
             </>
           )}
         </h2>
-        <p className="mx-auto max-w-2xl text-sm leading-relaxed text-[#4F5561] dark:text-[#C8B5C3] sm:text-base">
+        <p className="mx-auto max-w-2xl text-sm leading-relaxed text-[#746B72] dark:text-[#C8B5C3] sm:text-base">
           {subtitle}
         </p>
       </div>
@@ -312,7 +309,7 @@ export default function InfiniteTestimonials({
         <div
           className="pointer-events-none absolute inset-y-0 left-0 z-20 w-24 sm:w-40 md:w-56"
           style={{
-            background: 'linear-gradient(to right, #F7F6F2 0%, rgba(247, 246, 242, 0) 100%)',
+            background: 'linear-gradient(to right, #F9F6F2 0%, rgba(249, 246, 242, 0) 100%)',
           }}
         />
 
@@ -320,7 +317,7 @@ export default function InfiniteTestimonials({
         <div
           className="pointer-events-none absolute inset-y-0 right-0 z-20 w-24 sm:w-40 md:w-56"
           style={{
-            background: 'linear-gradient(to left, #F7F6F2 0%, rgba(247, 246, 242, 0) 100%)',
+            background: 'linear-gradient(to left, #F9F6F2 0%, rgba(249, 246, 242, 0) 100%)',
           }}
         />
 
