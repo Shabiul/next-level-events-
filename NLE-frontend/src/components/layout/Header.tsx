@@ -14,8 +14,6 @@ import {
   Layers,
   ArrowUpRight,
   Gift,
-  PartyPopper,
-  Flame,
   Phone,
   Search,
 } from 'lucide-react';
@@ -41,6 +39,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '../base-ui/accordion';
+import { SERVICE_COLUMNS } from '../../data/servicesData';
 
 interface AuthSlice {
   isLoggedIn: boolean;
@@ -73,7 +72,7 @@ export const Header: React.FC<HeaderProps> = ({
   onLogout: _onLogout,
   onLogoClick,
   onAssistantOpen,
-  categories = [],
+  categories: _categories = [],
   onSelectCategory,
 }) => {
   const { isDark, toggleTheme } = useTheme();
@@ -324,140 +323,75 @@ export const Header: React.FC<HeaderProps> = ({
                     Services
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="p-0">
-                    <div className="w-[1040px] max-w-[96vw] rounded-3xl border border-[#E4DEF2] dark:border-[#483250] bg-[#FAF8F5] dark:bg-[#201325] p-6 shadow-2xl">
-                      <div className="grid grid-cols-12 gap-5">
-                        
-                        {/* Col 1: Curated Décors (span 3) */}
-                        <div className="col-span-3 border-r border-[#E4DEF2]/70 dark:border-[#483250]/70 pr-3 text-left">
-                          <button
-                            type="button"
-                            onClick={() => handleNavAnchor('curated-decors')}
-                            className="flex items-center gap-2 pb-3 border-b border-[#E4DEF2]/60 dark:border-[#483250]/60 mb-3 w-full text-left hover:opacity-80 transition-opacity cursor-pointer group"
+                    <div className="w-[720px] max-w-[96vw] rounded-3xl border border-[#E4DEF2] dark:border-[#483250] bg-[#FAF8F5] dark:bg-[#201325] p-6 shadow-2xl">
+                      <div className="grid grid-cols-12 gap-6">
+                        {SERVICE_COLUMNS.map((column, colIdx) => (
+                          <div
+                            key={column.key}
+                            className={cn(
+                              'text-left',
+                              colIdx === 0
+                                ? 'col-span-7 border-r border-[#E4DEF2]/70 dark:border-[#483250]/70 pr-5'
+                                : 'col-span-5'
+                            )}
                           >
-                            <PartyPopper size={16} className="text-[#8F6FC4]" />
-                            <span className="text-xs font-bold uppercase tracking-wider text-[#1C1B22] dark:text-[#FAF8F5]">
-                              Curated Décors
-                            </span>
-                            <ArrowUpRight size={12} className="text-[#6B6B76] ml-auto group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                          </button>
-                          <div className="flex flex-col gap-1 max-h-[300px] overflow-y-auto pr-1">
-                            {categories.slice(0, 6).map((cat) => (
-                              <NavigationMenuLink
-                                key={cat._id || cat.name}
-                                href={`/category/${encodeURIComponent(cat.name)}`}
-                                onClick={(e: React.MouseEvent) => {
-                                  e.preventDefault();
-                                  handleNavCategory(cat.name);
-                                }}
-                                className="group flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-medium text-[#1C1B22] hover:bg-[#8F6FC4]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors cursor-pointer"
-                              >
-                                <span className="truncate">{cat.name}</span>
-                                <ArrowUpRight size={12} className="text-[#6B6B76] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 ml-1" />
-                              </NavigationMenuLink>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Col 2: Experiences (span 3) */}
-                        <div className="col-span-3 border-r border-[#E4DEF2]/70 dark:border-[#483250]/70 pr-3 text-left">
-                          <button
-                            type="button"
-                            onClick={() => handleNavAnchor('experiences')}
-                            className="flex items-center gap-2 pb-3 border-b border-[#E4DEF2]/60 dark:border-[#483250]/60 mb-3 w-full text-left hover:opacity-80 transition-opacity cursor-pointer group"
-                          >
-                            <Flame size={16} className="text-[#C7B8E8]" />
-                            <span className="text-xs font-bold uppercase tracking-wider text-[#1C1B22] dark:text-[#FAF8F5]">
-                              Experiences
-                            </span>
-                            <ArrowUpRight size={12} className="text-[#6B6B76] ml-auto group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                          </button>
-                          <div className="flex flex-col gap-1">
-                            {[
-                              { label: 'Cabana Setups', cat: 'Experiences', sub: 'Cabana Setups' },
-                              { label: 'Terrace Proposals', cat: 'Experiences', sub: 'Terrace Proposals' },
-                              { label: 'Car Boot Surprises', cat: 'Experiences', sub: 'Car Boot Surprises' },
-                              { label: 'Kids Themes', cat: 'Kids Themes', sub: '__all__' },
-                            ].map((item) => (
-                              <NavigationMenuLink
-                                key={item.label}
-                                href={`/category/${encodeURIComponent(item.cat)}`}
-                                onClick={(e: React.MouseEvent) => {
-                                  e.preventDefault();
-                                  handleNavCategory(item.cat, item.sub);
-                                }}
-                                className="group flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-medium text-[#1C1B22] hover:bg-[#8F6FC4]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors cursor-pointer"
-                              >
-                                <span className="truncate">{item.label}</span>
-                                <ArrowUpRight size={12} className="text-[#6B6B76] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 ml-1" />
-                              </NavigationMenuLink>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Col 3: Activities & Entertainment (span 3) */}
-                        <div className="col-span-3 border-r border-[#E4DEF2]/70 dark:border-[#483250]/70 pr-3 text-left">
-                          <button
-                            type="button"
-                            onClick={() => handleNavCategory('Activities & Entertainment')}
-                            className="flex items-center gap-2 pb-3 border-b border-[#E4DEF2]/60 dark:border-[#483250]/60 mb-3 w-full text-left hover:opacity-80 transition-opacity cursor-pointer group"
-                          >
-                            <Sparkles size={16} className="text-[#8F6FC4]" />
-                            <span className="text-xs font-bold uppercase tracking-wider text-[#1C1B22] dark:text-[#FAF8F5]">
-                              Activities &amp; Entertainment
-                            </span>
-                            <ArrowUpRight size={12} className="text-[#6B6B76] ml-auto group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                          </button>
-
-                          <div className="flex flex-col gap-1">
-                            {[
-                              { label: 'Kids Activities', cat: 'Kids Activities' },
-                              { label: 'Live Eateries', cat: 'Live Eateries' },
-                              { label: 'Photography & Video', cat: 'Photography & Video' },
-                            ].map((item) => (
-                              <NavigationMenuLink
-                                key={item.label}
-                                href={`/category/${encodeURIComponent(item.cat)}`}
-                                onClick={(e: React.MouseEvent) => {
-                                  e.preventDefault();
-                                  handleNavCategory(item.cat);
-                                }}
-                                className="group flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-medium text-[#1C1B22] hover:bg-[#8F6FC4]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors cursor-pointer"
-                              >
-                                <span className="truncate">{item.label}</span>
-                                <ArrowUpRight size={12} className="text-[#6B6B76] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 ml-1" />
-                              </NavigationMenuLink>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Col 4: Express Callout Card (span 3) */}
-                        <div className="col-span-3 text-left">
-                          <div className="flex h-full flex-col justify-between rounded-2xl bg-gradient-to-br from-[#8F6FC4] to-[#483250] p-4 text-[#FAF8F5] shadow-lg">
-                            <div>
-                              <div className="flex items-center gap-1.5 text-[#C7B8E8] text-xs font-bold uppercase tracking-wider mb-2">
-                                <Gift size={14} />
-                                <span>Express 3hr</span>
-                              </div>
-                              <p className="font-serif text-sm font-semibold text-white leading-snug">
-                                Same-Day Bengaluru Surprises
-                              </p>
-                              <p className="text-[11px] text-[#C7B8E8] mt-1 line-clamp-2">
-                                Instant slots available for tonight across all areas.
-                              </p>
-                            </div>
                             <button
                               type="button"
-                              onClick={() => {
-                                navigate('/explore');
-                              }}
-                              className="mt-4 flex items-center justify-center gap-1 rounded-full bg-[#FAF8F5] py-2 text-xs font-bold text-[#1C1B22] shadow hover:bg-[#C7B8E8] transition-colors cursor-pointer"
+                              onClick={() =>
+                                column.key === 'curated-decors'
+                                  ? handleNavAnchor('curated-decors')
+                                  : handleNavCategory(column.title)
+                              }
+                              className="flex items-center gap-2 pb-3 border-b border-[#E4DEF2]/60 dark:border-[#483250]/60 mb-3 w-full text-left hover:opacity-80 transition-opacity cursor-pointer group"
                             >
-                              <span>Explore All</span>
-                              <ArrowUpRight size={13} />
+                              <column.icon size={16} className="text-[#8F6FC4]" />
+                              <span className="text-xs font-bold uppercase tracking-wider text-[#1C1B22] dark:text-[#FAF8F5]">
+                                {column.title}
+                              </span>
+                              <ArrowUpRight size={12} className="text-[#6B6B76] ml-auto group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                             </button>
+                            <div
+                              className={cn(
+                                'grid gap-1 pr-1',
+                                colIdx === 0 ? 'grid-cols-2 max-h-[320px] overflow-y-auto' : 'grid-cols-1'
+                              )}
+                            >
+                              {column.items.map((item) => (
+                                <NavigationMenuLink
+                                  key={item.label}
+                                  href={`/category/${encodeURIComponent(item.label)}`}
+                                  onClick={(e: React.MouseEvent) => {
+                                    e.preventDefault();
+                                    handleNavCategory(item.label);
+                                  }}
+                                  className="group flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-medium text-[#1C1B22] hover:bg-[#8F6FC4]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors cursor-pointer"
+                                >
+                                  <span className="truncate">{item.label}</span>
+                                  <ArrowUpRight size={12} className="text-[#6B6B76] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 ml-1" />
+                                </NavigationMenuLink>
+                              ))}
+                            </div>
                           </div>
-                        </div>
+                        ))}
+                      </div>
 
+                      {/* Express Callout Strip */}
+                      <div className="mt-5 flex items-center justify-between gap-4 rounded-2xl bg-gradient-to-r from-[#8F6FC4] to-[#483250] px-5 py-3.5 text-[#FAF8F5] shadow-lg">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <Gift size={16} className="text-[#C7B8E8] shrink-0" />
+                          <p className="text-xs font-semibold leading-snug truncate">
+                            <span className="text-[#C7B8E8] font-bold uppercase tracking-wider mr-1.5">Express 3hr</span>
+                            Same-day Bengaluru surprises — instant slots for tonight.
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => navigate('/explore')}
+                          className="shrink-0 flex items-center justify-center gap-1 rounded-full bg-[#FAF8F5] px-4 py-2 text-xs font-bold text-[#1C1B22] shadow hover:bg-[#C7B8E8] transition-colors cursor-pointer"
+                        >
+                          <span>Explore All</span>
+                          <ArrowUpRight size={13} />
+                        </button>
                       </div>
                     </div>
                   </NavigationMenuContent>
@@ -856,38 +790,40 @@ export const Header: React.FC<HeaderProps> = ({
                           <AccordionTrigger className="py-2 px-1 text-sm font-semibold text-[#1C1B22] dark:text-[#FAF8F5] hover:no-underline">
                             Services &amp; Occasions
                           </AccordionTrigger>
-                          <AccordionContent className="flex flex-col gap-1.5 pl-3 pt-1 pb-3 text-xs text-[#6B6B76] dark:text-[#C9BEAB]">
-                            <button
-                              type="button"
-                              onClick={() => handleNavAnchor('curated-decors')}
-                              className="text-left py-1 hover:text-[#1C1B22] dark:hover:text-white"
-                            >
-                              • Curated Décors
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleNavAnchor('experiences')}
-                              className="text-left py-1 hover:text-[#1C1B22] dark:hover:text-white"
-                            >
-                              • Immersive Experiences
-                            </button>
+                          <AccordionContent className="flex flex-col gap-3 pl-3 pt-1 pb-3 text-xs text-[#6B6B76] dark:text-[#C9BEAB]">
+                            {SERVICE_COLUMNS.map((column) => (
+                              <div key={column.key} className="flex flex-col gap-1">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    column.key === 'curated-decors'
+                                      ? handleNavAnchor('curated-decors')
+                                      : handleNavCategory(column.title)
+                                  }
+                                  className="flex items-center gap-1.5 text-left py-1 font-bold uppercase tracking-wider text-[10px] text-[#1C1B22] dark:text-[#FAF8F5]"
+                                >
+                                  <column.icon size={12} className="text-[#8F6FC4]" />
+                                  {column.title}
+                                </button>
+                                {column.items.map((item) => (
+                                  <button
+                                    key={item.label}
+                                    type="button"
+                                    onClick={() => handleNavCategory(item.label)}
+                                    className="text-left py-1 pl-2 hover:text-[#1C1B22] dark:hover:text-white"
+                                  >
+                                    &ndash; {item.label}
+                                  </button>
+                                ))}
+                              </div>
+                            ))}
                             <button
                               type="button"
                               onClick={() => handleNavAnchor('express')}
-                              className="text-left py-1 hover:text-[#1C1B22] dark:hover:text-white"
+                              className="text-left py-1 font-bold uppercase tracking-wider text-[10px] text-[#1C1B22] dark:text-[#FAF8F5]"
                             >
-                              • Express 3-Hour Setup
+                              Express 3-Hour Setup
                             </button>
-                            {categories.slice(0, 5).map((cat) => (
-                              <button
-                                key={cat._id || cat.name}
-                                type="button"
-                                onClick={() => handleNavCategory(cat.name)}
-                                className="text-left py-1 pl-2 hover:text-[#1C1B22] dark:hover:text-white"
-                              >
-                                &ndash; {cat.name}
-                              </button>
-                            ))}
                           </AccordionContent>
                         </AccordionItem>
                       </Accordion>

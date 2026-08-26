@@ -12,6 +12,7 @@ import { EmptyState } from '../../components/ui/EmptyState';
 import { BackButton } from '../../components/ui/BackButton';
 import { ShareDialog } from '../../components/ui/ShareDialog';
 import { SeoHead } from '../../components/layout/SeoHead';
+import { findServiceSubItems } from '../../data/servicesData';
 import type { AdminProduct } from '../../types';
 
 const ACTIVITIES_FALLBACK_MAP: Record<string, AdminProduct[]> = {
@@ -710,6 +711,12 @@ export const OccasionPage: React.FC<{
 
   const subcategories = useMemo(() => {
     const normCat = (decodedCategory || '').toLowerCase();
+
+    const servicesDataSubs = findServiceSubItems(decodedCategory);
+    if (servicesDataSubs && servicesDataSubs.length > 0) {
+      return servicesDataSubs.map((name) => ({ name, image: '' }));
+    }
+
     if (normCat.includes('photo') || normCat.includes('video')) {
       return [
         { name: 'Event Photography', image: '' },
