@@ -211,24 +211,25 @@ export const HomePage: React.FC<HomePageProps> = ({
               </button>
             </div>
 
-            <div className="flex gap-4 sm:gap-6 overflow-x-auto pb-2 smooth-horizontal-rail hide-scrollbar snap-x sm:grid sm:grid-cols-4 lg:grid-cols-8 sm:overflow-visible">
+            <div className="flex gap-4 sm:gap-5 overflow-x-auto pb-2 smooth-horizontal-rail hide-scrollbar snap-x sm:grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 sm:overflow-visible">
               {occasions.map((cat) => (
                 <button
                   key={cat._id || cat.name}
                   type="button"
                   onClick={() => onSelectCategory(cat.name)}
-                  className="group flex-none w-[100px] sm:w-auto snap-start flex flex-col items-center gap-2.5 cursor-pointer"
+                  className="group flex-none w-[150px] sm:w-auto snap-start cursor-pointer"
                 >
-                  <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full overflow-hidden border-2 border-[#E4DCD2] group-hover:border-[#725D75] shadow-sm transition-all duration-300 group-hover:scale-105">
+                  <div className="relative aspect-square w-full rounded-xl overflow-hidden border border-[#E4DCD2] bg-[#F3EFE7] shadow-sm group-hover:shadow-md group-hover:border-[#A78A9F] transition-all duration-300">
                     <img
                       src={cat.image || FALLBACK_OCCASION_IMAGE}
                       alt={cat.name}
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent" />
+                    <span className="absolute inset-x-0 bottom-0 p-3 sm:p-3.5 text-left text-xs sm:text-sm font-semibold text-white leading-tight line-clamp-2">
+                      {cat.name}
+                    </span>
                   </div>
-                  <span className="text-xs font-semibold text-[#2F2930] text-center leading-tight line-clamp-2">
-                    {cat.name}
-                  </span>
                 </button>
               ))}
             </div>
