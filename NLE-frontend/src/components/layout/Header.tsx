@@ -201,11 +201,11 @@ export const Header: React.FC<HeaderProps> = ({
         <div
           ref={headerPillRef}
           className={cn(
-            'pointer-events-auto flex h-14 sm:h-16 w-full max-w-7xl items-center justify-between gap-2 rounded-full border px-3 sm:px-4 shadow-xl backdrop-blur-2xl',
+            'pointer-events-auto flex h-14 sm:h-16 w-full max-w-7xl items-center justify-between gap-2 rounded-full border px-3 sm:px-4 shadow-sm backdrop-blur-2xl',
             'transition-all duration-300 ease-out',
             isDark
-              ? 'border-[#483250] bg-[#1B101F]/92 text-[#F9F6F2] shadow-[0_12px_40px_-8px_rgba(0,0,0,0.5)]'
-              : 'border-[#E4DCD2] bg-[#F9F6F2]/95 text-[#2F2930] shadow-[0_12px_40px_-8px_rgba(11,19,32,0.15)]'
+              ? 'border-[#483250] bg-[#1B101F]/92 text-[#F9F6F2] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.4)]'
+              : 'border-[#E4DCD2] bg-[#F9F6F2]/95 text-[#2F2930] shadow-[0_2px_12px_rgba(47,41,48,0.06)]'
           )}
           style={{
             transitionProperty: 'color, background-color, border-color, box-shadow',
@@ -213,8 +213,8 @@ export const Header: React.FC<HeaderProps> = ({
             transitionTimingFunction: 'ease',
             boxShadow: scrollY > 20
               ? isDark
-                ? '0 12px 40px -8px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1)'
-                : '0 12px 40px -8px rgba(11,19,32,0.18), 0 0 0 1px rgba(201,190,171,0.5)'
+                ? '0 6px 24px -6px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.1)'
+                : '0 4px 16px rgba(47,41,48,0.08), 0 0 0 1px rgba(228,220,210,0.6)'
               : undefined,
           }}
         >
