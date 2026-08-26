@@ -146,7 +146,7 @@ export const EventPackageDetailModal: React.FC<EventPackageDetailModalProps> = (
                 <button
                   type="button"
                   onClick={() => openWhatsApp('customise')}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-full border border-[#725D75]/40 text-[#725D75] hover:bg-[#725D75]/08 py-3 text-[11px] font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#A78A9F] text-[#725D75] hover:bg-[#725D75]/08 py-3 text-xs font-medium tracking-wide transition-colors cursor-pointer"
                 >
                   <Wand2 size={13} />
                   Customise Package
@@ -154,7 +154,7 @@ export const EventPackageDetailModal: React.FC<EventPackageDetailModalProps> = (
                 <button
                   type="button"
                   onClick={() => openWhatsApp('enquire')}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-full border border-emerald-600/40 bg-emerald-50/60 text-emerald-700 hover:bg-emerald-100/70 py-3 text-[11px] font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-emerald-600/40 bg-emerald-50/60 text-emerald-700 hover:bg-emerald-100/70 py-3 text-xs font-medium tracking-wide transition-colors cursor-pointer"
                 >
                   <MessageCircle size={13} />
                   Enquire Now
@@ -162,7 +162,7 @@ export const EventPackageDetailModal: React.FC<EventPackageDetailModalProps> = (
                 <button
                   type="button"
                   onClick={() => onBook(pkg)}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-full bg-[#725D75] hover:bg-[#A78A9F] text-white py-3 text-[11px] font-bold uppercase tracking-wider shadow-md transition-colors cursor-pointer"
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#725D75] hover:bg-[#A78A9F] text-white py-3 text-xs font-medium tracking-wide shadow-sm transition-colors cursor-pointer"
                 >
                   Book Now
                   <ArrowRight size={13} />

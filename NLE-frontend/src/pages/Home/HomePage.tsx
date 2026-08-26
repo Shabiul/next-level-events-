@@ -148,7 +148,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <button
               type="button"
               onClick={() => navigate('/explore')}
-              className="inline-flex items-center gap-2 rounded-full bg-[#F9F6F2] text-[#1B101F] hover:bg-[#C9BEAB] px-7 py-3.5 text-xs font-extrabold uppercase tracking-wider shadow-xl transition-all duration-300 hover:scale-103 cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-lg bg-[#F9F6F2] text-[#2F2930] hover:bg-[#C9BEAB] px-7 py-3 text-xs sm:text-sm font-medium tracking-wide shadow-sm transition-colors duration-300 cursor-pointer"
             >
               <span>Explore Themes &amp; Setups</span>
               <ArrowRight size={14} />
@@ -156,7 +156,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <button
               type="button"
               onClick={() => navigate('/packages')}
-              className="inline-flex items-center gap-2 rounded-full bg-black/50 hover:bg-white/20 text-[#F9F6F2] border border-white/30 backdrop-blur-md px-7 py-3.5 text-xs font-bold uppercase tracking-wider shadow-xl transition-all duration-300 hover:scale-103 cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-lg bg-transparent hover:bg-white/10 text-[#F9F6F2] border border-white/50 px-7 py-3 text-xs sm:text-sm font-medium tracking-wide transition-colors duration-300 cursor-pointer"
             >
               <span>View All Packages</span>
             </button>
@@ -257,9 +257,9 @@ export const HomePage: React.FC<HomePageProps> = ({
                 key={pkg.id}
                 type="button"
                 onClick={() => navigate('/packages')}
-                className="group relative flex flex-col rounded-[24px] border border-[#E4DCD2] bg-white p-5 text-left shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                className="group relative flex flex-col rounded-xl border border-[#E4DCD2] bg-white p-5 text-left shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
               >
-                <div className="relative -mx-5 -mt-5 mb-4 h-36 rounded-t-[24px] overflow-hidden bg-[#F9F6F2]">
+                <div className="relative -mx-5 -mt-5 mb-4 h-36 rounded-t-xl overflow-hidden bg-[#F9F6F2]">
                   <img
                     src={HOME_PACKAGE_IMAGES[pkg.id]}
                     alt={pkg.name}
@@ -349,13 +349,13 @@ export const HomePage: React.FC<HomePageProps> = ({
         <section id="contact" data-nav-theme="dark" className="w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
           <div id="final-cta" className="scroll-mt-24 sm:scroll-mt-28" />
           <div
-            className="relative overflow-hidden rounded-none py-14 sm:py-16 md:py-20 px-6 sm:px-10 text-[#F9F6F2] shadow-2xl border-y border-white/10 text-center w-full"
+            className="relative overflow-hidden rounded-none py-14 sm:py-16 md:py-20 px-6 sm:px-10 text-[#F9F6F2] shadow-lg border-y border-white/10 text-center w-full"
             style={{
-              background: 'linear-gradient(145deg, #26112A 0%, #371A3F 55%, #46224F 100%)',
+              background: 'linear-gradient(145deg, #58445B 0%, #725D75 100%)',
             }}
           >
-            <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-[#725D75]/10 blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-[#483250]/20 blur-3xl pointer-events-none" />
+            <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-[#C9BEAB]/10 blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-[#A78A9F]/15 blur-3xl pointer-events-none" />
 
             <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center gap-4 sm:gap-5">
 
@@ -371,9 +371,9 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <button
                   type="button"
                   onClick={() => navigate('/explore')}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#725D75] to-[#A78A9F] px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#F9F6F2] shadow-lg hover:opacity-95 hover:scale-103 active:scale-95 transition-all cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#F9F6F2] px-7 py-3 text-xs sm:text-sm font-medium tracking-wide text-[#725D75] shadow-sm hover:bg-[#C9BEAB] transition-colors duration-300 cursor-pointer"
                 >
-                  <Sparkles size={15} className="text-[#A78A9F]" />
+                  <Sparkles size={15} />
                   <span>Get a Free Quote</span>
                 </button>
 
@@ -381,7 +381,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   href="https://wa.me/917022058460"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-[#F9F6F2] px-7 py-3 text-xs sm:text-sm font-semibold tracking-wider text-[#1F1122] shadow-md hover:bg-white hover:scale-103 active:scale-95 transition-all"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-transparent border border-white/50 px-7 py-3 text-xs sm:text-sm font-medium tracking-wide text-[#F9F6F2] hover:bg-white/10 transition-colors duration-300"
                 >
                   <MessageSquare size={16} className="text-[#25D366]" />
                   <span>Chat on WhatsApp</span>
@@ -389,9 +389,9 @@ export const HomePage: React.FC<HomePageProps> = ({
 
                 <a
                   href="tel:+917022058460"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-black/40 border border-white/25 px-7 py-3 text-xs sm:text-sm font-semibold tracking-wider text-[#F9F6F2] shadow-md hover:bg-black/60 hover:scale-103 active:scale-95 transition-all"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-transparent border border-white/50 px-7 py-3 text-xs sm:text-sm font-medium tracking-wide text-[#F9F6F2] hover:bg-white/10 transition-colors duration-300"
                 >
-                  <Phone size={14} className="text-[#F9F6F2]" />
+                  <Phone size={14} />
                   <span>Call Now</span>
                 </a>
               </div>

@@ -88,7 +88,7 @@ export const Footer: React.FC<FooterProps> = ({
       
       {/* Ambient background glows in locked Japanese Violet & Lilac */}
       <div className="pointer-events-none absolute -top-40 -right-40 h-96 w-96 rounded-full bg-[#725D75]/10 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#483250]/20 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#A78A9F]/15 blur-3xl" />
 
 
 

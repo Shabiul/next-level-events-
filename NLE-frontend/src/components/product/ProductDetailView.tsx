@@ -211,9 +211,9 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
   return (
     <div className="relative mx-auto max-w-[1920px] px-4 pt-2 sm:pt-3 pb-20 sm:px-6 md:px-8 lg:px-12 overflow-hidden">
       {/* Decorative Luxury 3D Ambient Lighting Orbs */}
-      <div className="pointer-events-none absolute -top-40 right-0 z-0 h-[600px] w-[600px] rounded-full bg-gradient-to-br from-amber-500/12 via-purple-600/10 to-pink-500/05 blur-[120px]" />
-      <div className="pointer-events-none absolute top-[35%] -left-40 z-0 h-[700px] w-[700px] rounded-full bg-gradient-to-tr from-purple-700/10 via-amber-400/08 to-rose-400/05 blur-[140px]" />
-      <div className="pointer-events-none absolute bottom-20 -right-20 z-0 h-[500px] w-[500px] rounded-full bg-gradient-to-tl from-indigo-500/10 via-purple-500/08 to-amber-500/05 blur-[110px]" />
+      <div className="pointer-events-none absolute -top-40 right-0 z-0 h-[600px] w-[600px] rounded-full bg-[#A78A9F]/10 blur-[120px]" />
+      <div className="pointer-events-none absolute top-[35%] -left-40 z-0 h-[700px] w-[700px] rounded-full bg-[#C9BEAB]/10 blur-[140px]" />
+      <div className="pointer-events-none absolute bottom-20 -right-20 z-0 h-[500px] w-[500px] rounded-full bg-[#725D75]/08 blur-[110px]" />
 
       <div className="relative z-10">
         {/* Top Header Actions */}

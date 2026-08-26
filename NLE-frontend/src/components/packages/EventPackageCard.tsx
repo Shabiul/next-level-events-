@@ -117,7 +117,7 @@ export const EventPackageCard: React.FC<EventPackageCardProps> = ({
             e.stopPropagation();
             onView(pkg);
           }}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-full border border-[#725D75]/40 text-[#725D75] hover:bg-[#725D75]/08 py-2.5 text-[11px] font-bold uppercase tracking-wider transition-colors cursor-pointer"
+          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#A78A9F] text-[#725D75] hover:bg-[#725D75]/08 py-2.5 text-xs font-medium tracking-wide transition-colors cursor-pointer"
         >
           View Package
         </button>
@@ -127,7 +127,7 @@ export const EventPackageCard: React.FC<EventPackageCardProps> = ({
             e.stopPropagation();
             onBook(pkg);
           }}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-full bg-[#725D75] hover:bg-[#A78A9F] text-white py-2.5 text-[11px] font-bold uppercase tracking-wider shadow-sm transition-colors cursor-pointer"
+          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#725D75] hover:bg-[#A78A9F] text-white py-2.5 text-xs font-medium tracking-wide shadow-sm transition-colors cursor-pointer"
         >
           Book Now
           <ArrowRight size={12} />

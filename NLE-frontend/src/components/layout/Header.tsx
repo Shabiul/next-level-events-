@@ -387,7 +387,7 @@ export const Header: React.FC<HeaderProps> = ({
                         <button
                           type="button"
                           onClick={() => navigate('/explore')}
-                          className="shrink-0 flex items-center justify-center gap-1 rounded-full bg-[#F9F6F2] px-4 py-2 text-xs font-bold text-[#2F2930] shadow hover:bg-[#C9BEAB] transition-colors cursor-pointer"
+                          className="shrink-0 flex items-center justify-center gap-1 rounded-lg bg-[#F9F6F2] px-4 py-2 text-xs font-medium text-[#2F2930] shadow-sm hover:bg-[#C9BEAB] transition-colors cursor-pointer"
                         >
                           <span>Explore All</span>
                           <ArrowUpRight size={13} />
@@ -527,10 +527,10 @@ export const Header: React.FC<HeaderProps> = ({
                 }
               }}
               className={cn(
-                'hidden md:inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider shadow-sm transition-all duration-300 hover:scale-103 active:scale-95 cursor-pointer',
+                'hidden md:inline-flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-medium uppercase tracking-wider shadow-sm transition-colors duration-300 cursor-pointer',
                 isDark
                   ? 'bg-[#725D75] hover:bg-[#C9BEAB] text-[#1B101F]'
-                  : 'bg-[#725D75] hover:bg-[#483250] text-[#F9F6F2]'
+                  : 'bg-[#725D75] hover:bg-[#A78A9F] text-[#F9F6F2]'
               )}
             >
               <span>Book Now</span>
@@ -902,7 +902,7 @@ export const Header: React.FC<HeaderProps> = ({
                           setMobileMenuOpen(false);
                           navigate('/checkout');
                         }}
-                        className="w-full rounded-full bg-[#725D75] dark:bg-[#C9BEAB] dark:text-[#34203C] text-[#F9F6F2] py-3 text-xs font-bold uppercase tracking-wider shadow-md text-center cursor-pointer"
+                        className="w-full rounded-lg bg-[#725D75] dark:bg-[#C9BEAB] dark:text-[#34203C] text-[#F9F6F2] py-3 text-xs sm:text-sm font-medium tracking-wide text-center cursor-pointer"
                       >
                         Book Now
                       </button>
@@ -911,7 +911,7 @@ export const Header: React.FC<HeaderProps> = ({
                         href="https://wa.me/917022058460"
                         target="_blank"
                         rel="noreferrer"
-                        className="flex items-center justify-center gap-2 w-full rounded-full border border-[#E4DCD2] dark:border-[#483250] py-2.5 text-xs font-semibold text-[#2F2930] dark:text-[#FAF8F5] text-center"
+                        className="flex items-center justify-center gap-2 w-full rounded-lg border border-[#E4DCD2] dark:border-[#483250] py-2.5 text-xs sm:text-sm font-medium tracking-wide text-[#2F2930] dark:text-[#FAF8F5] text-center"
                       >
                         <Phone size={13} className="text-[#25D366]" />
                         <span>WhatsApp Quick Assistance</span>
