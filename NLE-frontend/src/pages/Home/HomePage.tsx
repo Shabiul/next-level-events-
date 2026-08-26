@@ -260,31 +260,31 @@ export const HomePage: React.FC<HomePageProps> = ({
             </button>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             {homePackages.map((pkg) => (
               <button
                 key={pkg.id}
                 type="button"
                 onClick={() => navigate('/packages')}
-                className="group relative flex flex-col rounded-xl border border-[#E4DCD2] bg-white p-3.5 text-left shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+                className="group relative flex flex-col rounded-xl border border-[#E4DCD2] bg-white p-5 text-left shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
               >
-                <div className="relative -mx-3.5 -mt-3.5 mb-3 h-28 rounded-t-xl overflow-hidden bg-[#F9F6F2]">
+                <div className="relative -mx-5 -mt-5 mb-4 h-48 rounded-t-xl overflow-hidden bg-[#F9F6F2]">
                   <img
                     src={HOME_PACKAGE_IMAGES[pkg.id]}
                     alt={pkg.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   {pkg.badge === 'Most Popular' && (
-                    <span className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-[#725D75] text-white px-2 py-0.5 text-[8px] font-bold uppercase tracking-wide shadow-sm">
-                      <Crown size={9} />
+                    <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-[#725D75] text-white px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-sm">
+                      <Crown size={11} />
                       Most Popular
                     </span>
                   )}
                 </div>
-                <h3 className="font-serif text-sm font-bold text-[#2F2930] mb-0.5 line-clamp-1">{pkg.name}</h3>
-                <span className="text-base font-bold text-[#725D75] mb-1.5">{pkg.price}</span>
-                <p className="text-[11px] text-[#746B72] font-light leading-relaxed line-clamp-2 mb-2">{pkg.description}</p>
-                <span className="mt-auto inline-flex items-center gap-1 text-[11px] font-semibold text-[#2F2930] group-hover:text-[#725D75]">
+                <h3 className="font-serif text-lg font-bold text-[#2F2930] mb-1 line-clamp-1">{pkg.name}</h3>
+                <span className="text-xl font-bold text-[#725D75] mb-2">{pkg.price}</span>
+                <p className="text-sm text-[#746B72] font-normal leading-relaxed line-clamp-2 mb-3">{pkg.description}</p>
+                <span className="mt-auto inline-flex items-center gap-1 text-xs font-semibold text-[#2F2930] group-hover:text-[#725D75]">
                   View Details
                   <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform" />
                 </span>
