@@ -102,10 +102,23 @@ export default {
         '3xl': '1.5rem',
       },
       boxShadow: {
-        card: '0 1px 4px rgba(0,0,0,.04), 0 2px 8px rgba(0,0,0,.02)',
-        'card-hover': '0 4px 16px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.04)',
-        glass: '0 4px 20px rgba(0,0,0,.04), inset 0 1px 0 rgba(255,255,255,.9)',
-        modal: '0 20px 40px -15px rgba(0, 0, 0, 0.08)',
+        // Override Tailwind's default shadow scale with soft, ink-tinted
+        // (#2F2930) elevation per the premium-editorial brief -- "0 4px 20px
+        // rgba(47,41,48,0.05)" direction -- instead of the default pure-black
+        // shadows. This is a single global lever: every existing shadow-sm/
+        // shadow-md/shadow-lg/shadow-xl usage across the site picks this up
+        // automatically, no per-component changes needed.
+        xs: '0 1px 2px rgba(47,41,48,.03)',
+        sm: '0 1px 3px rgba(47,41,48,.04)',
+        DEFAULT: '0 2px 8px rgba(47,41,48,.05)',
+        md: '0 4px 16px rgba(47,41,48,.06)',
+        lg: '0 8px 24px rgba(47,41,48,.07)',
+        xl: '0 12px 32px rgba(47,41,48,.08)',
+        '2xl': '0 20px 48px rgba(47,41,48,.10)',
+        card: '0 2px 8px rgba(47,41,48,.05)',
+        'card-hover': '0 8px 24px rgba(47,41,48,.08)',
+        glass: '0 4px 20px rgba(47,41,48,.05), inset 0 1px 0 rgba(255,255,255,.9)',
+        modal: '0 20px 40px -15px rgba(47,41,48,.12)',
       },
       keyframes: {
         fadeInUp: {
