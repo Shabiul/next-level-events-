@@ -104,14 +104,14 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       <div
         className={`mx-auto flex w-full max-w-[680px] items-center gap-3 rounded-full border px-4 sm:px-5 py-3.5 cursor-text transition-all duration-200 backdrop-blur-md shadow-lg ${
           isFocused
-            ? 'bg-white border-[#8F6FC4] ring-2 ring-[#8F6FC4]/20 shadow-xl'
-            : 'bg-white/90 border-[#E4DEF2] hover:border-[#8F6FC4]'
+            ? 'bg-white border-[#725D75] ring-2 ring-[#725D75]/20 shadow-xl'
+            : 'bg-white/90 border-[#E4DCD2] hover:border-[#725D75]'
         }`}
         onClick={() => inputRef.current?.focus()}
       >
         <Search
           size={18}
-          className="flex-shrink-0 transition-colors duration-200 text-[#1C1B22]"
+          className="flex-shrink-0 transition-colors duration-200 text-[#2F2930]"
         />
         <input
           ref={inputRef}
@@ -121,7 +121,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           onChange={e => onChange(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          className="w-full bg-transparent text-sm sm:text-base text-[#1C1B22] outline-none placeholder:text-[#6B6B76]/70 font-medium"
+          className="w-full bg-transparent text-sm sm:text-base text-[#2F2930] outline-none placeholder:text-[#746B72]/70 font-medium"
         />
         {value && (
           <button
@@ -131,7 +131,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               inputRef.current?.focus();
             }}
             aria-label="Clear search"
-            className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full bg-[#E4DEF2]/60 hover:bg-[#8F6FC4] text-[#1C1B22] hover:text-white transition-all active:scale-90 cursor-pointer"
+            className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full bg-[#E4DCD2]/60 hover:bg-[#725D75] text-[#2F2930] hover:text-white transition-all active:scale-90 cursor-pointer"
           >
             <X size={13} />
           </button>

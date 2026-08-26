@@ -42,10 +42,10 @@ export const ProductSlider: React.FC<ProductSliderProps> = ({
       {/* Section Header */}
       <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
-          <h3 className="font-serif text-lg sm:text-xl md:text-2xl font-bold uppercase text-[#1C1B22] dark:text-[#FAF8F5] tracking-[0.04em] leading-snug">
+          <h3 className="font-serif text-lg sm:text-xl md:text-2xl font-bold uppercase text-[#2F2930] dark:text-[#FAF8F5] tracking-[0.04em] leading-snug">
             {title}
           </h3>
-          <p className="text-xs sm:text-[13px] font-normal text-[#6B6B76] dark:text-[#C8B5C3] tracking-normal mt-0.5">
+          <p className="text-xs sm:text-[13px] font-normal text-[#746B72] dark:text-[#C8B5C3] tracking-normal mt-0.5">
             Verified decoration packages and bespoke celebration setups across Bengaluru.
           </p>
         </div>
@@ -55,7 +55,7 @@ export const ProductSlider: React.FC<ProductSliderProps> = ({
           <button
             type="button"
             onClick={() => handleScroll('left')}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E4DEF2] bg-[#FAF8F5] text-[#1C1B22] hover:bg-[#F2EEFA] hover:border-[#8F6FC4] dark:bg-[#2D1C34] dark:border-[#483250] dark:text-[#FAF8F5] transition-all active:scale-95 cursor-pointer shadow-xs"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E4DCD2] bg-[#F9F6F2] text-[#2F2930] hover:bg-[#F9F6F2] hover:border-[#725D75] dark:bg-[#2D1C34] dark:border-[#483250] dark:text-[#FAF8F5] transition-all active:scale-95 cursor-pointer shadow-xs"
             aria-label="Scroll left"
           >
             <ChevronLeft size={17} />
@@ -63,7 +63,7 @@ export const ProductSlider: React.FC<ProductSliderProps> = ({
           <button
             type="button"
             onClick={() => handleScroll('right')}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E4DEF2] bg-[#FAF8F5] text-[#1C1B22] hover:bg-[#F2EEFA] hover:border-[#8F6FC4] dark:bg-[#2D1C34] dark:border-[#483250] dark:text-[#FAF8F5] transition-all active:scale-95 cursor-pointer shadow-xs"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E4DCD2] bg-[#F9F6F2] text-[#2F2930] hover:bg-[#F9F6F2] hover:border-[#725D75] dark:bg-[#2D1C34] dark:border-[#483250] dark:text-[#FAF8F5] transition-all active:scale-95 cursor-pointer shadow-xs"
             aria-label="Scroll right"
           >
             <ChevronRight size={17} />

@@ -109,7 +109,7 @@ export const AutoLayoutCard: React.FC<AutoLayoutCardProps> = ({
               className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-108"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#483250] to-[#8F6FC4] text-6xl text-[#C7B8E8]">
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#483250] to-[#725D75] text-6xl text-[#A78A9F]">
               {icon || '🎉'}
             </div>
           )}
@@ -144,8 +144,8 @@ export const AutoLayoutCard: React.FC<AutoLayoutCardProps> = ({
         >
           {/* Top Left Badge Pill */}
           {tag && (
-            <span className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full bg-[#8F6FC4]/60 hover:bg-[#8F6FC4]/85 border border-white/25 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[#FAF8F5] backdrop-blur-md shadow-md transition-colors">
-              <Sparkles size={10} className="text-[#C7B8E8]" />
+            <span className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full bg-[#725D75]/60 hover:bg-[#725D75]/85 border border-white/25 px-2.5 py-0.5 sm:px-3 sm:py-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[#F9F6F2] backdrop-blur-md shadow-md transition-colors">
+              <Sparkles size={10} className="text-[#A78A9F]" />
               <span className="drop-shadow-xs">{tag}</span>
             </span>
           )}
@@ -158,13 +158,13 @@ export const AutoLayoutCard: React.FC<AutoLayoutCardProps> = ({
               e.stopPropagation();
               setIsSaved(!isSaved);
             }}
-            className="pointer-events-auto flex h-7.5 w-7.5 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-[#8F6FC4]/60 hover:bg-[#8F6FC4]/85 border border-white/25 backdrop-blur-md text-[#FAF8F5] transition-all hover:scale-110 active:scale-95 shadow-md ml-auto cursor-pointer"
+            className="pointer-events-auto flex h-7.5 w-7.5 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-[#725D75]/60 hover:bg-[#725D75]/85 border border-white/25 backdrop-blur-md text-[#F9F6F2] transition-all hover:scale-110 active:scale-95 shadow-md ml-auto cursor-pointer"
           >
             <Heart
               size={13}
               className={cn(
                 'transition-all duration-200',
-                isSaved ? 'fill-rose-500 text-rose-500 scale-110' : 'text-[#FAF8F5]'
+                isSaved ? 'fill-rose-500 text-rose-500 scale-110' : 'text-[#F9F6F2]'
               )}
             />
           </button>
@@ -175,25 +175,25 @@ export const AutoLayoutCard: React.FC<AutoLayoutCardProps> = ({
         {/* =================================================================== */}
         <div
           style={{ transform: 'translateZ(35px)', transformStyle: 'preserve-3d' }}
-          className="relative z-20 m-2 sm:m-2.5 p-2.5 sm:p-3 rounded-[15px] sm:rounded-[17px] bg-[#8F6FC4]/40 backdrop-blur-md border border-white/20 dark:border-[#A78A9F]/35 shadow-[0_6px_24px_rgba(0,0,0,0.3)] text-left transition-all duration-300 group-hover:bg-[#8F6FC4]/55 group-hover:border-white/30"
+          className="relative z-20 m-2 sm:m-2.5 p-2.5 sm:p-3 rounded-[15px] sm:rounded-[17px] bg-[#725D75]/40 backdrop-blur-md border border-white/20 dark:border-[#A78A9F]/35 shadow-[0_6px_24px_rgba(0,0,0,0.3)] text-left transition-all duration-300 group-hover:bg-[#725D75]/55 group-hover:border-white/30"
         >
           {/* Category Title in Clean Serif Typography */}
-          <h3 className="font-serif text-[15px] sm:text-base md:text-[17px] font-bold text-[#FAF8F5] drop-shadow-[0_1px_3px_rgba(0,0,0,0.85)] tracking-wide leading-snug group-hover:text-[#C7B8E8] transition-colors line-clamp-1 mb-0.5">
+          <h3 className="font-serif text-[15px] sm:text-base md:text-[17px] font-bold text-[#F9F6F2] drop-shadow-[0_1px_3px_rgba(0,0,0,0.85)] tracking-wide leading-snug group-hover:text-[#A78A9F] transition-colors line-clamp-1 mb-0.5">
             {name}
           </h3>
 
           {/* Subtitle / Description */}
-          <p className="text-[11px] sm:text-xs font-normal text-[#FAF8F5]/85 drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)] line-clamp-1 mb-2 leading-tight">
+          <p className="text-[11px] sm:text-xs font-normal text-[#F9F6F2]/85 drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)] line-clamp-1 mb-2 leading-tight">
             {subtitle || `${setupsCount} setups available`}
           </p>
 
           {/* Bottom Row: Price on Left & "VIEW SETUPS ↗" Button on Right */}
           <div className="flex items-center justify-between gap-2 pt-1.5 border-t border-white/15">
             <div>
-              <span className="text-[9px] font-semibold uppercase tracking-wider text-[#E4DEF2]/80 drop-shadow-xs block leading-none mb-0.5">
+              <span className="text-[9px] font-semibold uppercase tracking-wider text-[#E4DCD2]/80 drop-shadow-xs block leading-none mb-0.5">
                 Starting
               </span>
-              <span className="font-serif text-xs sm:text-[13px] md:text-sm font-bold text-[#C7B8E8] drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)] leading-none">
+              <span className="font-serif text-xs sm:text-[13px] md:text-sm font-bold text-[#A78A9F] drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)] leading-none">
                 {price}
               </span>
             </div>
@@ -201,7 +201,7 @@ export const AutoLayoutCard: React.FC<AutoLayoutCardProps> = ({
             {/* Signature "View Setups ↗" Pill Button */}
             <button
               type="button"
-              className="shrink-0 inline-flex items-center gap-1 rounded-full bg-[#C7B8E8] hover:bg-[#FAF8F5] text-[#1C1B22] font-bold text-[10px] sm:text-[11px] uppercase tracking-wider px-2.5 py-1 sm:px-3 sm:py-1 shadow-sm transition-all duration-300 group-hover:scale-105 active:scale-95 cursor-pointer"
+              className="shrink-0 inline-flex items-center gap-1 rounded-full bg-[#C9BEAB] hover:bg-[#F9F6F2] text-[#2F2930] font-bold text-[10px] sm:text-[11px] uppercase tracking-wider px-2.5 py-1 sm:px-3 sm:py-1 shadow-sm transition-all duration-300 group-hover:scale-105 active:scale-95 cursor-pointer"
             >
               <span>View Setups</span>
               <ArrowUpRight

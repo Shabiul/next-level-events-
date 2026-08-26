@@ -63,10 +63,10 @@ export const StatsGrid: React.FC<StatsGridProps> = ({
   return (
     <section
       ref={containerRef}
-      className={`relative w-full py-10 sm:py-14 bg-[#8F6FC4] text-[#FAF8F5] overflow-hidden border-y border-[#483250]/50 ${className}`}
+      className={`relative w-full py-10 sm:py-14 bg-[#725D75] text-[#F9F6F2] overflow-hidden border-y border-[#483250]/50 ${className}`}
     >
       {/* Subtle luxury ambient glows matching locked palette */}
-      <div className="absolute -top-24 left-1/4 w-80 h-80 rounded-full bg-[#8F6FC4]/10 blur-3xl pointer-events-none" />
+      <div className="absolute -top-24 left-1/4 w-80 h-80 rounded-full bg-[#725D75]/10 blur-3xl pointer-events-none" />
       <div className="absolute -bottom-24 right-1/4 w-80 h-80 rounded-full bg-[#483250]/30 blur-3xl pointer-events-none" />
 
       <div className="relative mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-12">
@@ -79,14 +79,14 @@ export const StatsGrid: React.FC<StatsGridProps> = ({
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="group relative rounded-2xl bg-[#8F6FC4]/80 border border-[#8F6FC4]/20 p-6 backdrop-blur-md hover:border-[#8F6FC4]/40 hover:bg-[#483250]/40 transition-all duration-300 shadow-xl flex flex-col justify-between"
+                className="group relative rounded-2xl bg-[#725D75]/80 border border-[#725D75]/20 p-6 backdrop-blur-md hover:border-[#725D75]/40 hover:bg-[#483250]/40 transition-all duration-300 shadow-xl flex flex-col justify-between"
               >
                 {/* Top Row: Icon & Accents */}
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-11 h-11 rounded-xl bg-[#483250]/50 border border-[#8F6FC4]/30 flex items-center justify-center text-[#8F6FC4] group-hover:text-[#C7B8E8] group-hover:border-[#C7B8E8]/40 transition-all duration-300">
-                    <IconComponent className="w-5 h-5 fill-[#8F6FC4]/15 stroke-[#8F6FC4] group-hover:stroke-[#C7B8E8] transition-colors" />
+                  <div className="w-11 h-11 rounded-xl bg-[#483250]/50 border border-[#725D75]/30 flex items-center justify-center text-[#725D75] group-hover:text-[#A78A9F] group-hover:border-[#C9BEAB]/40 transition-all duration-300">
+                    <IconComponent className="w-5 h-5 fill-[#725D75]/15 stroke-[#725D75] group-hover:stroke-[#C9BEAB] transition-colors" />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#8F6FC4]/80 bg-[#483250]/40 px-2.5 py-1 rounded-full border border-[#8F6FC4]/15">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#725D75]/80 bg-[#483250]/40 px-2.5 py-1 rounded-full border border-[#725D75]/15">
                     Metric
                   </span>
                 </div>
@@ -94,7 +94,7 @@ export const StatsGrid: React.FC<StatsGridProps> = ({
                 {/* Counter & Suffix */}
                 <div className="flex items-baseline gap-1 my-1">
                   <AnimatedNumber
-                    className="inline-flex items-center font-serif text-3xl sm:text-4xl font-semibold tracking-tight text-[#C7B8E8]"
+                    className="inline-flex items-center font-serif text-3xl sm:text-4xl font-semibold tracking-tight text-[#A78A9F]"
                     springOptions={{
                       bounce: 0,
                       duration: 2000,
@@ -102,13 +102,13 @@ export const StatsGrid: React.FC<StatsGridProps> = ({
                     decimalPlaces={item.decimalPlaces || 0}
                     value={item.value}
                   />
-                  <span className="font-serif text-2xl sm:text-3xl font-semibold text-[#8F6FC4]">
+                  <span className="font-serif text-2xl sm:text-3xl font-semibold text-[#725D75]">
                     {item.suffix}
                   </span>
                 </div>
 
                 {/* Sub-label */}
-                <p className="text-xs sm:text-[13px] font-medium text-[#B9A6D9] group-hover:text-[#FAF8F5] transition-colors mt-2">
+                <p className="text-xs sm:text-[13px] font-medium text-[#A78A9F] group-hover:text-[#F9F6F2] transition-colors mt-2">
                   {item.label}
                 </p>
               </motion.div>

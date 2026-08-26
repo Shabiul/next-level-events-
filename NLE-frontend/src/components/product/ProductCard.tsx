@@ -116,14 +116,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       whileHover={{ y: -6 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        'group flex flex-col justify-between rounded-2xl border border-[#E4DEF2] dark:border-[#483250] bg-white dark:bg-[#201325] text-[#1C1B22] dark:text-[#FAF8F5] overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 text-left select-none cursor-pointer w-full h-full',
+        'group flex flex-col justify-between rounded-2xl border border-[#E4DCD2] dark:border-[#483250] bg-white dark:bg-[#201325] text-[#2F2930] dark:text-[#FAF8F5] overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 text-left select-none cursor-pointer w-full h-full',
         className
       )}
       onClick={handleCardClick}
     >
       {/* Top Image Showcase -- clean product shot, no text overlay (badge + wishlist heart only) */}
       <div>
-        <div className="relative w-full h-[220px] sm:h-[240px] overflow-hidden bg-[#8F6FC4]/10">
+        <div className="relative w-full h-[220px] sm:h-[240px] overflow-hidden bg-[#725D75]/10">
           <img
             src={cardImage}
             alt={product.name}
@@ -135,7 +135,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <div className="absolute top-3.5 left-3.5 right-3.5 z-20 flex items-center justify-between pointer-events-none">
             <div className="flex items-center gap-1.5 pointer-events-auto">
               {!isAI && product.badge && (
-                <span className="rounded-full bg-[#8F6FC4] text-white px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider shadow-md">
+                <span className="rounded-full bg-[#725D75] text-white px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider shadow-md">
                   {product.badge}
                 </span>
               )}
@@ -155,15 +155,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 animate={{ scale: wished ? [1, 1.25, 1] : 1 }}
                 className={cn(
                   'pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full',
-                  'bg-white/90 hover:bg-white border border-[#E4DEF2] backdrop-blur-md shadow-md',
-                  'text-[#1C1B22] transition-colors duration-200 cursor-pointer'
+                  'bg-white/90 hover:bg-white border border-[#E4DCD2] backdrop-blur-md shadow-md',
+                  'text-[#2F2930] transition-colors duration-200 cursor-pointer'
                 )}
               >
                 <Heart
                   size={16}
                   className={cn(
                     'transition-all duration-200',
-                    wished ? 'fill-rose-500 text-rose-500 scale-110' : 'text-[#1C1B22]/70 hover:text-[#1C1B22]'
+                    wished ? 'fill-rose-500 text-rose-500 scale-110' : 'text-[#2F2930]/70 hover:text-[#2F2930]'
                   )}
                 />
               </motion.button>
@@ -174,13 +174,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {/* Card Content Body */}
         <div className="p-5 sm:p-6 flex flex-col">
           {/* Category / Location Tag */}
-          <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-[#8F6FC4] mb-1.5">
+          <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-[#725D75] mb-1.5">
             <MapPin size={11} className="shrink-0" />
             <span>{tagLabel}</span>
           </div>
 
           {/* Title */}
-          <h3 className="font-serif text-lg sm:text-xl font-bold tracking-tight text-[#1C1B22] dark:text-white leading-tight line-clamp-1">
+          <h3 className="font-serif text-lg sm:text-xl font-bold tracking-tight text-[#2F2930] dark:text-white leading-tight line-clamp-1">
             {product.name}
           </h3>
         </div>
@@ -188,17 +188,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       {/* Card Actions Footer */}
       <div className="px-5 sm:px-6 pb-6 pt-0 flex flex-col gap-3">
-        <div className="flex items-center justify-between border-t border-[#E4DEF2]/50 dark:border-[#483250]/50 pt-4">
+        <div className="flex items-center justify-between border-t border-[#E4DCD2]/50 dark:border-[#483250]/50 pt-4">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#6B6B76] dark:text-[#A78A9F] block">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#746B72] dark:text-[#A78A9F] block">
               Starting Price
             </span>
             <div className="flex items-baseline gap-1.5">
-              <span className="font-serif text-lg sm:text-xl font-bold text-[#1C1B22] dark:text-[#FAF8F5]">
+              <span className="font-serif text-lg sm:text-xl font-bold text-[#2F2930] dark:text-[#FAF8F5]">
                 ₹{product.price?.toLocaleString('en-IN')}
               </span>
               {hasDiscount && (
-                <span className="text-xs font-normal text-[#6B6B76]/60 line-through">
+                <span className="text-xs font-normal text-[#746B72]/60 line-through">
                   ₹{product.originalPrice?.toLocaleString('en-IN')}
                 </span>
               )}
@@ -211,7 +211,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               e.stopPropagation();
               handleCardClick();
             }}
-            className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#1C1B22] dark:text-[#C9BEAB] hover:text-[#8F6FC4] group/btn cursor-pointer"
+            className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#2F2930] dark:text-[#C9BEAB] hover:text-[#725D75] group/btn cursor-pointer"
           >
             <span>VIEW DETAILS</span>
             <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
@@ -229,7 +229,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 navigate(`/booking/${product._id}`, { state: { product, preferredMethod: 'razorpay' } });
               }
             }}
-            className="w-full flex items-center justify-center gap-1.5 rounded-lg bg-[#8F6FC4] dark:bg-[#C9BEAB] text-white dark:text-[#25172C] py-2.5 text-[11px] font-bold uppercase tracking-wider shadow-sm hover:bg-[#7D5DB2] dark:hover:bg-white transition-colors cursor-pointer"
+            className="w-full flex items-center justify-center gap-1.5 rounded-lg bg-[#725D75] dark:bg-[#C9BEAB] text-white dark:text-[#25172C] py-2.5 text-[11px] font-bold uppercase tracking-wider shadow-sm hover:bg-[#A78A9F] dark:hover:bg-white transition-colors cursor-pointer"
           >
             <span>BOOK NOW</span>
             <ArrowRight size={12} />

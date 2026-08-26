@@ -823,23 +823,23 @@ export const OccasionPage: React.FC<{
         description={`Explore handcrafted ${decodedCategory} theme setups, backdrops, and balloon styling in Bengaluru.`}
       />
 
-      <div className="min-h-screen bg-[#FAF8F5] dark:bg-[#1B101F] text-[#1C1B22] dark:text-[#FAF8F5] transition-colors pb-24">
+      <div className="min-h-screen bg-[#F9F6F2] dark:bg-[#1B101F] text-[#2F2930] dark:text-[#FAF8F5] transition-colors pb-24">
         <div className="mx-auto max-w-[1720px] px-4 py-6 sm:px-6 md:px-8 lg:px-12 animate-fade-in">
           
           {/* Navigation Bar */}
           <div className="mb-6 flex items-center justify-between gap-3">
             <BackButton onClick={() => navigate(-1)} aria-label="Go back" />
             
-            <div className="flex items-center gap-2 text-xs text-[#6B6B76] dark:text-[#A78A9F] font-medium tracking-wide">
-              <span className="cursor-pointer hover:text-[#1C1B22] dark:hover:text-white transition-colors" onClick={() => navigate('/explore')}>
+            <div className="flex items-center gap-2 text-xs text-[#746B72] dark:text-[#A78A9F] font-medium tracking-wide">
+              <span className="cursor-pointer hover:text-[#2F2930] dark:hover:text-white transition-colors" onClick={() => navigate('/explore')}>
                 All Services
               </span>
               <span>/</span>
-              <span className="font-semibold text-[#1C1B22] dark:text-[#FAF8F5]">{decodedCategory}</span>
+              <span className="font-semibold text-[#2F2930] dark:text-[#FAF8F5]">{decodedCategory}</span>
               {decodedSubcategory && (
                 <>
                   <span>/</span>
-                  <span className="font-bold text-[#1C1B22] dark:text-white">{decodedSubcategory}</span>
+                  <span className="font-bold text-[#2F2930] dark:text-white">{decodedSubcategory}</span>
                 </>
               )}
             </div>
@@ -847,7 +847,7 @@ export const OccasionPage: React.FC<{
             <button
               type="button"
               onClick={() => setShareOpen(true)}
-              className="inline-flex items-center gap-1.5 rounded-full border border-[#E4DEF2] dark:border-[#483250] bg-white dark:bg-[#201325] px-3.5 py-1.5 text-xs font-semibold text-[#1C1B22] dark:text-[#FAF8F5] hover:bg-[#FAF6F0] dark:hover:bg-[#2F1D35] transition-colors cursor-pointer shadow-xs"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#E4DCD2] dark:border-[#483250] bg-white dark:bg-[#201325] px-3.5 py-1.5 text-xs font-semibold text-[#2F2930] dark:text-[#FAF8F5] hover:bg-[#FAF6F0] dark:hover:bg-[#2F1D35] transition-colors cursor-pointer shadow-xs"
             >
               <Share2 size={13} />
               <span>Share</span>
@@ -859,7 +859,7 @@ export const OccasionPage: React.FC<{
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="relative overflow-hidden rounded-[32px] sm:rounded-[40px] bg-[#120A16] text-[#FAF8F5] p-8 sm:p-12 lg:p-16 shadow-2xl border border-[#8F6FC4]/20 mb-12 min-h-[380px] md:min-h-[460px] flex items-center"
+            className="relative overflow-hidden rounded-[32px] sm:rounded-[40px] bg-[#120A16] text-[#F9F6F2] p-8 sm:p-12 lg:p-16 shadow-2xl border border-[#725D75]/20 mb-12 min-h-[380px] md:min-h-[460px] flex items-center"
           >
             {/* Background Image: High-Resolution 1920x716 Landscape Photography */}
             <img
@@ -871,8 +871,8 @@ export const OccasionPage: React.FC<{
             <div className="absolute inset-0 bg-gradient-to-r from-[#120A16] via-[#120A16]/65 to-transparent z-10 pointer-events-none" />
 
             <div className="relative z-20 max-w-xl text-left">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#482E54]/60 border border-[#8F6FC4]/30 text-[#C7B8E8] text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] shadow-md mb-5 backdrop-blur-xs">
-                <Sparkles size={13} className="text-[#C7B8E8]" />
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#482E54]/60 border border-[#725D75]/30 text-[#A78A9F] text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] shadow-md mb-5 backdrop-blur-xs">
+                <Sparkles size={13} className="text-[#A78A9F]" />
                 <span>YOUR CELEBRATION SANCTUARY</span>
               </div>
               <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-normal tracking-tight text-white uppercase leading-[1.05] mb-4">
@@ -882,7 +882,7 @@ export const OccasionPage: React.FC<{
                   theme setups
                 </span>
               </h1>
-              <p className="text-xs sm:text-sm md:text-base text-[#F2EEFA]/90 font-light leading-relaxed max-w-lg mb-8">
+              <p className="text-xs sm:text-sm md:text-base text-[#F9F6F2]/90 font-light leading-relaxed max-w-lg mb-8">
                 Select from our meticulously designed celebration theme sanctuaries handcrafted by verified master decorators across Bengaluru.
               </p>
               <button
@@ -891,7 +891,7 @@ export const OccasionPage: React.FC<{
                   const el = document.getElementById('curated-accommodations');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="inline-flex items-center gap-2.5 rounded-full px-8 py-3.5 text-xs font-extrabold uppercase tracking-wider text-[#1C1B22] bg-[#E5D7C2] hover:bg-white shadow-xl hover:scale-102 transition-all cursor-pointer"
+                className="inline-flex items-center gap-2.5 rounded-full px-8 py-3.5 text-xs font-extrabold uppercase tracking-wider text-[#2F2930] bg-[#E5D7C2] hover:bg-white shadow-xl hover:scale-102 transition-all cursor-pointer"
               >
                 <span>EXPLORE THEMES NOW</span>
                 <ArrowRight size={15} />
@@ -909,13 +909,13 @@ export const OccasionPage: React.FC<{
             className="mb-14 scroll-mt-28"
           >
             <div className="text-center max-w-2xl mx-auto mb-8">
-              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-[#6B6B76] dark:text-[#A78A9F] mb-2">
+              <p className="text-xs font-extrabold uppercase tracking-[0.22em] text-[#746B72] dark:text-[#A78A9F] mb-2">
                 PREMIUM CELEBRATION LIVING
               </p>
-              <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-normal text-[#1C1B22] dark:text-[#FAF8F5] tracking-tight uppercase leading-tight">
+              <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-normal text-[#2F2930] dark:text-[#FAF8F5] tracking-tight uppercase leading-tight">
                 Our Curated Theme Setups
               </h2>
-              <p className="text-xs sm:text-sm text-[#6B6B76] dark:text-[#C8B5C3] font-light mt-2">
+              <p className="text-xs sm:text-sm text-[#746B72] dark:text-[#C8B5C3] font-light mt-2">
                 Select from our meticulously designed celebration theme setups in {decodedCategory}.
               </p>
             </div>
@@ -928,8 +928,8 @@ export const OccasionPage: React.FC<{
                     onClick={() => handleSubcategorySelect('__all__')}
                     className={`whitespace-nowrap rounded-full px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer border shadow-xs shrink-0 ${
                       !decodedSubcategory || decodedSubcategory === '__all__'
-                        ? 'border-[#8F6FC4] bg-[#8F6FC4] text-[#FAF8F5] dark:bg-[#C9BEAB] dark:text-[#25172C] dark:border-[#C9BEAB]'
-                        : 'border-[#E4DEF2] bg-[#FAF6F0] text-[#6B6B76] hover:bg-[#FAF8F5] hover:border-[#8F6FC4] hover:text-[#1C1B22] dark:bg-[#201325] dark:border-[#483250] dark:text-[#C8B5C3]'
+                        ? 'border-[#725D75] bg-[#725D75] text-[#F9F6F2] dark:bg-[#C9BEAB] dark:text-[#25172C] dark:border-[#C9BEAB]'
+                        : 'border-[#E4DCD2] bg-[#FAF6F0] text-[#746B72] hover:bg-[#F9F6F2] hover:border-[#725D75] hover:text-[#2F2930] dark:bg-[#201325] dark:border-[#483250] dark:text-[#C8B5C3]'
                     }`}
                   >
                     All {decodedCategory} Themes
@@ -946,8 +946,8 @@ export const OccasionPage: React.FC<{
                         onClick={() => handleSubcategorySelect(sub.name)}
                         className={`whitespace-nowrap rounded-full px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer border shadow-xs shrink-0 ${
                           isSelected
-                            ? 'border-[#8F6FC4] bg-[#8F6FC4] text-[#FAF8F5] dark:bg-[#C9BEAB] dark:text-[#25172C] dark:border-[#C9BEAB]'
-                            : 'border-[#E4DEF2] bg-[#FAF6F0] text-[#6B6B76] hover:bg-[#FAF8F5] hover:border-[#8F6FC4] hover:text-[#1C1B22] dark:bg-[#201325] dark:border-[#483250] dark:text-[#C8B5C3]'
+                            ? 'border-[#725D75] bg-[#725D75] text-[#F9F6F2] dark:bg-[#C9BEAB] dark:text-[#25172C] dark:border-[#C9BEAB]'
+                            : 'border-[#E4DCD2] bg-[#FAF6F0] text-[#746B72] hover:bg-[#F9F6F2] hover:border-[#725D75] hover:text-[#2F2930] dark:bg-[#201325] dark:border-[#483250] dark:text-[#C8B5C3]'
                         }`}
                       >
                         {sub.name}
@@ -998,19 +998,19 @@ export const OccasionPage: React.FC<{
             className="mb-14 mx-auto max-w-4xl"
           >
             <div className="text-center mb-8">
-              <p className="text-[11px] font-extrabold uppercase tracking-[0.25em] text-[#6B6B76] dark:text-[#A78A9F] mb-2">
+              <p className="text-[11px] font-extrabold uppercase tracking-[0.25em] text-[#746B72] dark:text-[#A78A9F] mb-2">
                 — {decodedCategory.toUpperCase()} FAQS —
               </p>
-              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#1C1B22] dark:text-[#FAF8F5] tracking-tight">
+              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#2F2930] dark:text-[#FAF8F5] tracking-tight">
                 {decodedCategory} Frequently Asked Questions
               </h2>
-              <p className="mt-2 text-xs sm:text-sm text-[#6B6B76] dark:text-[#C8B5C3] font-light max-w-xl mx-auto">
+              <p className="mt-2 text-xs sm:text-sm text-[#746B72] dark:text-[#C8B5C3] font-light max-w-xl mx-auto">
                 Everything you need to know about booking, timing, balloon customization, and decorator setup for {decodedCategory}.
               </p>
             </div>
 
             {/* Accordion Box Container */}
-            <div className="rounded-2xl sm:rounded-3xl border border-[#E4DEF2] dark:border-[#483250] bg-white dark:bg-[#201325] shadow-md overflow-hidden divide-y divide-[#E4DEF2]/60 dark:divide-[#483250]/60">
+            <div className="rounded-2xl sm:rounded-3xl border border-[#E4DCD2] dark:border-[#483250] bg-white dark:bg-[#201325] shadow-md overflow-hidden divide-y divide-[#E4DCD2]/60 dark:divide-[#483250]/60">
               {currentThemeFaqs.map((faq, index) => {
                 const isOpen = activeFaqIndex === index;
                 return (
@@ -1018,18 +1018,18 @@ export const OccasionPage: React.FC<{
                     <button
                       type="button"
                       onClick={() => setActiveFaqIndex(isOpen ? null : index)}
-                      className="w-full flex items-center justify-between p-5 sm:p-6 text-left cursor-pointer hover:bg-[#FAF8F5]/60 dark:hover:bg-[#2A1830] transition-colors gap-4"
+                      className="w-full flex items-center justify-between p-5 sm:p-6 text-left cursor-pointer hover:bg-[#F9F6F2]/60 dark:hover:bg-[#2A1830] transition-colors gap-4"
                     >
-                      <span className="font-serif text-base sm:text-lg font-bold text-[#1C1B22] dark:text-[#FAF8F5]">
+                      <span className="font-serif text-base sm:text-lg font-bold text-[#2F2930] dark:text-[#FAF8F5]">
                         {faq.question}
                       </span>
-                      <div className="w-8 h-8 rounded-full bg-[#FAF8F5] dark:bg-[#34203C] border border-[#E4DEF2] dark:border-[#483250] flex items-center justify-center text-[#1C1B22] dark:text-[#C9BEAB] shrink-0 font-mono text-sm font-bold">
+                      <div className="w-8 h-8 rounded-full bg-[#F9F6F2] dark:bg-[#34203C] border border-[#E4DCD2] dark:border-[#483250] flex items-center justify-center text-[#2F2930] dark:text-[#C9BEAB] shrink-0 font-mono text-sm font-bold">
                         {isOpen ? '−' : '+'}
                       </div>
                     </button>
 
                     {isOpen && (
-                      <div className="px-5 pb-6 sm:px-6 sm:pb-6 text-xs sm:text-sm text-[#6B6B76] dark:text-[#C8B5C3] font-light leading-relaxed animate-fade-in">
+                      <div className="px-5 pb-6 sm:px-6 sm:pb-6 text-xs sm:text-sm text-[#746B72] dark:text-[#C8B5C3] font-light leading-relaxed animate-fade-in">
                         {faq.answer}
                       </div>
                     )}

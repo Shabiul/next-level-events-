@@ -165,25 +165,25 @@ export function TabbedFAQ({
     <section
       id={id}
       data-nav-theme="light"
-      className={`relative w-full bg-[#FAF8F5] dark:bg-[#1B101F] py-10 sm:py-12 lg:py-14 text-[#1C1B22] dark:text-[#FAF8F5] transition-colors duration-200 ${className}`}
+      className={`relative w-full bg-[#F9F6F2] dark:bg-[#1B101F] py-10 sm:py-12 lg:py-14 text-[#2F2930] dark:text-[#FAF8F5] transition-colors duration-200 ${className}`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* 1. Section Header (Image 2 style with centered clean layout) */}
         <div className="mx-auto max-w-2xl text-center mb-8 sm:mb-10">
-          <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] text-[#6B6B76] dark:text-[#A78A9F] mb-2">
+          <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] text-[#746B72] dark:text-[#A78A9F] mb-2">
             — FAQS —
           </p>
-          <h2 className="font-serif text-3xl font-semibold tracking-tight text-[#1C1B22] dark:text-[#FAF8F5] sm:text-4xl lg:text-[42px] leading-[1.15]">
+          <h2 className="font-serif text-3xl font-semibold tracking-tight text-[#2F2930] dark:text-[#FAF8F5] sm:text-4xl lg:text-[42px] leading-[1.15]">
             {title}
           </h2>
-          <p className="mt-2 text-xs sm:text-sm md:text-[15px] font-light leading-relaxed text-[#6B6B76] dark:text-[#C8B5C3]">
+          <p className="mt-2 text-xs sm:text-sm md:text-[15px] font-light leading-relaxed text-[#746B72] dark:text-[#C8B5C3]">
             {subtitle}
           </p>
         </div>
 
         {/* 2. Category Filter Tabs */}
         <div className="flex items-center justify-center mb-6 sm:mb-8">
-          <div className="flex flex-wrap items-center justify-center gap-1.5 p-1 rounded-full bg-[#F2EEFA] dark:bg-[#25172C] border border-[#E4DEF2] dark:border-[#483250] shadow-xs">
+          <div className="flex flex-wrap items-center justify-center gap-1.5 p-1 rounded-full bg-[#F9F6F2] dark:bg-[#25172C] border border-[#E4DCD2] dark:border-[#483250] shadow-xs">
             {TABS.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
@@ -193,14 +193,14 @@ export function TabbedFAQ({
                   onClick={() => setActiveTab(tab.id)}
                   className={`relative z-10 rounded-full px-3.5 py-1.5 text-xs sm:text-[13px] font-medium transition-colors duration-200 cursor-pointer ${
                     isActive
-                      ? 'text-[#FAF8F5] font-semibold'
-                      : 'text-[#6B6B76] hover:text-[#1C1B22] dark:text-[#C8B5C3] dark:hover:text-[#FAF8F5] hover:bg-[#FAF8F5]/60'
+                      ? 'text-[#F9F6F2] font-semibold'
+                      : 'text-[#746B72] hover:text-[#2F2930] dark:text-[#C8B5C3] dark:hover:text-[#FAF8F5] hover:bg-[#F9F6F2]/60'
                   }`}
                 >
                   {isActive && (
                     <motion.div
                       layoutId="activeFaqTab"
-                      className="absolute inset-0 z-[-1] rounded-full bg-[#8F6FC4] dark:bg-[#483250] shadow-sm"
+                      className="absolute inset-0 z-[-1] rounded-full bg-[#725D75] dark:bg-[#483250] shadow-sm"
                       transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                     />
                   )}
@@ -212,7 +212,7 @@ export function TabbedFAQ({
         </div>
 
         {/* 3. Single Unified Box Container (Exact Image 2 Style) */}
-        <div className="mx-auto max-w-3xl rounded-2xl sm:rounded-3xl border border-[#E4DEF2] dark:border-[#483250] bg-white dark:bg-[#25172C] shadow-sm overflow-hidden divide-y divide-[#E4DEF2]/60 dark:divide-[#483250]/60">
+        <div className="mx-auto max-w-3xl rounded-2xl sm:rounded-3xl border border-[#E4DCD2] dark:border-[#483250] bg-white dark:bg-[#25172C] shadow-sm overflow-hidden divide-y divide-[#E4DCD2]/60 dark:divide-[#483250]/60">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
@@ -220,25 +220,25 @@ export function TabbedFAQ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className="divide-y divide-[#E4DEF2]/60 dark:divide-[#483250]/60"
+              className="divide-y divide-[#E4DCD2]/60 dark:divide-[#483250]/60"
             >
               {filteredFAQs.map((item) => {
                 const isOpen = !!openIds[item.id];
                 return (
-                  <div key={item.id} className="transition-colors hover:bg-[#FAF8F5]/50 dark:hover:bg-[#34203C]/20">
+                  <div key={item.id} className="transition-colors hover:bg-[#F9F6F2]/50 dark:hover:bg-[#34203C]/20">
                     <button
                       type="button"
                       onClick={() => toggleFAQ(item.id)}
                       aria-expanded={isOpen}
                       className="flex w-full items-center justify-between gap-4 p-4.5 sm:p-5 sm:px-6 text-left transition-colors cursor-pointer select-none"
                     >
-                      <span className="text-xs sm:text-sm md:text-[15px] font-medium text-[#1C1B22] dark:text-[#FAF8F5] tracking-tight pr-2">
+                      <span className="text-xs sm:text-sm md:text-[15px] font-medium text-[#2F2930] dark:text-[#FAF8F5] tracking-tight pr-2">
                         {item.question}
                       </span>
                       <motion.div
                         animate={{ rotate: isOpen ? 180 : 0 }}
                         transition={{ duration: 0.22, ease: 'easeInOut' }}
-                        className="flex h-6 w-6 sm:h-7 sm:w-7 flex-shrink-0 items-center justify-center rounded-full text-[#6B6B76] dark:text-[#C8B5C3]"
+                        className="flex h-6 w-6 sm:h-7 sm:w-7 flex-shrink-0 items-center justify-center rounded-full text-[#746B72] dark:text-[#C8B5C3]"
                       >
                         <ChevronDown className="h-4 w-4 stroke-[2]" />
                       </motion.div>
@@ -253,7 +253,7 @@ export function TabbedFAQ({
                           transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                         >
                           <div className="px-4.5 sm:px-6 pb-5 pt-0">
-                            <p className="text-xs sm:text-[13px] font-light leading-relaxed text-[#6B6B76] dark:text-[#C8B5C3]">
+                            <p className="text-xs sm:text-[13px] font-light leading-relaxed text-[#746B72] dark:text-[#C8B5C3]">
                               {item.answer}
                             </p>
                           </div>
@@ -268,13 +268,13 @@ export function TabbedFAQ({
         </div>
 
         {/* Direct Concierge Contact Footer */}
-        <div className="mt-6 sm:mt-8 text-center text-xs sm:text-[13px] text-[#6B6B76] dark:text-[#C8B5C3]">
+        <div className="mt-6 sm:mt-8 text-center text-xs sm:text-[13px] text-[#746B72] dark:text-[#C8B5C3]">
           Have a question not listed here?{' '}
           <a
             href="https://wa.me/917022058460"
             target="_blank"
             rel="noreferrer"
-            className="font-semibold text-[#1C1B22] dark:text-[#FAF8F5] underline underline-offset-4 hover:text-[#8F6FC4] transition-colors"
+            className="font-semibold text-[#2F2930] dark:text-[#FAF8F5] underline underline-offset-4 hover:text-[#725D75] transition-colors"
           >
             Chat directly with our styling team on WhatsApp
           </a>

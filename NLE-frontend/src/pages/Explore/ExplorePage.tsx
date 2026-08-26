@@ -195,7 +195,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
         description="Discover signature balloon arches, terrace cabanas, and bespoke birthday themes across Bengaluru."
       />
 
-      <div className="relative min-h-screen bg-[#FAF8F5] dark:bg-[#120B16] text-[#1C1B22] dark:text-[#FAF8F5] font-sans antialiased transition-colors pb-20 overflow-x-hidden">
+      <div className="relative min-h-screen bg-[#F9F6F2] dark:bg-[#120B16] text-[#2F2930] dark:text-[#FAF8F5] font-sans antialiased transition-colors pb-20 overflow-x-hidden">
         
         {/* ========================================================================= */}
         {/* 1. CINEMATIC LUXURY FULL-BLEED HERO SECTION WITH UNIFIED SEARCH ISLAND   */}
@@ -216,18 +216,18 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
           {/* Centered Editorial Hero Content */}
           <div className="relative z-10 max-w-4xl mx-auto w-full flex flex-col items-center justify-center text-center px-4 my-auto pt-6">
             {/* Small Eyebrow */}
-            <span className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-black/50 border border-white/25 text-[#FAF8F5] text-[10px] sm:text-xs font-semibold uppercase tracking-[0.22em] backdrop-blur-md mb-3 shadow-md">
-              <Sparkles className="w-3.5 h-3.5 text-[#C7B8E8]" />
+            <span className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-black/50 border border-white/25 text-[#F9F6F2] text-[10px] sm:text-xs font-semibold uppercase tracking-[0.22em] backdrop-blur-md mb-3 shadow-md">
+              <Sparkles className="w-3.5 h-3.5 text-[#A78A9F]" />
               CURATED CELEBRATION EXPERIENCES
             </span>
 
             {/* Large Editorial Heading */}
-            <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-[56px] font-normal text-[#FAF8F5] leading-[1.08] tracking-tight uppercase max-w-4xl drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
-              EXPLORE <span className="text-[#C7B8E8] font-normal italic font-['Great_Vibes'] lowercase text-[1.18em] tracking-normal">Themes</span> &amp; SETUPS
+            <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-[56px] font-semibold text-[#F9F6F2] leading-[1.05] tracking-tight max-w-4xl drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
+              Explore <span className="text-[#C9BEAB] italic font-medium tracking-normal">Themes</span> &amp; Setups
             </h1>
 
             {/* Short Supporting Text */}
-            <p className="mt-2 max-w-xl text-xs sm:text-sm md:text-base text-[#FAF8F5]/90 font-sans font-light leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]">
+            <p className="mt-2 max-w-xl text-xs sm:text-sm md:text-base text-[#F9F6F2]/90 font-sans font-light leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]">
               Discover signature balloon arches, terrace cabanas, and bespoke birthday themes styled across Bengaluru.
             </p>
           </div>
@@ -244,7 +244,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
                   className={cn(
                     'rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all whitespace-nowrap cursor-pointer shrink-0',
                     selectedCategory === cat
-                      ? 'bg-[#FAF8F5] text-[#1B101F] shadow-md font-bold scale-102'
+                      ? 'bg-[#F9F6F2] text-[#1B101F] shadow-md font-bold scale-102'
                       : 'text-white/80 hover:text-white hover:bg-white/15'
                   )}
                 >
@@ -257,9 +257,9 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
             <div className="flex w-full flex-col overflow-hidden rounded-2xl bg-white/95 shadow-[0_20px_50px_rgba(0,0,0,0.35)] border border-white/60 backdrop-blur-2xl dark:bg-[#1B101F]/95 dark:border-white/15 lg:flex-row lg:items-center lg:rounded-full lg:p-1.5">
               
               {/* 1. Theme or Keyword Input */}
-              <label className="flex flex-1 cursor-text flex-col gap-0.5 border-b border-[#8F6FC4]/8 px-4 py-2 dark:border-white/10 lg:border-b-0 lg:px-4 lg:py-1 lg:rounded-full lg:hover:bg-[#8F6FC4]/5 dark:lg:hover:bg-white/5 text-left">
-                <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-[#1C1B22] dark:text-[#C9BEAB]">
-                  <Search size={13} className="text-[#8F6FC4]" />
+              <label className="flex flex-1 cursor-text flex-col gap-0.5 border-b border-[#725D75]/8 px-4 py-2 dark:border-white/10 lg:border-b-0 lg:px-4 lg:py-1 lg:rounded-full lg:hover:bg-[#725D75]/5 dark:lg:hover:bg-white/5 text-left">
+                <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-[#2F2930] dark:text-[#C9BEAB]">
+                  <Search size={13} className="text-[#725D75]" />
                   <span>Search Keyword</span>
                 </span>
                 <div className="relative flex items-center">
@@ -278,7 +278,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
                       }
                       setSearchParams(newParams);
                     }}
-                    className="w-full border-none bg-transparent p-0 text-xs font-medium text-[#1C1B22] placeholder:text-[#6B6B76]/60 focus:outline-none dark:text-[#FAF8F5] dark:placeholder:text-[#A78A9F]/60"
+                    className="w-full border-none bg-transparent p-0 text-xs font-medium text-[#2F2930] placeholder:text-[#746B72]/60 focus:outline-none dark:text-[#FAF8F5] dark:placeholder:text-[#A78A9F]/60"
                   />
                   {searchQuery && (
                     <button
@@ -289,7 +289,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
                         newParams.delete('q');
                         setSearchParams(newParams);
                       }}
-                      className="text-[#1C1B22]/60 dark:text-white/60 hover:text-red-500 cursor-pointer ml-1"
+                      className="text-[#2F2930]/60 dark:text-white/60 hover:text-red-500 cursor-pointer ml-1"
                     >
                       <X size={13} />
                     </button>
@@ -297,18 +297,18 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
                 </div>
               </label>
 
-              <div className="hidden h-7 w-px bg-[#E4DEF2]/70 dark:bg-white/15 lg:block" />
+              <div className="hidden h-7 w-px bg-[#E4DCD2]/70 dark:bg-white/15 lg:block" />
 
               {/* 2. Budget Range Selector */}
-              <label className="flex flex-1 cursor-pointer flex-col gap-0.5 border-b border-[#8F6FC4]/8 px-4 py-2 dark:border-white/10 lg:border-b-0 lg:px-4 lg:py-1 lg:rounded-full lg:hover:bg-[#8F6FC4]/5 dark:lg:hover:bg-white/5 text-left">
-                <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-[#1C1B22] dark:text-[#C9BEAB]">
-                  <Filter size={13} className="text-[#8F6FC4]" />
+              <label className="flex flex-1 cursor-pointer flex-col gap-0.5 border-b border-[#725D75]/8 px-4 py-2 dark:border-white/10 lg:border-b-0 lg:px-4 lg:py-1 lg:rounded-full lg:hover:bg-[#725D75]/5 dark:lg:hover:bg-white/5 text-left">
+                <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-[#2F2930] dark:text-[#C9BEAB]">
+                  <Filter size={13} className="text-[#725D75]" />
                   <span>Budget Range</span>
                 </span>
                 <select
                   value={selectedPriceBracket}
                   onChange={(e) => setSelectedPriceBracket(e.target.value)}
-                  className="w-full border-none bg-transparent p-0 text-xs font-medium text-[#1C1B22] focus:outline-none dark:text-[#FAF8F5] cursor-pointer"
+                  className="w-full border-none bg-transparent p-0 text-xs font-medium text-[#2F2930] focus:outline-none dark:text-[#FAF8F5] cursor-pointer"
                 >
                   <option value="all" className="bg-[#1B101F] text-white">All Price Ranges</option>
                   <option value="under_3000" className="bg-[#1B101F] text-white">Under ₹3,000</option>
@@ -317,18 +317,18 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
                 </select>
               </label>
 
-              <div className="hidden h-7 w-px bg-[#E4DEF2]/70 dark:bg-white/15 lg:block" />
+              <div className="hidden h-7 w-px bg-[#E4DCD2]/70 dark:bg-white/15 lg:block" />
 
               {/* 3. Sort Order Selector */}
-              <label className="flex flex-1 cursor-pointer flex-col gap-0.5 border-b border-[#8F6FC4]/8 px-4 py-2 dark:border-white/10 lg:border-b-0 lg:px-4 lg:py-1 lg:rounded-full lg:hover:bg-[#8F6FC4]/5 dark:lg:hover:bg-white/5 text-left">
-                <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-[#1C1B22] dark:text-[#C9BEAB]">
-                  <ArrowUpDown size={13} className="text-[#8F6FC4]" />
+              <label className="flex flex-1 cursor-pointer flex-col gap-0.5 border-b border-[#725D75]/8 px-4 py-2 dark:border-white/10 lg:border-b-0 lg:px-4 lg:py-1 lg:rounded-full lg:hover:bg-[#725D75]/5 dark:lg:hover:bg-white/5 text-left">
+                <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-[#2F2930] dark:text-[#C9BEAB]">
+                  <ArrowUpDown size={13} className="text-[#725D75]" />
                   <span>Sort Packages</span>
                 </span>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as any)}
-                  className="w-full border-none bg-transparent p-0 text-xs font-medium text-[#1C1B22] focus:outline-none dark:text-[#FAF8F5] cursor-pointer"
+                  className="w-full border-none bg-transparent p-0 text-xs font-medium text-[#2F2930] focus:outline-none dark:text-[#FAF8F5] cursor-pointer"
                 >
                   <option value="featured" className="bg-[#1B101F] text-white">Featured First</option>
                   <option value="price_asc" className="bg-[#1B101F] text-white">Price: Low to High</option>
@@ -344,7 +344,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
                     const gridEl = document.getElementById('products-grid');
                     if (gridEl) gridEl.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#8F6FC4] hover:bg-[#483250] dark:bg-[#C9BEAB] dark:text-[#1B101F] dark:hover:bg-white text-[#FAF8F5] px-8 py-3 text-xs font-extrabold uppercase tracking-wider shadow-lg hover:scale-102 transition-all cursor-pointer lg:rounded-full"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#725D75] hover:bg-[#483250] dark:bg-[#C9BEAB] dark:text-[#1B101F] dark:hover:bg-white text-[#F9F6F2] px-8 py-3 text-xs font-extrabold uppercase tracking-wider shadow-lg hover:scale-102 transition-all cursor-pointer lg:rounded-full"
                 >
                   <Search size={14} />
                   <span>SEARCH</span>
@@ -363,14 +363,14 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
             {/* CONTENT CARDS GRID */}
             <div className="w-full">
               <div className="w-full mb-6 flex flex-wrap items-center justify-between gap-3 text-xs font-semibold px-1">
-                <span className="uppercase tracking-wider rounded-full bg-white/85 dark:bg-white/10 backdrop-blur-md px-4 py-1.5 border border-[#E4DEF2] dark:border-white/15 shadow-xs text-[#1C1B22] dark:text-[#FAF8F5]">
+                <span className="uppercase tracking-wider rounded-full bg-white/85 dark:bg-white/10 backdrop-blur-md px-4 py-1.5 border border-[#E4DCD2] dark:border-white/15 shadow-xs text-[#2F2930] dark:text-[#FAF8F5]">
                   Showing {filteredProducts.length} celebration package{filteredProducts.length === 1 ? '' : 's'}
                 </span>
                 {(searchQuery || selectedCategory !== 'ALL' || selectedPriceBracket !== 'all' || sortBy !== 'featured') && (
                   <button
                     type="button"
                     onClick={clearAllFilters}
-                    className="inline-flex items-center gap-1.5 font-bold text-[#1C1B22] dark:text-white hover:underline cursor-pointer bg-white/85 dark:bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full shadow-xs border border-[#E4DEF2] dark:border-white/15"
+                    className="inline-flex items-center gap-1.5 font-bold text-[#2F2930] dark:text-white hover:underline cursor-pointer bg-white/85 dark:bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full shadow-xs border border-[#E4DCD2] dark:border-white/15"
                   >
                     <X size={13} /> Clear Filters
                   </button>
@@ -379,8 +379,8 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
 
               {loading ? (
                 <div className="py-24 flex flex-col items-center justify-center gap-3">
-                  <div className="h-8 w-8 rounded-full border-2 border-[#8F6FC4] dark:border-white border-t-transparent animate-spin" />
-                  <span className="text-xs font-medium text-[#6B6B76] dark:text-[#FAF8F5]">
+                  <div className="h-8 w-8 rounded-full border-2 border-[#725D75] dark:border-white border-t-transparent animate-spin" />
+                  <span className="text-xs font-medium text-[#746B72] dark:text-[#FAF8F5]">
                     Loading celebration packages...
                   </span>
                 </div>

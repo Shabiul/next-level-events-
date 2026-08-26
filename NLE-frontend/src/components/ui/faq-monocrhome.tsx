@@ -57,46 +57,46 @@ const defaultFaqs: FAQItem[] = [
 // Brand Theme Palettes (Khaki Shell, Radiant Lilac, Banished Brown, Shadow Purple, Japanese Violet)
 const palettes = {
   dark: {
-    surface: "bg-[#1B101F] text-[#FAF8F5]",
+    surface: "bg-[#1B101F] text-[#F9F6F2]",
     panel: "bg-[#2D1C34]/80",
     border: "border-[#483250]/70",
-    heading: "text-[#FAF8F5]",
-    muted: "text-[#B9A6D9]",
-    iconRing: "border-[#8F6FC4]/40",
-    iconSurface: "bg-[#8F6FC4]/90 text-[#C7B8E8]",
-    icon: "text-[#C7B8E8]",
-    toggle: "border-[#483250] text-[#FAF8F5]",
+    heading: "text-[#F9F6F2]",
+    muted: "text-[#A78A9F]",
+    iconRing: "border-[#725D75]/40",
+    iconSurface: "bg-[#725D75]/90 text-[#A78A9F]",
+    icon: "text-[#A78A9F]",
+    toggle: "border-[#483250] text-[#F9F6F2]",
     toggleSurface: "bg-[#2D1C34]",
     glow: "rgba(201, 190, 171, 0.14)",
     aurora: "radial-gradient(ellipse 60% 100% at 10% 0%, rgba(167, 138, 159, 0.22), transparent 65%), radial-gradient(circle at 90% 20%, rgba(72, 50, 80, 0.35), transparent 50%), #1B101F",
     shadow: "shadow-[0_36px_140px_-60px_rgba(27,16,31,0.95)]",
     overlay: "linear-gradient(130deg, rgba(201,190,171,0.05) 0%, transparent 65%)",
-    badgeBorder: "border-[#C7B8E8]/25",
-    badgeBg: "bg-[#8F6FC4]/70",
-    badgeText: "text-[#FAF8F5]",
-    metaBorder: "border-[#8F6FC4]/30",
-    metaText: "text-[#C7B8E8]",
+    badgeBorder: "border-[#C9BEAB]/25",
+    badgeBg: "bg-[#725D75]/70",
+    badgeText: "text-[#F9F6F2]",
+    metaBorder: "border-[#725D75]/30",
+    metaText: "text-[#A78A9F]",
   },
   light: {
-    surface: "bg-[#FAF8F5] text-[#1C1B22]",
+    surface: "bg-[#F9F6F2] text-[#2F2930]",
     panel: "bg-white/85",
-    border: "border-[#E4DEF2]",
-    heading: "text-[#1C1B22]",
-    muted: "text-[#6B6B76]",
-    iconRing: "border-[#E4DEF2]",
-    iconSurface: "bg-[#F2EEFA] text-[#1C1B22]",
-    icon: "text-[#1C1B22]",
-    toggle: "border-[#E4DEF2] text-[#1C1B22]",
+    border: "border-[#E4DCD2]",
+    heading: "text-[#2F2930]",
+    muted: "text-[#746B72]",
+    iconRing: "border-[#E4DCD2]",
+    iconSurface: "bg-[#F9F6F2] text-[#2F2930]",
+    icon: "text-[#2F2930]",
+    toggle: "border-[#E4DCD2] text-[#2F2930]",
     toggleSurface: "bg-white",
     glow: "rgba(114, 93, 117, 0.08)",
     aurora: "radial-gradient(ellipse 60% 100% at 10% 0%, rgba(167, 138, 159, 0.14), rgba(250, 248, 245, 0.95) 70%), radial-gradient(circle at 90% 80%, rgba(201, 190, 171, 0.22), transparent 60%)",
     shadow: "shadow-[0_36px_120px_-70px_rgba(52,32,60,0.1)]",
     overlay: "linear-gradient(130deg, rgba(114,93,117,0.04) 0%, transparent 70%)",
-    badgeBorder: "border-[#A48ED0]/20",
-    badgeBg: "bg-[#FAF8F5]/90",
-    badgeText: "text-[#1C1B22]",
-    metaBorder: "border-[#E4DEF2]",
-    metaText: "text-[#6B6B76]",
+    badgeBorder: "border-[#A78A9F]/20",
+    badgeBg: "bg-[#F9F6F2]/90",
+    badgeText: "text-[#2F2930]",
+    metaBorder: "border-[#E4DCD2]",
+    metaText: "text-[#746B72]",
   },
 };
 
@@ -413,12 +413,12 @@ function FAQ1({
               <span className="relative flex h-6 w-6 items-center justify-center">
                 <span
                   className={`pointer-events-none absolute inset-0 rounded-full border opacity-40 ${
-                    theme === "dark" ? "border-[#C7B8E8]/40 animate-pulse" : "border-[#A48ED0]/40"
+                    theme === "dark" ? "border-[#C9BEAB]/40 animate-pulse" : "border-[#A78A9F]/40"
                   }`}
                 />
                 <span
                   className={`h-3 w-3 rounded-full transition-all duration-500 ${
-                    theme === "dark" ? "bg-[#C7B8E8]" : "bg-[#8F6FC4]"
+                    theme === "dark" ? "bg-[#C9BEAB]" : "bg-[#725D75]"
                   }`}
                 />
               </span>

@@ -94,7 +94,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             <ShoppingCart size={18} />
             <span>Your Cart</span>
             {items.length > 0 && (
-              <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#8F6FC4] px-1.5 text-[10px] font-bold text-white dark:bg-[#C9BEAB] dark:text-[#1B101F]">
+              <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#725D75] px-1.5 text-[10px] font-bold text-white dark:bg-[#C9BEAB] dark:text-[#1B101F]">
                 {items.reduce((s, i) => s + i.qty, 0)}
               </span>
             )}
@@ -123,19 +123,19 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             <div className="flex-1 overflow-y-auto px-5 py-4">
               <div className="flex flex-col gap-3">
                 {items.map(item => (
-                  <div className="flex gap-3 rounded-2xl border border-[#E8E7E3] p-3.5 dark:border-[#2E2E2E] bg-[#FAFAF8] dark:bg-[#181818] shadow-2xs hover:border-[#E4DEF2] transition-all" key={item._id}>
+                  <div className="flex gap-3 rounded-2xl border border-[#E8E7E3] p-3.5 dark:border-[#2E2E2E] bg-[#FAFAF8] dark:bg-[#181818] shadow-2xs hover:border-[#E4DCD2] transition-all" key={item._id}>
                     <img src={resolveProductCardImage(item)} alt={item.name} className="h-18 w-18 flex-shrink-0 rounded-xl object-cover bg-white" />
                     <div className="min-w-0 flex-1 flex flex-col justify-between">
                       <div>
                         <div className="truncate text-xs font-bold text-[#1C1C1C] dark:text-white">{item.name}</div>
                         <div className="text-[11px] text-[#6F6F6B] dark:text-[#A0A09C]">{item.categoryName}</div>
-                        <div className="mt-1 text-xs font-extrabold text-[#1C1B22] dark:text-[#C9BEAB]">₹{item.price.toLocaleString('en-IN')}</div>
+                        <div className="mt-1 text-xs font-extrabold text-[#2F2930] dark:text-[#C9BEAB]">₹{item.price.toLocaleString('en-IN')}</div>
                       </div>
                       <div className="mt-2 flex items-center gap-2">
                         <button
                           type="button"
                           onClick={() => handleBookNowItem(item)}
-                          className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-[#1C1B22] dark:text-[#C9BEAB] hover:underline cursor-pointer"
+                          className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-[#2F2930] dark:text-[#C9BEAB] hover:underline cursor-pointer"
                         >
                           <span>Book Now</span>
                           <ArrowRight size={11} />
@@ -172,7 +172,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             <div className="border-t border-[#E8E7E3] dark:border-[#2E2E2E] p-5 bg-white/95 dark:bg-[#1E1E1E]/95 backdrop-blur-md">
               <div className="mb-4 flex items-center justify-between text-base font-bold text-[#1C1C1C] dark:text-white">
                 <span>Total Amount</span>
-                <span className="font-serif text-lg font-bold text-[#1C1B22] dark:text-[#C9BEAB]">₹{total.toLocaleString('en-IN')}</span>
+                <span className="font-serif text-lg font-bold text-[#2F2930] dark:text-[#C9BEAB]">₹{total.toLocaleString('en-IN')}</span>
               </div>
               
               <div className="flex flex-col gap-2.5">
@@ -180,7 +180,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <button
                   type="button"
                   onClick={handleBookNowAll}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#8F6FC4] hover:bg-[#483250] text-[#FAF8F5] dark:bg-[#C9BEAB] dark:hover:bg-white dark:text-[#1B101F] py-3 px-4 text-xs font-bold uppercase tracking-wider shadow-md hover:shadow-lg transition-all cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#725D75] hover:bg-[#483250] text-[#F9F6F2] dark:bg-[#C9BEAB] dark:hover:bg-white dark:text-[#1B101F] py-3 px-4 text-xs font-bold uppercase tracking-wider shadow-md hover:shadow-lg transition-all cursor-pointer"
                 >
                   <CalendarCheck size={16} />
                   <span>Book Now (Proceed to Checkout)</span>

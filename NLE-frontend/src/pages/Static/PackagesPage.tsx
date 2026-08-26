@@ -101,7 +101,7 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
         description="Explore thoughtfully curated event packages with transparent pricing, decor, activities, live eateries, and complimentary extras across Bengaluru."
       />
 
-      <div className="flex flex-col w-full bg-[#FAF8F5] text-[#1C1B22] font-sans antialiased min-h-screen">
+      <div className="flex flex-col w-full bg-[#F9F6F2] text-[#2F2930] font-sans antialiased min-h-screen">
 
         {/* ========================================================================= */}
         {/* 01 — EDITORIAL HERO HEADER                                               */}
@@ -111,17 +111,17 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
           className="relative w-full pt-12 sm:pt-16 md:pt-20 pb-8 sm:pb-12 px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1720px] mx-auto text-center"
         >
           {/* Ambient Lighting Orbs */}
-          <div className="absolute top-10 left-1/4 w-96 h-96 rounded-full bg-[#8F6FC4]/10 blur-3xl pointer-events-none -z-10" />
-          <div className="absolute top-28 right-1/4 w-96 h-96 rounded-full bg-[#C9A876]/08 blur-3xl pointer-events-none -z-10" />
+          <div className="absolute top-10 left-1/4 w-96 h-96 rounded-full bg-[#725D75]/10 blur-3xl pointer-events-none -z-10" />
+          <div className="absolute top-28 right-1/4 w-96 h-96 rounded-full bg-[#C9BEAB]/08 blur-3xl pointer-events-none -z-10" />
 
           <div className="max-w-4xl mx-auto flex flex-col items-center">
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#8F6FC4]/06 border border-[#8F6FC4]/15 text-xs font-bold uppercase tracking-[0.22em] text-[#6B6B76] mb-4 sm:mb-5"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#725D75]/06 border border-[#725D75]/15 text-xs font-bold uppercase tracking-[0.22em] text-[#746B72] mb-4 sm:mb-5"
             >
-              <Sparkles size={13} className="text-[#8F6FC4]" />
+              <Sparkles size={13} className="text-[#725D75]" />
               <span>CURATED CELEBRATION PACKAGES</span>
             </motion.div>
 
@@ -129,16 +129,16 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-normal tracking-tight text-[#1C1B22] leading-[1.08] mb-4"
+              className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-normal tracking-tight text-[#2F2930] leading-[1.08] mb-4"
             >
-              Event <span className="font-serif italic text-[#8F6FC4]">Packages</span>
+              Event <span className="font-serif italic text-[#725D75]">Packages</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-sm sm:text-base font-light leading-relaxed text-[#6B6B76] max-w-xl mb-8"
+              className="text-sm sm:text-base font-light leading-relaxed text-[#746B72] max-w-xl mb-8"
             >
               Celebrate beautifully with our thoughtfully curated packages.
             </motion.p>
@@ -170,15 +170,15 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
                   }}
                   className={`relative shrink-0 rounded-full px-4 sm:px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
                     isActive
-                      ? 'bg-[#8F6FC4] text-white shadow-md scale-102'
-                      : 'bg-[#8F6FC4]/06 text-[#6B6B76] hover:bg-[#8F6FC4]/12 hover:text-[#1C1B22]'
+                      ? 'bg-[#725D75] text-white shadow-md scale-102'
+                      : 'bg-[#725D75]/06 text-[#746B72] hover:bg-[#725D75]/12 hover:text-[#2F2930]'
                   }`}
                 >
-                  <Icon size={13} className={isActive ? 'text-white' : 'text-[#8F6FC4]'} />
+                  <Icon size={13} className={isActive ? 'text-white' : 'text-[#725D75]'} />
                   <span>{label}</span>
                   <span
                     className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
-                      isActive ? 'bg-white/20 text-white' : 'bg-[#8F6FC4]/10 text-[#6B6B76]'
+                      isActive ? 'bg-white/20 text-white' : 'bg-[#725D75]/10 text-[#746B72]'
                     }`}
                   >
                     {count}
@@ -206,7 +206,7 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
           </div>
 
           {primaryPackages.length === 0 && (
-            <div className="py-16 text-center text-sm text-[#6B6B76]">
+            <div className="py-16 text-center text-sm text-[#746B72]">
               No packages found in this category yet.
             </div>
           )}
@@ -216,7 +216,7 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
               <button
                 type="button"
                 onClick={() => setShowMore((v) => !v)}
-                className="inline-flex items-center gap-2 rounded-full border border-[#8F6FC4]/30 bg-white px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#8F6FC4] hover:bg-[#8F6FC4]/06 shadow-sm transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 rounded-full border border-[#725D75]/30 bg-white px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#725D75] hover:bg-[#725D75]/06 shadow-sm transition-all cursor-pointer"
               >
                 <span>{showMore ? 'Hide Packages' : `View More Packages (${extraPackages.length})`}</span>
                 {showMore ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
@@ -252,19 +252,19 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
         {/* 04 — GENERAL ENQUIRY STRIP                                                */}
         {/* ========================================================================= */}
         <section className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 pb-16 sm:pb-24">
-          <div className="rounded-[28px] border border-[#E4DEF2] bg-white p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+          <div className="rounded-[28px] border border-[#E4DCD2] bg-white p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
             <div>
-              <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1C1B22] mb-1">
+              <h3 className="font-serif text-lg sm:text-xl font-bold text-[#2F2930] mb-1">
                 Don't see the exact fit?
               </h3>
-              <p className="text-xs sm:text-sm text-[#6B6B76] font-light">
+              <p className="text-xs sm:text-sm text-[#746B72] font-light">
                 Every package can be customised — mix decor, activities, and eateries to your taste and budget.
               </p>
             </div>
             <button
               type="button"
               onClick={openWhatsAppEnquiry}
-              className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-[#8F6FC4] hover:bg-[#7D5DB2] text-white px-6 py-3 text-xs font-bold uppercase tracking-wider shadow-md transition-colors cursor-pointer"
+              className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-[#725D75] hover:bg-[#A78A9F] text-white px-6 py-3 text-xs font-bold uppercase tracking-wider shadow-md transition-colors cursor-pointer"
             >
               Enquire Now
               <ArrowRight size={13} />
@@ -277,48 +277,48 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
         {/* ========================================================================= */}
         <section
           data-nav-theme="dark"
-          className="relative w-full py-16 sm:py-20 lg:py-24 px-4 sm:px-6 md:px-8 lg:px-12 text-[#FAF8F5] text-center border-t border-white/10"
+          className="relative w-full py-16 sm:py-20 lg:py-24 px-4 sm:px-6 md:px-8 lg:px-12 text-[#F9F6F2] text-center border-t border-white/10"
           style={{
             background: 'linear-gradient(145deg, #26112A 0%, #371A3F 55%, #46224F 100%)',
           }}
         >
           <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center gap-5 sm:gap-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs font-bold uppercase tracking-[0.22em] text-[#C7B8E8]">
-              <HeartHandshake size={13} className="text-[#C7B8E8]" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs font-bold uppercase tracking-[0.22em] text-[#A78A9F]">
+              <HeartHandshake size={13} className="text-[#A78A9F]" />
               <span>THE DECOR PARTY PROMISE</span>
             </div>
 
-            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-normal tracking-tight leading-[1.12] text-[#FAF8F5] uppercase">
+            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-normal tracking-tight leading-[1.12] text-[#F9F6F2] uppercase">
               YOUR CELEBRATION.{' '}
-              <span className="font-serif italic text-[#C7B8E8] block sm:inline lowercase">
+              <span className="font-serif italic text-[#A78A9F] block sm:inline lowercase">
                 Your style. Your moment.
               </span>
             </h2>
 
-            <p className="text-xs sm:text-sm md:text-base font-light text-[#F2EEFA]/85 max-w-xl leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base font-light text-[#F9F6F2]/85 max-w-xl leading-relaxed">
               Transparent fixed pricing with guaranteed punctual arrival anywhere in Bengaluru.
             </p>
 
             <button
               type="button"
               onClick={scrollToCatalog}
-              className="mt-3 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#8F6FC4] to-[#A48ED0] hover:from-[#C7B8E8] hover:to-[#8F6FC4] px-8 sm:px-10 py-3.5 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#FAF8F5] hover:text-[#25172C] shadow-xl hover:scale-103 active:scale-95 transition-all cursor-pointer"
+              className="mt-3 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#725D75] to-[#A78A9F] hover:from-[#C9BEAB] hover:to-[#725D75] px-8 sm:px-10 py-3.5 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#F9F6F2] hover:text-[#25172C] shadow-xl hover:scale-103 active:scale-95 transition-all cursor-pointer"
             >
               <span>EXPLORE ALL PACKAGES</span>
               <ArrowRight size={15} />
             </button>
 
-            <div className="mt-4 pt-6 border-t border-white/10 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-[11px] sm:text-xs text-[#FAF8F5]/75 font-medium tracking-wide">
+            <div className="mt-4 pt-6 border-t border-white/10 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-[11px] sm:text-xs text-[#F9F6F2]/75 font-medium tracking-wide">
               <span className="flex items-center gap-1.5">
-                <Clock size={13} className="text-[#C7B8E8]" />
+                <Clock size={13} className="text-[#A78A9F]" />
                 <span>Express 3-Hour Setup</span>
               </span>
               <span className="flex items-center gap-1.5">
-                <Shield size={13} className="text-[#C7B8E8]" />
+                <Shield size={13} className="text-[#A78A9F]" />
                 <span>100% Picture-Match Guarantee</span>
               </span>
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 size={13} className="text-[#C7B8E8]" />
+                <CheckCircle2 size={13} className="text-[#A78A9F]" />
                 <span>No Hidden Fees</span>
               </span>
             </div>

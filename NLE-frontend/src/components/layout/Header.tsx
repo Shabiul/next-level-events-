@@ -204,8 +204,8 @@ export const Header: React.FC<HeaderProps> = ({
             'pointer-events-auto flex h-14 sm:h-16 w-full max-w-7xl items-center justify-between gap-2 rounded-full border px-3 sm:px-4 shadow-xl backdrop-blur-2xl',
             'transition-all duration-300 ease-out',
             isDark
-              ? 'border-[#483250] bg-[#1B101F]/92 text-[#FAF8F5] shadow-[0_12px_40px_-8px_rgba(0,0,0,0.5)]'
-              : 'border-[#E4DEF2] bg-[#FAF8F5]/95 text-[#1C1B22] shadow-[0_12px_40px_-8px_rgba(11,19,32,0.15)]'
+              ? 'border-[#483250] bg-[#1B101F]/92 text-[#F9F6F2] shadow-[0_12px_40px_-8px_rgba(0,0,0,0.5)]'
+              : 'border-[#E4DCD2] bg-[#F9F6F2]/95 text-[#2F2930] shadow-[0_12px_40px_-8px_rgba(11,19,32,0.15)]'
           )}
           style={{
             transitionProperty: 'color, background-color, border-color, box-shadow',
@@ -230,7 +230,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <span
                   className={cn(
                     'font-serif text-[9px] sm:text-[10px] font-bold tracking-[0.28em] uppercase transition-colors duration-300',
-                    isDark ? 'text-[#8F6FC4]' : 'text-[#6B6B76]'
+                    isDark ? 'text-[#725D75]' : 'text-[#746B72]'
                   )}
                 >
                   THE
@@ -239,15 +239,15 @@ export const Header: React.FC<HeaderProps> = ({
                   <span
                     className={cn(
                       'font-serif text-base sm:text-lg font-bold tracking-[0.08em] uppercase transition-colors duration-300',
-                      isDark ? 'text-[#FAF8F5]' : 'text-[#1C1B22]'
+                      isDark ? 'text-[#F9F6F2]' : 'text-[#2F2930]'
                     )}
                   >
                     DECOR
                   </span>
                   <span
                     className={cn(
-                      "font-['Great_Vibes'] lowercase text-[1.25rem] sm:text-[1.35rem] font-normal tracking-normal transition-colors duration-300",
-                      isDark ? 'text-[#C7B8E8]' : 'text-[#6B6B76]'
+                      "font-heading italic lowercase text-[1.1rem] sm:text-[1.2rem] font-medium tracking-normal transition-colors duration-300",
+                      isDark ? 'text-[#A78A9F]' : 'text-[#746B72]'
                     )}
                   >
                     Party
@@ -259,7 +259,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* 2. Desktop Navigation Menu */}
           <div className="hidden lg:block">
-            <NavigationMenu className={cn(isDark ? 'text-[#FAF8F5]' : 'text-[#1C1B22]')}>
+            <NavigationMenu className={cn(isDark ? 'text-[#F9F6F2]' : 'text-[#2F2930]')}>
               <NavigationMenuList className="gap-1 xl:gap-1.5">
                 
                 {/* 1. Logo / Home */}
@@ -271,11 +271,11 @@ export const Header: React.FC<HeaderProps> = ({
                       'px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer',
                       location.pathname === '/' && activeSection === 'home'
                         ? isDark
-                          ? 'bg-[#8F6FC4] text-[#1B101F] shadow-xs font-bold'
-                          : 'bg-[#8F6FC4] text-[#FAF8F5] shadow-xs font-bold'
+                          ? 'bg-[#725D75] text-[#1B101F] shadow-xs font-bold'
+                          : 'bg-[#725D75] text-[#F9F6F2] shadow-xs font-bold'
                         : isDark
-                          ? 'text-[#FAF8F5]/90 hover:text-white hover:bg-white/15'
-                          : 'text-[#1C1B22] hover:text-[#1C1B22] hover:bg-[#8F6FC4]/08'
+                          ? 'text-[#F9F6F2]/90 hover:text-white hover:bg-white/15'
+                          : 'text-[#2F2930] hover:text-[#2F2930] hover:bg-[#725D75]/08'
                     )}
                   >
                     Home
@@ -295,11 +295,11 @@ export const Header: React.FC<HeaderProps> = ({
                       'px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer',
                       location.pathname === '/about'
                         ? isDark
-                          ? 'bg-[#8F6FC4] text-[#1B101F] shadow-xs font-bold'
-                          : 'bg-[#8F6FC4] text-[#FAF8F5] shadow-xs font-bold'
+                          ? 'bg-[#725D75] text-[#1B101F] shadow-xs font-bold'
+                          : 'bg-[#725D75] text-[#F9F6F2] shadow-xs font-bold'
                         : isDark
-                          ? 'text-[#FAF8F5]/90 hover:text-white hover:bg-white/15'
-                          : 'text-[#1C1B22] hover:text-[#1C1B22] hover:bg-[#8F6FC4]/08'
+                          ? 'text-[#F9F6F2]/90 hover:text-white hover:bg-white/15'
+                          : 'text-[#2F2930] hover:text-[#2F2930] hover:bg-[#725D75]/08'
                     )}
                   >
                     About
@@ -313,17 +313,17 @@ export const Header: React.FC<HeaderProps> = ({
                       'bg-transparent px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer',
                       activeSection === 'services'
                         ? isDark
-                          ? 'bg-[#8F6FC4]/30 text-white font-bold'
-                          : 'bg-[#8F6FC4]/12 text-[#1C1B22] font-bold'
+                          ? 'bg-[#725D75]/30 text-white font-bold'
+                          : 'bg-[#725D75]/12 text-[#2F2930] font-bold'
                         : isDark
-                          ? 'text-[#FAF8F5]/90 hover:text-white hover:bg-white/15 data-[state=open]:bg-white/20'
-                          : 'text-[#1C1B22] hover:text-[#1C1B22] hover:bg-[#8F6FC4]/08 data-[state=open]:bg-[#8F6FC4]/10'
+                          ? 'text-[#F9F6F2]/90 hover:text-white hover:bg-white/15 data-[state=open]:bg-white/20'
+                          : 'text-[#2F2930] hover:text-[#2F2930] hover:bg-[#725D75]/08 data-[state=open]:bg-[#725D75]/10'
                     )}
                   >
                     Services
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="p-0">
-                    <div className="w-[720px] max-w-[96vw] rounded-3xl border border-[#E4DEF2] dark:border-[#483250] bg-[#FAF8F5] dark:bg-[#201325] p-6 shadow-2xl">
+                    <div className="w-[720px] max-w-[96vw] rounded-3xl border border-[#E4DCD2] dark:border-[#483250] bg-[#F9F6F2] dark:bg-[#201325] p-6 shadow-2xl">
                       <div className="grid grid-cols-12 gap-6">
                         {SERVICE_COLUMNS.map((column, colIdx) => (
                           <div
@@ -331,7 +331,7 @@ export const Header: React.FC<HeaderProps> = ({
                             className={cn(
                               'text-left',
                               colIdx === 0
-                                ? 'col-span-7 border-r border-[#E4DEF2]/70 dark:border-[#483250]/70 pr-5'
+                                ? 'col-span-7 border-r border-[#E4DCD2]/70 dark:border-[#483250]/70 pr-5'
                                 : 'col-span-5'
                             )}
                           >
@@ -342,13 +342,13 @@ export const Header: React.FC<HeaderProps> = ({
                                   ? handleNavAnchor('curated-decors')
                                   : handleNavCategory(column.title)
                               }
-                              className="flex items-center gap-2 pb-3 border-b border-[#E4DEF2]/60 dark:border-[#483250]/60 mb-3 w-full text-left hover:opacity-80 transition-opacity cursor-pointer group"
+                              className="flex items-center gap-2 pb-3 border-b border-[#E4DCD2]/60 dark:border-[#483250]/60 mb-3 w-full text-left hover:opacity-80 transition-opacity cursor-pointer group"
                             >
-                              <column.icon size={16} className="text-[#8F6FC4]" />
-                              <span className="text-xs font-bold uppercase tracking-wider text-[#1C1B22] dark:text-[#FAF8F5]">
+                              <column.icon size={16} className="text-[#725D75]" />
+                              <span className="text-xs font-bold uppercase tracking-wider text-[#2F2930] dark:text-[#FAF8F5]">
                                 {column.title}
                               </span>
-                              <ArrowUpRight size={12} className="text-[#6B6B76] ml-auto group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                              <ArrowUpRight size={12} className="text-[#746B72] ml-auto group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                             </button>
                             <div
                               className={cn(
@@ -364,10 +364,10 @@ export const Header: React.FC<HeaderProps> = ({
                                     e.preventDefault();
                                     handleNavCategory(item.label);
                                   }}
-                                  className="group flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-medium text-[#1C1B22] hover:bg-[#8F6FC4]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors cursor-pointer"
+                                  className="group flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-medium text-[#2F2930] hover:bg-[#725D75]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors cursor-pointer"
                                 >
                                   <span className="truncate">{item.label}</span>
-                                  <ArrowUpRight size={12} className="text-[#6B6B76] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 ml-1" />
+                                  <ArrowUpRight size={12} className="text-[#746B72] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 ml-1" />
                                 </NavigationMenuLink>
                               ))}
                             </div>
@@ -376,18 +376,18 @@ export const Header: React.FC<HeaderProps> = ({
                       </div>
 
                       {/* Express Callout Strip */}
-                      <div className="mt-5 flex items-center justify-between gap-4 rounded-2xl bg-gradient-to-r from-[#8F6FC4] to-[#483250] px-5 py-3.5 text-[#FAF8F5] shadow-lg">
+                      <div className="mt-5 flex items-center justify-between gap-4 rounded-2xl bg-gradient-to-r from-[#725D75] to-[#483250] px-5 py-3.5 text-[#F9F6F2] shadow-lg">
                         <div className="flex items-center gap-2.5 min-w-0">
-                          <Gift size={16} className="text-[#C7B8E8] shrink-0" />
+                          <Gift size={16} className="text-[#A78A9F] shrink-0" />
                           <p className="text-xs font-semibold leading-snug truncate">
-                            <span className="text-[#C7B8E8] font-bold uppercase tracking-wider mr-1.5">Express 3hr</span>
+                            <span className="text-[#A78A9F] font-bold uppercase tracking-wider mr-1.5">Express 3hr</span>
                             Same-day Bengaluru surprises — instant slots for tonight.
                           </p>
                         </div>
                         <button
                           type="button"
                           onClick={() => navigate('/explore')}
-                          className="shrink-0 flex items-center justify-center gap-1 rounded-full bg-[#FAF8F5] px-4 py-2 text-xs font-bold text-[#1C1B22] shadow hover:bg-[#C7B8E8] transition-colors cursor-pointer"
+                          className="shrink-0 flex items-center justify-center gap-1 rounded-full bg-[#F9F6F2] px-4 py-2 text-xs font-bold text-[#2F2930] shadow hover:bg-[#C9BEAB] transition-colors cursor-pointer"
                         >
                           <span>Explore All</span>
                           <ArrowUpRight size={13} />
@@ -410,11 +410,11 @@ export const Header: React.FC<HeaderProps> = ({
                       'px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer',
                       location.pathname === '/packages'
                         ? isDark
-                          ? 'bg-[#8F6FC4] text-[#1B101F] shadow-xs font-bold'
-                          : 'bg-[#8F6FC4] text-[#FAF8F5] shadow-xs font-bold'
+                          ? 'bg-[#725D75] text-[#1B101F] shadow-xs font-bold'
+                          : 'bg-[#725D75] text-[#F9F6F2] shadow-xs font-bold'
                         : isDark
-                          ? 'text-[#FAF8F5]/90 hover:text-white hover:bg-white/15'
-                          : 'text-[#1C1B22] hover:text-[#1C1B22] hover:bg-[#8F6FC4]/08'
+                          ? 'text-[#F9F6F2]/90 hover:text-white hover:bg-white/15'
+                          : 'text-[#2F2930] hover:text-[#2F2930] hover:bg-[#725D75]/08'
                     )}
                   >
                     Packages
@@ -434,11 +434,11 @@ export const Header: React.FC<HeaderProps> = ({
                       'px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer',
                       location.pathname === '/gallery'
                         ? isDark
-                          ? 'bg-[#8F6FC4] text-[#1B101F] shadow-xs font-bold'
-                          : 'bg-[#8F6FC4] text-[#FAF8F5] shadow-xs font-bold'
+                          ? 'bg-[#725D75] text-[#1B101F] shadow-xs font-bold'
+                          : 'bg-[#725D75] text-[#F9F6F2] shadow-xs font-bold'
                         : isDark
-                          ? 'text-[#FAF8F5]/90 hover:text-white hover:bg-white/15'
-                          : 'text-[#1C1B22] hover:text-[#1C1B22] hover:bg-[#8F6FC4]/08'
+                          ? 'text-[#F9F6F2]/90 hover:text-white hover:bg-white/15'
+                          : 'text-[#2F2930] hover:text-[#2F2930] hover:bg-[#725D75]/08'
                     )}
                   >
                     Gallery
@@ -458,11 +458,11 @@ export const Header: React.FC<HeaderProps> = ({
                       'px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-300 cursor-pointer',
                       location.pathname === '/contact'
                         ? isDark
-                          ? 'bg-[#8F6FC4] text-[#1B101F] shadow-xs font-bold'
-                          : 'bg-[#8F6FC4] text-[#FAF8F5] shadow-xs font-bold'
+                          ? 'bg-[#725D75] text-[#1B101F] shadow-xs font-bold'
+                          : 'bg-[#725D75] text-[#F9F6F2] shadow-xs font-bold'
                         : isDark
-                          ? 'text-[#FAF8F5]/90 hover:text-white hover:bg-white/15'
-                          : 'text-[#1C1B22] hover:text-[#1C1B22] hover:bg-[#8F6FC4]/08'
+                          ? 'text-[#F9F6F2]/90 hover:text-white hover:bg-white/15'
+                          : 'text-[#2F2930] hover:text-[#2F2930] hover:bg-[#725D75]/08'
                     )}
                   >
                     Contact
@@ -484,17 +484,17 @@ export const Header: React.FC<HeaderProps> = ({
             className={cn(
               'hidden xl:flex items-center gap-1.5 rounded-full px-3 py-1 border transition-all duration-300 ml-1',
               isDark
-                ? 'border-white/15 bg-black/40 text-[#FAF8F5] focus-within:border-[#C7B8E8] focus-within:bg-black/70 shadow-inner'
-                : 'border-[#E4DEF2] bg-white/75 text-[#1C1B22] focus-within:border-[#8F6FC4] focus-within:bg-white shadow-inner'
+                ? 'border-white/15 bg-black/40 text-[#F9F6F2] focus-within:border-[#C9BEAB] focus-within:bg-black/70 shadow-inner'
+                : 'border-[#E4DCD2] bg-white/75 text-[#2F2930] focus-within:border-[#725D75] focus-within:bg-white shadow-inner'
             )}
           >
-            <Search size={13} className="text-[#8F6FC4] shrink-0" />
+            <Search size={13} className="text-[#725D75] shrink-0" />
             <input
               type="text"
               placeholder="Search setups, themes..."
               value={navSearchQuery}
               onChange={(e) => setNavSearchQuery(e.target.value)}
-              className="w-24 2xl:w-36 bg-transparent text-xs font-medium border-none outline-none placeholder:text-[#8F6FC4]/60 text-[#1C1B22] dark:text-[#FAF8F5]"
+              className="w-24 2xl:w-36 bg-transparent text-xs font-medium border-none outline-none placeholder:text-[#725D75]/60 text-[#2F2930] dark:text-[#FAF8F5]"
             />
           </form>
 
@@ -509,7 +509,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => navigate('/explore')}
               className={cn(
                 'hidden sm:flex xl:hidden h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full transition-all duration-300 cursor-pointer',
-                isDark ? 'text-[#FAF8F5] hover:bg-white/15' : 'text-[#1C1B22] hover:bg-[#8F6FC4]/08'
+                isDark ? 'text-[#F9F6F2] hover:bg-white/15' : 'text-[#2F2930] hover:bg-[#725D75]/08'
               )}
               aria-label="Search"
             >
@@ -529,8 +529,8 @@ export const Header: React.FC<HeaderProps> = ({
               className={cn(
                 'hidden md:inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider shadow-sm transition-all duration-300 hover:scale-103 active:scale-95 cursor-pointer',
                 isDark
-                  ? 'bg-[#8F6FC4] hover:bg-[#C7B8E8] text-[#1B101F]'
-                  : 'bg-[#8F6FC4] hover:bg-[#483250] text-[#FAF8F5]'
+                  ? 'bg-[#725D75] hover:bg-[#C9BEAB] text-[#1B101F]'
+                  : 'bg-[#725D75] hover:bg-[#483250] text-[#F9F6F2]'
               )}
             >
               <span>Book Now</span>
@@ -544,8 +544,8 @@ export const Header: React.FC<HeaderProps> = ({
               className={cn(
                 'relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full transition-all duration-300 cursor-pointer',
                 isDark
-                  ? 'text-[#FAF8F5] hover:bg-white/15'
-                  : 'text-[#1C1B22] hover:bg-[#8F6FC4]/08'
+                  ? 'text-[#F9F6F2] hover:bg-white/15'
+                  : 'text-[#2F2930] hover:bg-[#725D75]/08'
               )}
               aria-label="Wishlist"
             >
@@ -554,7 +554,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <span
                   className={cn(
                     'absolute top-1 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full text-[8px] font-bold transition-colors duration-300',
-                    isDark ? 'bg-[#C7B8E8] text-[#1B101F]' : 'bg-[#8F6FC4] text-white'
+                    isDark ? 'bg-[#C9BEAB] text-[#1B101F]' : 'bg-[#725D75] text-white'
                   )}
                 >
                   {wishlistCount}
@@ -569,8 +569,8 @@ export const Header: React.FC<HeaderProps> = ({
               className={cn(
                 'relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full transition-all duration-300 cursor-pointer',
                 isDark
-                  ? 'text-[#FAF8F5] hover:bg-white/15'
-                  : 'text-[#1C1B22] hover:bg-[#8F6FC4]/08'
+                  ? 'text-[#F9F6F2] hover:bg-white/15'
+                  : 'text-[#2F2930] hover:bg-[#725D75]/08'
               )}
               aria-label="Shopping Cart"
             >
@@ -579,7 +579,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <span
                   className={cn(
                     'absolute top-1 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full text-[8px] font-bold transition-colors duration-300',
-                    isDark ? 'bg-[#8F6FC4] text-[#1B101F]' : 'bg-[#8F6FC4] text-white'
+                    isDark ? 'bg-[#725D75] text-[#1B101F]' : 'bg-[#725D75] text-white'
                   )}
                 >
                   {cartCount}
@@ -594,8 +594,8 @@ export const Header: React.FC<HeaderProps> = ({
               className={cn(
                 'flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full transition-all duration-300 cursor-pointer',
                 isDark
-                  ? 'text-[#FAF8F5] hover:bg-white/15'
-                  : 'text-[#1C1B22] hover:bg-[#8F6FC4]/08'
+                  ? 'text-[#F9F6F2] hover:bg-white/15'
+                  : 'text-[#2F2930] hover:bg-[#725D75]/08'
               )}
               aria-label="Toggle Theme"
             >
@@ -611,15 +611,15 @@ export const Header: React.FC<HeaderProps> = ({
                   className={cn(
                     'flex items-center gap-1.5 rounded-full border py-1 px-2.5 transition-all duration-300 cursor-pointer',
                     isDark
-                      ? 'border-white/20 bg-white/10 hover:bg-white/20 text-[#FAF8F5]'
-                      : 'border-[#8F6FC4]/20 bg-[#8F6FC4]/06 hover:bg-[#8F6FC4]/12 text-[#1C1B22]'
+                      ? 'border-white/20 bg-white/10 hover:bg-white/20 text-[#F9F6F2]'
+                      : 'border-[#725D75]/20 bg-[#725D75]/06 hover:bg-[#725D75]/12 text-[#2F2930]'
                   )}
                 >
                   <Avatar user={auth.user} className="h-5 w-5" />
                   <span className="hidden sm:inline text-xs font-semibold max-w-[80px] truncate">
                     {auth.user?.firstName || auth.user?.name || 'Account'}
                   </span>
-                  <ChevronDown size={11} className={isDark ? 'text-[#C7B8E8]' : 'text-[#6B6B76]'} />
+                  <ChevronDown size={11} className={isDark ? 'text-[#A78A9F]' : 'text-[#746B72]'} />
                 </button>
               ) : (
                 <button
@@ -630,8 +630,8 @@ export const Header: React.FC<HeaderProps> = ({
                     'inline-flex items-center gap-1 rounded-full border transition-all duration-300 cursor-pointer',
                     'h-8 w-8 justify-center px-0 sm:h-auto sm:w-auto sm:justify-start sm:px-3.5 sm:py-1.5 text-xs font-bold',
                     isDark
-                      ? 'text-[#FAF8F5] bg-white/15 hover:bg-white/25 border-white/30'
-                      : 'text-[#1C1B22] bg-[#8F6FC4]/08 hover:bg-[#8F6FC4]/15 border-[#8F6FC4]/20'
+                      ? 'text-[#F9F6F2] bg-white/15 hover:bg-white/25 border-white/30'
+                      : 'text-[#2F2930] bg-[#725D75]/08 hover:bg-[#725D75]/15 border-[#725D75]/20'
                   )}
                 >
                   <LogIn size={13} />
@@ -641,12 +641,12 @@ export const Header: React.FC<HeaderProps> = ({
 
               {/* Account Dropdown */}
               {accountOpen && auth.isLoggedIn && (
-                <div className="absolute right-0 mt-2 w-48 rounded-2xl border border-[#E4DEF2]/80 bg-[#FAF8F5] p-1.5 shadow-2xl dark:bg-[#2D1C34] dark:border-[#483250] animate-scale-in z-50">
-                  <div className="px-3 py-2 border-b border-[#E4DEF2] dark:border-[#483250]">
-                    <p className="text-xs font-bold text-[#1C1B22] dark:text-[#FAF8F5] truncate">
+                <div className="absolute right-0 mt-2 w-48 rounded-2xl border border-[#E4DCD2]/80 bg-[#F9F6F2] p-1.5 shadow-2xl dark:bg-[#2D1C34] dark:border-[#483250] animate-scale-in z-50">
+                  <div className="px-3 py-2 border-b border-[#E4DCD2] dark:border-[#483250]">
+                    <p className="text-xs font-bold text-[#2F2930] dark:text-[#FAF8F5] truncate">
                       {auth.user?.firstName} {auth.user?.lastName}
                     </p>
-                    <p className="text-[11px] text-[#6B6B76] dark:text-[#A78A9F] truncate">
+                    <p className="text-[11px] text-[#746B72] dark:text-[#A78A9F] truncate">
                       {auth.user?.email || auth.user?.phone}
                     </p>
                   </div>
@@ -657,7 +657,7 @@ export const Header: React.FC<HeaderProps> = ({
                         setAccountOpen(false);
                         navigate('/profile');
                       }}
-                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-[#1C1B22] hover:bg-[#F2EEFA] dark:text-[#FAF8F5] dark:hover:bg-[#38223E] text-left cursor-pointer"
+                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-[#2F2930] hover:bg-[#F9F6F2] dark:text-[#FAF8F5] dark:hover:bg-[#38223E] text-left cursor-pointer"
                     >
                       <UserIcon size={14} />
                       <span>My Profile</span>
@@ -668,7 +668,7 @@ export const Header: React.FC<HeaderProps> = ({
                         setAccountOpen(false);
                         navigate('/bookings');
                       }}
-                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-[#1C1B22] hover:bg-[#F2EEFA] dark:text-[#FAF8F5] dark:hover:bg-[#38223E] text-left cursor-pointer"
+                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-[#2F2930] hover:bg-[#F9F6F2] dark:text-[#FAF8F5] dark:hover:bg-[#38223E] text-left cursor-pointer"
                     >
                       <Calendar size={14} />
                       <span>My Bookings</span>
@@ -687,7 +687,7 @@ export const Header: React.FC<HeaderProps> = ({
                       </button>
                     )}
                   </div>
-                  <div className="border-t border-[#E4DEF2] dark:border-[#483250] pt-1">
+                  <div className="border-t border-[#E4DCD2] dark:border-[#483250] pt-1">
                     <button
                       type="button"
                       onClick={() => {
@@ -712,19 +712,19 @@ export const Header: React.FC<HeaderProps> = ({
                     type="button"
                     className={cn(
                       'flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full transition-all duration-300 cursor-pointer',
-                      isDark ? 'text-[#FAF8F5] hover:bg-white/15' : 'text-[#1C1B22] hover:bg-[#8F6FC4]/08'
+                      isDark ? 'text-[#F9F6F2] hover:bg-white/15' : 'text-[#2F2930] hover:bg-[#725D75]/08'
                     )}
                     aria-label="Open Navigation Menu"
                   >
                     <Menu size={18} />
                   </button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] sm:w-[360px] bg-[#FAF8F5] dark:bg-[#1B101F] p-6 overflow-y-auto">
+                <SheetContent side="right" className="w-[300px] sm:w-[360px] bg-[#F9F6F2] dark:bg-[#1B101F] p-6 overflow-y-auto">
                   <div className="flex flex-col gap-5 pt-4">
                     
                     {/* Brand header */}
-                    <div className="flex items-center justify-between pb-3 border-b border-[#E4DEF2] dark:border-[#483250]">
-                      <span className="font-serif text-sm font-bold tracking-wider text-[#1C1B22] dark:text-[#FAF8F5] uppercase">
+                    <div className="flex items-center justify-between pb-3 border-b border-[#E4DCD2] dark:border-[#483250]">
+                      <span className="font-serif text-sm font-bold tracking-wider text-[#2F2930] dark:text-[#FAF8F5] uppercase">
                         TheDecorParty
                       </span>
                     </div>
@@ -742,27 +742,27 @@ export const Header: React.FC<HeaderProps> = ({
                       className={cn(
                         'flex items-center gap-2 rounded-full px-3.5 py-2 border transition-all duration-300',
                         isDark
-                          ? 'border-white/20 bg-black/40 text-[#FAF8F5]'
-                          : 'border-[#E4DEF2] bg-white text-[#1C1B22]'
+                          ? 'border-white/20 bg-black/40 text-[#F9F6F2]'
+                          : 'border-[#E4DCD2] bg-white text-[#2F2930]'
                       )}
                     >
-                      <Search size={14} className="text-[#8F6FC4] shrink-0" />
+                      <Search size={14} className="text-[#725D75] shrink-0" />
                       <input
                         type="text"
                         placeholder="Search celebrations, themes..."
                         value={navSearchQuery}
                         onChange={(e) => setNavSearchQuery(e.target.value)}
-                        className="w-full bg-transparent text-xs font-medium border-none outline-none placeholder:text-[#8F6FC4]/60 text-[#1C1B22] dark:text-[#FAF8F5]"
+                        className="w-full bg-transparent text-xs font-medium border-none outline-none placeholder:text-[#725D75]/60 text-[#2F2930] dark:text-[#FAF8F5]"
                       />
                     </form>
 
-                    <div className="flex flex-col gap-1 text-sm font-semibold text-[#1C1B22] dark:text-[#FAF8F5]">
+                    <div className="flex flex-col gap-1 text-sm font-semibold text-[#2F2930] dark:text-[#FAF8F5]">
                       
                       {/* Home */}
                       <button
                         type="button"
                         onClick={() => handleNavAnchor('top')}
-                        className="text-left py-2 px-1 hover:text-[#8F6FC4] transition-colors border-b border-[#E4DEF2]/50 dark:border-[#483250]/50"
+                        className="text-left py-2 px-1 hover:text-[#725D75] transition-colors border-b border-[#E4DCD2]/50 dark:border-[#483250]/50"
                       >
                         Home
                       </button>
@@ -777,20 +777,20 @@ export const Header: React.FC<HeaderProps> = ({
                           }
                         }}
                         className={cn(
-                          "text-left py-2 px-1 hover:text-[#8F6FC4] transition-colors border-b border-[#E4DEF2]/50 dark:border-[#483250]/50",
-                          location.pathname === '/about' && "text-[#8F6FC4] font-bold"
+                          "text-left py-2 px-1 hover:text-[#725D75] transition-colors border-b border-[#E4DCD2]/50 dark:border-[#483250]/50",
+                          location.pathname === '/about' && "text-[#725D75] font-bold"
                         )}
                       >
                         About Us
                       </button>
 
                       {/* Services Accordion */}
-                      <Accordion type="single" collapsible className="w-full border-b border-[#E4DEF2]/50 dark:border-[#483250]/50">
+                      <Accordion type="single" collapsible className="w-full border-b border-[#E4DCD2]/50 dark:border-[#483250]/50">
                         <AccordionItem value="mobile-services" className="border-none">
-                          <AccordionTrigger className="py-2 px-1 text-sm font-semibold text-[#1C1B22] dark:text-[#FAF8F5] hover:no-underline">
+                          <AccordionTrigger className="py-2 px-1 text-sm font-semibold text-[#2F2930] dark:text-[#FAF8F5] hover:no-underline">
                             Services &amp; Occasions
                           </AccordionTrigger>
-                          <AccordionContent className="flex flex-col gap-3 pl-3 pt-1 pb-3 text-xs text-[#6B6B76] dark:text-[#C9BEAB]">
+                          <AccordionContent className="flex flex-col gap-3 pl-3 pt-1 pb-3 text-xs text-[#746B72] dark:text-[#C9BEAB]">
                             {SERVICE_COLUMNS.map((column) => (
                               <div key={column.key} className="flex flex-col gap-1">
                                 <button
@@ -800,9 +800,9 @@ export const Header: React.FC<HeaderProps> = ({
                                       ? handleNavAnchor('curated-decors')
                                       : handleNavCategory(column.title)
                                   }
-                                  className="flex items-center gap-1.5 text-left py-1 font-bold uppercase tracking-wider text-[10px] text-[#1C1B22] dark:text-[#FAF8F5]"
+                                  className="flex items-center gap-1.5 text-left py-1 font-bold uppercase tracking-wider text-[10px] text-[#2F2930] dark:text-[#FAF8F5]"
                                 >
-                                  <column.icon size={12} className="text-[#8F6FC4]" />
+                                  <column.icon size={12} className="text-[#725D75]" />
                                   {column.title}
                                 </button>
                                 {column.items.map((item) => (
@@ -810,7 +810,7 @@ export const Header: React.FC<HeaderProps> = ({
                                     key={item.label}
                                     type="button"
                                     onClick={() => handleNavCategory(item.label)}
-                                    className="text-left py-1 pl-2 hover:text-[#1C1B22] dark:hover:text-white"
+                                    className="text-left py-1 pl-2 hover:text-[#2F2930] dark:hover:text-white"
                                   >
                                     &ndash; {item.label}
                                   </button>
@@ -820,7 +820,7 @@ export const Header: React.FC<HeaderProps> = ({
                             <button
                               type="button"
                               onClick={() => handleNavAnchor('express')}
-                              className="text-left py-1 font-bold uppercase tracking-wider text-[10px] text-[#1C1B22] dark:text-[#FAF8F5]"
+                              className="text-left py-1 font-bold uppercase tracking-wider text-[10px] text-[#2F2930] dark:text-[#FAF8F5]"
                             >
                               Express 3-Hour Setup
                             </button>
@@ -838,8 +838,8 @@ export const Header: React.FC<HeaderProps> = ({
                           }
                         }}
                         className={cn(
-                          "text-left py-2 px-1 hover:text-[#8F6FC4] transition-colors border-b border-[#E4DEF2]/50 dark:border-[#483250]/50",
-                          location.pathname === '/packages' && "text-[#8F6FC4] font-bold"
+                          "text-left py-2 px-1 hover:text-[#725D75] transition-colors border-b border-[#E4DCD2]/50 dark:border-[#483250]/50",
+                          location.pathname === '/packages' && "text-[#725D75] font-bold"
                         )}
                       >
                         Packages &amp; Pricing
@@ -855,8 +855,8 @@ export const Header: React.FC<HeaderProps> = ({
                           }
                         }}
                         className={cn(
-                          "text-left py-2 px-1 hover:text-[#8F6FC4] transition-colors border-b border-[#E4DEF2]/50 dark:border-[#483250]/50",
-                          location.pathname === '/gallery' && "text-[#8F6FC4] font-bold"
+                          "text-left py-2 px-1 hover:text-[#725D75] transition-colors border-b border-[#E4DCD2]/50 dark:border-[#483250]/50",
+                          location.pathname === '/gallery' && "text-[#725D75] font-bold"
                         )}
                       >
                         Visual Gallery
@@ -872,8 +872,8 @@ export const Header: React.FC<HeaderProps> = ({
                           }
                         }}
                         className={cn(
-                          "text-left py-2 px-1 hover:text-[#8F6FC4] transition-colors border-b border-[#E4DEF2]/50 dark:border-[#483250]/50",
-                          location.pathname === '/contact' && "text-[#8F6FC4] font-bold"
+                          "text-left py-2 px-1 hover:text-[#725D75] transition-colors border-b border-[#E4DCD2]/50 dark:border-[#483250]/50",
+                          location.pathname === '/contact' && "text-[#725D75] font-bold"
                         )}
                       >
                         Contact &amp; Booking
@@ -887,9 +887,9 @@ export const Header: React.FC<HeaderProps> = ({
                           if (onAssistantOpen) onAssistantOpen();
                           else navigate('/ai-planner');
                         }}
-                        className="flex items-center gap-2 text-left py-2 px-1 hover:text-[#8F6FC4] transition-colors border-b border-[#E4DEF2]/50 dark:border-[#483250]/50"
+                        className="flex items-center gap-2 text-left py-2 px-1 hover:text-[#725D75] transition-colors border-b border-[#E4DCD2]/50 dark:border-[#483250]/50"
                       >
-                        <Sparkles size={14} className="text-[#8F6FC4]" />
+                        <Sparkles size={14} className="text-[#725D75]" />
                         <span>AI Celebration Planner</span>
                       </button>
                     </div>
@@ -902,7 +902,7 @@ export const Header: React.FC<HeaderProps> = ({
                           setMobileMenuOpen(false);
                           navigate('/checkout');
                         }}
-                        className="w-full rounded-full bg-[#8F6FC4] dark:bg-[#C9BEAB] dark:text-[#34203C] text-[#FAF8F5] py-3 text-xs font-bold uppercase tracking-wider shadow-md text-center cursor-pointer"
+                        className="w-full rounded-full bg-[#725D75] dark:bg-[#C9BEAB] dark:text-[#34203C] text-[#F9F6F2] py-3 text-xs font-bold uppercase tracking-wider shadow-md text-center cursor-pointer"
                       >
                         Book Now
                       </button>
@@ -911,7 +911,7 @@ export const Header: React.FC<HeaderProps> = ({
                         href="https://wa.me/917022058460"
                         target="_blank"
                         rel="noreferrer"
-                        className="flex items-center justify-center gap-2 w-full rounded-full border border-[#E4DEF2] dark:border-[#483250] py-2.5 text-xs font-semibold text-[#1C1B22] dark:text-[#FAF8F5] text-center"
+                        className="flex items-center justify-center gap-2 w-full rounded-full border border-[#E4DCD2] dark:border-[#483250] py-2.5 text-xs font-semibold text-[#2F2930] dark:text-[#FAF8F5] text-center"
                       >
                         <Phone size={13} className="text-[#25D366]" />
                         <span>WhatsApp Quick Assistance</span>

@@ -39,7 +39,7 @@ export const SubcategoryScroll: React.FC<SubcategoryScrollProps> = ({
           <button
             type="button"
             onClick={onShare}
-            className="inline-flex items-center gap-1.5 rounded-full border border-[#E4DEF2] bg-[#FAF8F5] px-3.5 py-1.5 text-xs font-semibold text-[#1C1B22] hover:bg-[#F2EEFA] dark:bg-[#2D1C34] dark:border-[#483250] dark:text-[#FAF8F5] transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[#E4DCD2] bg-[#F9F6F2] px-3.5 py-1.5 text-xs font-semibold text-[#2F2930] hover:bg-[#F9F6F2] dark:bg-[#2D1C34] dark:border-[#483250] dark:text-[#FAF8F5] transition-colors cursor-pointer"
             aria-label="Share category"
           >
             <Share2 size={13} />
@@ -50,10 +50,10 @@ export const SubcategoryScroll: React.FC<SubcategoryScrollProps> = ({
 
       {/* Header */}
       <div className="mb-5">
-        <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#1C1B22] dark:text-[#FAF8F5]">
+        <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#2F2930] dark:text-[#FAF8F5]">
           {categoryName}
         </h1>
-        <p className="mt-1 max-w-md text-xs sm:text-sm text-[#6B6B76] dark:text-[#C8B5C3]">
+        <p className="mt-1 max-w-md text-xs sm:text-sm text-[#746B72] dark:text-[#C8B5C3]">
           Browse curated subcategories and design setups for {categoryName}.
         </p>
       </div>
@@ -74,7 +74,7 @@ export const SubcategoryScroll: React.FC<SubcategoryScrollProps> = ({
             <button
               key={sub.name}
               onClick={() => onSelectSubcategory(sub.name)}
-              className="group relative flex flex-col overflow-hidden rounded-[20px] border border-[#E4DEF2]/70 bg-[#FAF8F5] shadow-xs transition-all duration-200 hover:border-[#8F6FC4] dark:bg-[#2D1C34] dark:border-[#483250] dark:hover:border-[#C9BEAB] hover:shadow-md active:scale-95 text-left cursor-pointer"
+              className="group relative flex flex-col overflow-hidden rounded-[20px] border border-[#E4DCD2]/70 bg-[#F9F6F2] shadow-xs transition-all duration-200 hover:border-[#725D75] dark:bg-[#2D1C34] dark:border-[#483250] dark:hover:border-[#C9BEAB] hover:shadow-md active:scale-95 text-left cursor-pointer"
               style={{
                 animation: 'fadeIn 0.3s ease both',
                 animationDelay: `${i * 30}ms`,

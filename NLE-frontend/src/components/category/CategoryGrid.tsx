@@ -78,21 +78,21 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ categories, onSelect
       {/* Section header */}
       <div className="mb-8 sm:mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.24em] text-[#6B6B76] dark:text-[#A78A9F]">
-            <span className="eyebrow-line bg-[#A48ED0] dark:bg-[#A78A9F]" />
+          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.24em] text-[#746B72] dark:text-[#A78A9F]">
+            <span className="eyebrow-line bg-[#A78A9F] dark:bg-[#A78A9F]" />
             Celebration Catalog
           </p>
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-[44px] font-normal uppercase tracking-tight text-[#1C1B22] dark:text-[#FAF8F5] leading-[1.08]">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-[44px] font-normal uppercase tracking-tight text-[#2F2930] dark:text-[#FAF8F5] leading-[1.08]">
             {t?.categories_title || 'Explore Our Categories'}
           </h2>
-          <p className="text-xs sm:text-sm md:text-[15px] font-light leading-relaxed text-[#6B6B76] dark:text-[#C8B5C3] max-w-2xl">
+          <p className="text-xs sm:text-sm md:text-[15px] font-light leading-relaxed text-[#746B72] dark:text-[#C8B5C3] max-w-2xl">
             Select a milestone celebration to view handcrafted decor packages styled by our master decorators.
           </p>
         </div>
 
         <a
           href="/explore"
-          className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#1C1B22] hover:text-[#6B6B76] dark:text-[#C9BEAB] dark:hover:text-[#FAF8F5] hover:underline whitespace-nowrap self-start sm:self-auto transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#2F2930] hover:text-[#746B72] dark:text-[#C9BEAB] dark:hover:text-[#FAF8F5] hover:underline whitespace-nowrap self-start sm:self-auto transition-colors"
         >
           <span>View All Setups</span>
           <ArrowRight size={14} />

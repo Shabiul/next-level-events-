@@ -290,8 +290,8 @@ const InteractiveGalleryCard: React.FC<InteractiveGalleryCardProps> = ({ item, o
         onClick={onClick}
         className={cn(
           'group relative cursor-pointer overflow-hidden rounded-2xl sm:rounded-3xl',
-          'border border-[#E4DEF2]/70 dark:border-[#483250]/70 bg-[#FAF8F5] dark:bg-[#25172C]',
-          'shadow-sm hover:shadow-2xl hover:border-[#C7B8E8] dark:hover:border-[#A78A9F]',
+          'border border-[#E4DCD2]/70 dark:border-[#483250]/70 bg-[#F9F6F2] dark:bg-[#25172C]',
+          'shadow-sm hover:shadow-2xl hover:border-[#C9BEAB] dark:hover:border-[#A78A9F]',
           'transition-all duration-500 ease-out p-[1px]'
         )}
       >
@@ -301,7 +301,7 @@ const InteractiveGalleryCard: React.FC<InteractiveGalleryCardProps> = ({ item, o
             className="absolute -inset-[100%] opacity-0 group-hover:opacity-75 transition-opacity duration-700"
             style={{
               background:
-                'conic-gradient(from 0deg, transparent 0deg, transparent 270deg, #483250 310deg, #8F6FC4 340deg, #C7B8E8 360deg)',
+                'conic-gradient(from 0deg, transparent 0deg, transparent 270deg, #483250 310deg, #725D75 340deg, #C9BEAB 360deg)',
             }}
             animate={{
               rotate: [0, 360],
@@ -315,7 +315,7 @@ const InteractiveGalleryCard: React.FC<InteractiveGalleryCardProps> = ({ item, o
         </div>
 
         {/* 2. Main Card Content Inner Body */}
-        <div className="relative z-10 w-full h-full rounded-[inherit] overflow-hidden bg-[#FAF8F5] dark:bg-[#201325]">
+        <div className="relative z-10 w-full h-full rounded-[inherit] overflow-hidden bg-[#F9F6F2] dark:bg-[#201325]">
           {/* Natural aspect ratio image with smooth zoom */}
           <img
             src={item.image}
@@ -339,7 +339,7 @@ const InteractiveGalleryCard: React.FC<InteractiveGalleryCardProps> = ({ item, o
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.5 }}
               transition={{ duration: 0.2 }}
-              className="pointer-events-none absolute z-30 hidden sm:flex items-center gap-1.5 rounded-full bg-[#8F6FC4]/90 text-[#FAF8F5] dark:bg-[#FAF8F5]/92 dark:text-[#34203C] px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider shadow-2xl backdrop-blur-md border border-white/20"
+              className="pointer-events-none absolute z-30 hidden sm:flex items-center gap-1.5 rounded-full bg-[#725D75]/90 text-[#F9F6F2] dark:bg-[#FAF8F5]/92 dark:text-[#34203C] px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider shadow-2xl backdrop-blur-md border border-white/20"
               style={{
                 x: badgeX,
                 y: badgeY,
@@ -364,20 +364,20 @@ const InteractiveGalleryCard: React.FC<InteractiveGalleryCardProps> = ({ item, o
             {/* Bottom Label, Tag & Arrow */}
             <div className="flex items-end justify-between gap-2 pt-6">
               <div className="flex flex-col gap-0.5">
-                <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#C7B8E8]">
-                  <Sparkles size={11} className="text-[#C7B8E8]" />
+                <span className="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#A78A9F]">
+                  <Sparkles size={11} className="text-[#A78A9F]" />
                   <span>{item.tag}</span>
                 </span>
                 <p className="text-xs sm:text-sm font-serif font-semibold text-white leading-tight line-clamp-2">
                   {item.title}
                 </p>
                 {item.price && (
-                  <span className="text-[11px] font-semibold text-[#E4DEF2]/90">
+                  <span className="text-[11px] font-semibold text-[#E4DCD2]/90">
                     {item.price}
                   </span>
                 )}
               </div>
-              <div className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-full bg-[#FAF8F5] text-[#1C1B22] shadow-md group-hover:scale-110 group-hover:bg-[#C7B8E8] transition-all duration-300">
+              <div className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-full bg-[#F9F6F2] text-[#2F2930] shadow-md group-hover:scale-110 group-hover:bg-[#C9BEAB] transition-all duration-300">
                 <ArrowUpRight size={14} />
               </div>
             </div>
@@ -537,7 +537,7 @@ export const GalleryPage: React.FC = () => {
         description="A curated Pinterest-style board of real celebrations, balloon decor installations, milestone birthdays, and romantic setups styled across Bengaluru."
       />
 
-      <div className="flex flex-col w-full bg-[#FAF8F5] dark:bg-[#1B101F] text-[#1C1B22] dark:text-[#FAF8F5] font-sans antialiased transition-colors min-h-screen">
+      <div className="flex flex-col w-full bg-[#F9F6F2] dark:bg-[#1B101F] text-[#2F2930] dark:text-[#FAF8F5] font-sans antialiased transition-colors min-h-screen">
         
         {/* ========================================================================= */}
         {/* 1. GALLERY HERO                                                           */}
@@ -547,8 +547,8 @@ export const GalleryPage: React.FC = () => {
           className="relative w-full pt-12 sm:pt-16 md:pt-20 pb-8 sm:pb-12 px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1720px] mx-auto text-center"
         >
           {/* Ambient Glows */}
-          <div className="absolute top-10 left-1/3 w-80 h-80 rounded-full bg-[#8F6FC4]/12 blur-3xl pointer-events-none -z-10" />
-          <div className="absolute top-32 right-1/4 w-80 h-80 rounded-full bg-[#C7B8E8]/15 blur-3xl pointer-events-none -z-10" />
+          <div className="absolute top-10 left-1/3 w-80 h-80 rounded-full bg-[#725D75]/12 blur-3xl pointer-events-none -z-10" />
+          <div className="absolute top-32 right-1/4 w-80 h-80 rounded-full bg-[#C9BEAB]/15 blur-3xl pointer-events-none -z-10" />
 
           <div className="max-w-3xl mx-auto flex flex-col items-center">
             {/* Eyebrow */}
@@ -556,9 +556,9 @@ export const GalleryPage: React.FC = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#8F6FC4]/06 dark:bg-white/10 border border-[#8F6FC4]/10 dark:border-white/15 text-xs font-bold uppercase tracking-[0.22em] text-[#6B6B76] dark:text-[#C9BEAB] mb-4 sm:mb-6"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#725D75]/06 dark:bg-white/10 border border-[#725D75]/10 dark:border-white/15 text-xs font-bold uppercase tracking-[0.22em] text-[#746B72] dark:text-[#C9BEAB] mb-4 sm:mb-6"
             >
-              <Sparkles size={13} className="text-[#8F6FC4]" />
+              <Sparkles size={13} className="text-[#725D75]" />
               <span>REAL CELEBRATIONS</span>
             </motion.div>
 
@@ -567,10 +567,10 @@ export const GalleryPage: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-normal tracking-tight text-[#1C1B22] dark:text-[#FAF8F5] leading-[1.12] mb-5 uppercase"
+              className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-normal tracking-tight text-[#2F2930] dark:text-[#FAF8F5] leading-[1.12] mb-5 uppercase"
             >
               A little inspiration{' '}
-              <span className="font-serif italic text-[#6B6B76] dark:text-[#C9BEAB] block sm:inline lowercase">
+              <span className="font-serif italic text-[#746B72] dark:text-[#C9BEAB] block sm:inline lowercase">
                 for your next celebration.
               </span>
             </motion.h1>
@@ -580,7 +580,7 @@ export const GalleryPage: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-sm sm:text-base md:text-lg font-light leading-relaxed text-[#6B6B76] dark:text-[#C8B5C3] max-w-xl"
+              className="text-sm sm:text-base md:text-lg font-light leading-relaxed text-[#746B72] dark:text-[#C8B5C3] max-w-xl"
             >
               A collection of celebrations, details and beautiful spaces created by TheDecorParty.
             </motion.p>
@@ -606,8 +606,8 @@ export const GalleryPage: React.FC = () => {
                   }}
                   className={`relative shrink-0 rounded-full px-4 sm:px-5 py-2 text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
                     isActive
-                      ? 'bg-[#8F6FC4] text-[#FAF8F5] dark:bg-[#C9BEAB] dark:text-[#25172C] shadow-md scale-103'
-                      : 'bg-[#8F6FC4]/06 text-[#6B6B76] hover:bg-[#8F6FC4]/12 hover:text-[#1C1B22] dark:bg-white/06 dark:text-[#C8B5C3] dark:hover:bg-white/12 dark:hover:text-white'
+                      ? 'bg-[#725D75] text-[#F9F6F2] dark:bg-[#C9BEAB] dark:text-[#25172C] shadow-md scale-103'
+                      : 'bg-[#725D75]/06 text-[#746B72] hover:bg-[#725D75]/12 hover:text-[#2F2930] dark:bg-white/06 dark:text-[#C8B5C3] dark:hover:bg-white/12 dark:hover:text-white'
                   }`}
                 >
                   <span>{cat}</span>
@@ -615,7 +615,7 @@ export const GalleryPage: React.FC = () => {
                     className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
                       isActive
                         ? 'bg-white/20 text-white dark:bg-black/20 dark:text-black'
-                        : 'bg-[#8F6FC4]/10 dark:bg-white/10 text-[#6B6B76] dark:text-[#DDD5C7]'
+                        : 'bg-[#725D75]/10 dark:bg-white/10 text-[#746B72] dark:text-[#DDD5C7]'
                     }`}
                   >
                     {count}
@@ -668,7 +668,7 @@ export const GalleryPage: React.FC = () => {
                   <span className="rounded-full bg-white/10 backdrop-blur-md border border-white/15 px-3 py-1 text-xs font-semibold text-white">
                     {lightboxIndex + 1} / {filteredImages.length}
                   </span>
-                  <span className="rounded-full bg-[#C7B8E8]/25 border border-[#C7B8E8]/40 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#C7B8E8]">
+                  <span className="rounded-full bg-[#C9BEAB]/25 border border-[#C9BEAB]/40 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#A78A9F]">
                     {filteredImages[lightboxIndex].category}
                   </span>
                 </div>
@@ -716,7 +716,7 @@ export const GalleryPage: React.FC = () => {
                 {/* Bottom Caption Pill */}
                 <div className="mt-3 flex items-center gap-2 rounded-full bg-black/60 backdrop-blur-md border border-white/15 px-4 py-1.5 text-xs text-white">
                   <span className="font-serif font-medium">{filteredImages[lightboxIndex].title}</span>
-                  <span className="text-[#C7B8E8]">• {filteredImages[lightboxIndex].tag}</span>
+                  <span className="text-[#A78A9F]">• {filteredImages[lightboxIndex].tag}</span>
                   {filteredImages[lightboxIndex].price && (
                     <span className="text-white font-bold ml-1">
                       ({filteredImages[lightboxIndex].price})
