@@ -96,7 +96,7 @@ export const HomePage: React.FC<HomePageProps> = ({
     }
   }, [location.hash]);
 
-  const occasions = categories.slice(0, 8);
+  const occasions = categories.slice(0, 9);
   const homePackages = HOME_PACKAGE_INDICES.map((i) => EVENT_PACKAGES[i]).filter(Boolean);
 
   return (
@@ -211,22 +211,22 @@ export const HomePage: React.FC<HomePageProps> = ({
               </button>
             </div>
 
-            <div className="flex gap-4 sm:gap-6 overflow-x-auto pb-2 smooth-horizontal-rail hide-scrollbar snap-x sm:grid sm:grid-cols-3 sm:overflow-visible">
+            <div className="flex gap-3 sm:gap-5 overflow-x-auto pb-2 smooth-horizontal-rail hide-scrollbar snap-x sm:grid sm:grid-cols-3 sm:max-w-[760px] sm:overflow-visible">
               {occasions.map((cat) => (
                 <button
                   key={cat._id || cat.name}
                   type="button"
                   onClick={() => onSelectCategory(cat.name)}
-                  className="group flex-none w-[150px] sm:w-auto snap-start cursor-pointer"
+                  className="group flex-none w-[110px] sm:w-auto snap-start cursor-pointer"
                 >
-                  <div className="relative aspect-square w-full rounded-xl overflow-hidden border border-[#E4DCD2] bg-[#F3EFE7] shadow-sm group-hover:shadow-md group-hover:border-[#A78A9F] transition-all duration-300">
+                  <div className="relative aspect-square w-full rounded-lg overflow-hidden border border-[#E4DCD2] bg-[#F3EFE7] shadow-sm group-hover:shadow-md group-hover:border-[#A78A9F] transition-all duration-300">
                     <img
                       src={cat.image || FALLBACK_OCCASION_IMAGE}
                       alt={cat.name}
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent" />
-                    <span className="absolute inset-x-0 bottom-0 p-3 sm:p-3.5 text-left text-xs sm:text-sm font-semibold text-white leading-tight line-clamp-2">
+                    <span className="absolute inset-x-0 bottom-0 p-2 sm:p-2.5 text-left text-[11px] sm:text-xs font-semibold text-white leading-tight line-clamp-2">
                       {cat.name}
                     </span>
                   </div>
