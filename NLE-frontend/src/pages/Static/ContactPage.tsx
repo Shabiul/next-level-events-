@@ -106,74 +106,74 @@ export const ContactPage: React.FC = () => {
         description="Connect with Bengaluru's premier event styling team. Fast responses under 15 minutes, direct WhatsApp hotlines, and instant quotes."
       />
 
-      <div className="w-full min-h-screen bg-[#725D75] text-[#A78A9F] font-sans antialiased selection:bg-[#725D75]/30 pb-16">
-        
+      <div className="w-full min-h-screen bg-[#F9F6F2] text-[#2F2930] font-sans antialiased selection:bg-[#725D75]/20 pb-16">
+
         {/* ========================================================================= */}
         {/* SECTION 1 — HERO SPLIT FORM & EDITORIAL STATEMENT                        */}
         {/* ========================================================================= */}
-        <section data-nav-theme="dark" className="w-full max-w-7xl mx-auto pt-10 sm:pt-14 pb-12 px-6">
+        <section data-nav-theme="light" className="w-full max-w-7xl mx-auto pt-10 sm:pt-14 pb-12 px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            
+
             {/* LEFT COLUMN (lg:col-span-6 — Editorial Statement & Primary Contact) */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="lg:col-span-6 flex flex-col justify-between p-6 sm:p-10 rounded-[28px] bg-[#483250]/40 border border-[#725D75]/20 backdrop-blur-md relative overflow-hidden text-left"
+              className="lg:col-span-6 flex flex-col justify-between p-6 sm:p-10 rounded-xl bg-white border border-[#E4DCD2] relative overflow-hidden text-left"
             >
               {/* Subtle Background Glow */}
-              <div className="absolute top-0 left-0 w-72 h-72 bg-[#725D75]/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute top-0 left-0 w-72 h-72 bg-[#C9BEAB]/15 rounded-full blur-3xl pointer-events-none" />
 
               <div className="relative z-10 flex flex-col items-start text-left">
                 {/* Pill Badge */}
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#483250] border border-[#725D75]/40 text-[#725D75] font-bold text-xs uppercase tracking-[0.25em] shadow-md mb-6">
-                  <Sparkles size={13} className="text-[#725D75]" />
-                  <span>CONTACT US</span>
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F3EFE7] border border-[#E4DCD2] text-[#725D75] font-medium text-xs tracking-wide mb-6">
+                  <Sparkles size={13} className="text-[#A78A9F]" />
+                  <span>Contact Us</span>
                 </div>
 
                 {/* Serif Headline */}
-                <h1 className="font-serif text-4xl sm:text-5xl lg:text-[54px] font-bold leading-[1.12] text-[#A78A9F] mb-6 tracking-tight">
+                <h1 className="font-serif text-4xl sm:text-5xl lg:text-[54px] font-semibold leading-[1.05] text-[#725D75] mb-6 tracking-tight">
                   Let’s start the <br className="hidden sm:inline" />
-                  <span className="font-serif italic text-white">conversation.</span>
+                  <span className="font-serif italic text-[#A78A9F]">conversation.</span>
                 </h1>
 
                 {/* Sub-copy */}
-                <p className="text-base sm:text-lg text-[#A78A9F] font-light leading-relaxed max-w-lg mb-8">
+                <p className="text-base sm:text-lg text-[#746B72] font-normal leading-relaxed max-w-lg mb-8">
                   Whether you are planning a milestone birthday, a romantic proposal, or a bespoke celebration, our master stylists are ready to craft your dream setup.
                 </p>
 
                 {/* Micro guarantees */}
-                <div className="flex flex-wrap gap-4 text-xs font-semibold text-[#725D75] mb-8">
-                  <span className="flex items-center gap-1.5 bg-[#725D75]/80 px-3.5 py-1.5 rounded-full border border-[#725D75]/30">
+                <div className="flex flex-wrap gap-4 text-xs font-medium text-[#725D75] mb-8">
+                  <span className="flex items-center gap-1.5 bg-[#F3EFE7] px-3.5 py-1.5 rounded-full border border-[#E4DCD2]">
                     <ShieldCheck size={14} className="text-[#A78A9F]" />
                     <span>Zero Hidden Fees</span>
                   </span>
-                  <span className="flex items-center gap-1.5 bg-[#725D75]/80 px-3.5 py-1.5 rounded-full border border-[#725D75]/30">
+                  <span className="flex items-center gap-1.5 bg-[#F3EFE7] px-3.5 py-1.5 rounded-full border border-[#E4DCD2]">
                     <CheckCircle2 size={14} className="text-[#A78A9F]" />
                     <span>100% Picture Match</span>
                   </span>
                 </div>
               </div>
 
-              {/* Lead Stylist Floating Glass Contact Chip */}
+              {/* Lead Stylist Contact Chip */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="relative z-10 bg-[#483250]/80 border border-[#725D75]/30 rounded-2xl p-4 sm:p-5 flex items-center gap-4 shadow-xl backdrop-blur-md"
+                className="relative z-10 bg-[#F9F6F2] border border-[#E4DCD2] rounded-xl p-4 sm:p-5 flex items-center gap-4 shadow-sm"
               >
                 <div className="relative flex-shrink-0">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#725D75] to-[#A78A9F] flex items-center justify-center font-serif text-lg font-bold text-white border border-white/20">
+                  <div className="w-12 h-12 rounded-full bg-[#725D75] flex items-center justify-center font-serif text-lg font-semibold text-white">
                     PB
                   </div>
-                  <span className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-[#25D366] ring-2 ring-[#725D75]" />
+                  <span className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-[#25D366] ring-2 ring-white" />
                 </div>
 
                 <div className="flex flex-col text-left">
-                  <span className="font-serif text-base font-bold text-[#A78A9F]">
+                  <span className="font-serif text-base font-semibold text-[#2F2930]">
                     Prashanth B S &amp; Styling Team
                   </span>
-                  <div className="flex items-center gap-2 text-xs text-[#725D75] font-medium mt-0.5">
+                  <div className="flex items-center gap-2 text-xs text-[#746B72] font-medium mt-0.5">
                     <Clock size={12} className="text-[#25D366]" />
                     <span>Average response: &lt; 15 mins</span>
                   </div>
@@ -186,13 +186,13 @@ export const ContactPage: React.FC = () => {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="lg:col-span-6 bg-[#725D75] border border-[#725D75]/30 rounded-[28px] p-6 sm:p-10 shadow-2xl flex flex-col justify-between relative overflow-hidden"
+              className="lg:col-span-6 bg-white border border-[#E4DCD2] rounded-xl p-6 sm:p-10 shadow-sm flex flex-col justify-between relative overflow-hidden"
             >
               <div className="relative z-10 text-left mb-6">
-                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#A78A9F] tracking-tight mb-2">
+                <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-[#725D75] tracking-tight mb-2">
                   Send Us a Message
                 </h2>
-                <p className="text-xs sm:text-sm text-[#746B72] font-light">
+                <p className="text-xs sm:text-sm text-[#746B72] font-normal">
                   Fill in your details below and our creative team will connect with you right away.
                 </p>
               </div>
@@ -200,7 +200,7 @@ export const ContactPage: React.FC = () => {
               <form onSubmit={handleSubmit} className="relative z-10 flex flex-col gap-5 text-left">
                 {/* Name */}
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#A78A9F]">
+                  <label className="text-xs font-medium tracking-wide text-[#746B72]">
                     Your Name *
                   </label>
                   <input
@@ -209,13 +209,13 @@ export const ContactPage: React.FC = () => {
                     placeholder="e.g. Ananya Sharma"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full rounded-xl bg-[#483250] border border-[#A78A9F]/50 px-4 py-3.5 text-sm text-[#A78A9F] placeholder:text-[#746B72] focus:border-[#725D75] focus:outline-none focus:ring-1 focus:ring-[#725D75] transition-all"
+                    className="w-full rounded-lg bg-white border border-[#E4DCD2] px-4 py-3.5 text-sm text-[#2F2930] placeholder:text-[#746B72]/60 focus:border-[#A78A9F] focus:outline-none focus:ring-1 focus:ring-[#A78A9F] transition-colors"
                   />
                 </div>
 
                 {/* Email / WhatsApp Number */}
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#A78A9F]">
+                  <label className="text-xs font-medium tracking-wide text-[#746B72]">
                     Email / WhatsApp Number *
                   </label>
                   <input
@@ -224,22 +224,22 @@ export const ContactPage: React.FC = () => {
                     placeholder="e.g. +91 98765 43210 or name@gmail.com"
                     value={formData.contact}
                     onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-                    className="w-full rounded-xl bg-[#483250] border border-[#A78A9F]/50 px-4 py-3.5 text-sm text-[#A78A9F] placeholder:text-[#746B72] focus:border-[#725D75] focus:outline-none focus:ring-1 focus:ring-[#725D75] transition-all"
+                    className="w-full rounded-lg bg-white border border-[#E4DCD2] px-4 py-3.5 text-sm text-[#2F2930] placeholder:text-[#746B72]/60 focus:border-[#A78A9F] focus:outline-none focus:ring-1 focus:ring-[#A78A9F] transition-colors"
                   />
                 </div>
 
                 {/* Occasion Type */}
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#A78A9F]">
+                  <label className="text-xs font-medium tracking-wide text-[#746B72]">
                     Occasion Type
                   </label>
                   <select
                     value={formData.occasion}
                     onChange={(e) => setFormData({ ...formData, occasion: e.target.value })}
-                    className="w-full rounded-xl bg-[#483250] border border-[#A78A9F]/50 px-4 py-3.5 text-sm text-[#A78A9F] focus:border-[#725D75] focus:outline-none focus:ring-1 focus:ring-[#725D75] transition-all cursor-pointer"
+                    className="w-full rounded-lg bg-white border border-[#E4DCD2] px-4 py-3.5 text-sm text-[#2F2930] focus:border-[#A78A9F] focus:outline-none focus:ring-1 focus:ring-[#A78A9F] transition-colors cursor-pointer"
                   >
                     {OCCASION_TYPES.map((type) => (
-                      <option key={type} value={type} className="bg-[#483250] text-[#A78A9F]">
+                      <option key={type} value={type} className="bg-white text-[#2F2930]">
                         {type}
                       </option>
                     ))}
@@ -248,7 +248,7 @@ export const ContactPage: React.FC = () => {
 
                 {/* Message */}
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs font-bold uppercase tracking-wider text-[#A78A9F]">
+                  <label className="text-xs font-medium tracking-wide text-[#746B72]">
                     Your Message / Special Requests
                   </label>
                   <textarea
@@ -256,20 +256,20 @@ export const ContactPage: React.FC = () => {
                     placeholder="Tell us about your event date, preferred colors, theme ideas, or venue details..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full rounded-xl bg-[#483250] border border-[#A78A9F]/50 px-4 py-3.5 text-sm text-[#A78A9F] placeholder:text-[#746B72] focus:border-[#725D75] focus:outline-none focus:ring-1 focus:ring-[#725D75] transition-all resize-none"
+                    className="w-full rounded-lg bg-white border border-[#E4DCD2] px-4 py-3.5 text-sm text-[#2F2930] placeholder:text-[#746B72]/60 focus:border-[#A78A9F] focus:outline-none focus:ring-1 focus:ring-[#A78A9F] transition-colors resize-none"
                   />
                 </div>
 
                 {/* Submit Button */}
                 <motion.button
-                  whileHover={{ scale: 1.015 }}
+                  whileHover={{ y: -1 }}
                   whileTap={{ scale: 0.985 }}
                   type="submit"
                   disabled={isSubmitting}
-                  className="mt-2 w-full flex items-center justify-center gap-3 rounded-full bg-[#725D75] hover:bg-[#C9BEAB] text-[#2F2930] py-4 text-sm font-extrabold uppercase tracking-wider shadow-lg hover:shadow-[#725D75]/20 transition-all cursor-pointer disabled:opacity-70"
+                  className="mt-2 w-full flex items-center justify-center gap-3 rounded-lg bg-[#725D75] hover:bg-[#A78A9F] text-white py-3.5 text-sm font-medium tracking-wide shadow-sm transition-colors cursor-pointer disabled:opacity-70"
                 >
                   <Send size={16} />
-                  <span>{isSubmitting ? 'SENDING...' : 'SEND MESSAGE →'}</span>
+                  <span>{isSubmitting ? 'Sending...' : 'Send Message →'}</span>
                 </motion.button>
               </form>
             </motion.div>
@@ -279,29 +279,29 @@ export const ContactPage: React.FC = () => {
         {/* ========================================================================= */}
         {/* SECTION 2 — DIRECT CONTACT & LOCATION HUB (3-Card Grid)                   */}
         {/* ========================================================================= */}
-        <section data-nav-theme="dark" className="w-full max-w-7xl mx-auto py-12 px-6">
+        <section data-nav-theme="light" className="w-full max-w-7xl mx-auto py-12 px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
+
             {/* Card 1: Direct Stylist Hotline */}
             <motion.div
               initial={{ opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="bg-[#725D75] border border-[#725D75]/20 rounded-2xl p-6 shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between text-left group"
+              className="bg-white border border-[#E4DCD2] rounded-xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between text-left group"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-[#483250] border border-[#725D75]/30 flex items-center justify-center text-[#725D75] group-hover:bg-[#725D75] group-hover:text-[#2F2930] transition-colors">
+                  <div className="w-12 h-12 rounded-xl bg-[#F3EFE7] flex items-center justify-center text-[#725D75] group-hover:bg-[#725D75] group-hover:text-white transition-colors">
                     <Phone size={22} />
                   </div>
-                  <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#25D366]/15 border border-[#25D366]/30 text-[#25D366] text-[11px] font-bold">
+                  <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#25D366]/10 border border-[#25D366]/30 text-[#1EBE5D] text-[11px] font-semibold">
                     <span className="w-2 h-2 rounded-full bg-[#25D366] animate-pulse" />
                     Online for instant quotes
                   </span>
                 </div>
 
-                <h3 className="font-serif text-xl font-bold text-[#A78A9F] mb-2">
+                <h3 className="font-serif text-xl font-semibold text-[#725D75] mb-2">
                   Direct Stylist Hotline
                 </h3>
 
@@ -312,14 +312,14 @@ export const ContactPage: React.FC = () => {
                 <div className="flex flex-col gap-2 mb-6">
                   <a
                     href={`tel:${SUPPORT_PHONE_PRIMARY}`}
-                    className="text-sm font-bold text-[#A78A9F] hover:text-[#725D75] transition-colors flex items-center gap-2"
+                    className="text-sm font-semibold text-[#2F2930] hover:text-[#725D75] transition-colors flex items-center gap-2"
                   >
                     <span>+91 70220 58460</span>
                     <span className="text-[10px] text-[#746B72] font-normal uppercase">(Primary)</span>
                   </a>
                   <a
                     href={`tel:${SUPPORT_PHONE_SECONDARY}`}
-                    className="text-sm font-bold text-[#A78A9F] hover:text-[#725D75] transition-colors flex items-center gap-2"
+                    className="text-sm font-semibold text-[#2F2930] hover:text-[#725D75] transition-colors flex items-center gap-2"
                   >
                     <span>+91 86609 24212</span>
                     <span className="text-[10px] text-[#746B72] font-normal uppercase">(Operations)</span>
@@ -333,10 +333,10 @@ export const ContactPage: React.FC = () => {
                 )}`}
                 target="_blank"
                 rel="noreferrer"
-                className="w-full flex items-center justify-center gap-2.5 rounded-full bg-[#25D366] hover:bg-[#1EBE5D] text-white py-3 text-xs font-bold uppercase tracking-wider shadow-md transition-all"
+                className="w-full flex items-center justify-center gap-2.5 rounded-lg bg-[#25D366] hover:bg-[#1EBE5D] text-white py-3 text-xs sm:text-sm font-medium tracking-wide shadow-sm transition-colors"
               >
                 <MessageSquare size={16} />
-                <span>CHAT ON WHATSAPP →</span>
+                <span>Chat on WhatsApp →</span>
               </a>
             </motion.div>
 
@@ -346,19 +346,19 @@ export const ContactPage: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="bg-[#725D75] border border-[#725D75]/20 rounded-2xl p-6 shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between text-left group"
+              className="bg-white border border-[#E4DCD2] rounded-xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between text-left group"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-[#483250] border border-[#725D75]/30 flex items-center justify-center text-[#725D75] group-hover:bg-[#725D75] group-hover:text-[#2F2930] transition-colors">
+                  <div className="w-12 h-12 rounded-xl bg-[#F3EFE7] flex items-center justify-center text-[#725D75] group-hover:bg-[#725D75] group-hover:text-white transition-colors">
                     <MapPin size={22} />
                   </div>
-                  <span className="px-3 py-1 rounded-full bg-[#483250] border border-[#725D75]/30 text-[#A78A9F] text-[11px] font-bold">
+                  <span className="px-3 py-1 rounded-full bg-[#F3EFE7] border border-[#E4DCD2] text-[#725D75] text-[11px] font-semibold">
                     HQ: Bengaluru
                   </span>
                 </div>
 
-                <h3 className="font-serif text-xl font-bold text-[#A78A9F] mb-2">
+                <h3 className="font-serif text-xl font-semibold text-[#725D75] mb-2">
                   Studio Location &amp; Coverage
                 </h3>
 
@@ -371,7 +371,7 @@ export const ContactPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowPincodes(!showPincodes)}
-                  className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl bg-[#483250] border border-[#725D75]/30 text-xs font-bold text-[#A78A9F] hover:text-white transition-colors cursor-pointer mb-2"
+                  className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg bg-[#F9F6F2] border border-[#E4DCD2] text-xs font-medium text-[#2F2930] hover:border-[#A78A9F] transition-colors cursor-pointer mb-2"
                 >
                   <span>View Service Pincodes</span>
                   <ChevronDown
@@ -388,7 +388,7 @@ export const ContactPage: React.FC = () => {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden bg-[#483250]/70 rounded-xl p-3 border border-[#725D75]/20 text-[11px] text-[#A78A9F] grid grid-cols-2 gap-1.5"
+                      className="overflow-hidden bg-[#F9F6F2] rounded-lg p-3 border border-[#E4DCD2] text-[11px] text-[#2F2930] grid grid-cols-2 gap-1.5"
                     >
                       {SERVICE_PINCODES.map((pin) => (
                         <span key={pin} className="text-left truncate">
@@ -407,19 +407,19 @@ export const ContactPage: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-[#725D75] border border-[#725D75]/20 rounded-2xl p-6 shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between text-left group"
+              className="bg-white border border-[#E4DCD2] rounded-xl p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between text-left group"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-[#483250] border border-[#725D75]/30 flex items-center justify-center text-[#725D75] group-hover:bg-[#725D75] group-hover:text-[#2F2930] transition-colors">
+                  <div className="w-12 h-12 rounded-xl bg-[#F3EFE7] flex items-center justify-center text-[#725D75] group-hover:bg-[#725D75] group-hover:text-white transition-colors">
                     <Mail size={22} />
                   </div>
-                  <span className="px-3 py-1 rounded-full bg-[#483250] border border-[#725D75]/30 text-[#725D75] text-[11px] font-bold">
+                  <span className="px-3 py-1 rounded-full bg-[#F3EFE7] border border-[#E4DCD2] text-[#725D75] text-[11px] font-semibold">
                     Official Inquiries
                   </span>
                 </div>
 
-                <h3 className="font-serif text-xl font-bold text-[#A78A9F] mb-2">
+                <h3 className="font-serif text-xl font-semibold text-[#725D75] mb-2">
                   Email &amp; Enquiries
                 </h3>
 
@@ -427,26 +427,26 @@ export const ContactPage: React.FC = () => {
                   For corporate bookings, vendor partnerships, or detailed mood boards, email our design leads directly.
                 </p>
 
-                <div className="p-3.5 rounded-xl bg-[#483250] border border-[#A78A9F]/40 flex items-center justify-between mb-4">
-                  <span className="text-xs font-bold text-[#A78A9F] truncate">
+                <div className="p-3.5 rounded-lg bg-[#F9F6F2] border border-[#E4DCD2] flex items-center justify-between mb-4">
+                  <span className="text-xs font-semibold text-[#2F2930] truncate">
                     {SUPPORT_EMAIL}
                   </span>
                   <button
                     type="button"
                     onClick={handleCopyEmail}
-                    className="p-1.5 rounded-lg bg-[#725D75] hover:bg-[#725D75] text-[#A78A9F] hover:text-[#2F2930] transition-colors cursor-pointer"
+                    className="p-1.5 rounded-lg bg-[#725D75] hover:bg-[#A78A9F] text-white transition-colors cursor-pointer"
                     title="Copy Email"
                   >
-                    {copiedEmail ? <Check size={14} className="text-[#25D366]" /> : <Copy size={14} />}
+                    {copiedEmail ? <Check size={14} /> : <Copy size={14} />}
                   </button>
                 </div>
               </div>
 
               <a
                 href={`mailto:${SUPPORT_EMAIL}`}
-                className="w-full flex items-center justify-center gap-2 rounded-full bg-[#483250] hover:bg-[#725D75] border border-[#725D75]/40 text-[#A78A9F] hover:text-[#2F2930] py-3 text-xs font-bold uppercase tracking-wider transition-all"
+                className="w-full flex items-center justify-center gap-2 rounded-lg bg-transparent hover:bg-[#725D75]/08 border border-[#A78A9F] text-[#725D75] py-3 text-xs sm:text-sm font-medium tracking-wide transition-colors"
               >
-                <span>SEND AN EMAIL →</span>
+                <span>Send an Email →</span>
               </a>
             </motion.div>
 
