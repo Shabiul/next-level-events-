@@ -233,11 +233,11 @@ export const HomePage: React.FC<HomePageProps> = ({
                       alt={cat.name}
                       className="h-full w-full object-cover transition-transform duration-[250ms] ease-out group-hover:scale-[1.03]"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-[250ms]" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                    <span className="absolute inset-x-0 bottom-0 p-3.5 text-left text-sm font-medium text-white leading-tight line-clamp-1">
+                      {cat.name}
+                    </span>
                   </div>
-                  <span className="mt-3 block text-center text-sm font-medium text-[#2F2930] group-hover:text-[#725D75] leading-tight line-clamp-1 transition-colors duration-[250ms]">
-                    {cat.name}
-                  </span>
                 </button>
               ))}
             </div>
@@ -266,28 +266,32 @@ export const HomePage: React.FC<HomePageProps> = ({
                 key={pkg.id}
                 type="button"
                 onClick={() => navigate('/packages')}
-                className="group relative flex flex-col rounded-xl border border-[#E4DCD2] bg-white p-5 text-left shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+                className="group relative flex flex-col rounded-xl border border-[#E4DCD2] overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer text-left"
               >
-                <div className="relative -mx-5 -mt-5 mb-4 h-48 rounded-t-xl overflow-hidden bg-[#F9F6F2]">
+                <div className="relative aspect-[4/5] w-full">
                   <img
                     src={HOME_PACKAGE_IMAGES[pkg.id]}
                     alt={pkg.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
                   {pkg.badge === 'Most Popular' && (
                     <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-[#725D75] text-white px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-sm">
                       <Crown size={11} />
                       Most Popular
                     </span>
                   )}
+                  <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+                    <h3 className="font-serif text-lg font-bold text-white mb-1 line-clamp-1">{pkg.name}</h3>
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-lg font-bold text-white">{pkg.price}</span>
+                      <span className="inline-flex items-center gap-1 text-xs font-semibold text-white/90 group-hover:text-[#C9BEAB] transition-colors">
+                        View Details
+                        <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform" />
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="font-serif text-lg font-bold text-[#2F2930] mb-1 line-clamp-1">{pkg.name}</h3>
-                <span className="text-xl font-bold text-[#725D75] mb-2">{pkg.price}</span>
-                <p className="text-sm text-[#746B72] font-normal leading-relaxed line-clamp-2 mb-3">{pkg.description}</p>
-                <span className="mt-auto inline-flex items-center gap-1 text-xs font-semibold text-[#2F2930] group-hover:text-[#725D75]">
-                  View Details
-                  <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform" />
-                </span>
               </button>
             ))}
           </div>
