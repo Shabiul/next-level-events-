@@ -435,34 +435,34 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
 
             {/* Action Buttons */}
             <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-              <motion.div whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.98 }}>
+              <motion.div whileHover={{ y: -1 }} whileTap={{ scale: 0.98 }}>
                 <button
                   type="button"
                   onClick={() => handleBookNow('razorpay')}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-2xl border border-transparent bg-[#725D75] hover:bg-[#A78A9F] text-white dark:bg-amber-400 dark:text-slate-950 dark:hover:bg-amber-300 py-4 px-4 text-xs sm:text-sm font-extrabold uppercase tracking-wider shadow-lg hover:shadow-xl transition-all cursor-pointer"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-transparent bg-[#725D75] hover:bg-[#A78A9F] text-white dark:bg-amber-400 dark:text-slate-950 dark:hover:bg-amber-300 py-3.5 px-4 text-xs sm:text-sm font-medium tracking-wide shadow-sm transition-colors cursor-pointer"
                 >
-                  <span className="text-white dark:text-slate-950 font-extrabold">Book Package Online</span>
-                  <ArrowRight size={17} className="text-white dark:text-slate-950" />
+                  <span className="font-medium">Book Package Online</span>
+                  <ArrowRight size={17} />
                 </button>
               </motion.div>
 
               <motion.button
-                whileHover={{ scale: 1.02, y: -2 }}
+                whileHover={{ y: -1 }}
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 onClick={handleAddToCart}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[#E4DCD2] dark:border-[#483250] bg-[#FAF5EE] hover:bg-[#725D75]/20 text-[#2F2930] dark:bg-[#2A1830] dark:hover:bg-[#34203C] dark:text-[#FAF8F5] py-4 px-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-md"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#A78A9F] bg-transparent hover:bg-[#725D75]/08 text-[#725D75] dark:bg-[#2A1830] dark:hover:bg-[#34203C] dark:text-[#FAF8F5] py-3.5 px-4 text-xs sm:text-sm font-medium tracking-wide transition-colors cursor-pointer"
               >
                 <ShoppingCart size={17} />
                 <span>Add to Cart</span>
               </motion.button>
 
               <motion.button
-                whileHover={{ scale: 1.02, y: -2 }}
+                whileHover={{ y: -1 }}
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 onClick={() => handleBookNow('whatsapp')}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white py-4 px-4 text-xs font-bold uppercase tracking-wider shadow-lg hover:shadow-xl transition-all cursor-pointer"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 px-4 text-xs sm:text-sm font-medium tracking-wide shadow-sm transition-colors cursor-pointer"
               >
                 {WA_SVG}
                 <span>Instant WhatsApp</span>

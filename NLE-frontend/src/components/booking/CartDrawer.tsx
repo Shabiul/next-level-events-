@@ -180,7 +180,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <button
                   type="button"
                   onClick={handleBookNowAll}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#725D75] hover:bg-[#483250] text-[#F9F6F2] dark:bg-[#C9BEAB] dark:hover:bg-white dark:text-[#1B101F] py-3 px-4 text-xs font-bold uppercase tracking-wider shadow-md hover:shadow-lg transition-all cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 rounded-lg bg-[#725D75] hover:bg-[#A78A9F] text-[#F9F6F2] dark:bg-[#C9BEAB] dark:hover:bg-white dark:text-[#1B101F] py-3 px-4 text-xs sm:text-sm font-medium tracking-wide shadow-sm transition-colors cursor-pointer"
                 >
                   <CalendarCheck size={16} />
                   <span>Book Now (Proceed to Checkout)</span>
@@ -191,7 +191,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <button
                   type="button"
                   onClick={handleCheckout}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl border border-emerald-600/60 bg-emerald-50 dark:bg-emerald-950/30 hover:bg-emerald-100/70 text-emerald-700 dark:text-emerald-300 py-2.5 px-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 rounded-lg border border-emerald-600/60 bg-emerald-50 dark:bg-emerald-950/30 hover:bg-emerald-100/70 text-emerald-700 dark:text-emerald-300 py-2.5 px-4 text-xs sm:text-sm font-medium tracking-wide transition-colors cursor-pointer"
                 >
                   <span>Confirm via WhatsApp</span>
                   <ArrowRight size={13} />
