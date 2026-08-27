@@ -4,10 +4,8 @@ import {
   Shield,
   Clock,
   ArrowRight,
-  MessageSquare,
   Sparkles,
   CheckCircle2,
-  Phone,
   Palette,
   Crown,
   PenTool,
@@ -373,73 +371,6 @@ export const HomePage: React.FC<HomePageProps> = ({
         <div className="w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
           <TabbedFAQ id="faq" />
         </div>
-
-        {/* ========================================================================= */}
-        {/* 9. FINAL CTA BANNER                                                       */}
-        {/* ========================================================================= */}
-        <section id="contact" data-nav-theme="light" className="w-full scroll-reveal scroll-mt-24 sm:scroll-mt-28">
-          <div id="final-cta" className="scroll-mt-24 sm:scroll-mt-28" />
-          <div className="relative overflow-hidden bg-[#F3EFE7] py-14 sm:py-16 md:py-20 px-6 sm:px-10 text-center w-full">
-            <Sparkles className="absolute left-[8%] top-10 h-6 w-6 text-[#A78A9F]/40 hidden sm:block" />
-            <Sparkles className="absolute right-[8%] bottom-10 h-8 w-8 text-[#C9BEAB]/60 hidden sm:block" />
-
-            <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center gap-4 sm:gap-5">
-
-              <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[50px] font-semibold tracking-tight leading-[1.12] text-[#725D75]">
-                Let&apos;s Plan Your Perfect Celebration!
-              </h2>
-
-              <p className="text-xs sm:text-sm md:text-[15px] font-normal text-[#746B72] max-w-2xl leading-relaxed">
-                Share your ideas and we&apos;ll bring them to life — tell us where you&apos;re celebrating, how many guests are attending and what theme you need.
-              </p>
-
-              <div className="mt-2 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-                <button
-                  type="button"
-                  onClick={() => navigate('/explore')}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#725D75] px-7 py-3 text-xs sm:text-sm font-medium tracking-wide text-white shadow-sm hover:bg-[#A78A9F] transition-colors duration-300 cursor-pointer"
-                >
-                  <Sparkles size={15} />
-                  <span>Get a Free Quote</span>
-                </button>
-
-                <a
-                  href="https://wa.me/917022058460"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-white border border-[#A78A9F] px-7 py-3 text-xs sm:text-sm font-medium tracking-wide text-[#725D75] hover:bg-[#725D75]/08 transition-colors duration-300"
-                >
-                  <MessageSquare size={16} className="text-[#25D366]" />
-                  <span>Chat on WhatsApp</span>
-                </a>
-
-                <a
-                  href="tel:+917022058460"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-white border border-[#A78A9F] px-7 py-3 text-xs sm:text-sm font-medium tracking-wide text-[#725D75] hover:bg-[#725D75]/08 transition-colors duration-300"
-                >
-                  <Phone size={14} />
-                  <span>Call Now</span>
-                </a>
-              </div>
-
-              <div className="mt-4 pt-4 border-t border-[#E4DCD2] flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-[11px] sm:text-xs text-[#746B72] font-medium tracking-wide">
-                <span className="flex items-center gap-1.5">
-                  <CheckCircle2 size={13} className="text-[#725D75]" />
-                  <span>Zero Hidden Fees</span>
-                </span>
-                <span id="express" className="flex items-center gap-1.5 scroll-mt-24">
-                  <Clock size={13} className="text-[#725D75]" />
-                  <span>Express 3-Hour Setup</span>
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Shield size={13} className="text-[#725D75]" />
-                  <span>100% Picture-Match Guarantee</span>
-                </span>
-              </div>
-
-            </div>
-          </div>
-        </section>
 
       </div>
     </div>
