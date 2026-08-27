@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, Check, Maximize2, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { motion } from 'framer-motion';
 import type { CatalogActivity, CatalogAddon, CatalogSelectionItem } from '../../types';
 import { getApiUrl } from '../../services/api.service';
 import { cn } from '../../utils/utils';
@@ -94,7 +94,6 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
   const [selectedActivityIds, setSelectedActivityIds] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<TabKey>('addons');
   const [activeCategory, setActiveCategory] = useState('All');
-  const [previewItem, setPreviewItem] = useState<{ url: string; title: string; price: string } | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -296,10 +295,12 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
         })}
       </div>
 
-      {/* Scrollable Row with 3D Animated Cards */}
+      {/* Scrollable Row -- overlay-on-image cards, matching the Home
+          "Popular Packages" style (real photo, bottom gradient, white
+          text) instead of a separate white info panel below the photo. */}
       <div
         ref={scrollRef}
-        className="flex gap-4 overflow-x-auto pb-3 pt-1 hide-scrollbar snap-x snap-mandatory perspective-[1000px]"
+        className="flex gap-4 overflow-x-auto pb-3 pt-1 hide-scrollbar snap-x snap-mandatory"
       >
         {visibleItems.length > 0 ? (
           visibleItems.map((item, idx) => {
@@ -313,79 +314,62 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
             return (
               <motion.div
                 key={itemId}
-                initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: Math.min(idx * 0.04, 0.3) }}
-                whileHover={{ y: -6, rotateX: 2, scale: 1.02 }}
-                className="flex-none w-[200px] sm:w-[220px] snap-start transform-gpu"
+                className="flex-none w-[240px] sm:w-[260px] snap-start"
               >
-                <div className={cn(
-                  'flex h-full flex-col overflow-hidden rounded-2xl border bg-white dark:bg-[#1E1E1E] shadow-card hover:shadow-2xl transition-all duration-300',
-                  selected
-                    ? 'border-[#725D75] ring-2 ring-[#725D75]/50 dark:border-amber-400 dark:ring-amber-400/50'
-                    : 'border-[#E8E7E3] dark:border-[#2E2E2E] hover:border-[#725D75]'
-                )}>
-                  {/* Clickable Image for Full View */}
-                  <div
-                    className="h-[135px] w-full overflow-hidden bg-[#F9F6F2] relative dark:bg-[#141414] cursor-pointer group"
-                    onClick={() => setPreviewItem({
-                      url: imgUrl,
-                      title: item.name,
-                      price: getItemPriceLabel(item)
-                    })}
-                  >
-                    <img
-                      src={imgUrl}
-                      alt={item.name}
-                      loading="lazy"
-                      className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold gap-1.5 backdrop-blur-[2px]">
-                      <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 border border-white/30 backdrop-blur-md">
-                        <Maximize2 size={13} />
-                        <span>Full View</span>
+                <button
+                  type="button"
+                  onClick={() => (activeTab === 'addons' ? toggleAddon(itemId) : toggleActivity(itemId))}
+                  className={cn(
+                    'group relative block h-[260px] sm:h-[280px] w-full overflow-hidden rounded-2xl border text-left cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300',
+                    selected ? 'border-[#725D75] ring-2 ring-[#725D75]/50' : 'border-[#E4DCD2] dark:border-[#2E2E2E]'
+                  )}
+                >
+                  <img
+                    src={imgUrl}
+                    alt={item.name}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-[350ms] ease-out group-hover:scale-[1.04]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+
+                  {selected && (
+                    <span className="absolute top-3 right-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#725D75] text-white shadow-md">
+                      <Check size={14} />
+                    </span>
+                  )}
+
+                  <div className="absolute inset-x-0 bottom-0 p-4">
+                    <h4 className="font-serif text-base font-bold text-white line-clamp-1 mb-0.5">
+                      {item.name}
+                    </h4>
+                    {item.description && (
+                      <p className="text-[11px] text-white/80 leading-relaxed line-clamp-1 mb-2">
+                        {item.description}
+                      </p>
+                    )}
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-sm font-bold text-white">{getItemPriceLabel(item)}</span>
+                      <span
+                        className={cn(
+                          'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide transition-colors',
+                          selected ? 'bg-[#725D75] text-white' : 'bg-white/90 text-[#2F2930] group-hover:bg-white'
+                        )}
+                      >
+                        {selected ? (
+                          <>
+                            <Check size={11} />
+                            <span>Added</span>
+                          </>
+                        ) : (
+                          <span>+ Add</span>
+                        )}
                       </span>
                     </div>
                   </div>
-
-                  <div className="flex flex-1 flex-col justify-between p-3.5">
-                    <div>
-                      <h4 className="line-clamp-1 font-serif text-xs font-bold text-[#1C1C1C] dark:text-white">
-                        {item.name}
-                      </h4>
-                      {item.description && (
-                        <p className="mt-1 text-[11px] text-[#746B72] dark:text-[#C8B5C3] font-light leading-snug line-clamp-1">
-                          {item.description}
-                        </p>
-                      )}
-                      <p className="mt-1 text-xs font-extrabold text-[#746B72] dark:text-[#C9BEAB]">
-                        {getItemPriceLabel(item)}
-                      </p>
-                    </div>
-
-                    <motion.button
-                      whileHover={{ scale: 1.04 }}
-                      whileTap={{ scale: 0.95 }}
-                      type="button"
-                      onClick={() => activeTab === 'addons' ? toggleAddon(itemId) : toggleActivity(itemId)}
-                      className={cn(
-                        'mt-3 flex items-center justify-center gap-1.5 rounded-full py-1.5 px-3 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs',
-                        selected
-                          ? 'bg-[#725D75] text-white dark:bg-amber-400 dark:text-slate-950 shadow-md'
-                          : 'border border-[#E4DCD2] bg-[#F9F6F2] text-[#2F2930] hover:bg-[#725D75] hover:text-white dark:bg-[#262626] dark:border-[#483250] dark:text-white dark:hover:bg-amber-400 dark:hover:text-slate-950'
-                      )}
-                    >
-                      {selected ? (
-                        <>
-                          <Check size={14} />
-                          <span>Added</span>
-                        </>
-                      ) : (
-                        <span>+ Add</span>
-                      )}
-                    </motion.button>
-                  </div>
-                </div>
+                </button>
               </motion.div>
             );
           })
@@ -395,47 +379,6 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
           </div>
         )}
       </div>
-
-      {/* Full-Size Image Preview Lightbox Modal */}
-      <AnimatePresence>
-        {previewItem && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/90 backdrop-blur-md p-4"
-            onClick={() => setPreviewItem(null)}
-          >
-            <div className="absolute top-5 right-5 flex items-center gap-3 text-white">
-              <button
-                type="button"
-                onClick={() => setPreviewItem(null)}
-                className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-white transition-colors cursor-pointer"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="relative max-w-4xl max-h-[85vh] flex flex-col items-center"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <img
-                src={previewItem.url}
-                alt={previewItem.title}
-                className="max-h-[75vh] max-w-[90vw] object-contain rounded-2xl border border-white/20 shadow-2xl"
-              />
-              <div className="mt-4 text-center text-white">
-                <h3 className="font-serif text-xl font-bold">{previewItem.title}</h3>
-                <p className="text-sm font-semibold text-[#A78A9F]">{previewItem.price}</p>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };
