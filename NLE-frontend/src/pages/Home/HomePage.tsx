@@ -41,18 +41,18 @@ const HOME_PACKAGE_INDICES = [0, 1, 2, 3, 5, 6];
 // Real photos from public/ where one genuinely exists and matches the
 // activity (checked each candidate file before using it -- e.g. tattoo.jpeg
 // / tatoo.jpeg both actually show face painting, not a tattoo artist, so
-// that mislabeled file was used for Face Painting instead). No photo in
-// public/ actually depicts Tattoo Artist, Magician, or Mascot, so those
-// three keep the icon-tile fallback rather than using a mismatched image.
+// that mislabeled file was used for Face Painting instead). Tattoo Artist,
+// Magician, and Mascot now have dedicated photos too, so every tile shows
+// a real image instead of an icon-only fallback.
 const TOP_ACTIVITIES = [
-  { name: 'Tattoo Artist', icon: PenTool },
+  { name: 'Tattoo Artist', icon: PenTool, image: '/TATOO FOR HOME PAGE.jpeg' },
   { name: 'Balloon Modelling', icon: PartyPopper, image: '/hero-balloons.jpg' },
-  { name: 'Magician', icon: Wand2 },
+  { name: 'Magician', icon: Wand2, image: '/MAGICIAN.jpeg' },
   { name: 'Face Painting', icon: Palette, image: '/tattoo.jpeg' },
   { name: 'Popcorn', icon: Popcorn, image: '/popcorn.jpeg' },
   { name: 'Cotton Candy', icon: Candy, image: '/cotton candy.jpeg' },
   { name: 'Chocolate Fountain', icon: Droplets, image: '/chocolate fountain.jpeg' },
-  { name: 'Mascot', icon: Smile },
+  { name: 'Mascot', icon: Smile, image: '/MASCOT FOR HOME PAGE.jpeg' },
 ];
 
 const FALLBACK_OCCASION_IMAGE = '/final_logo.jpeg';
