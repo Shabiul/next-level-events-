@@ -100,7 +100,7 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
 
           {/* LEFT COLUMN: Narrative & feature highlights -- scrolls
               naturally past the pinned image on the right. */}
-          <div className="lg:col-span-6 flex flex-col justify-center py-10 lg:py-16">
+          <div className="lg:col-span-5 flex flex-col justify-center py-10 lg:py-16">
             <motion.p
               initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -116,7 +116,7 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-              className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold leading-[1.1] text-[#725D75] tracking-tight mb-5"
+              className="font-serif text-3xl sm:text-4xl md:text-5xl font-medium leading-[1.15] text-[#725D75] tracking-tight mb-5"
             >
               {title} <span className="italic text-[#A78A9F]">{titleAccent}</span>
             </motion.h2>
@@ -148,10 +148,10 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
                       <IconComponent size={18} />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-[#2F2930] mb-1">
+                      <h3 className="text-sm font-semibold text-[#2F2930] mb-1.5">
                         {item.title}
                       </h3>
-                      <p className="text-xs leading-relaxed text-[#746B72]">
+                      <p className="text-sm leading-relaxed text-[#746B72]">
                         {item.description}
                       </p>
                     </div>
@@ -162,9 +162,12 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
           </div>
 
           {/* RIGHT COLUMN: Showcase image, pinned via sticky positioning on
-              desktop while the left column scrolls past it. Stacks below
-              the content with no sticky behavior under lg. */}
-          <div className="lg:col-span-6 lg:sticky lg:top-24 lg:self-start lg:h-[calc(100vh-120px)] py-6 lg:py-16">
+              desktop while the left column scrolls past it. Wider than the
+              text column and stretched to match its height (rather than a
+              fixed vh calc) so the image scales with however much text
+              content is there. Stacks below the content with no sticky
+              behavior under lg. */}
+          <div className="lg:col-span-7 lg:sticky lg:top-24 lg:self-stretch lg:min-h-[560px] py-6 lg:py-16">
             <motion.div
               initial={{ opacity: 0, scale: 0.97 }}
               whileInView={{ opacity: 1, scale: 1 }}
