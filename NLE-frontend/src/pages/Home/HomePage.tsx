@@ -168,30 +168,30 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* ========================================================================= */}
       {/* TRUST MARQUEE SECTION                                                    */}
       {/* ========================================================================= */}
-      <div id="trust-marquee" data-nav-theme="light" className="relative z-10 overflow-hidden bg-[#F9F6F2] py-3 text-[#746B72] border-y border-[#E4DCD2]">
-        <div className="animate-marquee whitespace-nowrap text-xs sm:text-[13px] font-medium tracking-wide">
+      <div id="trust-marquee" data-nav-theme="dark" className="relative z-10 overflow-hidden bg-[#725D75] py-4 sm:py-5 text-[#F9F6F2]">
+        <div className="animate-marquee whitespace-nowrap text-sm sm:text-base font-medium tracking-wide">
           {[0, 1].map((rep) => (
             <React.Fragment key={rep}>
-              <span className="mx-5 inline-flex items-center gap-2">
-                <Shield size={14} className="text-[#A78A9F]" /> Verified Master Stylists
+              <span className="mx-6 inline-flex items-center gap-2">
+                <Shield size={16} className="text-[#C9BEAB]" /> Verified Master Stylists
               </span>
-              <span className="mx-1.5 text-[#E4DCD2]">|</span>
-              <span className="mx-5 inline-flex items-center gap-2">
-                <Clock size={14} className="text-[#A78A9F]" /> Express 3-Hour Setup
+              <span className="mx-2 text-white/25">|</span>
+              <span className="mx-6 inline-flex items-center gap-2">
+                <Clock size={16} className="text-[#C9BEAB]" /> Express 3-Hour Setup
               </span>
-              <span className="mx-1.5 text-[#E4DCD2]">|</span>
-              <span className="mx-5 inline-flex items-center gap-2">
-                <MapPin size={14} className="text-[#A78A9F]" /> All Bengaluru Locations
+              <span className="mx-2 text-white/25">|</span>
+              <span className="mx-6 inline-flex items-center gap-2">
+                <MapPin size={16} className="text-[#C9BEAB]" /> All Bengaluru Locations
               </span>
-              <span className="mx-1.5 text-[#E4DCD2]">|</span>
-              <span className="mx-5 inline-flex items-center gap-2">
-                <CheckCircle2 size={14} className="text-[#A78A9F]" /> 100% Picture-Match Guarantee
+              <span className="mx-2 text-white/25">|</span>
+              <span className="mx-6 inline-flex items-center gap-2">
+                <CheckCircle2 size={16} className="text-[#C9BEAB]" /> 100% Picture-Match Guarantee
               </span>
-              <span className="mx-1.5 text-[#E4DCD2]">|</span>
-              <span className="mx-5 inline-flex items-center gap-2">
-                <Sparkles size={14} className="text-[#A78A9F]" /> Zero Hidden Fees
+              <span className="mx-2 text-white/25">|</span>
+              <span className="mx-6 inline-flex items-center gap-2">
+                <Sparkles size={16} className="text-[#C9BEAB]" /> Zero Hidden Fees
               </span>
-              <span className="mx-1.5 text-[#E4DCD2]">|</span>
+              <span className="mx-2 text-white/25">|</span>
             </React.Fragment>
           ))}
         </div>
