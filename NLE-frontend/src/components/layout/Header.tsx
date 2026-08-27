@@ -84,6 +84,7 @@ export const Header: React.FC<HeaderProps> = ({
   const { count: cartCount } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
+  const isHome = location.pathname === '/' || location.pathname === '';
   const [accountOpen, setAccountOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -269,13 +270,9 @@ export const Header: React.FC<HeaderProps> = ({
         )}
       >
         <div className="mx-auto flex max-w-[1720px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-12 py-1.5 text-[11px] sm:text-xs">
-          <span className="hidden sm:inline-flex items-center gap-1.5 truncate">
+          <span className="flex-1 sm:flex-none inline-flex items-center gap-1.5 truncate">
             <Truck size={12} className="text-[#C9BEAB] shrink-0" />
             Free Delivery on orders above ₹999
-          </span>
-          <span className="flex-1 sm:flex-none text-center inline-flex items-center justify-center gap-1.5 truncate">
-            <Sparkles size={12} className="text-[#C9BEAB] shrink-0" />
-            Make Every Celebration Magical
           </span>
           <span className="hidden sm:inline-flex items-center gap-3 shrink-0">
             <button type="button" onClick={() => navigate('/bookings')} className="inline-flex items-center gap-1.5 hover:text-[#C9BEAB] transition-colors cursor-pointer">
@@ -292,15 +289,25 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* ================================================================= */}
-      {/* ONE UNIFIED FLOATING NAVBAR -- logo + nav + search + actions       */}
+      {/* UNIFIED NAVBAR -- logo + nav + search + actions                    */}
+      {/* Full width, flush, edge-to-edge on the landing page; a floating   */}
+      {/* rounded card (with margin) everywhere else.                       */}
       {/* ================================================================= */}
-      <div className="mx-auto max-w-[1720px] px-3 sm:px-5 lg:px-8 py-2 sm:py-3">
+      <div className={isHome ? 'w-full' : 'mx-auto max-w-[1720px] px-3 sm:px-5 lg:px-8 py-2 sm:py-3'}>
         <div
           className={cn(
-            'flex items-center gap-2 sm:gap-3 lg:gap-5 h-[68px] sm:h-[76px] lg:h-[80px] rounded-[18px] sm:rounded-[20px] border px-3 sm:px-5 lg:px-6 backdrop-blur-md transition-colors duration-300',
-            isDark
-              ? 'bg-[#1B101F]/90 border-[#483250] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.4)]'
-              : 'bg-white/90 border-[#E4DCD2] shadow-[0_2px_16px_rgba(47,41,48,0.06)]'
+            'flex items-center gap-2 sm:gap-3 lg:gap-5 h-[68px] sm:h-[76px] lg:h-[80px] backdrop-blur-md transition-colors duration-300',
+            isHome
+              ? cn(
+                  'w-full border-b px-4 sm:px-6 lg:px-12',
+                  isDark ? 'bg-[#1B101F]/90 border-[#483250]' : 'bg-white/90 border-[#E4DCD2]'
+                )
+              : cn(
+                  'rounded-[18px] sm:rounded-[20px] border px-3 sm:px-5 lg:px-6',
+                  isDark
+                    ? 'bg-[#1B101F]/90 border-[#483250] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.4)]'
+                    : 'bg-white/90 border-[#E4DCD2] shadow-[0_2px_16px_rgba(47,41,48,0.06)]'
+                )
           )}
         >
           {/* Brand Logo */}
