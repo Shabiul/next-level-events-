@@ -116,7 +116,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       whileHover={{ y: -6 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        'group flex flex-col justify-between rounded-2xl border border-[#E4DCD2] dark:border-[#483250] bg-white dark:bg-[#201325] text-[#2F2930] dark:text-[#FAF8F5] overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 text-left select-none cursor-pointer w-full h-full',
+        'group flex flex-col rounded-2xl border border-[#E4DCD2] dark:border-[#483250] bg-white dark:bg-[#201325] text-[#2F2930] dark:text-[#FAF8F5] overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 text-left select-none cursor-pointer w-full h-full',
         className
       )}
       onClick={handleCardClick}
@@ -186,9 +186,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </div>
       </div>
 
-      {/* Card Actions Footer */}
-      <div className="px-5 sm:px-6 pb-6 pt-0 flex flex-col gap-3">
-        <div className="flex items-center justify-between border-t border-[#E4DCD2]/50 dark:border-[#483250]/50 pt-4">
+      {/* Card Actions Footer -- mt-auto pins it to the bottom of the card
+          without stretching the gap between the title and the price row
+          for shorter titles (that used to come from justify-between on
+          the whole card). */}
+      <div className="px-5 sm:px-6 pb-6 pt-0 mt-auto flex flex-col gap-3">
+        <div className="flex items-center justify-between border-t border-[#E4DCD2]/50 dark:border-[#483250]/50 pt-3">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#746B72] dark:text-[#A78A9F] block">
               Starting Price
