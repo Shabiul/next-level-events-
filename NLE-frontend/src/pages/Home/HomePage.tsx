@@ -23,7 +23,7 @@ import TabbedFAQ from '../../components/ui/TabbedFAQ';
 import InfiniteTestimonials from '../../components/ui/InfiniteTestimonials';
 import WhyChooseUs from '../../components/ui/WhyChooseUs';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
-import { EVENT_PACKAGES } from '../../components/packages/eventPackages.data';
+import { EVENT_PACKAGES, PACKAGE_IMAGES } from '../../components/packages/eventPackages.data';
 import type { AdminCategory, AdminProduct } from '../../types';
 
 interface HomePageProps {
@@ -37,18 +37,6 @@ interface HomePageProps {
 // second ₹39,999 tier so pricing reads as a clean staircase); full list
 // with badges lives on /packages via EVENT_PACKAGES.
 const HOME_PACKAGE_INDICES = [0, 1, 2, 3, 5, 6];
-
-// Real decor photos already used elsewhere in this app (verified to exist
-// and to actually depict the celebration/decor imagery they're used for),
-// keyed by EVENT_PACKAGES id.
-const HOME_PACKAGE_IMAGES: Record<string, string> = {
-  'essential-celebration': '/kkkk-landscape.jpeg',
-  'fun-fiesta': '/hero-balloons.jpg',
-  'premium-carnival': '/explore2-landscape.jpeg',
-  '30k-theme-decor': '/tearce-landscape.jpeg',
-  'grand-celebration': '/cabana.jpeg',
-  '1-lakh-custom-stage': '/romantic-dinner-landscape.jpg',
-};
 
 // Real photos from public/ where one genuinely exists and matches the
 // activity (checked each candidate file before using it -- e.g. tattoo.jpeg
@@ -271,7 +259,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               >
                 <div className="relative h-72 sm:h-80 w-full">
                   <img
-                    src={HOME_PACKAGE_IMAGES[pkg.id]}
+                    src={PACKAGE_IMAGES[pkg.id]}
                     alt={pkg.name}
                     className="h-full w-full object-cover transition-transform duration-[350ms] ease-out group-hover:scale-[1.03]"
                   />

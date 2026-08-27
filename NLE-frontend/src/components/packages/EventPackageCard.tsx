@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Crown, Sparkles, Wand2 } from 'lucide-react';
+import { ArrowRight, Crown, ImageOff, Sparkles, Wand2 } from 'lucide-react';
 import { cn } from '../../utils/utils';
-import { CATEGORY_META, type EventPackage } from './eventPackages.data';
+import { CATEGORY_META, PACKAGE_IMAGES, type EventPackage } from './eventPackages.data';
 
 const BADGE_META = {
   'Most Popular': {
@@ -37,6 +37,8 @@ export const EventPackageCard: React.FC<EventPackageCardProps> = ({
   const badgeMeta = pkg.badge ? BADGE_META[pkg.badge] : null;
   const BadgeIcon = badgeMeta?.icon;
   const shownCategories = pkg.categories.slice(0, 4);
+  const image = PACKAGE_IMAGES[pkg.id];
+  const FallbackIcon = CATEGORY_META[shownCategories[0]?.key]?.icon || ImageOff;
 
   return (
     <motion.div
@@ -51,12 +53,20 @@ export const EventPackageCard: React.FC<EventPackageCardProps> = ({
       )}
       onClick={() => onView(pkg)}
     >
-      {/* Decorative header band */}
-      <div className="relative -mx-6 -mt-6 sm:-mx-7 sm:-mt-7 mb-5 h-24 rounded-t-xl overflow-hidden bg-[#F3EFE7] border-b border-[#E4DCD2]">
-        <div className="absolute -top-6 -right-6 h-24 w-24 rounded-full bg-[#725D75]/20 blur-2xl" />
-        <div className="absolute -bottom-8 -left-4 h-20 w-20 rounded-full bg-[#C9BEAB]/15 blur-2xl" />
-        <Sparkles size={16} className="absolute bottom-3 left-6 text-[#725D75]/40" />
-        <Sparkles size={11} className="absolute top-4 right-16 text-[#C9BEAB]/50" />
+      {/* Photo header -- real decor photography, matching the Home "Popular
+          Packages" card style, not an abstract gradient/icon placeholder. */}
+      <div className="relative -mx-6 -mt-6 sm:-mx-7 sm:-mt-7 mb-5 h-36 sm:h-40 rounded-t-xl overflow-hidden bg-[#F9F6F2] border-b border-[#E4DCD2]">
+        {image ? (
+          <img
+            src={image}
+            alt={pkg.name}
+            className="h-full w-full object-cover transition-transform duration-[350ms] ease-out group-hover:scale-[1.04]"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-[#F3EFE7]">
+            <FallbackIcon size={32} className="text-[#725D75]/40" />
+          </div>
+        )}
 
         {badgeMeta && BadgeIcon && (
           <span

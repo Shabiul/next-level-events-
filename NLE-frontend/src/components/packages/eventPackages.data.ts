@@ -54,6 +54,20 @@ export interface PackageCategoryBlock {
 
 export type PackageBadge = 'Most Popular' | 'Luxury' | 'Custom';
 
+// Real decor photos already used elsewhere in this app (verified to exist
+// and to actually depict the celebration/decor imagery they're used for),
+// keyed by EventPackage id. Shared by the Home "Popular Packages" rail and
+// the /packages catalogue cards so both use the exact same photography.
+export const PACKAGE_IMAGES: Record<string, string> = {
+  'essential-celebration': '/kkkk-landscape.jpeg',
+  'fun-fiesta': '/hero-balloons.jpg',
+  'premium-carnival': '/explore2-landscape.jpeg',
+  '30k-theme-decor': '/tearce-landscape.jpeg',
+  'theme-decor-birthday': '/birthday-landscape.jpg',
+  'grand-celebration': '/cabana.jpeg',
+  '1-lakh-custom-stage': '/romantic-dinner-landscape.jpg',
+};
+
 export interface EventPackage {
   id: string;
   name: string;
