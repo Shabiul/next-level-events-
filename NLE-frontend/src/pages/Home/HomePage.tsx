@@ -226,9 +226,9 @@ export const HomePage: React.FC<HomePageProps> = ({
                   key={cat._id || cat.name}
                   type="button"
                   onClick={() => onSelectCategory(cat.name)}
-                  className="group flex-none w-[150px] sm:w-auto snap-start cursor-pointer"
+                  className="group flex-none w-[150px] sm:w-auto snap-start cursor-pointer transition-transform duration-[250ms] ease-out hover:-translate-y-1"
                 >
-                  <div className="relative aspect-square w-full rounded-xl overflow-hidden">
+                  <div className="relative aspect-square w-full rounded-xl overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-[250ms]">
                     <img
                       src={cat.image || FALLBACK_OCCASION_IMAGE}
                       alt={cat.name}
@@ -267,13 +267,13 @@ export const HomePage: React.FC<HomePageProps> = ({
                 key={pkg.id}
                 type="button"
                 onClick={() => navigate('/packages')}
-                className="group relative self-start block w-full rounded-xl border border-[#E4DCD2] overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer text-left"
+                className="group relative self-start block w-full rounded-xl border border-[#E4DCD2] overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer text-left"
               >
                 <div className="relative h-72 sm:h-80 w-full">
                   <img
                     src={HOME_PACKAGE_IMAGES[pkg.id]}
                     alt={pkg.name}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-[350ms] ease-out group-hover:scale-[1.03]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
                   {pkg.badge === 'Most Popular' && (
@@ -324,15 +324,15 @@ export const HomePage: React.FC<HomePageProps> = ({
                 key={activity.name}
                 type="button"
                 onClick={() => onSelectCategory('Kids Activities', activity.name)}
-                className="group flex-none w-[190px] sm:w-auto snap-start cursor-pointer"
+                className="group flex-none w-[190px] sm:w-auto snap-start cursor-pointer transition-transform duration-[250ms] ease-out hover:-translate-y-1"
               >
-                <div className="relative aspect-square rounded-xl overflow-hidden shadow-sm border border-[#E4DCD2] flex items-center justify-center group-hover:border-[#725D75]/40 transition-all">
+                <div className="relative aspect-square rounded-xl overflow-hidden shadow-sm group-hover:shadow-md border border-[#E4DCD2] flex items-center justify-center group-hover:border-[#725D75]/40 transition-all duration-[250ms]">
                   {activity.image ? (
                     <>
                       <img
                         src={activity.image}
                         alt={activity.name}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="h-full w-full object-cover transition-transform duration-[350ms] ease-out group-hover:scale-[1.03]"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                       <span className="absolute inset-x-0 bottom-0 p-3.5 text-left text-sm font-medium text-white">
