@@ -114,21 +114,21 @@ const InputField: React.FC<InputFieldProps> = ({
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between">
-        <label htmlFor={id} className="text-xs font-medium text-[#F9F6F2]/90 tracking-wide">
+        <label htmlFor={id} className="text-xs font-medium text-[#746B72] tracking-wide">
           {label}
         </label>
         {labelRight}
       </div>
       <div
         className={cn(
-          'flex h-11 sm:h-12 items-center gap-2.5 rounded-xl border bg-black/40 backdrop-blur-md px-3.5 transition-all duration-200',
+          'flex h-11 sm:h-12 items-center gap-2.5 rounded-lg border bg-white px-3.5 transition-colors duration-200',
           error
-            ? 'border-rose-400/80 ring-1 ring-rose-400/30'
-            : 'border-[#725D75]/25 focus-within:border-[#C9BEAB] focus-within:ring-2 focus-within:ring-[#C9BEAB]/20 hover:border-[#725D75]/40'
+            ? 'border-rose-400 ring-1 ring-rose-400/30'
+            : 'border-[#E4DCD2] focus-within:border-[#A78A9F] focus-within:ring-1 focus-within:ring-[#A78A9F]/30 hover:border-[#A78A9F]/60'
         )}
       >
         {icon && <span className="flex-shrink-0 text-[#725D75]">{icon}</span>}
-        {prefix && <span className="flex-shrink-0 text-xs font-medium text-[#A78A9F]">{prefix}</span>}
+        {prefix && <span className="flex-shrink-0 text-xs font-medium text-[#746B72]">{prefix}</span>}
         <input
           id={id}
           type={type}
@@ -137,11 +137,11 @@ const InputField: React.FC<InputFieldProps> = ({
           autoComplete={autoComplete}
           maxLength={maxLength}
           placeholder={placeholder || `Enter your ${label.toLowerCase()}`}
-          className="w-full bg-transparent text-sm text-[#F9F6F2] outline-none placeholder:text-[#A78A9F]/40"
+          className="w-full bg-transparent text-sm text-[#2F2930] outline-none placeholder:text-[#746B72]/50"
         />
         {endAdornment}
       </div>
-      {error && <span className="text-[11.5px] font-medium text-rose-400 animate-fade-in">{error}</span>}
+      {error && <span className="text-[11.5px] font-medium text-rose-500 animate-fade-in">{error}</span>}
     </div>
   );
 };
@@ -173,7 +173,7 @@ const PasswordInput: React.FC<{
         <button
           type="button"
           tabIndex={-1}
-          className="flex-shrink-0 text-[#725D75] hover:text-[#F9F6F2] transition-colors cursor-pointer"
+          className="flex-shrink-0 text-[#725D75] hover:text-[#A78A9F] transition-colors cursor-pointer"
           onClick={() => setShow(s => !s)}
           aria-label={show ? 'Hide password' : 'Show password'}
         >
@@ -187,12 +187,12 @@ const PasswordInput: React.FC<{
 const SocialGoogleButton: React.FC<{ onClick: () => void; loading: boolean; label: string }> = ({ onClick, loading, label }) => (
   <button
     type="button"
-    className="flex h-11 sm:h-12 w-full items-center justify-center gap-2.5 rounded-xl border border-white/15 bg-white/10 hover:bg-white/15 px-4 text-xs sm:text-sm font-medium text-[#F9F6F2] transition-all hover:border-white/25 active:scale-[0.98] disabled:opacity-60 shadow-sm cursor-pointer"
+    className="flex h-11 sm:h-12 w-full items-center justify-center gap-2.5 rounded-lg border border-[#E4DCD2] bg-white hover:bg-[#F9F6F2] px-4 text-xs sm:text-sm font-medium text-[#2F2930] transition-colors duration-200 active:scale-[0.98] disabled:opacity-60 shadow-xs cursor-pointer"
     onClick={onClick}
     disabled={loading}
   >
     {loading ? (
-      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-[#C9BEAB]" />
+      <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#E4DCD2] border-t-[#725D75]" />
     ) : (
       <GoogleIcon />
     )}
@@ -204,11 +204,11 @@ const SubmitButton: React.FC<{ loading: boolean; loadingLabel: string; children:
   <button
     type="submit"
     disabled={loading}
-    className="flex h-11 sm:h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#F9F6F2] hover:bg-[#F2ECE3] text-[#25172C] text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200 active:scale-[0.98] disabled:opacity-60 cursor-pointer"
+    className="flex h-11 sm:h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#725D75] hover:bg-[#A78A9F] text-white text-sm font-medium shadow-sm transition-colors duration-200 active:scale-[0.98] disabled:opacity-60 cursor-pointer"
   >
     {loading ? (
       <>
-        <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#25172C]/20 border-t-[#25172C]" />
+        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
         <span>{loadingLabel}</span>
       </>
     ) : (
@@ -317,17 +317,17 @@ const LoginForm: React.FC<{
       {/* Header section */}
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#F9F6F2] font-serif">
+          <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#725D75] font-serif">
             Customer Log In
           </h2>
-          <p className="mt-1 text-xs sm:text-[13px] text-[#A78A9F] font-light">
+          <p className="mt-1 text-xs sm:text-[13px] text-[#746B72] font-normal">
             Enter your email to manage your celebration bookings
           </p>
         </div>
         <button
           type="button"
           onClick={onRegister}
-          className="text-xs sm:text-sm font-semibold text-[#A78A9F] hover:text-[#F9F6F2] hover:underline transition-colors cursor-pointer shrink-0 mt-1"
+          className="text-xs sm:text-sm font-semibold text-[#A78A9F] hover:text-[#725D75] hover:underline transition-colors cursor-pointer shrink-0 mt-1"
         >
           Create Account →
         </button>
@@ -368,7 +368,7 @@ const LoginForm: React.FC<{
           <input
             type="checkbox"
             defaultChecked
-            className="h-4 w-4 rounded border-[#725D75]/40 bg-black/40 accent-[#C9BEAB]"
+            className="h-4 w-4 rounded border-[#E4DCD2] bg-white accent-[#725D75]"
           />
           <span>Remember me</span>
         </label>
@@ -391,7 +391,7 @@ const LoginForm: React.FC<{
           <button
             type="button"
             onClick={onRegister}
-            className="font-semibold text-[#A78A9F] hover:text-[#F9F6F2] hover:underline transition-colors cursor-pointer"
+            className="font-semibold text-[#A78A9F] hover:text-[#725D75] hover:underline transition-colors cursor-pointer"
           >
             Create Customer Account
           </button>
@@ -539,17 +539,17 @@ const RegisterForm: React.FC<{
       {/* Header section with Log In toggle */}
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#F9F6F2] font-serif">
+          <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#725D75] font-serif">
             Create Customer Account
           </h2>
-          <p className="mt-1 text-xs sm:text-[13px] text-[#A78A9F] font-light">
+          <p className="mt-1 text-xs sm:text-[13px] text-[#746B72] font-normal">
             Join TheDecorParty to book and customize celebration events
           </p>
         </div>
         <button
           type="button"
           onClick={onLogin}
-          className="text-xs sm:text-sm font-semibold text-[#A78A9F] hover:text-[#F9F6F2] hover:underline transition-colors cursor-pointer shrink-0 mt-1"
+          className="text-xs sm:text-sm font-semibold text-[#A78A9F] hover:text-[#725D75] hover:underline transition-colors cursor-pointer shrink-0 mt-1"
         >
           Sign In →
         </button>
@@ -647,7 +647,7 @@ const RegisterForm: React.FC<{
             type="checkbox"
             checked={terms}
             onChange={e => setTerms(e.target.checked)}
-            className="mt-0.5 h-4 w-4 rounded border-[#725D75]/40 bg-black/40 accent-[#C9BEAB]"
+            className="mt-0.5 h-4 w-4 rounded border-[#E4DCD2] bg-white accent-[#725D75]"
           />
           <span>
             I agree to the Terms of Service & Privacy Policy
@@ -679,7 +679,7 @@ const RegisterForm: React.FC<{
           <button
             type="button"
             onClick={onLogin}
-            className="font-semibold text-[#A78A9F] hover:text-[#F9F6F2] hover:underline transition-colors cursor-pointer"
+            className="font-semibold text-[#A78A9F] hover:text-[#725D75] hover:underline transition-colors cursor-pointer"
           >
             Customer Sign In
           </button>
@@ -764,10 +764,10 @@ const AdminLoginForm: React.FC<{
           <Shield size={13} className="text-[#A78A9F]" />
           <span>Admin Control Portal</span>
         </div>
-        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#F9F6F2] font-serif">
+        <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#725D75] font-serif">
           Administrator Sign In
         </h2>
-        <p className="mt-1 text-xs sm:text-[13px] text-[#A78A9F] font-light">
+        <p className="mt-1 text-xs sm:text-[13px] text-[#746B72] font-normal">
           Enter authorized administrative credentials to access controls
         </p>
       </div>
@@ -809,7 +809,7 @@ const AdminLoginForm: React.FC<{
           <button
             type="button"
             onClick={onUserLogin}
-            className="text-[#A78A9F] hover:text-[#F9F6F2] transition-colors cursor-pointer"
+            className="text-[#A78A9F] hover:text-[#725D75] transition-colors cursor-pointer"
           >
             ← Customer Login
           </button>
@@ -910,10 +910,10 @@ const AdminRegisterForm: React.FC<{
           <Shield size={13} className="text-[#A78A9F]" />
           <span>Staff Registration</span>
         </div>
-        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#F9F6F2] font-serif">
+        <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#725D75] font-serif">
           Register Admin Account
         </h2>
-        <p className="mt-0.5 text-xs sm:text-[13px] text-[#A78A9F] font-light">
+        <p className="mt-0.5 text-xs sm:text-[13px] text-[#746B72] font-normal">
           Authorized manager / decorator account creation
         </p>
       </div>
@@ -1026,7 +1026,7 @@ const AdminRegisterForm: React.FC<{
           <button
             type="button"
             onClick={onUserLogin}
-            className="text-[#A78A9F] hover:text-[#F9F6F2] transition-colors cursor-pointer"
+            className="text-[#A78A9F] hover:text-[#725D75] transition-colors cursor-pointer"
           >
             ← Customer Login
           </button>
@@ -1051,10 +1051,10 @@ const ForgotForm: React.FC<{ onBack: () => void; onSuccess: (user: AuthUser, tok
   return (
     <form onSubmit={e => { e.preventDefault(); send(); }} className="flex flex-col gap-4 animate-fade-in" noValidate>
       <div>
-        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-[#F9F6F2] font-serif">
+        <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#725D75] font-serif">
           Reset password
         </h2>
-        <p className="mt-1 text-xs sm:text-[13px] text-[#A78A9F] font-light">
+        <p className="mt-1 text-xs sm:text-[13px] text-[#746B72] font-normal">
           Enter your email to receive a password reset link.
         </p>
       </div>
@@ -1098,7 +1098,7 @@ const SuccessPanel: React.FC<{ title: string; msg: string; isAdmin?: boolean; on
       <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#725D75] border border-[#725D75]/40 text-[#A78A9F] shadow-lg">
         {isAdmin ? <Shield size={26} className="text-[#A78A9F]" /> : <Sparkles size={26} className="text-[#A78A9F]" />}
       </div>
-      <h2 className="text-xl font-bold text-[#F9F6F2] font-serif">{title}</h2>
+      <h2 className="text-xl font-semibold text-[#725D75] font-serif">{title}</h2>
       <p className="text-xs sm:text-sm text-[#A78A9F] max-w-xs leading-relaxed">{msg}</p>
       <button
         className="mt-3 flex h-11 w-full max-w-xs items-center justify-center rounded-xl bg-[#F9F6F2] hover:bg-[#F2ECE3] text-sm font-semibold text-[#25172C] shadow-lg transition-all cursor-pointer"
@@ -1151,9 +1151,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, tab, onClose, onSe
 
   return (
     <>
-      {/* Frosted dark backdrop */}
+      {/* Dark scrim behind the modal */}
       <div
-        className="fixed inset-0 z-[10000] bg-black/65 backdrop-blur-md transition-opacity duration-300 animate-fade-in"
+        className="fixed inset-0 z-[10000] bg-[#2F2930]/60 backdrop-blur-sm transition-opacity duration-300 animate-fade-in"
         onClick={onClose}
       />
 
@@ -1162,60 +1162,53 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, tab, onClose, onSe
         role="dialog"
         aria-modal="true"
       >
-        {/* Glass Card Container (Image 2 Style with Website Theme Tokens) */}
+        {/* Card Container */}
         <div
           className={cn(
-            "relative flex w-full flex-col overflow-hidden rounded-3xl border border-[#725D75]/30 p-6 sm:p-8 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.75),inset_0_1px_0_rgba(255,255,255,0.12)] animate-scale-in text-[#F9F6F2] my-auto transition-all duration-300",
+            "relative flex w-full flex-col overflow-hidden rounded-2xl border border-[#E4DCD2] bg-white p-6 sm:p-8 shadow-md animate-scale-in text-[#2F2930] my-auto transition-all duration-300",
             isAdminTab || tab === 'register' ? "max-w-[480px]" : "max-w-[440px]"
           )}
-          style={{
-            background: isAdminTab
-              ? 'linear-gradient(150deg, rgba(40, 20, 48, 0.92) 0%, rgba(52, 32, 60, 0.90) 50%, rgba(31, 18, 36, 0.95) 100%)'
-              : 'linear-gradient(150deg, rgba(37, 23, 44, 0.88) 0%, rgba(45, 28, 52, 0.85) 50%, rgba(31, 18, 36, 0.92) 100%)',
-            backdropFilter: 'blur(28px)',
-            WebkitBackdropFilter: 'blur(28px)',
-          }}
         >
-          {/* Subtle luxury ambient glows */}
-          <div className="absolute -top-20 -left-20 w-48 h-48 rounded-full bg-[#725D75]/15 blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-20 -right-20 w-48 h-48 rounded-full bg-[#483250]/35 blur-3xl pointer-events-none" />
+          {/* Subtle ambient accents */}
+          <div className="absolute -top-20 -left-20 w-48 h-48 rounded-full bg-[#F3EFE7] blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-20 -right-20 w-48 h-48 rounded-full bg-[#A78A9F]/10 blur-3xl pointer-events-none" />
 
-          {/* Close button with frosted glass ring */}
+          {/* Close button */}
           <button
-            className="absolute right-4 top-4 sm:right-5 sm:top-5 flex h-8 w-8 items-center justify-center rounded-full bg-white/5 border border-white/10 text-[#A78A9F] hover:text-white hover:bg-white/15 transition-all cursor-pointer z-20"
+            className="absolute right-4 top-4 sm:right-5 sm:top-5 flex h-8 w-8 items-center justify-center rounded-full bg-[#F9F6F2] border border-[#E4DCD2] text-[#746B72] hover:text-[#2F2930] hover:bg-white transition-colors cursor-pointer z-20"
             onClick={onClose}
             aria-label="Close modal"
           >
             <X size={16} />
           </button>
 
-          {/* Top Segmented Tab Pill for Customer Auth (Image 1 + Image 2 hybrid) */}
+          {/* Top Segmented Tab Pill for Customer Auth */}
           {isCustomerTab && (
-            <div className="flex items-center rounded-2xl bg-black/40 border border-[#725D75]/25 p-1 mb-5 w-full relative z-10">
+            <div className="flex items-center rounded-xl bg-[#F3EFE7] border border-[#E4DCD2] p-1 mb-5 w-full relative z-10">
               <button
                 type="button"
                 className={cn(
-                  'flex-1 flex items-center justify-center gap-1.5 py-2 text-xs sm:text-[13px] font-semibold rounded-xl transition-all cursor-pointer text-center',
+                  'flex-1 flex items-center justify-center gap-1.5 py-2 text-xs sm:text-[13px] font-medium rounded-lg transition-colors duration-200 cursor-pointer text-center',
                   tab === 'login'
-                    ? 'bg-[#F9F6F2] text-[#25172C] shadow-md font-bold'
-                    : 'text-[#A78A9F] hover:text-[#F9F6F2]'
+                    ? 'bg-white text-[#725D75] shadow-xs font-semibold'
+                    : 'text-[#746B72] hover:text-[#2F2930]'
                 )}
                 onClick={() => onSetTab('login')}
               >
-                <LogIn size={14} className={tab === 'login' ? 'text-[#25172C]' : 'text-[#725D75]'} />
+                <LogIn size={14} className={tab === 'login' ? 'text-[#725D75]' : 'text-[#A78A9F]'} />
                 <span>Customer Login</span>
               </button>
               <button
                 type="button"
                 className={cn(
-                  'flex-1 flex items-center justify-center gap-1.5 py-2 text-xs sm:text-[13px] font-semibold rounded-xl transition-all cursor-pointer text-center',
+                  'flex-1 flex items-center justify-center gap-1.5 py-2 text-xs sm:text-[13px] font-medium rounded-lg transition-colors duration-200 cursor-pointer text-center',
                   tab === 'register'
-                    ? 'bg-[#F9F6F2] text-[#25172C] shadow-md font-bold'
-                    : 'text-[#A78A9F] hover:text-[#F9F6F2]'
+                    ? 'bg-white text-[#725D75] shadow-xs font-semibold'
+                    : 'text-[#746B72] hover:text-[#2F2930]'
                 )}
                 onClick={() => onSetTab('register')}
               >
-                <UserPlus size={14} className={tab === 'register' ? 'text-[#25172C]' : 'text-[#725D75]'} />
+                <UserPlus size={14} className={tab === 'register' ? 'text-[#725D75]' : 'text-[#A78A9F]'} />
                 <span>Customer Register</span>
               </button>
             </div>
@@ -1223,31 +1216,31 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, tab, onClose, onSe
 
           {/* Top Segmented Tab Pill for Admin Auth */}
           {isAdminTab && (
-            <div className="flex items-center rounded-2xl bg-black/40 border border-[#C9BEAB]/30 p-1 mb-5 w-full relative z-10">
+            <div className="flex items-center rounded-xl bg-[#F3EFE7] border border-[#E4DCD2] p-1 mb-5 w-full relative z-10">
               <button
                 type="button"
                 className={cn(
-                  'flex-1 flex items-center justify-center gap-1.5 py-2 text-xs sm:text-[13px] font-semibold rounded-xl transition-all cursor-pointer text-center',
+                  'flex-1 flex items-center justify-center gap-1.5 py-2 text-xs sm:text-[13px] font-medium rounded-lg transition-colors duration-200 cursor-pointer text-center',
                   tab === 'admin-login'
-                    ? 'bg-[#C9BEAB] text-[#25172C] shadow-md font-bold'
-                    : 'text-[#A78A9F] hover:text-[#F9F6F2]'
+                    ? 'bg-white text-[#725D75] shadow-xs font-semibold'
+                    : 'text-[#746B72] hover:text-[#2F2930]'
                 )}
                 onClick={() => onSetTab('admin-login')}
               >
-                <Shield size={14} className={tab === 'admin-login' ? 'text-[#25172C]' : 'text-[#A78A9F]'} />
+                <Shield size={14} className={tab === 'admin-login' ? 'text-[#725D75]' : 'text-[#A78A9F]'} />
                 <span>Admin Login</span>
               </button>
               <button
                 type="button"
                 className={cn(
-                  'flex-1 flex items-center justify-center gap-1.5 py-2 text-xs sm:text-[13px] font-semibold rounded-xl transition-all cursor-pointer text-center',
+                  'flex-1 flex items-center justify-center gap-1.5 py-2 text-xs sm:text-[13px] font-medium rounded-lg transition-colors duration-200 cursor-pointer text-center',
                   tab === 'admin-register'
-                    ? 'bg-[#C9BEAB] text-[#25172C] shadow-md font-bold'
-                    : 'text-[#A78A9F] hover:text-[#F9F6F2]'
+                    ? 'bg-white text-[#725D75] shadow-xs font-semibold'
+                    : 'text-[#746B72] hover:text-[#2F2930]'
                 )}
                 onClick={() => onSetTab('admin-register')}
               >
-                <KeyRound size={14} className={tab === 'admin-register' ? 'text-[#25172C]' : 'text-[#A78A9F]'} />
+                <KeyRound size={14} className={tab === 'admin-register' ? 'text-[#725D75]' : 'text-[#A78A9F]'} />
                 <span>Register Admin</span>
               </button>
             </div>
