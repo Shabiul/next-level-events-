@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { MapPin, Sparkles, Clock } from 'lucide-react';
+import { MapPin, Sparkles, Clock, ArrowRight } from 'lucide-react';
 
 interface FeatureItem {
   icon: React.ElementType;
@@ -38,6 +39,8 @@ interface WhyChooseUsProps {
   features?: FeatureItem[];
   imageUrl?: string;
   imageAlt?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
 }
 
 export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
@@ -48,6 +51,8 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
   features = DEFAULT_FEATURES,
   imageUrl = '/birthday-landscape.jpg',
   imageAlt = 'Premium celebration décor setup',
+  ctaLabel = 'Explore All',
+  ctaHref = '/packages',
 }) => {
   const sectionRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -159,6 +164,24 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
                 );
               })}
             </div>
+
+            {ctaLabel && ctaHref && (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 0.24 + features.length * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                className="mt-6"
+              >
+                <Link
+                  to={ctaHref}
+                  className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#725D75] hover:underline"
+                >
+                  {ctaLabel}
+                  <ArrowRight size={13} />
+                </Link>
+              </motion.div>
+            )}
           </div>
 
           {/* RIGHT COLUMN: Showcase image, pinned via sticky positioning on
