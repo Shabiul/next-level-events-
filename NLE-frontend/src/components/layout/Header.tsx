@@ -270,9 +270,13 @@ export const Header: React.FC<HeaderProps> = ({
         )}
       >
         <div className="mx-auto flex max-w-[1720px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-12 py-1.5 text-[11px] sm:text-xs">
-          <span className="flex-1 sm:flex-none inline-flex items-center gap-1.5 truncate">
+          <span className="hidden sm:inline-flex items-center gap-1.5 truncate">
             <Truck size={12} className="text-[#C9BEAB] shrink-0" />
             Free Delivery on orders above ₹999
+          </span>
+          <span className="flex-1 sm:flex-none text-center inline-flex items-center justify-center gap-1.5 truncate">
+            <Sparkles size={12} className="text-[#C9BEAB] shrink-0" />
+            Make Every Celebration Magical
           </span>
           <span className="hidden sm:inline-flex items-center gap-3 shrink-0">
             <button type="button" onClick={() => navigate('/bookings')} className="inline-flex items-center gap-1.5 hover:text-[#C9BEAB] transition-colors cursor-pointer">
