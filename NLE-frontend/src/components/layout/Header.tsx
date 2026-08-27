@@ -12,6 +12,7 @@ import {
   Calendar,
   Layers,
   ArrowUpRight,
+  ArrowRight,
   Gift,
   Phone,
   Search,
@@ -320,7 +321,7 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <input
               type="text"
-              placeholder="Search for products, themes & more..."
+              placeholder="Search themes, products & more..."
               value={navSearchQuery}
               onChange={(e) => setNavSearchQuery(e.target.value)}
               className={cn(
@@ -503,7 +504,7 @@ export const Header: React.FC<HeaderProps> = ({
               className="hidden md:inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-medium tracking-wide shadow-sm transition-colors duration-200 cursor-pointer bg-[#725D75] hover:bg-[#A78A9F] text-white"
             >
               <span>Book Now</span>
-              <span className="text-[12px]">→</span>
+              <ArrowRight size={14} strokeWidth={2} />
             </button>
 
             {/* Mobile Sheet Trigger */}
@@ -749,7 +750,7 @@ export const Header: React.FC<HeaderProps> = ({
           <Search size={14} className="text-[#725D75] shrink-0" />
           <input
             type="text"
-            placeholder="Search for products, themes & more..."
+            placeholder="Search themes, products & more..."
             value={navSearchQuery}
             onChange={(e) => setNavSearchQuery(e.target.value)}
             className={cn('w-full bg-transparent text-sm border-none outline-none', isDark ? 'text-[#FAF8F5] placeholder:text-[#A78A9F]/60' : 'text-[#2F2930] placeholder:text-[#746B72]/70')}

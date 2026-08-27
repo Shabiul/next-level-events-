@@ -237,6 +237,61 @@ router.post("/google", async (req: Request, res: Response) => {
   }
 });
 
+router.post("/phone", async (req: Request, res: Response) => {
+  try {
+    const { uid, phone, firstName, lastName } = req.body;
+    if (!uid || !phone) return res.status(400).json({ msg: "Invalid phone verification data" });
+
+    const normalizedPhone = String(phone).trim();
+
+    let user = await User.findOne({ phone: normalizedPhone });
+    let isNewUser = false;
+
+    if (!user) {
+      user = new User({
+        firstName: firstName || "",
+        lastName: lastName || "",
+        phone: normalizedPhone,
+        googleId: uid, // reuses the same "external auth uid" column for the Firebase phone uid
+        password: "",
+        role: "user",
+      });
+      await user.save();
+      isNewUser = true;
+    }
+
+    const role = user.role === "admin" ? "admin" : "user";
+    const token = jwt.sign({ id: user._id, role }, process.env.JWT_SECRET || "secret", { expiresIn: "7d" });
+
+    res.json({
+      token,
+      isNewUser,
+      user: {
+        id: String(user._id),
+        wishlist: Array.isArray(user.wishlist) ? user.wishlist.map((item) => String(item)) : [],
+        name: [user.firstName, user.lastName].filter(Boolean).join(' ') || normalizedPhone,
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email || "",
+        role,
+        phone: user.phone || "",
+        gender: user.gender || "",
+        dateOfBirth: user.dateOfBirth || "",
+        address: user.address || "",
+        city: user.city || "",
+        state: user.state || "",
+        country: user.country || "",
+        pincode: user.pincode || "",
+        photoURL: user.photoURL || "",
+        avatar: user.photoURL || "",
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
 router.post("/forgot-password", async (req: Request, res: Response) => {
   try {
     const { email } = req.body || {};

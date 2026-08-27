@@ -10,7 +10,6 @@ import { FloatingActionMenu } from './FloatingActionMenu';
 import { ScrollProgressBar } from '../ui/ScrollProgressBar';
 import { BackToTopButton } from '../ui/BackToTopButton';
 import { useSmoothScroll } from '../../hooks/useSmoothScroll';
-import { cn } from '../../utils/utils';
 import type { AdminCategory, AuthTab, AuthUser, CartItem, Translations } from '../../types';
 import type { AuthRedirect } from '../../context/AuthContext';
 
@@ -172,7 +171,7 @@ export default function MainLayout({
             categories={categories}
             onSelectCategory={onSelectCategory}
           />
-          <main className={cn("flex-1 w-full", (location.pathname !== '/' && location.pathname !== '/explore') && "pt-16 sm:pt-20")}>{children}</main>
+          <main className="flex-1 w-full">{children}</main>
           <Footer
             t={t}
             onPageOpen={handleTermsOpen}
