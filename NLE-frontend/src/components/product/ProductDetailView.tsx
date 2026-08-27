@@ -522,7 +522,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.5 }}
             >
-              <AddonsModule onSelectionChange={handleGlobalSelectionChange} />
+              <AddonsModule onSelectionChange={handleGlobalSelectionChange} themeCategory={product.categoryName} />
             </motion.div>
 
             {/* Cancellation & Service Terms Section */}

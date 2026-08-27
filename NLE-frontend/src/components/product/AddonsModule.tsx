@@ -7,6 +7,10 @@ import { cn } from '../../utils/utils';
 
 interface Props {
   onSelectionChange?: (addons: CatalogSelectionItem[], activities: CatalogSelectionItem[]) => void;
+  /** The product's own category/theme (e.g. "Birthdays", "Kids Activities"),
+   * used to recommend relevant add-ons/activities first instead of an
+   * undifferentiated full catalog. */
+  themeCategory?: string;
 }
 
 type RawCatalogItem = Record<string, any>;
@@ -71,7 +75,18 @@ const TABS = [
 
 type TabKey = (typeof TABS)[number]['key'];
 
-export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
+/** Fuzzy, case-insensitive, either-direction substring match -- same
+ * pattern used for service/category lookups elsewhere in the app (e.g.
+ * findServiceSubItems), so "Birthdays" theme matches an addon category of
+ * "Birthday" or "Birthday Decor" and vice versa. */
+const fuzzyCategoryMatch = (a: string, b: string): boolean => {
+  const na = a.trim().toLowerCase();
+  const nb = b.trim().toLowerCase();
+  if (!na || !nb) return false;
+  return na.includes(nb) || nb.includes(na);
+};
+
+export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory }) => {
   const [addons, setAddons] = useState<CatalogAddon[]>([]);
   const [activities, setActivities] = useState<CatalogActivity[]>([]);
   const [loading, setLoading] = useState(true);
@@ -129,14 +144,43 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
     }
   }, [activeCategory, categories]);
 
+  // Recommend add-ons/activities matching the product's own theme by
+  // default, instead of always starting on an undifferentiated "All" list.
+  const recommendedCategory = useMemo(() => {
+    if (!themeCategory) return null;
+    return categories.find((c) => c !== 'All' && fuzzyCategoryMatch(c, themeCategory)) || null;
+  }, [categories, themeCategory]);
+
+  const autoSelectedRef = useRef(false);
+  useEffect(() => {
+    if (autoSelectedRef.current) return;
+    if (recommendedCategory) {
+      setActiveCategory(recommendedCategory);
+      autoSelectedRef.current = true;
+    }
+  }, [recommendedCategory]);
+
   const getItemId = (item: CatalogAddon | CatalogActivity) => item._id || item.name;
 
   const visibleItems = useMemo(() => {
-    return currentItems.filter((item) => {
+    const filtered = currentItems.filter((item) => {
       const category = item.category?.trim() || 'General';
       return activeCategory === 'All' || category === activeCategory;
     });
-  }, [activeCategory, currentItems]);
+
+    // On the "All" view, float theme-matching items to the front rather
+    // than leaving recommendations undifferentiated from the rest of the
+    // catalog.
+    if (activeCategory === 'All' && themeCategory) {
+      return [...filtered].sort((a, b) => {
+        const aMatch = fuzzyCategoryMatch(a.category?.trim() || 'General', themeCategory) ? 0 : 1;
+        const bMatch = fuzzyCategoryMatch(b.category?.trim() || 'General', themeCategory) ? 0 : 1;
+        return aMatch - bMatch;
+      });
+    }
+
+    return filtered;
+  }, [activeCategory, currentItems, themeCategory]);
 
   useEffect(() => {
     const selectedAddonsList = addons
@@ -223,6 +267,12 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange }) => {
           </button>
         </div>
       </div>
+
+      {recommendedCategory && (
+        <p className="text-[11px] font-medium text-[#A78A9F]">
+          Recommended for your {recommendedCategory} theme
+        </p>
+      )}
 
       {/* Subcategory Pills */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 hide-scrollbar">

@@ -51,9 +51,25 @@ router.get("/", async (_req: Request, res: Response) => {
       .map(mapActivityToCatalogItem)
       .filter((item): item is NonNullable<typeof item> => item !== null);
 
+    // The GlobalCatalog fallback/seed doc and the actively-managed
+    // Addon/Activity collections are two independent data sources with no
+    // built-in relationship -- if an admin adds a real record whose name
+    // happens to match a seeded fallback entry (e.g. "Photography"), both
+    // used to render as two separate cards. Dedupe by normalized name,
+    // keeping the actively-managed record (listed second, so it wins).
+    const dedupeByName = <T extends { name?: string }>(items: T[]): T[] => {
+      const seen = new Map<string, T>();
+      for (const item of items) {
+        const key = (item?.name || '').trim().toLowerCase();
+        if (!key) continue;
+        seen.set(key, item);
+      }
+      return Array.from(seen.values());
+    };
+
     const mergedCatalog = {
-      addons: [...globalCatalog.addons, ...activeAddons],
-      activities: [...globalCatalog.activities, ...activeActivities],
+      addons: dedupeByName([...globalCatalog.addons, ...activeAddons]),
+      activities: dedupeByName([...globalCatalog.activities, ...activeActivities]),
     };
 
     if (!catalog && mergedCatalog.addons.length === 0 && mergedCatalog.activities.length === 0) {

@@ -198,7 +198,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       </div>
 
       {/* Main Content Sections Container */}
-      <div className="flex flex-col gap-14 sm:gap-16 lg:gap-20 pt-10 sm:pt-12 lg:pt-14 pb-14 sm:pb-16">
+      <div className="flex flex-col gap-10 sm:gap-12 lg:gap-14 pt-8 sm:pt-10 lg:pt-12 pb-10 sm:pb-12">
 
         {/* ========================================================================= */}
         {/* 2. SHOP BY OCCASION                                                       */}

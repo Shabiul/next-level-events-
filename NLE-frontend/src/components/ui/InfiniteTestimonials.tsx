@@ -274,7 +274,7 @@ export default function InfiniteTestimonials({
   className = '',
 }: InfiniteTestimonialsProps) {
   return (
-    <section className={`relative w-full overflow-hidden bg-[#F9F6F2] dark:bg-[#1B101F] py-10 sm:py-12 lg:py-14 transition-colors duration-300 ${className}`}>
+    <section className={`relative w-full overflow-hidden bg-[#F9F6F2] dark:bg-[#1B101F] py-4 sm:py-5 lg:py-6 transition-colors duration-300 ${className}`}>
       {/* Header Section */}
       <div className="mx-auto max-w-7xl px-6 text-center mb-8 sm:mb-10">
         {badgeText && (
