@@ -1,5 +1,25 @@
 import type { LucideIcon } from 'lucide-react';
-import { PartyPopper, Sparkles } from 'lucide-react';
+import {
+  PartyPopper,
+  Sparkles,
+  Image,
+  Cake,
+  CakeSlice,
+  Baby,
+  Heart,
+  Badge,
+  HeartHandshake,
+  Soup,
+  Car,
+  DoorOpen,
+  GraduationCap,
+  Tent,
+  Flower2,
+  Gift,
+  Gamepad2,
+  Utensils,
+  Camera,
+} from 'lucide-react';
 
 /**
  * Single source of truth for the site's service navigation:
@@ -16,6 +36,9 @@ import { PartyPopper, Sparkles } from 'lucide-react';
 export interface ServiceLink {
   label: string;
   subServices?: string[];
+  /** Small semantic line icon shown beside the label in the Services
+   * mega-menu/mobile menu -- keep to Lucide only, no emoji. */
+  icon?: LucideIcon;
 }
 
 export interface ServiceColumn {
@@ -26,34 +49,37 @@ export interface ServiceColumn {
 }
 
 export const CURATED_DECORS: ServiceLink[] = [
-  { label: 'Simple Wall Decors' },
+  { label: 'Simple Wall Decors', icon: Image },
   {
     label: 'Birthdays',
     subServices: ['Boy Kids Themes', 'Girl Baby Themes', 'Ring Decor Designs', 'U-Arch Decor Designs'],
+    icon: Cake,
   },
-  { label: '1st Birthday Designs' },
-  { label: 'Baby Showers' },
-  { label: 'Welcome Baby' },
-  { label: 'Anniversary Celebrations' },
-  { label: 'Naming Ceremonies' },
+  { label: '1st Birthday Designs', icon: CakeSlice },
+  { label: 'Baby Showers', icon: Baby },
+  { label: 'Welcome Baby', icon: Baby },
+  { label: 'Anniversary Celebrations', icon: Heart },
+  { label: 'Naming Ceremonies', icon: Badge },
   {
     label: 'Pre & Post Wedding',
     subServices: ['Engagement Decor', 'Haldi Ceremony', 'Bride-to-Be', 'Groom-to-Be', 'Ring Ceremony'],
+    icon: HeartHandshake,
   },
-  { label: 'Annaprashan' },
-  { label: 'Bike & Car Deliveries' },
-  { label: 'National Festivals' },
-  { label: 'Opening Decors' },
-  { label: 'Graduation' },
-  { label: 'Proposal Setup' },
-  { label: 'Cabana Setups' },
-  { label: 'Terrace Proposals' },
-  { label: 'Car Boot Surprises' },
+  { label: 'Annaprashan', icon: Soup },
+  { label: 'Bike & Car Deliveries', icon: Car },
+  { label: 'National Festivals', icon: Sparkles },
+  { label: 'Opening Decors', icon: DoorOpen },
+  { label: 'Graduation', icon: GraduationCap },
+  { label: 'Proposal Setup', icon: Heart },
+  { label: 'Cabana Setups', icon: Tent },
+  { label: 'Terrace Proposals', icon: Flower2 },
+  { label: 'Car Boot Surprises', icon: Gift },
 ];
 
 export const ACTIVITIES_ENTERTAINMENT: ServiceLink[] = [
   {
     label: 'Kids Activities',
+    icon: Gamepad2,
     subServices: [
       'Tattoo Artist',
       'Caricature',
@@ -75,6 +101,7 @@ export const ACTIVITIES_ENTERTAINMENT: ServiceLink[] = [
   },
   {
     label: 'Live Eateries / Catering',
+    icon: Utensils,
     subServices: [
       'Popcorn',
       'Cotton Candy',
@@ -90,9 +117,10 @@ export const ACTIVITIES_ENTERTAINMENT: ServiceLink[] = [
       'Ice Cream Flavours',
     ],
   },
-  { label: 'Photography & Videography' },
+  { label: 'Photography & Videography', icon: Camera },
   {
     label: 'Other Services',
+    icon: Sparkles,
     subServices: ['Return Gifts', 'Flower Bouquets', 'Gift Hampers', 'Customised Cakes', 'Music Systems', 'Venues', 'Food & Catering'],
   },
 ];

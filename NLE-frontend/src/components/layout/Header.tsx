@@ -364,9 +364,18 @@ export const Header: React.FC<HeaderProps> = ({
                                     e.preventDefault();
                                     handleNavCategory(item.label);
                                   }}
-                                  className="group flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs font-medium text-[#2F2930] hover:bg-[#725D75]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors cursor-pointer"
+                                  className="group flex items-center justify-between gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-medium text-[#2F2930] hover:bg-[#725D75]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors duration-200 cursor-pointer"
                                 >
-                                  <span className="truncate">{item.label}</span>
+                                  <span className="flex items-center gap-2 min-w-0">
+                                    {item.icon && (
+                                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#F9F6F2] text-[#725D75] group-hover:bg-white group-hover:text-[#58445B] transition-colors duration-200 dark:bg-[#2D1C34] dark:text-[#C9BEAB]">
+                                        <item.icon size={16} strokeWidth={1.75} />
+                                      </span>
+                                    )}
+                                    <span className="truncate group-hover:text-[#725D75] dark:group-hover:text-[#C9BEAB] transition-colors duration-200">
+                                      {item.label}
+                                    </span>
+                                  </span>
                                   <ArrowUpRight size={12} className="text-[#746B72] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 ml-1" />
                                 </NavigationMenuLink>
                               ))}
@@ -810,9 +819,14 @@ export const Header: React.FC<HeaderProps> = ({
                                     key={item.label}
                                     type="button"
                                     onClick={() => handleNavCategory(item.label)}
-                                    className="text-left py-1 pl-2 hover:text-[#2F2930] dark:hover:text-white"
+                                    className="group flex items-center gap-2 text-left py-1 pl-2 hover:text-[#725D75] dark:hover:text-white transition-colors duration-200"
                                   >
-                                    &ndash; {item.label}
+                                    {item.icon && (
+                                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#F9F6F2] text-[#725D75] dark:bg-[#2D1C34] dark:text-[#C9BEAB]">
+                                        <item.icon size={12} strokeWidth={1.75} />
+                                      </span>
+                                    )}
+                                    <span>{item.label}</span>
                                   </button>
                                 ))}
                               </div>
