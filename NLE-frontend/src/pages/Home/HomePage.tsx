@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import TabbedFAQ from '../../components/ui/TabbedFAQ';
 import InfiniteTestimonials from '../../components/ui/InfiniteTestimonials';
+import WhyChooseUs from '../../components/ui/WhyChooseUs';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { EVENT_PACKAGES } from '../../components/packages/eventPackages.data';
 import type { AdminCategory, AdminProduct } from '../../types';
@@ -295,6 +296,11 @@ export const HomePage: React.FC<HomePageProps> = ({
             ))}
           </div>
         </section>
+
+        {/* ========================================================================= */}
+        {/* 5. WHY CHOOSE US                                                          */}
+        {/* ========================================================================= */}
+        <WhyChooseUs />
 
         {/* ========================================================================= */}
         {/* 6. TOP ACTIVITIES & ADD-ONS                                               */}
