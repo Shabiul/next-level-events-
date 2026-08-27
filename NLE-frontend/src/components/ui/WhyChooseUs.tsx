@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { MapPin, Sparkles, Clock } from 'lucide-react';
 
 interface FeatureItem {
@@ -45,8 +45,20 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
   imageUrl = '/birthday-landscape.jpg',
   imageAlt = 'Premium celebration décor setup',
 }) => {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Scroll-linked parallax: as the section travels through the viewport,
+  // the showcase image drifts gently on its own axis (like the reference
+  // site's scroll-tied imagery) rather than just fading in once.
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  });
+  const imageY = useTransform(scrollYProgress, [0, 1], ['-6%', '6%']);
+
   return (
     <section
+      ref={sectionRef}
       id="why-us"
       data-nav-theme="light"
       className="relative w-full overflow-hidden bg-[#F9F6F2]"
@@ -56,17 +68,35 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
 
           {/* LEFT COLUMN: Narrative & feature highlights */}
           <div className="lg:col-span-6 flex flex-col justify-center">
-            <p className="text-xs font-semibold tracking-wide text-[#A78A9F] mb-3">
+            <motion.p
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="text-xs font-semibold tracking-wide text-[#A78A9F] mb-3"
+            >
               {eyebrow}
-            </p>
+            </motion.p>
 
-            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold leading-[1.1] text-[#725D75] tracking-tight mb-5">
+            <motion.h2
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+              className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold leading-[1.1] text-[#725D75] tracking-tight mb-5"
+            >
               {title} <span className="italic text-[#A78A9F]">{titleAccent}</span>
-            </h2>
+            </motion.h2>
 
-            <p className="text-sm sm:text-base leading-relaxed text-[#746B72] max-w-lg mb-8 sm:mb-10">
+            <motion.p
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
+              className="text-sm sm:text-base leading-relaxed text-[#746B72] max-w-lg mb-8 sm:mb-10"
+            >
               {description}
-            </p>
+            </motion.p>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {features.map((item, idx) => {
@@ -77,7 +107,7 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
                     initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: idx * 0.1 }}
+                    transition={{ duration: 0.4, delay: 0.24 + idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
                     className="rounded-xl border border-[#E4DCD2] bg-white p-4 sm:p-5"
                   >
                     <div className="w-10 h-10 rounded-full bg-[#F3EFE7] flex items-center justify-center text-[#725D75] mb-3">
@@ -95,19 +125,20 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Showcase image */}
+          {/* RIGHT COLUMN: Showcase image with scroll-linked parallax */}
           <div className="lg:col-span-6 h-full flex items-center">
             <motion.div
               initial={{ opacity: 0, scale: 0.97 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
               className="relative w-full h-[340px] sm:h-[420px] lg:h-[480px] rounded-2xl overflow-hidden shadow-sm group"
             >
-              <img
+              <motion.img
                 src={imageUrl}
                 alt={imageAlt}
-                className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                style={{ y: imageY }}
+                className="absolute inset-0 h-[120%] w-full -top-[10%] object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                 loading="lazy"
               />
             </motion.div>
