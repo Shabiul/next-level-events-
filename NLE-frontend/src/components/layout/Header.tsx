@@ -294,17 +294,20 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* ================================================================= */}
       {/* UNIFIED NAVBAR -- logo + nav + search + actions                    */}
-      {/* Full width, flush, edge-to-edge on the landing page; a floating   */}
-      {/* rounded card (with margin) everywhere else.                       */}
+      {/* A wide floating PILL spanning nearly the full viewport width on   */}
+      {/* the landing page (reference: murudeshwara.com-style capsule nav); */}
+      {/* a narrower floating rounded card everywhere else.                 */}
       {/* ================================================================= */}
-      <div className={isHome ? 'w-full' : 'mx-auto max-w-[1720px] px-3 sm:px-5 lg:px-8 py-2 sm:py-3'}>
+      <div className={isHome ? 'w-full px-3 sm:px-6 lg:px-10 py-3 sm:py-4' : 'mx-auto max-w-[1720px] px-3 sm:px-5 lg:px-8 py-2 sm:py-3'}>
         <div
           className={cn(
             'flex items-center gap-2 sm:gap-3 lg:gap-5 h-[68px] sm:h-[76px] lg:h-[80px] backdrop-blur-md transition-colors duration-300',
             isHome
               ? cn(
-                  'w-full border-b px-4 sm:px-6 lg:px-12',
-                  isDark ? 'bg-[#1B101F]/90 border-[#483250]' : 'bg-white/90 border-[#E4DCD2]'
+                  'w-full rounded-full border px-4 sm:px-6 lg:px-8',
+                  isDark
+                    ? 'bg-[#1B101F]/90 border-[#483250] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.4)]'
+                    : 'bg-white/90 border-[#E4DCD2] shadow-[0_2px_16px_rgba(47,41,48,0.06)]'
                 )
               : cn(
                   'rounded-[18px] sm:rounded-[20px] border px-3 sm:px-5 lg:px-6',
