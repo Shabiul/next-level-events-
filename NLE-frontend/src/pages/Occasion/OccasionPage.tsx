@@ -97,7 +97,7 @@ const ACTIVITIES_FALLBACK_MAP: Record<string, AdminProduct[]> = {
       originalPrice: 2800,
       description: 'Surprise car trunk styling with fairy light stringing, helium balloons, customized photo bunting, and gift boxes.',
       image: '/car bot.jpeg',
-      moreImages: [],
+      moreImages: ['/car deliver 4.jpeg'],
       inclusions: ['Custom Car Trunk Styling', 'Fairy Light Garland', '10 Printed Memories Photo Bunting', 'Surprise Banner'],
       addOns: [],
       badge: 'Surprise Favorite',
@@ -106,6 +106,56 @@ const ACTIVITIES_FALLBACK_MAP: Record<string, AdminProduct[]> = {
       reviewCount: 195,
       active: true,
       featured: true,
+      createdAt: '2026-01-01',
+      updatedAt: '2026-01-01',
+    },
+  ],
+  'car & bike decoration': [
+    {
+      _id: 'exp_car_1',
+      categoryId: 'cat_exp',
+      name: 'Grand Entry Car Floral Decoration',
+      categoryName: 'Experiences',
+      subcategory: 'Car & Bike Decoration',
+      price: 2999,
+      originalPrice: 3800,
+      description: 'Fresh floral garlands styled across the bonnet and grille for a grand wedding or celebration car entry.',
+      image: '/car dilver.jpeg',
+      moreImages: [
+        '/car deliver.jpeg',
+        '/car deliver (2).jpeg',
+        '/car deliver 5.jpeg',
+      ],
+      inclusions: ['Fresh Flower Bonnet Garland', 'Grille & Mirror Floral Accents', 'On-Location Styling', 'Same-Day Setup'],
+      addOns: [],
+      badge: 'Grand Entry',
+      badgeColor: 'purple',
+      rating: 4.9,
+      reviewCount: 84,
+      active: true,
+      featured: true,
+      createdAt: '2026-01-01',
+      updatedAt: '2026-01-01',
+    },
+    {
+      _id: 'exp_car_2',
+      categoryId: 'cat_exp',
+      name: 'Bridal Bike Floral Decoration',
+      categoryName: 'Experiences',
+      subcategory: 'Car & Bike Decoration',
+      price: 1499,
+      originalPrice: 1999,
+      description: 'Rose and baby\'s breath garland styling across the headlamp and handlebars for a stylish two-wheeler entry.',
+      image: '/car deliver5.jpeg',
+      moreImages: [],
+      inclusions: ['Fresh Rose & Baby\'s Breath Garland', 'Headlamp & Handlebar Styling', 'On-Location Setup'],
+      addOns: [],
+      badge: 'Popular',
+      badgeColor: 'pink',
+      rating: 4.8,
+      reviewCount: 47,
+      active: true,
+      featured: false,
       createdAt: '2026-01-01',
       updatedAt: '2026-01-01',
     },
@@ -333,6 +383,7 @@ ACTIVITIES_FALLBACK_MAP['experiences'] = [
   ...ACTIVITIES_FALLBACK_MAP['cabana setups'],
   ...ACTIVITIES_FALLBACK_MAP['terrace proposals'],
   ...ACTIVITIES_FALLBACK_MAP['car boot surprises'],
+  ...ACTIVITIES_FALLBACK_MAP['car & bike decoration'],
 ];
 
 const THEME_FAQS_MAP: Record<string, { question: string; answer: string }[]> = {
@@ -480,6 +531,17 @@ export const OccasionPage: React.FC<{
     );
   }, [decodedCategory, decodedSubcategory]);
 
+  const isCarDecorationCategory = useMemo(() => {
+    const cat = (decodedCategory || '').toLowerCase();
+    const sub = (decodedSubcategory || '').toLowerCase();
+    return (
+      cat.includes('car & bike') ||
+      sub.includes('car & bike') ||
+      sub.includes('bike decoration') ||
+      (cat.includes('experience') && sub.includes('bike'))
+    );
+  }, [decodedCategory, decodedSubcategory]);
+
   const isCabanaCategory = useMemo(() => {
     const cat = (decodedCategory || '').toLowerCase();
     const sub = (decodedSubcategory || '').toLowerCase();
@@ -553,6 +615,7 @@ export const OccasionPage: React.FC<{
   const heroBgImage = useMemo(() => {
     if (isPhotographyCategory) return 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1920&q=80';
     if (isProposalCategory) return '/tearce.jpeg';
+    if (isCarDecorationCategory) return '/car dilver.jpeg';
     if (isCarBootCategory) return '/car bot.jpeg';
     if (isCabanaCategory) return '/kkkk.jpeg';
     if (isLiveEateriesCategory) return '/liveeee.jpeg';
@@ -565,7 +628,7 @@ export const OccasionPage: React.FC<{
     if (isWelcomeBabyCategory) return '/welcome-baby.jpg';
     if (isBirthdayCategory) return '/birthday.jpg';
     return '/about-purple-decor.png';
-  }, [isPhotographyCategory, isProposalCategory, isCarBootCategory, isCabanaCategory, isLiveEateriesCategory, isKidsActivitiesCategory, isKidsThemeCategory, isAnniversaryCategory, isWallDecorCategory, is1stBirthdayCategory, isBabyShowerCategory, isWelcomeBabyCategory, isBirthdayCategory]);
+  }, [isPhotographyCategory, isProposalCategory, isCarDecorationCategory, isCarBootCategory, isCabanaCategory, isLiveEateriesCategory, isKidsActivitiesCategory, isKidsThemeCategory, isAnniversaryCategory, isWallDecorCategory, is1stBirthdayCategory, isBabyShowerCategory, isWelcomeBabyCategory, isBirthdayCategory]);
 
   const heroImageClass = useMemo(() => {
     if (isPhotographyCategory) return 'object-cover object-center';
@@ -613,6 +676,7 @@ export const OccasionPage: React.FC<{
         { name: 'Cabana Setups', image: '/kkkk.jpeg' },
         { name: 'Terrace Proposals', image: '/tearce.jpeg' },
         { name: 'Car Boot Surprises', image: '/car bot.jpeg' },
+        { name: 'Car & Bike Decoration', image: '/car dilver.jpeg' },
       ];
     }
     if (!currentCategory?.subcategories) return [];
