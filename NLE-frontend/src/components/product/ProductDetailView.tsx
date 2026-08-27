@@ -56,7 +56,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
   const primaryImage = useMemo(() => resolveProductCardImage(product), [product]);
   const allImages = useMemo(() => [primaryImage, ...(product.moreImages || [])].filter(Boolean) as string[], [primaryImage, product]);
   const [activeIdx, setActiveIdx] = useState(0);
-  const [termsOpen, setTermsOpen] = useState(true);
+  const [showAllTerms, setShowAllTerms] = useState(false);
   const [showAllInclusions, setShowAllInclusions] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [fullScreenModalOpen, setFullScreenModalOpen] = useState(false);
@@ -95,11 +95,15 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
     ];
   }, [product.inclusions]);
 
-  const INCLUSIONS_PREVIEW_COUNT = 6;
+  const INCLUSIONS_PREVIEW_COUNT = 3;
   const visibleInclusions = showAllInclusions
     ? inclusionsList
     : inclusionsList.slice(0, INCLUSIONS_PREVIEW_COUNT);
   const hiddenInclusionsCount = inclusionsList.length - INCLUSIONS_PREVIEW_COUNT;
+
+  const TERMS_PREVIEW_COUNT = 2;
+  const visibleTerms = showAllTerms ? TERMS : TERMS.slice(0, TERMS_PREVIEW_COUNT);
+  const hiddenTermsCount = TERMS.length - TERMS_PREVIEW_COUNT;
 
   useEffect(() => {
     setLocalWished(null);
@@ -506,12 +510,21 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+              <div
+                className={cn(
+                  showAllInclusions
+                    ? 'grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3'
+                    : 'flex flex-nowrap gap-3.5 overflow-x-auto hide-scrollbar pb-1'
+                )}
+              >
                 {visibleInclusions.map((inc: string, i: number) => (
                   <motion.div
                     key={i}
                     whileHover={{ scale: 1.025, y: -3 }}
-                    className="flex items-center gap-3 rounded-2xl border border-[#E8E7E3] bg-[#FAF9F6] dark:bg-[#25172C] dark:border-[#38223E] p-4 text-xs sm:text-sm font-semibold text-[#1C1C1C] dark:text-white shadow-2xs hover:border-[#DCD8CC] dark:hover:border-[#4D2F57] transition-all"
+                    className={cn(
+                      'flex items-center gap-3 rounded-2xl border border-[#E8E7E3] bg-[#FAF9F6] dark:bg-[#25172C] dark:border-[#38223E] p-4 text-xs sm:text-sm font-semibold text-[#1C1C1C] dark:text-white shadow-2xs hover:border-[#DCD8CC] dark:hover:border-[#4D2F57] transition-all',
+                      !showAllInclusions && 'flex-none w-[280px] sm:w-[320px]'
+                    )}
                   >
                     <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-600 dark:bg-emerald-400/20 dark:text-emerald-400 shadow-xs">
                       <Check size={16} />
@@ -525,7 +538,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                 <button
                   type="button"
                   onClick={() => setShowAllInclusions((o) => !o)}
-                  className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#725D75] dark:text-amber-400 hover:text-[#A78A9F] transition-colors cursor-pointer"
+                  className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-[#E8E7E3] dark:border-[#38223E] bg-[#FAF9F6] dark:bg-[#25172C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#725D75] dark:text-amber-400 hover:bg-[#725D75]/08 dark:hover:bg-amber-400/10 transition-colors cursor-pointer"
                 >
                   <span>
                     {showAllInclusions ? 'View Less' : `View More (${hiddenInclusionsCount})`}
@@ -553,13 +566,9 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
               transition={{ duration: 0.5 }}
               className="rounded-3xl border border-[#E8E7E3] bg-white/95 p-6 sm:p-8 dark:bg-[#1E1E1E]/95 dark:border-[#2E2E2E] shadow-card backdrop-blur-md transition-all"
             >
-              <button
-                type="button"
-                className="flex w-full items-center justify-between py-1 text-left cursor-pointer group"
-                onClick={() => setTermsOpen((o: boolean) => !o)}
-              >
+              <div className="flex w-full items-center justify-between py-1">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#725D75]/08 text-[#2F2930] dark:bg-amber-400/15 dark:text-amber-400 transition-colors group-hover:bg-[#725D75]/15">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#725D75]/08 text-[#2F2930] dark:bg-amber-400/15 dark:text-amber-400">
                     <ShieldCheck size={22} />
                   </div>
                   <div>
@@ -571,42 +580,57 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="hidden sm:inline-block text-[10px] font-bold uppercase tracking-wider text-[#2F2930] bg-[#725D75]/08 dark:text-amber-300 dark:bg-amber-400/15 px-3 py-1 rounded-full">
-                    10 Key Terms
-                  </span>
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#F9F6F2] text-[#2F2930] dark:bg-[#2A2A2A] dark:text-white group-hover:bg-[#EAE7DF] transition-colors">
-                    {termsOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                  </div>
-                </div>
-              </button>
+                <span className="hidden sm:inline-block text-[10px] font-bold uppercase tracking-wider text-[#2F2930] bg-[#725D75]/08 dark:text-amber-300 dark:bg-amber-400/15 px-3 py-1 rounded-full">
+                  10 Key Terms
+                </span>
+              </div>
 
-              {termsOpen && (
-                <div className="mt-6 pt-6 border-t border-[#E8E7E3] dark:border-[#2E2E2E]">
-                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {TERMS.map((term: string, i: number) => (
-                      <motion.li
-                        key={i}
-                        whileHover={{ y: -3, scale: 1.015 }}
-                        className="flex items-start gap-3.5 rounded-2xl border border-[#EDECE8] bg-[#FAF9F6] p-4 text-xs sm:text-sm font-semibold text-[#1C1C1C] dark:border-[#2E2E2E] dark:bg-[#252525] dark:text-[#F3F4F6] shadow-2xs hover:border-[#DCD8CC] dark:hover:border-[#3E3E3E] transition-all hover:shadow-sm"
-                      >
-                        <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#725D75] text-xs font-bold text-white dark:bg-amber-400 dark:text-slate-950 shadow-xs mt-0.5">
-                          {i + 1}
-                        </div>
-                        <div className="flex items-start gap-2.5 flex-1 min-w-0">
-                          <span className="relative flex h-2 w-2 shrink-0 mt-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-                          </span>
-                          <span className="text-[#242424] dark:text-[#E8E8E8] font-medium leading-relaxed text-xs sm:text-sm">
-                            {term}
-                          </span>
-                        </div>
-                      </motion.li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+              <div className="mt-6 pt-6 border-t border-[#E8E7E3] dark:border-[#2E2E2E]">
+                <ul
+                  className={cn(
+                    showAllTerms
+                      ? 'grid grid-cols-1 md:grid-cols-2 gap-4'
+                      : 'flex flex-nowrap gap-4 overflow-x-auto hide-scrollbar pb-1'
+                  )}
+                >
+                  {visibleTerms.map((term: string, i: number) => (
+                    <motion.li
+                      key={i}
+                      whileHover={{ y: -3, scale: 1.015 }}
+                      className={cn(
+                        'flex items-start gap-3.5 rounded-2xl border border-[#EDECE8] bg-[#FAF9F6] p-4 text-xs sm:text-sm font-semibold text-[#1C1C1C] dark:border-[#2E2E2E] dark:bg-[#252525] dark:text-[#F3F4F6] shadow-2xs hover:border-[#DCD8CC] dark:hover:border-[#3E3E3E] transition-all hover:shadow-sm',
+                        !showAllTerms && 'flex-none w-[300px] sm:w-[340px]'
+                      )}
+                    >
+                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#725D75] text-xs font-bold text-white dark:bg-amber-400 dark:text-slate-950 shadow-xs mt-0.5">
+                        {i + 1}
+                      </div>
+                      <div className="flex items-start gap-2.5 flex-1 min-w-0">
+                        <span className="relative flex h-2 w-2 shrink-0 mt-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                        </span>
+                        <span className="text-[#242424] dark:text-[#E8E8E8] font-medium leading-relaxed text-xs sm:text-sm">
+                          {term}
+                        </span>
+                      </div>
+                    </motion.li>
+                  ))}
+                </ul>
+
+                {hiddenTermsCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAllTerms((o) => !o)}
+                    className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-[#E8E7E3] dark:border-[#38223E] bg-[#FAF9F6] dark:bg-[#25172C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#725D75] dark:text-amber-400 hover:bg-[#725D75]/08 dark:hover:bg-amber-400/10 transition-colors cursor-pointer"
+                  >
+                    <span>
+                      {showAllTerms ? 'View Less' : `View More (${hiddenTermsCount})`}
+                    </span>
+                    {showAllTerms ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+                  </button>
+                )}
+              </div>
             </motion.div>
 
             {/* Similar Packages Grid */}
