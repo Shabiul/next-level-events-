@@ -569,11 +569,11 @@ export const Header: React.FC<HeaderProps> = ({
                         Home
                       </button>
 
-                      {/* Shop Accordion */}
+                      {/* Services Accordion */}
                       <Accordion type="single" collapsible className="w-full border-b border-[#E4DCD2]/50 dark:border-[#483250]/50">
                         <AccordionItem value="mobile-services" className="border-none">
                           <AccordionTrigger className="py-2 px-1 text-sm font-semibold text-[#2F2930] dark:text-[#FAF8F5] hover:no-underline">
-                            Shop
+                            Services
                           </AccordionTrigger>
                           <AccordionContent className="flex flex-col gap-3 pl-3 pt-1 pb-3 text-xs text-[#746B72] dark:text-[#C9BEAB]">
                             {SERVICE_COLUMNS.map((column) => (
@@ -618,29 +618,6 @@ export const Header: React.FC<HeaderProps> = ({
                         </AccordionItem>
                       </Accordion>
 
-                      {/* Themes */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setMobileMenuOpen(false);
-                          navigate('/explore');
-                        }}
-                        className="text-left py-2 px-1 hover:text-[#725D75] transition-colors border-b border-[#E4DCD2]/50 dark:border-[#483250]/50"
-                      >
-                        Themes
-                      </button>
-
-                      {/* Services */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setMobileMenuOpen(false);
-                          navigate('/explore');
-                        }}
-                        className="text-left py-2 px-1 hover:text-[#725D75] transition-colors border-b border-[#E4DCD2]/50 dark:border-[#483250]/50"
-                      >
-                        Services
-                      </button>
 
                       {/* Packages */}
                       <button
@@ -805,7 +782,7 @@ export const Header: React.FC<HeaderProps> = ({
                   </button>
                 </NavigationMenuItem>
 
-                {/* Shop (mega-menu trigger) */}
+                {/* Services (mega-menu trigger) */}
                 <NavigationMenuItem>
                   <NavigationMenuTrigger
                     className={cn(
@@ -817,7 +794,7 @@ export const Header: React.FC<HeaderProps> = ({
                           : 'text-[#2F2930] hover:text-[#725D75] data-[state=open]:text-[#725D75]'
                     )}
                   >
-                    Shop
+                    Services
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="p-0">
                     <div className="w-[720px] max-w-[96vw] rounded-3xl border border-[#E4DCD2] dark:border-[#483250] bg-[#F9F6F2] dark:bg-[#201325] p-6 shadow-2xl">
@@ -901,29 +878,6 @@ export const Header: React.FC<HeaderProps> = ({
                       </div>
                     </div>
                   </NavigationMenuContent>
-                </NavigationMenuItem>
-
-                {/* Themes */}
-                <NavigationMenuItem>
-                  <button
-                    type="button"
-                    onClick={() => navigate('/explore')}
-                    className={navLinkClass(location.pathname === '/explore')}
-                  >
-                    Themes
-                    {navUnderline(location.pathname === '/explore')}
-                  </button>
-                </NavigationMenuItem>
-
-                {/* Services */}
-                <NavigationMenuItem>
-                  <button
-                    type="button"
-                    onClick={() => navigate('/explore')}
-                    className={navLinkClass(false)}
-                  >
-                    Services
-                  </button>
                 </NavigationMenuItem>
 
                 {/* Packages */}
