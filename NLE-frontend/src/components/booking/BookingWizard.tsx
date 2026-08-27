@@ -1,11 +1,37 @@
 import React, { useContext, useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { ShieldCheck, Lock, Zap, Calendar, Clock, MapPin, User, Sparkles, X, CreditCard, ChevronRight } from 'lucide-react';
+import {
+  ShieldCheck,
+  Lock,
+  Zap,
+  Calendar,
+  Clock,
+  MapPin,
+  User,
+  Sparkles,
+  X,
+  CreditCard,
+  ChevronRight,
+  Camera,
+  Video,
+  Utensils,
+  Flame,
+  Flower2,
+  Cake,
+  Music,
+  Smile,
+  PartyPopper,
+  Lightbulb,
+  Gift,
+  ClipboardList,
+  type LucideIcon,
+} from 'lucide-react';
 import { BackButton } from '../ui/BackButton';
 import type { AdminProduct, BookingAddonSnapshot, BookingDetails } from '../../types';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
+import { AddOnCard } from './AddOnCard';
 import { getApiUrl } from '../../services/api.service';
 import { trackPaymentFailed, trackPurchase, trackWhatsappClick, type GAItem } from '../../utils/analytics';
 import AuthContext from '../../context/AuthContext';
@@ -61,13 +87,33 @@ const WA_SVG = (
   </svg>
 );
 
-const AVAILABLE_ADDONS_PRESETS: BookingAddonSnapshot[] = [
-  { name: 'LED Number / Age Lights (Set of 2)', price: 499, kind: 'addon' },
-  { name: 'Foil Balloon Bouquet (10 Balloons)', price: 699, kind: 'addon' },
-  { name: 'Candlelight Cabana Upgrade', price: 1499, kind: 'addon' },
-  { name: 'Live Ice Gola / Refreshment Counter', price: 2499, kind: 'activity' },
-  { name: 'Bespoke Welcome Board Setup', price: 899, kind: 'addon' },
+interface AddonPreset extends BookingAddonSnapshot {
+  description: string;
+  icon: LucideIcon;
+  badge?: string;
+}
+
+const AVAILABLE_ADDONS_PRESETS: AddonPreset[] = [
+  { name: 'Photography Coverage (2 Hours)', price: 2499, kind: 'addon', description: 'Candid + posed shots of the celebration', icon: Camera },
+  { name: 'Videography Coverage (2 Hours)', price: 2999, kind: 'addon', description: 'Cinematic highlight reel of your event', icon: Video },
+  { name: 'Live Catering Counter', price: 3499, kind: 'activity', description: 'Curated snack or dessert counter with live service', icon: Utensils, badge: 'POPULAR' },
+  { name: 'LED Number / Age Lights (Set of 2)', price: 499, kind: 'addon', description: 'Warm-glow numeral lights for the backdrop', icon: Lightbulb },
+  { name: 'Cold Pyro Entry Effect', price: 1999, kind: 'activity', description: 'Sparkling cold-spark entrance for a grand reveal', icon: Flame },
+  { name: 'Fresh Flower Styling', price: 1299, kind: 'addon', description: 'Fresh floral accents across the backdrop & table', icon: Flower2 },
+  { name: 'Customised Cake Table Styling', price: 899, kind: 'addon', description: 'Themed cake table with props & backdrop styling', icon: Cake },
+  { name: 'DJ & Sound System (2 Hours)', price: 3999, kind: 'activity', description: 'Live DJ with speakers for music & announcements', icon: Music, badge: 'POPULAR' },
+  { name: 'Mascot Character Visit', price: 1799, kind: 'activity', description: 'A costumed mascot to greet & pose with guests', icon: Smile },
+  { name: 'Foil Balloon Bouquet Upgrade', price: 699, kind: 'addon', description: 'Premium foil balloon bouquet, 10 balloons', icon: PartyPopper },
+  { name: 'Ambient Fairy Lighting', price: 999, kind: 'addon', description: 'Warm string lighting across the decor setup', icon: Lightbulb },
+  { name: 'Themed Photo Props Set', price: 599, kind: 'addon', description: 'Handheld props matching your event theme', icon: Gift },
+  { name: 'Bespoke Welcome Board Setup', price: 899, kind: 'addon', description: 'Custom-named welcome board at the entrance', icon: ClipboardList },
 ];
+
+const toBookingSnapshot = (preset: AddonPreset): BookingAddonSnapshot => ({
+  name: preset.name,
+  price: preset.price,
+  kind: preset.kind,
+});
 
 export const BookingWizard: React.FC<BookingPageProps> = ({
   product,
@@ -766,14 +812,14 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
                     {form.addOns.map((addon) => (
                       <div
                         key={addon.id || addon.name}
-                        className="flex items-center justify-between gap-3 rounded-lg border border-emerald-300 bg-emerald-50/80 p-2.5 dark:bg-emerald-950/40 dark:border-emerald-700/50 shadow-xs"
+                        className="flex items-center justify-between gap-3 rounded-lg border border-[#725D75] bg-[#725D75]/06 p-2.5 dark:bg-[#2D1C34] dark:border-[#A78A9F]/50 shadow-xs"
                       >
                         <div className="min-w-0">
                           <div className="truncate text-xs font-semibold text-[#2F2930] dark:text-white flex items-center gap-1">
-                            <Sparkles size={11} className="text-emerald-600 dark:text-emerald-400" />
+                            <Sparkles size={11} className="text-[#725D75] dark:text-[#C9BEAB]" />
                             {addon.name}
                           </div>
-                          <div className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300">
+                          <div className="text-[11px] font-bold text-[#725D75] dark:text-[#C9BEAB]">
                             +₹{addon.price.toLocaleString('en-IN')}
                           </div>
                         </div>
@@ -791,43 +837,32 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
                   </div>
                 )}
 
-                {/* Popular Add-ons Quick Picker */}
+                {/* Popular Add-ons Quick Picker -- compact catalogue-style cards,
+                    4 cols desktop -> 2 cols tablet/mobile */}
                 <div className="mt-2">
                   <p className="text-xs font-bold text-[#2F2930] dark:text-neutral-300 mb-2.5 uppercase tracking-wider">
                     Popular Celebration Enhancements:
                   </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                     {AVAILABLE_ADDONS_PRESETS.map((preset) => {
                       const isSelected = form.addOns.some(a => a.name === preset.name);
                       return (
-                        <button
+                        <AddOnCard
                           key={preset.name}
-                          type="button"
-                          onClick={() => {
+                          title={preset.name}
+                          description={preset.description}
+                          price={preset.price}
+                          icon={preset.icon}
+                          badge={preset.badge}
+                          selected={isSelected}
+                          onToggle={() => {
                             if (isSelected) {
                               removeAddon(preset.name);
                             } else {
-                              setForm(prev => ({ ...prev, addOns: [...prev.addOns, preset] }));
+                              setForm(prev => ({ ...prev, addOns: [...prev.addOns, toBookingSnapshot(preset)] }));
                             }
                           }}
-                          className={cn(
-                            'flex items-center justify-between p-2.5 rounded-lg border text-left text-xs transition-all cursor-pointer shadow-2xs',
-                            isSelected
-                              ? 'border-emerald-600 bg-emerald-50 text-emerald-900 font-semibold dark:bg-emerald-950/40 dark:text-emerald-200'
-                              : 'border-[#E4DCD2] bg-[#F9F6F2] text-[#2F2930] hover:border-[#2F2930] dark:bg-[#151515] dark:border-[#2E2E2E] dark:text-white'
-                          )}
-                        >
-                          <div className="truncate pr-2">
-                            <span className="font-semibold block">{preset.name}</span>
-                            <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400">+₹{preset.price.toLocaleString('en-IN')}</span>
-                          </div>
-                          <div className={cn(
-                            'flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold transition',
-                            isSelected ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-700 dark:bg-[#2A2A2A] dark:text-slate-300'
-                          )}>
-                            {isSelected ? '✓' : '+'}
-                          </div>
-                        </button>
+                        />
                       );
                     })}
                   </div>
