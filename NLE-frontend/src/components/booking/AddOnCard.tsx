@@ -8,6 +8,10 @@ export interface AddOnCardProps {
   title: string;
   description?: string;
   price: number;
+  /** Override the default "+₹{price}" label, e.g. "From ₹1,500" for
+   * variable-price add-ons. The numeric `price` is still what gets added
+   * to the booking total when selected. */
+  priceLabel?: string;
   /** Small semantic line icon -- falls back to a generic sparkle if omitted. */
   icon?: LucideIcon;
   /** e.g. "POPULAR" -- omit when there's no real signal backing it. */
@@ -27,6 +31,7 @@ export const AddOnCard: React.FC<AddOnCardProps> = ({
   title,
   description,
   price,
+  priceLabel,
   icon: Icon = Sparkles,
   badge,
   selected = false,
@@ -57,10 +62,10 @@ export const AddOnCard: React.FC<AddOnCardProps> = ({
             selected ? 'bg-[#725D75] text-white' : 'bg-[#F3EFE7] text-[#725D75] dark:bg-[#2A2A2A]'
           )}
         >
-          <Icon size={17} strokeWidth={1.75} />
+          <Icon size={20} strokeWidth={1.75} />
         </span>
         <span className="text-sm font-bold text-[#725D75] dark:text-[#C9BEAB] whitespace-nowrap">
-          +₹{price.toLocaleString('en-IN')}
+          {priceLabel ?? `+₹${price.toLocaleString('en-IN')}`}
         </span>
       </div>
 

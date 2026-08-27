@@ -16,15 +16,11 @@ import {
   Camera,
   Video,
   Utensils,
-  Flame,
   Flower2,
   Cake,
-  Music,
-  Smile,
   PartyPopper,
   Lightbulb,
   Gift,
-  ClipboardList,
   type LucideIcon,
 } from 'lucide-react';
 import { BackButton } from '../ui/BackButton';
@@ -91,22 +87,19 @@ interface AddonPreset extends BookingAddonSnapshot {
   description: string;
   icon: LucideIcon;
   badge?: string;
+  /** Override display label, e.g. "From ₹1,500" for variable-price add-ons. */
+  priceLabel?: string;
 }
 
 const AVAILABLE_ADDONS_PRESETS: AddonPreset[] = [
-  { name: 'Photography Coverage (2 Hours)', price: 2499, kind: 'addon', description: 'Candid + posed shots of the celebration', icon: Camera },
-  { name: 'Videography Coverage (2 Hours)', price: 2999, kind: 'addon', description: 'Cinematic highlight reel of your event', icon: Video },
-  { name: 'Live Catering Counter', price: 3499, kind: 'activity', description: 'Curated snack or dessert counter with live service', icon: Utensils, badge: 'POPULAR' },
-  { name: 'LED Number / Age Lights (Set of 2)', price: 499, kind: 'addon', description: 'Warm-glow numeral lights for the backdrop', icon: Lightbulb },
-  { name: 'Cold Pyro Entry Effect', price: 1999, kind: 'activity', description: 'Sparkling cold-spark entrance for a grand reveal', icon: Flame },
-  { name: 'Fresh Flower Styling', price: 1299, kind: 'addon', description: 'Fresh floral accents across the backdrop & table', icon: Flower2 },
-  { name: 'Customised Cake Table Styling', price: 899, kind: 'addon', description: 'Themed cake table with props & backdrop styling', icon: Cake },
-  { name: 'DJ & Sound System (2 Hours)', price: 3999, kind: 'activity', description: 'Live DJ with speakers for music & announcements', icon: Music, badge: 'POPULAR' },
-  { name: 'Mascot Character Visit', price: 1799, kind: 'activity', description: 'A costumed mascot to greet & pose with guests', icon: Smile },
-  { name: 'Foil Balloon Bouquet Upgrade', price: 699, kind: 'addon', description: 'Premium foil balloon bouquet, 10 balloons', icon: PartyPopper },
-  { name: 'Ambient Fairy Lighting', price: 999, kind: 'addon', description: 'Warm string lighting across the decor setup', icon: Lightbulb },
-  { name: 'Themed Photo Props Set', price: 599, kind: 'addon', description: 'Handheld props matching your event theme', icon: Gift },
-  { name: 'Bespoke Welcome Board Setup', price: 899, kind: 'addon', description: 'Custom-named welcome board at the entrance', icon: ClipboardList },
+  { name: 'Photography', price: 5000, kind: 'addon', description: 'Candid + posed shots of the celebration', icon: Camera },
+  { name: 'Videography', price: 7500, kind: 'addon', description: 'Cinematic highlight reel of your event', icon: Video },
+  { name: 'Live Catering', price: 3500, kind: 'activity', description: 'Curated snack or dessert counter with live service', icon: Utensils, badge: 'POPULAR' },
+  { name: 'Flower Decoration', price: 3000, kind: 'addon', description: 'Fresh floral accents across the backdrop & table', icon: Flower2 },
+  { name: 'LED Numbers', price: 1500, kind: 'addon', description: 'Warm-glow numeral lights for the backdrop', icon: Lightbulb },
+  { name: 'Custom Cake', price: 2500, kind: 'addon', description: 'Themed cake styled to match your celebration', icon: Cake },
+  { name: 'Return Gifts', price: 1500, kind: 'addon', description: 'Curated take-home favours for your guests', icon: Gift, priceLabel: 'From ₹1,500' },
+  { name: 'Premium Balloon Upgrade', price: 2500, kind: 'addon', description: 'Premium foil & organic balloon styling upgrade', icon: PartyPopper },
 ];
 
 const toBookingSnapshot = (preset: AddonPreset): BookingAddonSnapshot => ({
@@ -852,6 +845,7 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
                           title={preset.name}
                           description={preset.description}
                           price={preset.price}
+                          priceLabel={preset.priceLabel}
                           icon={preset.icon}
                           badge={preset.badge}
                           selected={isSelected}
