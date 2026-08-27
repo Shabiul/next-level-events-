@@ -57,6 +57,22 @@ const TOP_ACTIVITIES = [
 
 const FALLBACK_OCCASION_IMAGE = '/final_logo.jpeg';
 
+// Dedicated decor photography for the "Shop by Occasion" tiles (verified
+// to actually depict each occasion), replacing the admin-uploaded category
+// thumbnails on the Home page only -- keyed by category name, falls back
+// to cat.image for any category without a photo here (e.g. Kids
+// Activities, Live Eateries) so nothing elsewhere in the app is affected.
+const OCCASION_IMAGE_OVERRIDES: Record<string, string> = {
+  'Simple wall decors': '/SIMPLE WALL FOR HOME PAGE.jpeg',
+  'Birthday': '/BIRTHDAY FOR HOME PAGE.jpeg',
+  'Baby Shower': '/BABY SHOWER FOR HOME PAGE.jpeg',
+  '1st Birthday': '/1ST BIRTHDAY FOR HOME PAGE.jpeg',
+  'Welcome Baby': '/WELCOME FOR HOME PAGE.jpeg',
+  'Anniversary Celebrations': '/ANNIVERSAY FOR HOME PAGE.jpeg',
+  'Pre & Post Wedding decors': '/PRE AND POST WEDDING FOR HOME PAGE.jpeg',
+  'Naming ceremony': '/NAMING  FOR HOME PAGE.jpeg',
+};
+
 export const HomePage: React.FC<HomePageProps> = ({
   categories,
   onSelectCategory,
@@ -218,7 +234,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 >
                   <div className="relative aspect-square w-full rounded-xl overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-[250ms]">
                     <img
-                      src={cat.image || FALLBACK_OCCASION_IMAGE}
+                      src={OCCASION_IMAGE_OVERRIDES[cat.name] || cat.image || FALLBACK_OCCASION_IMAGE}
                       alt={cat.name}
                       className="h-full w-full object-cover transition-transform duration-[250ms] ease-out group-hover:scale-[1.03]"
                     />
