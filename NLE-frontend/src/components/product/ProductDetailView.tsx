@@ -57,6 +57,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
   const allImages = useMemo(() => [primaryImage, ...(product.moreImages || [])].filter(Boolean) as string[], [primaryImage, product]);
   const [activeIdx, setActiveIdx] = useState(0);
   const [termsOpen, setTermsOpen] = useState(true);
+  const [showAllInclusions, setShowAllInclusions] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [fullScreenModalOpen, setFullScreenModalOpen] = useState(false);
   const [fullScreenIdx, setFullScreenIdx] = useState(0);
@@ -93,6 +94,12 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
       '100% Real-to-Photo Pantone Color Match Guarantee',
     ];
   }, [product.inclusions]);
+
+  const INCLUSIONS_PREVIEW_COUNT = 6;
+  const visibleInclusions = showAllInclusions
+    ? inclusionsList
+    : inclusionsList.slice(0, INCLUSIONS_PREVIEW_COUNT);
+  const hiddenInclusionsCount = inclusionsList.length - INCLUSIONS_PREVIEW_COUNT;
 
   useEffect(() => {
     setLocalWished(null);
@@ -500,7 +507,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
               </div>
 
               <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
-                {inclusionsList.map((inc: string, i: number) => (
+                {visibleInclusions.map((inc: string, i: number) => (
                   <motion.div
                     key={i}
                     whileHover={{ scale: 1.025, y: -3 }}
@@ -513,6 +520,19 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                   </motion.div>
                 ))}
               </div>
+
+              {hiddenInclusionsCount > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setShowAllInclusions((o) => !o)}
+                  className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#725D75] dark:text-amber-400 hover:text-[#A78A9F] transition-colors cursor-pointer"
+                >
+                  <span>
+                    {showAllInclusions ? 'View Less' : `View More (${hiddenInclusionsCount})`}
+                  </span>
+                  {showAllInclusions ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+                </button>
+              )}
             </motion.div>
 
             {/* Global Add-ons & Activities Module */}
