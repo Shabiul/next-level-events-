@@ -14,7 +14,6 @@ import {
   DoorOpen,
   GraduationCap,
   Tent,
-  Flower2,
   Gift,
   Gamepad2,
   Utensils,
@@ -70,9 +69,12 @@ export const CURATED_DECORS: ServiceLink[] = [
   { label: 'National Festivals', icon: Sparkles },
   { label: 'Opening Decors', icon: DoorOpen },
   { label: 'Graduation', icon: GraduationCap },
-  { label: 'Proposal Setup', icon: Heart },
+  {
+    label: 'Proposal Setup',
+    subServices: ['Terrace Proposals', 'Marry Me Marquee', 'Heart Arch Setup', 'Candlelight Pathway'],
+    icon: Heart,
+  },
   { label: 'Cabana Setups', icon: Tent },
-  { label: 'Terrace Proposals', icon: Flower2 },
   { label: 'Car Boot Surprises', icon: Gift },
 ];
 
@@ -151,7 +153,201 @@ const SUB_SERVICE_IMAGES: Record<string, string> = {
   'ice cream flavours': '/ice gola.jpeg',
   'sweet corn': '/sweet corn.jpeg',
   'potato twister': '/potato twister.jpeg',
+  'bride-to-be': '/bride to be.jpeg',
+  'food & catering': '/food.jpeg',
+  'engagement decor': '/pre and post 2.jpeg',
+  'haldi ceremony': '/pre and post 5.jpeg',
+  'groom-to-be': '/pre and post 8.jpeg',
+  'ring ceremony': '/pre and post 3.jpeg',
+  'terrace proposals': '/tearce.jpeg',
+  'marry me marquee': '/terrace-proposal.jpeg',
+  'heart arch setup': '/proposal set up 2.jpeg',
+  'candlelight pathway': '/proposal set up 3.jpeg',
 };
+
+/**
+ * Themed photo galleries pulled from public/ for the top-level Curated
+ * Décor / Activities services. Keyed by the lower-cased `label`. These are
+ * the real event photos added to the site's Services section (NOT the home
+ * page) -- one entry per theme, every image verified to depict that theme.
+ */
+export const SERVICE_GALLERY_IMAGES: Record<string, string[]> = {
+  'simple wall decors': [
+    '/simple-wall-decor.jpg',
+    '/simple-wall-decors.jpg',
+  ],
+  'birthdays': [
+    '/birthday.jpeg',
+    '/birthday.jpg',
+    '/birthday-landscape.jpg',
+  ],
+  '1st birthday designs': [
+    '/1st birthday.jpeg',
+    '/1st-birthday.jpeg',
+    '/1st-birthday.jpg',
+    '/1ss.jpeg',
+  ],
+  'baby showers': [
+    '/baby shower.jpeg',
+    '/baby-shower.jpeg',
+    '/baby-shower.jpg',
+  ],
+  'welcome baby': [
+    '/welcome-baby.jpeg',
+    '/welcome-baby.jpg',
+    '/welcome.jpeg',
+  ],
+  'anniversary celebrations': [
+    '/romantic-dinner.jpg',
+    '/romantic-dinner-landscape.jpg',
+    '/romantic-dinner-ref.jpg',
+    '/candlelight-dinner.jpg',
+  ],
+  'naming ceremonies': [
+    '/NAMING CERMERIONS CARD.jpeg',
+    '/NAMING  FOR HOME PAGE.jpeg',
+  ],
+  'annaprashan': [
+    '/ANNAPARAS CARD.jpeg',
+    '/food.jpeg',
+    '/food 3.jpeg',
+    '/food 5.jpeg',
+    '/food 6.jpeg',
+    '/food 7.jpeg',
+  ],
+  'cabana setups': [
+    '/kkkk.jpeg',
+    '/cabana.jpeg',
+    '/kkkk-landscape.jpeg',
+  ],
+  'kids activities': [
+    '/kids-activities.jpeg',
+    '/kids activities.jpeg',
+    '/kids-activities.jpg',
+    '/kids theme.jpeg',
+    '/kids.jpeg',
+    '/kids-landscape.jpeg',
+  ],
+  'opening decors': [
+    '/OPINING CARD.jpeg',
+    '/opining 2.jpeg',
+    '/opining 4.jpeg',
+    '/opining 4 (2).jpeg',
+    '/opining5.jpeg',
+    '/opining6.jpeg',
+    '/opining7.jpeg',
+  ],
+  'national festivals': [
+    '/NATIONAL FISTIVAL CARD.jpeg',
+    '/national fistival.jpeg',
+    '/national fistival 5.jpeg',
+    '/national fistive 2.jpeg',
+    '/national fistivial 8.jpeg',
+  ],
+  'graduation': [
+    '/GRADUATION CARD.jpeg',
+    '/graduation.jpeg',
+    '/graduation set up.jpeg',
+    '/graduation set up 2.jpeg',
+    '/graduation set up 3.jpeg',
+    '/graduation set up 4.jpeg',
+    '/graduation set up 5.jpeg',
+    '/graduation set up 6.jpeg',
+    '/graduation set up 7.jpeg',
+  ],
+  'pre & post wedding': [
+    '/PRE AND POST CARD.jpeg',
+    '/pre and post 2.jpeg',
+    '/pre and post 3.jpeg',
+    '/pre and post 4.jpeg',
+    '/pre and post 5.jpeg',
+    '/pre and post 6.jpeg',
+    '/pre and post 7.jpeg',
+    '/pre and post 8.jpeg',
+    '/pre and post 9.jpeg',
+    '/pre and post 10.jpeg',
+    '/bride to be.jpeg',
+    '/bride to be 3.jpeg',
+    '/bride to be 4.jpeg',
+    '/bride to be 5.jpeg',
+  ],
+  'proposal setup': [
+    '/proposal set up.jpeg',
+    '/proposal set up 1.jpeg',
+    '/proposal set up 2.jpeg',
+    '/proposal set up 3.jpeg',
+    '/proposal set up 4.jpeg',
+    '/proposal set up 5.jpeg',
+    '/propsal set up 6.jpeg',
+    '/propsal set up 7.jpeg',
+    '/tearce.jpeg',
+    '/terrace-proposal.jpeg',
+    '/terrace.jpeg',
+  ],
+  'bike & car deliveries': [
+    '/BIKE AND CAR DELIVER CARD.jpeg',
+    '/car deliver.jpeg',
+    '/car deliver (2).jpeg',
+    '/car deliver (3).jpeg',
+    '/car deliver 4.jpeg',
+    '/car deliver 5.jpeg',
+  ],
+  'live eateries / catering': [
+    '/food.jpeg',
+    '/food 3.jpeg',
+    '/food 5.jpeg',
+    '/food 6.jpeg',
+    '/food 7.jpeg',
+  ],
+};
+
+/**
+ * One representative public/ photo per top-level service, shown as the
+ * thumbnail beside the label in the Services mega-menu / mobile menu.
+ * Labels without a verified photo fall back to their Lucide icon.
+ */
+export const SERVICE_THUMBNAILS: Record<string, string> = {
+  'simple wall decors': '/simple-wall-decor.jpg',
+  'birthdays': '/birthday.jpg',
+  'naming ceremonies': '/NAMING CERMERIONS CARD.jpeg',
+  'annaprashan': '/ANNAPARAS CARD.jpeg',
+  'photography & videography': 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=200&q=80',
+  'other services': '/activities-entertainment.jpeg',
+  '1st birthday designs': '/1ss.jpeg',
+  'baby showers': '/baby-shower.jpg',
+  'welcome baby': '/welcome-baby.jpg',
+  'anniversary celebrations': '/romantic-dinner.jpg',
+  'pre & post wedding': '/PRE AND POST CARD.jpeg',
+  'bike & car deliveries': '/BIKE AND CAR DELIVER CARD.jpeg',
+  'national festivals': '/NATIONAL FISTIVAL CARD.jpeg',
+  'opening decors': '/OPINING CARD.jpeg',
+  'graduation': '/GRADUATION CARD.jpeg',
+  'proposal setup': '/proposal set up.jpeg',
+  'cabana setups': '/kkkk.jpeg',
+  'car boot surprises': '/car bot.jpeg',
+  'kids activities': '/kids-activities.jpeg',
+  'live eateries / catering': '/food.jpeg',
+};
+
+/** Thumbnail for a top-level service label, or undefined to fall back to the icon. */
+export function getServiceThumb(label: string): string | undefined {
+  return SERVICE_THUMBNAILS[label.trim().toLowerCase()];
+}
+
+/**
+ * Returns the themed photo gallery for a top-level service by fuzzy
+ * (case-insensitive, either-direction substring) label match. Empty array
+ * when the theme has no curated photos yet.
+ */
+export function getServiceGalleryImages(name: string): string[] {
+  const norm = name.trim().toLowerCase();
+  if (!norm) return [];
+  if (SERVICE_GALLERY_IMAGES[norm]) return SERVICE_GALLERY_IMAGES[norm];
+  const key = Object.keys(SERVICE_GALLERY_IMAGES).find(
+    (k) => norm.includes(k) || k.includes(norm)
+  );
+  return key ? SERVICE_GALLERY_IMAGES[key] : [];
+}
 
 /** Generic celebration photo used when no verified photo exists for a
  * specific sub-service -- keeps every card populated with a real, on-brand

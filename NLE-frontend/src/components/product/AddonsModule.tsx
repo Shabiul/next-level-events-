@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, Heart, Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { CatalogActivity, CatalogAddon, CatalogSelectionItem } from '../../types';
 import { getApiUrl } from '../../services/api.service';
@@ -94,7 +94,13 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
   const [selectedActivityIds, setSelectedActivityIds] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<TabKey>('addons');
   const [activeCategory, setActiveCategory] = useState('All');
+  const [showAll, setShowAll] = useState(false);
+  const [wishlistIds, setWishlistIds] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  const toggleWishlist = (id: string) => {
+    setWishlistIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -225,53 +231,137 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
     );
   }
 
-  return (
-    <div className="space-y-4">
-      {/* Tab Switcher */}
-      <div className="flex items-center justify-between">
-        <div className="inline-flex rounded-full bg-[#E8E7E3] dark:bg-[#25172C] p-1 border border-[#E4DCD2] dark:border-[#483250]">
-          {TABS.map((tab) => (
+  const themeLabel = recommendedCategory || themeCategory;
+
+  const renderCard = (item: CatalogAddon | CatalogActivity, idx: number) => {
+    const itemId = getItemId(item);
+    const selected = activeTab === 'addons'
+      ? selectedAddonIds.includes(itemId)
+      : selectedActivityIds.includes(itemId);
+    const wished = wishlistIds.includes(itemId);
+    const imgUrl = item.image || 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&q=80';
+
+    return (
+      <motion.div
+        key={itemId}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: Math.min(idx * 0.04, 0.3) }}
+        className={cn(
+          'group relative self-start block overflow-hidden rounded-xl border shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300',
+          showAll ? 'w-full' : 'flex-none w-[220px] sm:w-[260px] snap-start',
+          selected ? 'border-[#725D75] ring-2 ring-[#725D75]/40' : 'border-[#E4DCD2] dark:border-[#2E2E2E]'
+        )}
+      >
+        <div className="relative h-72 sm:h-80 w-full">
+          <img
+            src={imgUrl}
+            alt={item.name}
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-[350ms] ease-out group-hover:scale-[1.03]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+
+          <button
+            type="button"
+            onClick={() => toggleWishlist(itemId)}
+            aria-label={wished ? 'Remove from wishlist' : 'Add to wishlist'}
+            className={cn(
+              'absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-white/40 bg-white/90 shadow-sm backdrop-blur-sm transition-colors cursor-pointer',
+              wished ? 'text-rose-600' : 'text-[#2F2930] hover:text-rose-600'
+            )}
+          >
+            <Heart size={15} fill={wished ? 'currentColor' : 'none'} />
+          </button>
+
+          {/* Overlay text area -- matches Home "Popular Packages" cards */}
+          <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+            <h3 className="font-serif text-lg font-bold text-white mb-1 line-clamp-1">{item.name}</h3>
+            <span className="text-lg font-bold text-white block mb-1.5">{getItemPriceLabel(item)}</span>
+            {item.description && (
+              <p className="text-xs text-white/80 leading-relaxed line-clamp-2 mb-2.5">{item.description}</p>
+            )}
             <button
-              key={tab.key}
               type="button"
-              onClick={() => setActiveTab(tab.key)}
+              onClick={() => (activeTab === 'addons' ? toggleAddon(itemId) : toggleActivity(itemId))}
               className={cn(
-                'rounded-full px-4 py-1.5 text-xs font-bold transition-all cursor-pointer',
-                activeTab === tab.key
-                  ? 'bg-[#725D75] text-[#F9F6F2] shadow-sm dark:bg-[#C9BEAB] dark:text-[#201325]'
-                  : 'text-[#746B72] hover:text-[#2F2930] dark:text-[#C8B5C3]'
+                'inline-flex items-center gap-1 rounded-full px-3.5 py-1.5 text-xs font-bold transition-colors cursor-pointer',
+                selected
+                  ? 'bg-[#725D75] text-white'
+                  : 'bg-white/90 text-[#2F2930] hover:bg-white'
               )}
             >
-              {tab.label}
+              {selected ? <><Check size={12} /> Added</> : <><Plus size={12} /> Add</>}
             </button>
-          ))}
+          </div>
         </div>
+      </motion.div>
+    );
+  };
 
-        <div className="hidden sm:flex items-center gap-1.5">
+  return (
+    <div className="space-y-5">
+      {/* Section Header -- title + View All, styled like "You May Also Like" */}
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#2F2930] dark:text-white">
+            Add-ons &amp; Activities
+          </h2>
+          <p className="text-xs text-[#746B72] dark:text-[#C8B5C3] font-medium mt-0.5">
+            {themeLabel
+              ? `Handpicked for your ${themeLabel} celebration`
+              : 'Complete your celebration with popular extras'}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="hidden sm:flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => scrollItems('left')}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E4DCD2] bg-white text-[#2F2930] hover:bg-[#F9F6F2] dark:bg-[#1E1E1E] dark:border-[#483250] dark:text-white cursor-pointer disabled:opacity-40"
+              aria-label="Scroll left"
+              disabled={showAll}
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollItems('right')}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E4DCD2] bg-white text-[#2F2930] hover:bg-[#F9F6F2] dark:bg-[#1E1E1E] dark:border-[#483250] dark:text-white cursor-pointer disabled:opacity-40"
+              aria-label="Scroll right"
+              disabled={showAll}
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
           <button
             type="button"
-            onClick={() => scrollItems('left')}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E4DCD2] bg-white text-[#2F2930] hover:bg-[#F9F6F2] dark:bg-[#1E1E1E] dark:border-[#483250] dark:text-white cursor-pointer"
-            aria-label="Scroll left"
+            onClick={() => setShowAll((o) => !o)}
+            className="rounded-full border border-[#E4DCD2] dark:border-[#483250] px-3.5 py-1.5 text-xs font-bold text-[#725D75] dark:text-[#C9BEAB] hover:bg-[#725D75]/08 dark:hover:bg-[#25172C] transition-colors cursor-pointer"
           >
-            <ChevronLeft size={16} />
-          </button>
-          <button
-            type="button"
-            onClick={() => scrollItems('right')}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E4DCD2] bg-white text-[#2F2930] hover:bg-[#F9F6F2] dark:bg-[#1E1E1E] dark:border-[#483250] dark:text-white cursor-pointer"
-            aria-label="Scroll right"
-          >
-            <ChevronRight size={16} />
+            {showAll ? 'Show Less' : 'View All'}
           </button>
         </div>
       </div>
 
-      {recommendedCategory && (
-        <p className="text-[11px] font-medium text-[#A78A9F]">
-          Recommended for your {recommendedCategory} theme
-        </p>
-      )}
+      {/* Tab Switcher */}
+      <div className="inline-flex rounded-full bg-[#E8E7E3] dark:bg-[#25172C] p-1 border border-[#E4DCD2] dark:border-[#483250]">
+        {TABS.map((tab) => (
+          <button
+            key={tab.key}
+            type="button"
+            onClick={() => setActiveTab(tab.key)}
+            className={cn(
+              'rounded-full px-4 py-1.5 text-xs font-bold transition-all cursor-pointer',
+              activeTab === tab.key
+                ? 'bg-[#725D75] text-[#F9F6F2] shadow-sm dark:bg-[#C9BEAB] dark:text-[#201325]'
+                : 'text-[#746B72] hover:text-[#2F2930] dark:text-[#C8B5C3]'
+            )}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
       {/* Subcategory Pills */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 hide-scrollbar">
@@ -295,90 +385,25 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
         })}
       </div>
 
-      {/* Scrollable Row -- overlay-on-image cards, matching the Home
-          "Popular Packages" style (real photo, bottom gradient, white
-          text) instead of a separate white info panel below the photo. */}
-      <div
-        ref={scrollRef}
-        className="flex gap-4 overflow-x-auto pb-3 pt-1 hide-scrollbar snap-x snap-mandatory"
-      >
-        {visibleItems.length > 0 ? (
-          visibleItems.map((item, idx) => {
-            const itemId = getItemId(item);
-            const selected = activeTab === 'addons'
-              ? selectedAddonIds.includes(itemId)
-              : selectedActivityIds.includes(itemId);
-
-            const imgUrl = item.image || 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&q=80';
-
-            return (
-              <motion.div
-                key={itemId}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: Math.min(idx * 0.04, 0.3) }}
-                className="flex-none w-[240px] sm:w-[260px] snap-start"
-              >
-                <button
-                  type="button"
-                  onClick={() => (activeTab === 'addons' ? toggleAddon(itemId) : toggleActivity(itemId))}
-                  className={cn(
-                    'group relative block h-[260px] sm:h-[280px] w-full overflow-hidden rounded-2xl border text-left cursor-pointer shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300',
-                    selected ? 'border-[#725D75] ring-2 ring-[#725D75]/50' : 'border-[#E4DCD2] dark:border-[#2E2E2E]'
-                  )}
-                >
-                  <img
-                    src={imgUrl}
-                    alt={item.name}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-[350ms] ease-out group-hover:scale-[1.04]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-
-                  {selected && (
-                    <span className="absolute top-3 right-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#725D75] text-white shadow-md">
-                      <Check size={14} />
-                    </span>
-                  )}
-
-                  <div className="absolute inset-x-0 bottom-0 p-4">
-                    <h4 className="font-serif text-base font-bold text-white line-clamp-1 mb-0.5">
-                      {item.name}
-                    </h4>
-                    {item.description && (
-                      <p className="text-[11px] text-white/80 leading-relaxed line-clamp-1 mb-2">
-                        {item.description}
-                      </p>
-                    )}
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-sm font-bold text-white">{getItemPriceLabel(item)}</span>
-                      <span
-                        className={cn(
-                          'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide transition-colors',
-                          selected ? 'bg-[#725D75] text-white' : 'bg-white/90 text-[#2F2930] group-hover:bg-white'
-                        )}
-                      >
-                        {selected ? (
-                          <>
-                            <Check size={11} />
-                            <span>Added</span>
-                          </>
-                        ) : (
-                          <span>+ Add</span>
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </button>
-              </motion.div>
-            );
-          })
-        ) : (
-          <div className="w-full rounded-2xl border border-[#E4DCD2] bg-white p-5 text-xs text-[#746B72] dark:bg-[#1E1E1E] dark:border-[#483250]">
-            No {activeTab === 'addons' ? 'add-ons' : 'activities'} available in this category.
+      {/* Cards -- carousel by default, responsive grid on "View All" */}
+      {visibleItems.length > 0 ? (
+        showAll ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {visibleItems.map((item, idx) => renderCard(item, idx))}
           </div>
-        )}
-      </div>
+        ) : (
+          <div
+            ref={scrollRef}
+            className="flex gap-4 overflow-x-auto pb-3 pt-1 hide-scrollbar snap-x snap-mandatory"
+          >
+            {visibleItems.map((item, idx) => renderCard(item, idx))}
+          </div>
+        )
+      ) : (
+        <div className="w-full rounded-2xl border border-[#E4DCD2] bg-white p-5 text-xs text-[#746B72] dark:bg-[#1E1E1E] dark:border-[#483250]">
+          No {activeTab === 'addons' ? 'add-ons' : 'activities'} available in this category.
+        </div>
+      )}
     </div>
   );
 };

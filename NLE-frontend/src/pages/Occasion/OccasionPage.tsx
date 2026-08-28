@@ -12,7 +12,7 @@ import { EmptyState } from '../../components/ui/EmptyState';
 import { BackButton } from '../../components/ui/BackButton';
 import { ShareDialog } from '../../components/ui/ShareDialog';
 import { SeoHead } from '../../components/layout/SeoHead';
-import { findServiceSubItems, getSubServiceImage } from '../../data/servicesData';
+import { findServiceSubItems, getSubServiceImage, getServiceGalleryImages } from '../../data/servicesData';
 import type { AdminProduct } from '../../types';
 
 const ACTIVITIES_FALLBACK_MAP: Record<string, AdminProduct[]> = {
@@ -62,7 +62,7 @@ const ACTIVITIES_FALLBACK_MAP: Record<string, AdminProduct[]> = {
       updatedAt: '2026-01-01',
     },
   ],
-  'terrace proposals': [
+  'proposal setup': [
     {
       _id: 'exp_prop_1',
       categoryId: 'cat_exp',
@@ -109,6 +109,28 @@ const ACTIVITIES_FALLBACK_MAP: Record<string, AdminProduct[]> = {
       createdAt: '2026-01-01',
       updatedAt: '2026-01-01',
     },
+    ...(['/car bot 1.jpeg', '/car bot 2.jpeg', '/car bot 3.jpeg', '/car bot3.jpeg'].map((img, i) => ({
+      _id: `exp_boot_${i + 2}`,
+      categoryId: 'cat_exp',
+      name: `Car Boot Surprise Setup ${i + 2}`,
+      categoryName: 'Experiences',
+      subcategory: 'Car Boot Surprises',
+      price: 1799 + i * 200,
+      originalPrice: 2500 + i * 200,
+      description: 'Surprise car trunk styling with balloons, fairy lights, fresh flower bouquets, and personalised banners.',
+      image: img,
+      moreImages: [],
+      inclusions: ['Custom Car Trunk Styling', 'Balloons & Fairy Lights', 'Fresh Flower Bouquet', 'Personalised Banner'],
+      addOns: [],
+      badge: 'Surprise Favorite',
+      badgeColor: 'purple',
+      rating: 4.8,
+      reviewCount: 90 + i * 12,
+      active: true,
+      featured: false,
+      createdAt: '2026-01-01',
+      updatedAt: '2026-01-01',
+    })) as AdminProduct[]),
   ],
   'car & bike decoration': [
     {
@@ -381,7 +403,7 @@ const ACTIVITIES_FALLBACK_MAP: Record<string, AdminProduct[]> = {
 ACTIVITIES_FALLBACK_MAP['photography & videography'] = ACTIVITIES_FALLBACK_MAP['photography'];
 ACTIVITIES_FALLBACK_MAP['experiences'] = [
   ...ACTIVITIES_FALLBACK_MAP['cabana setups'],
-  ...ACTIVITIES_FALLBACK_MAP['terrace proposals'],
+  ...ACTIVITIES_FALLBACK_MAP['proposal setup'],
   ...ACTIVITIES_FALLBACK_MAP['car boot surprises'],
   ...ACTIVITIES_FALLBACK_MAP['car & bike decoration'],
 ];
@@ -591,7 +613,7 @@ export const OccasionPage: React.FC<{
   const isLiveEateriesCategory = useMemo(() => {
     const cat = (decodedCategory || '').toLowerCase();
     const sub = (decodedSubcategory || '').toLowerCase();
-    return cat.includes('eater') || sub.includes('eater') || cat.includes('live') || sub.includes('live');
+    return cat.includes('eater') || sub.includes('eater') || cat.includes('catering') || sub.includes('catering');
   }, [decodedCategory, decodedSubcategory]);
 
   const isKidsActivitiesCategory = useMemo(() => {
@@ -627,16 +649,14 @@ export const OccasionPage: React.FC<{
     if (isBabyShowerCategory) return '/baby-shower.jpg';
     if (isWelcomeBabyCategory) return '/welcome-baby.jpg';
     if (isBirthdayCategory) return '/birthday.jpg';
+    // Fall back to the theme's own curated card photo (Graduation, Opening
+    // Decors, National Festivals, Naming Ceremonies, Annaprashan, ...) before
+    // the generic purple backdrop.
+    const themeImg = getServiceGalleryImages(decodedSubcategory || decodedCategory)[0];
+    if (themeImg) return themeImg;
     return '/about-purple-decor.png';
-  }, [isPhotographyCategory, isProposalCategory, isCarDecorationCategory, isCarBootCategory, isCabanaCategory, isLiveEateriesCategory, isKidsActivitiesCategory, isKidsThemeCategory, isAnniversaryCategory, isWallDecorCategory, is1stBirthdayCategory, isBabyShowerCategory, isWelcomeBabyCategory, isBirthdayCategory]);
+  }, [isPhotographyCategory, isProposalCategory, isCarDecorationCategory, isCarBootCategory, isCabanaCategory, isLiveEateriesCategory, isKidsActivitiesCategory, isKidsThemeCategory, isAnniversaryCategory, isWallDecorCategory, is1stBirthdayCategory, isBabyShowerCategory, isWelcomeBabyCategory, isBirthdayCategory, decodedCategory, decodedSubcategory]);
 
-  const heroImageClass = useMemo(() => {
-    if (isPhotographyCategory) return 'object-cover object-center';
-    if (isLiveEateriesCategory) return 'object-cover object-center';
-    if (isKidsActivitiesCategory) return 'object-cover object-center';
-    if (isKidsThemeCategory) return 'object-cover object-[center_65%]';
-    return 'object-cover object-center';
-  }, [isPhotographyCategory, isLiveEateriesCategory, isKidsActivitiesCategory, isKidsThemeCategory]);
 
   const currentCategory = useMemo(() => {
     return categories.find(c => c.name.toLowerCase().includes(decodedCategory.toLowerCase()));
@@ -664,7 +684,7 @@ export const OccasionPage: React.FC<{
         { name: 'Birthday Tattoo Artist', image: getSubServiceImage('Birthday Tattoo Artist') },
       ];
     }
-    if (normCat.includes('eateries') || normCat.includes('live')) {
+    if (normCat.includes('eateries') || normCat.includes('catering')) {
       return [
         { name: 'Turkish Ice Cream', image: getSubServiceImage('Turkish Ice Cream') },
         { name: 'Popcorn', image: getSubServiceImage('Popcorn') },
@@ -674,7 +694,7 @@ export const OccasionPage: React.FC<{
     if (normCat.includes('experience')) {
       return [
         { name: 'Cabana Setups', image: '/kkkk.jpeg' },
-        { name: 'Terrace Proposals', image: '/tearce.jpeg' },
+        { name: 'Proposal Setup', image: '/tearce.jpeg' },
         { name: 'Car Boot Surprises', image: '/car bot.jpeg' },
         { name: 'Car & Bike Decoration', image: '/car dilver.jpeg' },
       ];
@@ -754,6 +774,41 @@ export const OccasionPage: React.FC<{
     return list;
   }, [grouped, products, decodedCategory, decodedSubcategory]);
 
+  /**
+   * When no real products/experiences match this category, fall back to the
+   * curated theme photos from public/ (see SERVICE_GALLERY_IMAGES) so the
+   * "Our Curated Theme Setups" grid still shows real work as cards rather
+   * than an empty state -- e.g. Opening Decors, National Festivals, Graduation.
+   */
+  const galleryFallbackProducts = useMemo<AdminProduct[]>(() => {
+    const images = getServiceGalleryImages(decodedSubcategory || decodedCategory);
+    if (images.length === 0) return [];
+    const label = decodedSubcategory || decodedCategory;
+    return images.map((image, idx) => ({
+      _id: `gallery-${label}-${idx}`.replace(/\s+/g, '-').toLowerCase(),
+      categoryId: 'cat_gallery',
+      name: `${label} Theme Setup ${idx + 1}`,
+      categoryName: 'Curated Decors',
+      subcategory: label,
+      price: 2999,
+      description: `Handcrafted ${label} decoration setup styled by TheDecorParty's verified master decorators in Bengaluru.`,
+      image,
+      moreImages: [],
+      inclusions: [],
+      addOns: [],
+      badgeColor: 'purple',
+      rating: 4.9,
+      reviewCount: 120,
+      active: true,
+      featured: false,
+      createdAt: '2026-01-01',
+      updatedAt: '2026-01-01',
+    } as AdminProduct));
+  }, [decodedCategory, decodedSubcategory]);
+
+  const usingGalleryFallback = categoryProducts.length === 0 && galleryFallbackProducts.length > 0;
+  const displayProducts = usingGalleryFallback ? galleryFallbackProducts : categoryProducts;
+
   const handleSubcategorySelect = (subName: string) => {
     if (subName === '__all__') {
       navigate(`/category/${encodeURIComponent(decodedCategory)}`);
@@ -805,13 +860,13 @@ export const OccasionPage: React.FC<{
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="relative overflow-hidden rounded-2xl text-[#F9F6F2] p-8 sm:p-12 lg:p-16 shadow-sm mb-12 min-h-[360px] md:min-h-[440px] flex items-center"
+            className="relative overflow-hidden rounded-2xl bg-[#241826] text-[#F9F6F2] p-8 sm:p-12 lg:p-16 shadow-sm mb-12 min-h-[360px] md:min-h-[440px] flex items-center"
           >
             {/* Background Image: High-Resolution 1920x716 Landscape Photography */}
             <img
               src={heroBgImage}
               alt="Curated Celebration Setup"
-              className={`absolute inset-0 w-full h-full opacity-100 pointer-events-none transition-transform duration-700 ${heroImageClass}`}
+              className="absolute inset-0 w-full h-full object-cover object-center opacity-100 pointer-events-none transition-transform duration-700"
             />
             {/* Text Contrast Gradient Scrim */}
             <div className="absolute inset-0 bg-gradient-to-r from-[#2F2930] via-[#2F2930]/55 to-transparent z-10 pointer-events-none" />
@@ -901,7 +956,7 @@ export const OccasionPage: React.FC<{
               </div>
             )}
 
-            {categoryProducts.length === 0 ? (
+            {displayProducts.length === 0 ? (
               <EmptyState
                 title="No theme setups found"
                 description={`No decoration experiences found matching your search in ${decodedSubcategory || decodedCategory}.`}
@@ -910,7 +965,7 @@ export const OccasionPage: React.FC<{
               />
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {categoryProducts.map((product: AdminProduct, idx: number) => (
+                {displayProducts.map((product: AdminProduct, idx: number) => (
                   <motion.div
                     key={product._id}
                     initial={{ opacity: 0, y: 25 }}

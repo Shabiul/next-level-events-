@@ -16,7 +16,6 @@ import {
   Gift,
   Phone,
   Search,
-  Truck,
   LifeBuoy,
   MapPinned,
   LogIn,
@@ -43,7 +42,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '../base-ui/accordion';
-import { SERVICE_COLUMNS } from '../../data/servicesData';
+import { SERVICE_COLUMNS, getServiceThumb } from '../../data/servicesData';
 
 interface AuthSlice {
   isLoggedIn: boolean;
@@ -270,9 +269,9 @@ export const Header: React.FC<HeaderProps> = ({
         )}
       >
         <div className="mx-auto flex max-w-[1720px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-12 py-1.5 text-[11px] sm:text-xs">
-          <span className="hidden sm:inline-flex items-center gap-1.5 truncate">
-            <Truck size={12} className="text-[#C9BEAB] shrink-0" />
-            Free Delivery on orders above ₹999
+          <span className="hidden sm:inline-flex items-center gap-1.5 truncate tracking-[0.08em]">
+            <Sparkles size={12} className="text-[#C9BEAB] shrink-0" />
+            Start Your Celebration with The Decor Party ✦
           </span>
           <span className="flex-1 sm:flex-none text-center inline-flex items-center justify-center gap-1.5 truncate">
             <Sparkles size={12} className="text-[#C9BEAB] shrink-0" />
@@ -383,18 +382,10 @@ export const Header: React.FC<HeaderProps> = ({
                     Services
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="p-0">
-                    <div className="w-[720px] max-w-[96vw] rounded-3xl border border-[#E4DCD2] dark:border-[#483250] bg-[#F9F6F2] dark:bg-[#201325] p-6 shadow-2xl">
-                      <div className="grid grid-cols-12 gap-6">
-                        {SERVICE_COLUMNS.map((column, colIdx) => (
-                          <div
-                            key={column.key}
-                            className={cn(
-                              'text-left',
-                              colIdx === 0
-                                ? 'col-span-7 border-r border-[#E4DCD2]/70 dark:border-[#483250]/70 pr-5'
-                                : 'col-span-5'
-                            )}
-                          >
+                    <div className="w-[900px] max-w-[96vw] rounded-3xl border border-[#E4DCD2] dark:border-[#483250] bg-[#F9F6F2] dark:bg-[#201325] p-6 shadow-2xl">
+                      <div className="flex flex-col gap-5">
+                        {SERVICE_COLUMNS.map((column) => (
+                          <div key={column.key} className="text-left">
                             <button
                               type="button"
                               onClick={() =>
@@ -402,7 +393,7 @@ export const Header: React.FC<HeaderProps> = ({
                                   ? handleNavAnchor('curated-decors')
                                   : handleNavCategory(column.title)
                               }
-                              className="flex items-center gap-2 pb-3 border-b border-[#E4DCD2]/60 dark:border-[#483250]/60 mb-3 w-full text-left hover:opacity-80 transition-opacity cursor-pointer group"
+                              className="flex items-center gap-2 pb-2.5 border-b border-[#E4DCD2]/60 dark:border-[#483250]/60 mb-3 w-full text-left hover:opacity-80 transition-opacity cursor-pointer group"
                             >
                               <column.icon size={16} className="text-[#725D75]" />
                               <span className="text-xs font-bold uppercase tracking-wider text-[#2F2930] dark:text-[#FAF8F5]">
@@ -410,13 +401,10 @@ export const Header: React.FC<HeaderProps> = ({
                               </span>
                               <ArrowUpRight size={12} className="text-[#746B72] ml-auto group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                             </button>
-                            <div
-                              className={cn(
-                                'grid gap-1 pr-1',
-                                colIdx === 0 ? 'grid-cols-2 max-h-[320px] overflow-y-auto' : 'grid-cols-1'
-                              )}
-                            >
-                              {column.items.map((item) => (
+                            <div className="grid grid-cols-4 gap-1.5">
+                              {column.items.map((item) => {
+                                const thumb = getServiceThumb(item.label);
+                                return (
                                 <NavigationMenuLink
                                   key={item.label}
                                   href={`/category/${encodeURIComponent(item.label)}`}
@@ -424,21 +412,26 @@ export const Header: React.FC<HeaderProps> = ({
                                     e.preventDefault();
                                     handleNavCategory(item.label);
                                   }}
-                                  className="group flex items-center justify-between gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-medium text-[#2F2930] hover:bg-[#725D75]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors duration-200 cursor-pointer"
+                                  className="group flex items-center gap-2 rounded-xl px-2 py-1.5 text-xs font-medium text-[#2F2930] hover:bg-[#725D75]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors duration-200 cursor-pointer"
                                 >
-                                  <span className="flex items-center gap-2 min-w-0">
-                                    {item.icon && (
-                                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-[#F9F6F2] text-[#725D75] group-hover:bg-white group-hover:text-[#58445B] transition-colors duration-200 dark:bg-[#2D1C34] dark:text-[#C9BEAB]">
-                                        <item.icon size={16} strokeWidth={1.75} />
-                                      </span>
-                                    )}
-                                    <span className="truncate group-hover:text-[#725D75] dark:group-hover:text-[#C9BEAB] transition-colors duration-200">
-                                      {item.label}
+                                  {thumb ? (
+                                    <img
+                                      src={thumb}
+                                      alt=""
+                                      loading="lazy"
+                                      className="h-8 w-8 shrink-0 rounded-md object-cover ring-1 ring-[#E4DCD2] dark:ring-[#483250]"
+                                    />
+                                  ) : item.icon ? (
+                                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#F9F6F2] text-[#725D75] group-hover:bg-white group-hover:text-[#58445B] transition-colors duration-200 dark:bg-[#2D1C34] dark:text-[#C9BEAB]">
+                                      <item.icon size={16} strokeWidth={1.75} />
                                     </span>
+                                  ) : null}
+                                  <span className="truncate leading-tight group-hover:text-[#725D75] dark:group-hover:text-[#C9BEAB] transition-colors duration-200">
+                                    {item.label}
                                   </span>
-                                  <ArrowUpRight size={12} className="text-[#746B72] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 ml-1" />
                                 </NavigationMenuLink>
-                              ))}
+                                );
+                              })}
                             </div>
                           </div>
                         ))}
@@ -812,21 +805,31 @@ export const Header: React.FC<HeaderProps> = ({
                                   <column.icon size={12} className="text-[#725D75]" />
                                   {column.title}
                                 </button>
-                                {column.items.map((item) => (
+                                {column.items.map((item) => {
+                                  const thumb = getServiceThumb(item.label);
+                                  return (
                                   <button
                                     key={item.label}
                                     type="button"
                                     onClick={() => handleNavCategory(item.label)}
                                     className="group flex items-center gap-2 text-left py-1 pl-2 hover:text-[#725D75] dark:hover:text-white transition-colors duration-200"
                                   >
-                                    {item.icon && (
+                                    {thumb ? (
+                                      <img
+                                        src={thumb}
+                                        alt=""
+                                        loading="lazy"
+                                        className="h-6 w-6 shrink-0 rounded-md object-cover ring-1 ring-[#E4DCD2] dark:ring-[#483250]"
+                                      />
+                                    ) : item.icon ? (
                                       <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#F9F6F2] text-[#725D75] dark:bg-[#2D1C34] dark:text-[#C9BEAB]">
                                         <item.icon size={12} strokeWidth={1.75} />
                                       </span>
-                                    )}
+                                    ) : null}
                                     <span>{item.label}</span>
                                   </button>
-                                ))}
+                                  );
+                                })}
                               </div>
                             ))}
                             <button

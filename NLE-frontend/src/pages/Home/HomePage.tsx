@@ -134,32 +134,32 @@ export const HomePage: React.FC<HomePageProps> = ({
 
         {/* Hero Editorial Content */}
         <div className="relative z-10 max-w-4xl mx-auto w-full flex flex-col items-center justify-center text-center px-4 my-auto pt-16 sm:pt-20">
-          <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-black/50 border border-white/25 text-[#F9F6F2] text-[10px] sm:text-xs font-semibold uppercase tracking-[0.22em] backdrop-blur-md mb-4 shadow-md">
-            <Sparkles className="w-3.5 h-3.5 text-[#A78A9F]" />
-            Bespoke Event Styling &amp; Surprise Setups
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/40 border border-white/20 text-[#F9F6F2] text-[10px] sm:text-xs font-medium uppercase tracking-[0.28em] backdrop-blur-md mb-5 shadow-sm">
+            <Sparkles className="w-3.5 h-3.5 text-[#C9BEAB]" />
+            Curated Celebrations • Beautifully Styled
           </span>
 
           <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-[76px] font-semibold text-[#F9F6F2] leading-[1] tracking-tight max-w-4xl drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)]">
-            Celebrate <span className="text-[#C9BEAB] italic font-medium tracking-normal">Unforgettable</span> Moments
+            Celebrate <span className="text-[#C9BEAB] italic font-medium tracking-normal">Every Moment</span> Beautifully
           </h1>
 
-          <p className="mt-4 max-w-2xl text-xs sm:text-sm md:text-base text-[#F9F6F2]/90 font-sans font-light leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
-            Signature balloon arches, romantic candlelight cabanas, bespoke birthday themes, and live entertainment styled across Bengaluru.
+          <p className="mt-5 max-w-xl text-sm sm:text-base text-[#F9F6F2]/85 font-sans font-light leading-relaxed tracking-wide drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+            Thoughtfully styled celebrations, beautiful surprises, and unforgettable moments — designed around you.
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+          <div className="mt-9 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             <button
               type="button"
               onClick={() => navigate('/explore')}
-              className="inline-flex items-center gap-2 rounded-lg bg-[#F9F6F2] text-[#2F2930] hover:bg-[#C9BEAB] px-7 py-3 text-xs sm:text-sm font-medium tracking-wide shadow-sm transition-colors duration-300 cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-full bg-[#F9F6F2] text-[#2F2930] hover:bg-[#C9BEAB] px-8 py-3.5 text-xs sm:text-sm font-medium tracking-[0.06em] shadow-sm transition-colors duration-300 cursor-pointer"
             >
-              <span>Explore Themes &amp; Setups</span>
+              <span>Explore Celebrations</span>
               <ArrowRight size={14} />
             </button>
             <button
               type="button"
               onClick={() => navigate('/packages')}
-              className="inline-flex items-center gap-2 rounded-lg bg-transparent hover:bg-white/10 text-[#F9F6F2] border border-white/50 px-7 py-3 text-xs sm:text-sm font-medium tracking-wide transition-colors duration-300 cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-full bg-transparent hover:bg-white/10 text-[#F9F6F2] border border-white/40 px-8 py-3.5 text-xs sm:text-sm font-medium tracking-[0.06em] transition-colors duration-300 cursor-pointer"
             >
               <span>View All Packages</span>
             </button>

@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Check, ChevronDown, ChevronUp, Share2, Heart, ShieldCheck, CheckCircle2, X, Zap, Lock, Palette, ArrowRight, ShoppingCart, Maximize2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, Share2, Heart, ShieldCheck, CheckCircle2, X, Zap, Lock, Palette, ArrowRight, ShoppingCart, Maximize2, Truck, RotateCcw, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
 import type { AdminProduct, BookingAddonSnapshot } from '../../types';
@@ -9,7 +9,6 @@ import { BackButton } from '../ui/BackButton';
 import { Button } from '../ui/Button';
 import { ShareDialog } from '../ui/ShareDialog';
 import { trackBookingStarted, trackWhatsappClick, trackWishlistToggle, trackShare } from '../../utils/analytics';
-import { useLanguage } from '../../hooks/useLanguage';
 import { useAuth } from '../../hooks/useAuth';
 import { useProducts } from '../../hooks/useProducts';
 import { useWishlist } from '../../hooks/useWishlist';
@@ -38,6 +37,32 @@ const TERMS = [
   'For outdoor events, we are not responsible for weather-related disruptions.',
 ];
 
+const SHIPPING_POLICY = [
+  'On-site setup is completed by our decor team at your venue across Bengaluru — no physical shipping involved for setups.',
+  'Setup crew arrives 2-3 hours before the event start time; exact slot is confirmed a day prior.',
+  'For product-only / DIY kit orders, dispatch happens within 24-48 hours via a tracked courier partner.',
+  'Same-day express slots are available for select pin codes when booked before 12 PM.',
+  'Delivery to venues outside Bengaluru city limits may attract a travel & logistics surcharge.',
+];
+
+const RETURN_POLICY = [
+  'Being a customised event service, completed setups are not returnable.',
+  'If an item in your inclusions is damaged or missing on arrival, report it within 1 hour of setup for an on-site replacement or pro-rata refund.',
+  'DIY kit orders can be returned unused, in original packaging, within 3 days of delivery.',
+  'Approved refunds are processed to the original payment method within 5-7 business days.',
+  'Add-on services cancelled at least 24 hours before the event are fully refundable.',
+];
+
+const PRIVACY_POLICY = [
+  'We collect only the details needed to plan and deliver your booking — name, contact number, event address and date.',
+  'Payment is processed through PCI-DSS compliant gateways; we never store your full card details.',
+  'Your event photos are used for portfolio or marketing only with your explicit consent.',
+  'We do not sell or rent your personal information to third parties.',
+  'You can request deletion of your account data anytime by writing to support.',
+];
+
+type PolicyKey = 'inclusions' | 'cancellation' | 'shipping' | 'return' | 'privacy';
+
 const WA_SVG = (
   <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" />
@@ -45,7 +70,6 @@ const WA_SVG = (
 );
 
 export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) => {
-  const { t } = useLanguage();
   const auth = useAuth();
   const navigate = useNavigate();
   const { grouped } = useProducts();
@@ -56,8 +80,16 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
   const primaryImage = useMemo(() => resolveProductCardImage(product), [product]);
   const allImages = useMemo(() => [primaryImage, ...(product.moreImages || [])].filter(Boolean) as string[], [primaryImage, product]);
   const [activeIdx, setActiveIdx] = useState(0);
-  const [showAllTerms, setShowAllTerms] = useState(false);
-  const [showAllInclusions, setShowAllInclusions] = useState(false);
+  const [openPolicies, setOpenPolicies] = useState<Set<PolicyKey>>(new Set());
+
+  const togglePolicy = useCallback((key: PolicyKey) => {
+    setOpenPolicies((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }, []);
   const [shareOpen, setShareOpen] = useState(false);
   const [fullScreenModalOpen, setFullScreenModalOpen] = useState(false);
   const [fullScreenIdx, setFullScreenIdx] = useState(0);
@@ -95,15 +127,21 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
     ];
   }, [product.inclusions]);
 
-  const INCLUSIONS_PREVIEW_COUNT = 3;
-  const visibleInclusions = showAllInclusions
-    ? inclusionsList
-    : inclusionsList.slice(0, INCLUSIONS_PREVIEW_COUNT);
-  const hiddenInclusionsCount = inclusionsList.length - INCLUSIONS_PREVIEW_COUNT;
+  const POLICY_TABS: { key: PolicyKey; label: string; icon: typeof FileText }[] = [
+    { key: 'inclusions', label: 'Inclusions', icon: CheckCircle2 },
+    { key: 'cancellation', label: 'Cancellation Policy', icon: X },
+    { key: 'shipping', label: 'Shipping Policy', icon: Truck },
+    { key: 'return', label: 'Return & Refund Policy', icon: RotateCcw },
+    { key: 'privacy', label: 'Privacy Policy', icon: Lock },
+  ];
 
-  const TERMS_PREVIEW_COUNT = 2;
-  const visibleTerms = showAllTerms ? TERMS : TERMS.slice(0, TERMS_PREVIEW_COUNT);
-  const hiddenTermsCount = TERMS.length - TERMS_PREVIEW_COUNT;
+  const policyBody: Record<PolicyKey, { blurb: string; items: string[] }> = {
+    inclusions: { blurb: 'Everything included in this setup — components, labor & guarantees.', items: inclusionsList },
+    cancellation: { blurb: 'Booking rules, refund timelines & venue guidelines.', items: TERMS },
+    shipping: { blurb: 'How and when your setup or kit reaches you.', items: SHIPPING_POLICY },
+    return: { blurb: 'When returns and refunds apply.', items: RETURN_POLICY },
+    privacy: { blurb: 'How we handle your personal information.', items: PRIVACY_POLICY },
+  };
 
   useEffect(() => {
     setLocalWished(null);
@@ -481,74 +519,103 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
             </div>
           </motion.div>
 
-          {/* Sections: Inclusions, Add-ons, Terms, and Similar Products */}
+          {/* Sections: Policies, Add-ons, and Similar Products */}
           <div className="w-full flex flex-col gap-10">
-            {/* Inclusions Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.5 }}
-              className="rounded-3xl border border-[#E8E7E3] bg-white/95 p-6 sm:p-8 dark:bg-[#1E1E1E]/95 dark:border-[#2E2E2E] shadow-card backdrop-blur-md"
-            >
-              <div className="mb-6 flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:bg-emerald-400/20 dark:text-emerald-400">
-                    <CheckCircle2 size={22} />
-                  </div>
-                  <div>
-                    <h2 className="font-editorial text-xl font-bold text-[#1C1C1C] dark:text-white">
-                      {t?.whats_included || "What's Included in this Setup"}
-                    </h2>
-                    <p className="text-xs text-[#746B72] dark:text-[#C8B5C3] font-medium mt-0.5">
-                      Full service setup components &amp; labor guarantees
-                    </p>
-                  </div>
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#2F2930] bg-[#725D75]/08 dark:text-amber-300 dark:bg-amber-400/15 px-3 py-1.5 rounded-full">
-                  Full Setup Inclusions
-                </span>
+            {/* Compact Policy Tabs -- click a word to expand its full section below */}
+            <div className="rounded-2xl border border-[#E8E7E3] bg-white/95 px-3 py-3 sm:px-5 dark:bg-[#1E1E1E]/95 dark:border-[#2E2E2E] shadow-card backdrop-blur-md">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-2 sm:gap-x-4">
+                {POLICY_TABS.map((tab) => {
+                  const isOpen = openPolicies.has(tab.key);
+                  return (
+                    <button
+                      key={tab.key}
+                      type="button"
+                      onClick={() => togglePolicy(tab.key)}
+                      aria-expanded={isOpen}
+                      className={cn(
+                        'inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs sm:text-[13px] font-bold tracking-wide transition-colors cursor-pointer',
+                        isOpen
+                          ? 'bg-[#725D75] text-white dark:bg-amber-400 dark:text-slate-950'
+                          : 'text-[#725D75] hover:bg-[#725D75]/08 dark:text-amber-300 dark:hover:bg-amber-400/10'
+                      )}
+                    >
+                      <tab.icon size={15} />
+                      <span>{tab.label}</span>
+                    </button>
+                  );
+                })}
               </div>
+            </div>
 
-              <div
-                className={cn(
-                  showAllInclusions
-                    ? 'grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3'
-                    : 'flex flex-nowrap gap-3.5 overflow-x-auto hide-scrollbar pb-1'
-                )}
-              >
-                {visibleInclusions.map((inc: string, i: number) => (
+            {/* Expanded Policy Panels -- large, full-width */}
+            <AnimatePresence initial={false}>
+              {POLICY_TABS.filter((tab) => openPolicies.has(tab.key)).map((tab) => {
+                const body = policyBody[tab.key];
+                const isInclusions = tab.key === 'inclusions';
+                return (
                   <motion.div
-                    key={i}
-                    whileHover={{ scale: 1.025, y: -3 }}
-                    className={cn(
-                      'flex items-center gap-3 rounded-2xl border border-[#E8E7E3] bg-[#FAF9F6] dark:bg-[#25172C] dark:border-[#38223E] p-4 text-xs sm:text-sm font-semibold text-[#1C1C1C] dark:text-white shadow-2xs hover:border-[#DCD8CC] dark:hover:border-[#4D2F57] transition-all',
-                      !showAllInclusions && 'flex-none w-[280px] sm:w-[320px]'
-                    )}
+                    key={tab.key}
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                    className="overflow-hidden"
                   >
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-600 dark:bg-emerald-400/20 dark:text-emerald-400 shadow-xs">
-                      <Check size={16} />
+                    <div className="rounded-3xl border border-[#E8E7E3] bg-white/95 p-6 sm:p-8 dark:bg-[#1E1E1E]/95 dark:border-[#2E2E2E] shadow-card backdrop-blur-md">
+                      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <div className={cn(
+                            'flex h-10 w-10 items-center justify-center rounded-xl',
+                            isInclusions
+                              ? 'bg-emerald-500/10 text-emerald-600 dark:bg-emerald-400/20 dark:text-emerald-400'
+                              : 'bg-[#725D75]/08 text-[#2F2930] dark:bg-amber-400/15 dark:text-amber-400'
+                          )}>
+                            <tab.icon size={22} />
+                          </div>
+                          <div>
+                            <h2 className="font-editorial text-xl font-bold text-[#1C1C1C] dark:text-white">
+                              {tab.label}
+                            </h2>
+                            <p className="text-xs text-[#746B72] dark:text-[#C8B5C3] font-medium mt-0.5">
+                              {body.blurb}
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => togglePolicy(tab.key)}
+                          className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E8E7E3] text-[#746B72] hover:bg-[#F9F6F2] dark:border-[#2E2E2E] dark:text-[#C8B5C3] dark:hover:bg-[#25172C] transition-colors cursor-pointer"
+                          aria-label={`Close ${tab.label}`}
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+                        {body.items.map((line, i) => (
+                          <div
+                            key={i}
+                            className="flex items-start gap-3 rounded-2xl border border-[#E8E7E3] bg-[#FAF9F6] dark:bg-[#25172C] dark:border-[#38223E] p-4 text-xs sm:text-sm text-[#242424] dark:text-[#E8E8E8]"
+                          >
+                            <div className={cn(
+                              'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-xs font-bold',
+                              isInclusions
+                                ? 'bg-emerald-500/15 text-emerald-600 dark:bg-emerald-400/20 dark:text-emerald-400'
+                                : 'bg-[#725D75] text-white dark:bg-amber-400 dark:text-slate-950'
+                            )}>
+                              {isInclusions ? <Check size={14} /> : i + 1}
+                            </div>
+                            <span className="leading-relaxed font-medium">{line}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <span className="leading-relaxed font-medium">{inc}</span>
                   </motion.div>
-                ))}
-              </div>
+                );
+              })}
+            </AnimatePresence>
 
-              {hiddenInclusionsCount > 0 && (
-                <button
-                  type="button"
-                  onClick={() => setShowAllInclusions((o) => !o)}
-                  className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-[#E8E7E3] dark:border-[#38223E] bg-[#FAF9F6] dark:bg-[#25172C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#725D75] dark:text-amber-400 hover:bg-[#725D75]/08 dark:hover:bg-amber-400/10 transition-colors cursor-pointer"
-                >
-                  <span>
-                    {showAllInclusions ? 'View Less' : `View More (${hiddenInclusionsCount})`}
-                  </span>
-                  {showAllInclusions ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
-                </button>
-              )}
-            </motion.div>
-
-            {/* Global Add-ons & Activities Module */}
+            {/* Global Add-ons & Activities Module -- always visible */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -556,81 +623,6 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
               transition={{ duration: 0.5 }}
             >
               <AddonsModule onSelectionChange={handleGlobalSelectionChange} themeCategory={product.categoryName} />
-            </motion.div>
-
-            {/* Cancellation & Service Terms Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.5 }}
-              className="rounded-3xl border border-[#E8E7E3] bg-white/95 p-6 sm:p-8 dark:bg-[#1E1E1E]/95 dark:border-[#2E2E2E] shadow-card backdrop-blur-md transition-all"
-            >
-              <div className="flex w-full items-center justify-between py-1">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#725D75]/08 text-[#2F2930] dark:bg-amber-400/15 dark:text-amber-400">
-                    <ShieldCheck size={22} />
-                  </div>
-                  <div>
-                    <h2 className="font-editorial text-xl font-bold text-[#1C1C1C] dark:text-white">
-                      Cancellation &amp; Service Terms
-                    </h2>
-                    <p className="text-xs text-[#746B72] dark:text-[#C8B5C3] font-medium mt-0.5">
-                      Clear booking rules, refund timelines &amp; venue guidelines
-                    </p>
-                  </div>
-                </div>
-                <span className="hidden sm:inline-block text-[10px] font-bold uppercase tracking-wider text-[#2F2930] bg-[#725D75]/08 dark:text-amber-300 dark:bg-amber-400/15 px-3 py-1 rounded-full">
-                  10 Key Terms
-                </span>
-              </div>
-
-              <div className="mt-6 pt-6 border-t border-[#E8E7E3] dark:border-[#2E2E2E]">
-                <ul
-                  className={cn(
-                    showAllTerms
-                      ? 'grid grid-cols-1 md:grid-cols-2 gap-4'
-                      : 'flex flex-nowrap gap-4 overflow-x-auto hide-scrollbar pb-1'
-                  )}
-                >
-                  {visibleTerms.map((term: string, i: number) => (
-                    <motion.li
-                      key={i}
-                      whileHover={{ y: -3, scale: 1.015 }}
-                      className={cn(
-                        'flex items-start gap-3.5 rounded-2xl border border-[#EDECE8] bg-[#FAF9F6] p-4 text-xs sm:text-sm font-semibold text-[#1C1C1C] dark:border-[#2E2E2E] dark:bg-[#252525] dark:text-[#F3F4F6] shadow-2xs hover:border-[#DCD8CC] dark:hover:border-[#3E3E3E] transition-all hover:shadow-sm',
-                        !showAllTerms && 'flex-none w-[300px] sm:w-[340px]'
-                      )}
-                    >
-                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#725D75] text-xs font-bold text-white dark:bg-amber-400 dark:text-slate-950 shadow-xs mt-0.5">
-                        {i + 1}
-                      </div>
-                      <div className="flex items-start gap-2.5 flex-1 min-w-0">
-                        <span className="relative flex h-2 w-2 shrink-0 mt-2">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-                        </span>
-                        <span className="text-[#242424] dark:text-[#E8E8E8] font-medium leading-relaxed text-xs sm:text-sm">
-                          {term}
-                        </span>
-                      </div>
-                    </motion.li>
-                  ))}
-                </ul>
-
-                {hiddenTermsCount > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => setShowAllTerms((o) => !o)}
-                    className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-[#E8E7E3] dark:border-[#38223E] bg-[#FAF9F6] dark:bg-[#25172C] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#725D75] dark:text-amber-400 hover:bg-[#725D75]/08 dark:hover:bg-amber-400/10 transition-colors cursor-pointer"
-                  >
-                    <span>
-                      {showAllTerms ? 'View Less' : `View More (${hiddenTermsCount})`}
-                    </span>
-                    {showAllTerms ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
-                  </button>
-                )}
-              </div>
             </motion.div>
 
             {/* Similar Packages Grid */}

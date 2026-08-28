@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Sparkles, Search, Filter, ArrowUpDown, X, Home as HomeIcon, ChevronRight, Check } from 'lucide-react';
+import { Sparkles, Filter, ArrowUpDown, Home as HomeIcon, ChevronRight, Check } from 'lucide-react';
 import { useProducts } from '../../hooks/useProducts';
 import { SeoHead } from '../../components/layout/SeoHead';
 import { EmptyState } from '../../components/ui/EmptyState';
@@ -213,7 +213,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
         {/* ========================================================================= */}
         {/* 1. CINEMATIC LUXURY FULL-BLEED HERO SECTION WITH UNIFIED SEARCH ISLAND   */}
         {/* ========================================================================= */}
-        <section className="relative w-full min-h-[520px] sm:min-h-[580px] lg:min-h-[620px] overflow-hidden flex flex-col justify-between items-center text-center pt-24 sm:pt-28 pb-8 sm:pb-10 px-4 sm:px-6 bg-[#1B101F]">
+        <section className="relative w-full min-h-screen overflow-hidden flex flex-col justify-center items-center text-center pt-24 sm:pt-28 pb-8 sm:pb-10 px-4 sm:px-6 bg-[#1B101F]">
           {/* High-Resolution Landscape Backdrop with Scrim */}
           <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
             <img 
@@ -244,88 +244,6 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
               Discover signature balloon arches, terrace cabanas, and bespoke birthday themes styled across Bengaluru.
             </p>
           </div>
-
-          {/* BOTTOM: Floating Frosted Glass Category & Search Island */}
-          <div className="relative z-20 w-full max-w-6xl mx-auto px-2 sm:px-4 mt-6">
-            {/* Top Category Mode Tabs */}
-            <div className="flex items-center justify-start sm:justify-center gap-1.5 overflow-x-auto rounded-full bg-black/50 p-1 backdrop-blur-xl border border-white/20 shadow-xl max-w-full sm:max-w-max mx-auto mb-2.5 hide-scrollbar px-2">
-              {categoryTabs.map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => handleCategorySelect(cat)}
-                  className={cn(
-                    'rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all whitespace-nowrap cursor-pointer shrink-0',
-                    selectedCategory === cat
-                      ? 'bg-[#F9F6F2] text-[#1B101F] shadow-md font-bold scale-102'
-                      : 'text-white/80 hover:text-white hover:bg-white/15'
-                  )}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
-            {/* Floating Frosted Glass Search Capsule Bar */}
-            <div className="flex w-full flex-col overflow-hidden rounded-2xl bg-white/95 shadow-[0_20px_50px_rgba(0,0,0,0.35)] border border-white/60 backdrop-blur-2xl dark:bg-[#1B101F]/95 dark:border-white/15 lg:flex-row lg:items-center lg:rounded-full lg:p-1.5">
-              
-              {/* 1. Theme or Keyword Input */}
-              <label className="flex flex-1 cursor-text flex-col gap-0.5 border-b border-[#725D75]/8 px-4 py-2 dark:border-white/10 lg:border-b-0 lg:px-4 lg:py-1 lg:rounded-full lg:hover:bg-[#725D75]/5 dark:lg:hover:bg-white/5 text-left">
-                <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-[#2F2930] dark:text-[#C9BEAB]">
-                  <Search size={13} className="text-[#725D75]" />
-                  <span>Search Keyword</span>
-                </span>
-                <div className="relative flex items-center">
-                  <input
-                    type="text"
-                    placeholder="e.g. Ring Arch, Cabana, Pastel..."
-                    value={searchQuery}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setSearchQuery(val);
-                      const newParams = new URLSearchParams(searchParams);
-                      if (val) {
-                        newParams.set('q', val);
-                      } else {
-                        newParams.delete('q');
-                      }
-                      setSearchParams(newParams);
-                    }}
-                    className="w-full border-none bg-transparent p-0 text-xs font-medium text-[#2F2930] placeholder:text-[#746B72]/60 focus:outline-none dark:text-[#FAF8F5] dark:placeholder:text-[#A78A9F]/60"
-                  />
-                  {searchQuery && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSearchQuery('');
-                        const newParams = new URLSearchParams(searchParams);
-                        newParams.delete('q');
-                        setSearchParams(newParams);
-                      }}
-                      className="text-[#2F2930]/60 dark:text-white/60 hover:text-red-500 cursor-pointer ml-1"
-                    >
-                      <X size={13} />
-                    </button>
-                  )}
-                </div>
-              </label>
-
-              {/* 2. Search Submit Button */}
-              <div className="p-1 lg:p-0">
-                <button
-                  type="button"
-                  onClick={() => {
-                    const gridEl = document.getElementById('products-grid');
-                    if (gridEl) gridEl.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#725D75] hover:bg-[#A78A9F] dark:bg-[#C9BEAB] dark:text-[#1B101F] dark:hover:bg-white text-[#F9F6F2] px-8 py-3 text-xs font-medium tracking-wide shadow-sm transition-colors cursor-pointer lg:rounded-full"
-                >
-                  <Search size={14} />
-                  <span>SEARCH</span>
-                </button>
-              </div>
-            </div>
-          </div>
         </section>
 
         {/* ========================================================================= */}
@@ -351,7 +269,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
 
             {/* ---- Sidebar: Filter By ---- */}
             <aside className="w-full lg:w-64 shrink-0">
-              <div className="lg:sticky lg:top-28 rounded-xl border border-[#E4DCD2] bg-white dark:bg-[#1A1220] dark:border-[#483250] p-5 flex flex-col gap-6">
+              <div className="lg:sticky lg:top-28 lg:min-h-[calc(100vh-9rem)] rounded-xl border border-[#E4DCD2] bg-white dark:bg-[#1A1220] dark:border-[#483250] p-5 flex flex-col gap-6">
                 <div className="flex items-center justify-between">
                   <h2 className="flex items-center gap-1.5 text-sm font-semibold text-[#725D75]">
                     <Filter size={14} /> Filter By
