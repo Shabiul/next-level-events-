@@ -35,9 +35,8 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Large raw video renders (>100MB exceeds GitHub push limit)
-*lan-hd.mp4
-*lan-hd.avi
+# Hero-video source renders -- versioned via Git LFS (see .gitattributes),
+# not stored as normal blobs (lan-hd.mp4 is ~113MB).
 
 
 # local image-processing scratch
