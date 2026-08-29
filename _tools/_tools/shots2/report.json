@@ -1,0 +1,104 @@
+[
+  {
+    "name": "home",
+    "path": "/",
+    "contentImgs": 58,
+    "failed": 0,
+    "failedSrc": [],
+    "pending": 15,
+    "pendingSrc": [
+      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80",
+      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80"
+    ],
+    "netFail": []
+  },
+  {
+    "name": "explore",
+    "path": "/explore",
+    "contentImgs": 185,
+    "failed": 0,
+    "failedSrc": [],
+    "pending": 168,
+    "pendingSrc": [
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786193671/ems/products/fxoxcowy6bcjgvfgiawo.jpg",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786193607/ems/products/pvpq1fmkf2c7exzm0xje.jpg",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786193518/ems/products/ua0cuyaphdbbuph29808.jpg",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786193447/ems/products/inbq7xizfksrlgpixzov.jpg",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786193205/ems/products/rdmnhydkgpe81f8wzv3w.jpg",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786193177/ems/products/mqaa8kcmq5f4avqzzeeh.jpg",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786192981/ems/products/bbygfbfxdbbjmtzieye6.jpg",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786192861/ems/products/t6us4jcyepueizhwwhjw.jpg",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786192801/ems/products/ta45ptdervxsnn4ctxl5.webp",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786166082/ems/products/kt52qkktcznwdhsu4fou.webp"
+    ],
+    "netFail": []
+  },
+  {
+    "name": "packages",
+    "path": "/packages",
+    "contentImgs": 5,
+    "failed": 0,
+    "failedSrc": [],
+    "pending": 0,
+    "pendingSrc": [],
+    "netFail": []
+  },
+  {
+    "name": "cat-birthday",
+    "path": "/category/Birthday",
+    "contentImgs": 101,
+    "failed": 0,
+    "failedSrc": [],
+    "pending": 39,
+    "pendingSrc": [
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786087892/ems/products/hobxdl3t8yolrn33xlcq.jpg",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786087616/ems/products/ujqbrxqysud1hzx6jttl.jpg",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786086965/ems/products/djegeja5oknt0rvfuuey.jpg",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786069703/ems/products/pvad4frdxpa7vn5ei0yw.webp",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786068513/ems/products/rhofw34vyi1vxv9z9l7d.jpg",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786068468/ems/products/j65aqagrs7mmwcuztnkq.jpg",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786068349/ems/products/e7bhsifrar6zgyzytjhf.jpg",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786034659/ems/products/zcnqeknbhwvj4y7nekm4.webp",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786034572/ems/products/xqxafgaqzoiki8mbqww1.jpg",
+      "https://res.cloudinary.com/duwkslkdt/image/upload/v1786034452/ems/products/oej0rnn1gtuk4bofkuol.jpg"
+    ],
+    "netFail": []
+  },
+  {
+    "name": "cat-1stbday",
+    "path": "/category/1st%20Birthday",
+    "contentImgs": 30,
+    "failed": 0,
+    "failedSrc": [],
+    "pending": 0,
+    "pendingSrc": [],
+    "netFail": []
+  },
+  {
+    "name": "cat-anniversary",
+    "path": "/category/Anniversary%20Celebrations",
+    "contentImgs": 14,
+    "failed": 0,
+    "failedSrc": [],
+    "pending": 0,
+    "pendingSrc": [],
+    "netFail": []
+  },
+  {
+    "name": "cat-prepost",
+    "path": "/category/Pre%20%26%20Post%20Wedding%20decors",
+    "contentImgs": 23,
+    "failed": 0,
+    "failedSrc": [],
+    "pending": 0,
+    "pendingSrc": [],
+    "netFail": []
+  }
+]

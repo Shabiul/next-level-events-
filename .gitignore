@@ -35,11 +35,12 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Large raw video renders (>100MB exceeds GitHub push limit)
-
+# Hero-video source renders -- versioned via Git LFS (see .gitattributes),
+# not stored as normal blobs (lan-hd.mp4 is ~113MB).
 
 
 # local image-processing scratch
-_tools/
+#   _tools/ is intentionally committed (audit scripts, manifest, screenshots,
+#   and its vendored playwright-core) -- force-added past the node_modules rule.
 _drive_dl*/
 _drive_all/
