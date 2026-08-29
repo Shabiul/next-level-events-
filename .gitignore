@@ -36,8 +36,7 @@ Thumbs.db
 .idea/
 
 # Large raw video renders (>100MB exceeds GitHub push limit)
-*lan-hd.mp4
-*lan-hd.avi
+
 
 
 # local image-processing scratch
