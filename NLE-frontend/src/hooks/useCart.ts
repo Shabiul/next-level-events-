@@ -8,8 +8,24 @@ const LS_KEY = 'cart';
 const readLocal = (): CartItem[] => {
   try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch { return []; }
 };
+
+/**
+ * The guest cart is shared across every useCart() consumer on the page (each
+ * ProductCard mounts its own hook instance). Writes go read-modify-write against
+ * localStorage -- never against a component's possibly-stale `items` -- and then
+ * notify all instances so the header count, drawer and cards stay in sync.
+ */
+const guestListeners = new Set<() => void>();
+const notifyGuest = () => { guestListeners.forEach((fn) => fn()); };
 const writeLocal = (items: CartItem[]) => {
   try { localStorage.setItem(LS_KEY, JSON.stringify(items)); } catch { /* ignore */ }
+  notifyGuest();
+};
+/** Apply a pure transform to the persisted guest cart atomically. */
+const mutateLocal = (fn: (prev: CartItem[]) => CartItem[]): CartItem[] => {
+  const next = fn(readLocal());
+  writeLocal(next);
+  return next;
 };
 
 /** Map a backend cart line into the client CartItem shape. */
@@ -43,6 +59,20 @@ export function useCart() {
     const rows = Array.isArray(data?.items) ? data.items.map(fromServer) : [];
     setItems(rows);
   }, []);
+
+  // Keep every guest useCart() instance (and other tabs) in sync with the
+  // shared localStorage cart.
+  useEffect(() => {
+    if (loggedIn) return;
+    const sync = () => setItems(readLocal());
+    guestListeners.add(sync);
+    window.addEventListener('storage', sync);
+    sync();
+    return () => {
+      guestListeners.delete(sync);
+      window.removeEventListener('storage', sync);
+    };
+  }, [loggedIn]);
 
   // Load / merge when auth state settles.
   useEffect(() => {
@@ -101,12 +131,12 @@ export function useCart() {
         .catch(() => {});
       return;
     }
-    setItems((prev) => {
+    if (!readLocal().some((i) => i._id === product._id)) {
+      fetch(`/api/products/${product._id}/order`, { method: 'POST' }).catch(() => {});
+    }
+    setItems(mutateLocal((prev) => {
       const exists = prev.find((i) => i._id === product._id);
-      if (!exists) {
-        fetch(`/api/products/${product._id}/order`, { method: 'POST' }).catch(() => {});
-      }
-      const next = exists
+      return exists
         ? prev.map((i) => i._id === product._id
             ? { ...i, qty: i.qty + 1, bookingDetails: bookingDetails ? [...i.bookingDetails, bookingDetails] : i.bookingDetails }
             : i)
@@ -116,33 +146,27 @@ export function useCart() {
             categoryName: product.categoryName, badge: product.badge, badgeColor: product.badgeColor,
             qty: 1, bookingDetails: bookingDetails ? [bookingDetails] : [],
           }];
-      writeLocal(next);
-      return next;
-    });
+    }));
   }, [loggedIn, applyServer]);
 
   const removeItem = useCallback((id: string) => {
-    setItems((prev) => {
-      const next = prev.filter((i) => i._id !== id);
-      if (!loggedIn) writeLocal(next);
-      return next;
-    });
     if (loggedIn) {
+      setItems((prev) => prev.filter((i) => i._id !== id));
       authFetch(getApiUrl(`/api/cart/items/${id}`), { method: 'DELETE' })
         .then((r) => r.json()).then((b) => { if (b?.success) applyServer(b.data); }).catch(() => {});
+    } else {
+      setItems(mutateLocal((prev) => prev.filter((i) => i._id !== id)));
     }
   }, [loggedIn, applyServer]);
 
   const updateQty = useCallback((id: string, qty: number) => {
     if (qty < 1) return;
-    setItems((prev) => {
-      const next = prev.map((i) => (i._id === id ? { ...i, qty } : i));
-      if (!loggedIn) writeLocal(next);
-      return next;
-    });
     if (loggedIn) {
+      setItems((prev) => prev.map((i) => (i._id === id ? { ...i, qty } : i)));
       authFetch(getApiUrl(`/api/cart/items/${id}`), { method: 'PATCH', body: JSON.stringify({ qty }) })
         .then((r) => r.json()).then((b) => { if (b?.success) applyServer(b.data); }).catch(() => {});
+    } else {
+      setItems(mutateLocal((prev) => prev.map((i) => (i._id === id ? { ...i, qty } : i))));
     }
   }, [loggedIn, applyServer]);
 
@@ -151,7 +175,7 @@ export function useCart() {
     if (loggedIn) {
       authFetch(getApiUrl('/api/cart'), { method: 'DELETE' }).catch(() => {});
     } else {
-      try { localStorage.removeItem(LS_KEY); } catch { /* ignore */ }
+      writeLocal([]);
     }
   }, [loggedIn]);
 

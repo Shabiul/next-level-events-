@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Shield,
@@ -16,11 +16,13 @@ import {
   Droplets,
   Smile,
   MapPin,
+  Search,
 } from 'lucide-react';
 import TabbedFAQ from '../../components/ui/TabbedFAQ';
 import InfiniteTestimonials from '../../components/ui/InfiniteTestimonials';
 import WhyChooseUs from '../../components/ui/WhyChooseUs';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
+import { useServiceSearch } from '../../hooks/useServiceSearch';
 import { EVENT_PACKAGES, PACKAGE_IMAGES } from '../../components/packages/eventPackages.data';
 import type { AdminCategory, AdminProduct } from '../../types';
 
@@ -71,6 +73,30 @@ const OCCASION_IMAGE_OVERRIDES: Record<string, string> = {
   'Naming ceremony': '/NAMING  FOR HOME PAGE.jpeg',
 };
 
+/**
+ * Shared editorial section heading for the landing page:
+ * a lilac eyebrow with a rule, an Oswald all-caps lead, and one word
+ * set in the Great Vibes script on its own line.
+ */
+const SectionHeading: React.FC<{ eyebrow: string; lead: string; script: string }> = ({
+  eyebrow,
+  lead,
+  script,
+}) => (
+  <div>
+    <span className="inline-flex items-center gap-2.5 text-[11px] font-serif font-semibold uppercase tracking-[0.24em] text-[#A78A9F]">
+      <span className="h-px w-8 bg-[#A78A9F]" />
+      {eyebrow}
+    </span>
+    <h2 className="mt-2 font-serif text-3xl sm:text-4xl font-semibold uppercase tracking-tight text-[#381932] leading-[1.05]">
+      {lead}{' '}
+      <span className="block font-script lowercase normal-case font-normal tracking-normal text-[#A78A9F] text-[1.5em] leading-[0.9]">
+        {script}
+      </span>
+    </h2>
+  </div>
+);
+
 export const HomePage: React.FC<HomePageProps> = ({
   categories,
   onSelectCategory,
@@ -79,6 +105,11 @@ export const HomePage: React.FC<HomePageProps> = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Hero search -- same live suggestions / keyboard nav as the header search.
+  const heroSearch = useServiceSearch(categories);
+  const [heroSearchFocused, setHeroSearchFocused] = useState(false);
+  const showHeroSuggestions = heroSearchFocused && heroSearch.suggestions.length > 0;
 
   // Initialize clean scroll reveal & scroll threshold effects
   useScrollReveal();
@@ -106,13 +137,13 @@ export const HomePage: React.FC<HomePageProps> = ({
     <div className="flex flex-col pb-0 bg-[#FFF3E6] text-[#381932] font-sans antialiased transition-colors">
 
       {/* ========================================================================= */}
-      {/* 1. CINEMATIC LUXURY FULL-SCREEN HERO SECTION (original video hero)       */}
+      {/* 1. CINEMATIC HERO -- full-screen celebration video, nav floats over it   */}
       {/* ========================================================================= */}
       <section
         data-nav-theme="dark"
-        className="relative w-full min-h-[100vh] sm:min-h-[100svh] overflow-hidden flex flex-col justify-center items-center text-center shadow-2xl bg-[#381932] px-4 sm:px-6"
+        className="relative w-full min-h-[100vh] sm:min-h-[100svh] overflow-hidden flex items-center bg-[#381932]"
       >
-        {/* Background Video Media with Scrim & Vignette Overlays */}
+        {/* Background celebration video */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
           <video
             autoPlay
@@ -123,49 +154,134 @@ export const HomePage: React.FC<HomePageProps> = ({
             disablePictureInPicture
             disableRemotePlayback
             controls={false}
-            className="w-full h-full object-cover object-center transform-gpu will-change-transform transition-all duration-700"
+            className="w-full h-full object-cover object-center transform-gpu will-change-transform"
           >
             <source src="/lan.mp4" type="video/mp4" />
             <source src="/landing page.mp4" type="video/mp4" />
           </video>
-          {/* Ambient vignette & gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#381932]/80 via-[#381932]/25 to-[#381932]/45 pointer-events-none" />
+          {/* Plum scrims -- left for the editorial copy, base for the search pill */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#381932]/90 via-[#381932]/45 to-[#381932]/10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#381932]/80 via-transparent to-[#381932]/20" />
         </div>
 
-        {/* Hero Editorial Content */}
-        <div className="relative z-10 max-w-4xl mx-auto w-full flex flex-col items-center justify-center text-center px-4 my-auto pt-16 sm:pt-20">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#381932]/40 border border-[#381932]/20 text-[#FFF3E6] text-[10px] sm:text-xs font-medium uppercase tracking-[0.28em] backdrop-blur-md mb-5 shadow-sm">
-            <Sparkles className="w-3.5 h-3.5 text-[#A78A9F]" />
-            Curated Celebrations • Beautifully Styled
-          </span>
+        {/* Editorial hero content -- left aligned */}
+        <div className="relative z-10 w-full max-w-[1720px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 pt-28 sm:pt-32 pb-28 sm:pb-32">
+          <div className="max-w-3xl">
+            <span className="inline-flex items-center gap-3 text-[#FFF3E6] text-[10px] sm:text-xs font-serif font-medium uppercase tracking-[0.28em]">
+              <span className="h-px w-8 sm:w-12 bg-[#A78A9F]" />
+              Curated Celebrations · Beautifully Styled
+            </span>
 
-          <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-[76px] font-semibold text-[#FFF3E6] leading-[1] tracking-tight max-w-4xl drop-shadow-[0_4px_30px_rgba(56,25,50,0.9)]">
-            Celebrate <span className="font-script text-[#FFF3E6] font-normal tracking-normal">Every Moment</span> Beautifully
-          </h1>
+            <h1 className="mt-5 font-serif text-[2.6rem] leading-[1.04] sm:text-6xl md:text-[4rem] lg:text-[4.75rem] font-semibold uppercase text-[#FFF3E6] tracking-tight drop-shadow-[0_4px_30px_rgba(56,25,50,0.9)]">
+              Make Every Moment<br />
+              Worth{' '}
+              <span className="inline-block font-script lowercase font-normal normal-case tracking-normal text-[#A78A9F] text-[1.25em] leading-[0.95] pb-1 -mb-1 align-baseline">
+                Remembering.
+              </span>
+            </h1>
 
-          <p className="mt-5 max-w-xl text-sm sm:text-base text-[#FFF3E6]/85 font-sans font-light leading-relaxed tracking-wide drop-shadow-[0_2px_12px_rgba(56,25,50,0.85)]">
-            Thoughtfully styled celebrations, beautiful surprises, and unforgettable moments — designed around you.
-          </p>
+            <p className="mt-6 max-w-md text-sm sm:text-base text-[#FFF3E6]/90 font-sans font-light leading-relaxed drop-shadow-[0_2px_12px_rgba(56,25,50,0.85)]">
+              Thoughtfully styled celebrations, beautiful surprises, and unforgettable moments — brought beautifully to life.
+            </p>
 
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-            <button
-              type="button"
-              onClick={() => navigate('/explore')}
-              className="inline-flex items-center gap-2 rounded-full bg-[#FFF3E6] text-[#381932] hover:opacity-90 px-8 py-3.5 text-xs sm:text-sm font-medium tracking-[0.06em] shadow-sm transition-colors duration-300 cursor-pointer"
-            >
-              <span>Explore Celebrations</span>
-              <ArrowRight size={14} />
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/packages')}
-              className="inline-flex items-center gap-2 rounded-full bg-transparent hover:bg-[#FFF3E6]/10 text-[#FFF3E6] border border-[#381932]/40 px-8 py-3.5 text-xs sm:text-sm font-medium tracking-[0.06em] transition-colors duration-300 cursor-pointer"
-            >
-              <span>View All Packages</span>
-            </button>
+            <div className="mt-9 flex flex-wrap items-center gap-3 sm:gap-4">
+              <button
+                type="button"
+                onClick={() => navigate('/explore')}
+                className="inline-flex items-center gap-2 rounded-full bg-[#FFF3E6] text-[#381932] hover:bg-white px-7 sm:px-8 py-3.5 text-xs sm:text-sm font-serif font-semibold uppercase tracking-[0.14em] shadow-sm transition-colors duration-300 cursor-pointer"
+              >
+                <span>Explore Celebrations</span>
+                <ArrowRight size={15} strokeWidth={2.25} />
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/packages')}
+                className="inline-flex items-center gap-2 rounded-full bg-transparent hover:bg-[#FFF3E6]/12 text-[#FFF3E6] border border-[#FFF3E6]/55 hover:border-[#FFF3E6] px-7 sm:px-8 py-3.5 text-xs sm:text-sm font-serif font-semibold uppercase tracking-[0.14em] transition-colors duration-300 cursor-pointer"
+              >
+                <span>View Packages</span>
+              </button>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* ========================================================================= */}
+      {/* CELEBRATION DISCOVERY -- one elegant search, straddling the hero edge    */}
+      {/* ========================================================================= */}
+      <div className="relative z-20 -mt-14 sm:-mt-16 mb-8 sm:mb-12 px-4 sm:px-6 md:px-8 lg:px-12">
+        <div className="relative mx-auto max-w-4xl">
+          <form
+            onSubmit={(e) => { e.preventDefault(); heroSearch.runSearch(); }}
+            className="bg-[#FFF3E6] border border-[#381932]/15 rounded-[28px] sm:rounded-full shadow-[0_28px_70px_-30px_rgba(56,25,50,0.35)] flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 p-4 sm:py-3.5 sm:pl-8 sm:pr-3.5"
+          >
+            <span className="hidden sm:grid place-items-center h-12 w-12 shrink-0 rounded-full border border-[#381932]/25 text-[#381932]">
+              <Sparkles size={20} strokeWidth={1.5} />
+            </span>
+            <div className="min-w-0 flex-1">
+              <label htmlFor="celebrate" className="block font-serif text-[11px] font-semibold uppercase tracking-[0.2em] text-[#A78A9F]">
+                What are you celebrating?
+              </label>
+              <input
+                id="celebrate"
+                type="text"
+                value={heroSearch.query}
+                onChange={(e) => heroSearch.setQuery(e.target.value)}
+                onKeyDown={heroSearch.onKeyDown}
+                onFocus={() => setHeroSearchFocused(true)}
+                onBlur={() => setTimeout(() => setHeroSearchFocused(false), 120)}
+                placeholder="Birthday, Anniversary, Proposal…"
+                autoComplete="off"
+                role="combobox"
+                aria-expanded={showHeroSuggestions}
+                aria-controls="hero-search-suggestions"
+                className="mt-0.5 w-full bg-transparent border-none outline-none text-[#381932] text-lg sm:text-xl font-sans placeholder:text-[#381932]/45"
+              />
+            </div>
+            <button
+              type="submit"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#381932] text-[#FFF3E6] hover:bg-[#2a121f] px-7 py-3.5 text-xs font-serif font-semibold uppercase tracking-[0.14em] shadow-sm transition-colors cursor-pointer"
+            >
+              <Search size={15} strokeWidth={2.25} />
+              <span>Search</span>
+              <ArrowRight size={15} strokeWidth={2.25} />
+            </button>
+          </form>
+
+          {showHeroSuggestions && (
+            <ul
+              id="hero-search-suggestions"
+              className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-30 max-h-80 overflow-y-auto rounded-2xl border border-[#381932]/15 bg-[#FFF3E6] p-1.5 shadow-[0_28px_70px_-30px_rgba(56,25,50,0.4)]"
+            >
+              {heroSearch.suggestions.map((s, i) => (
+                <li key={`${s.kind}-${s.label}`}>
+                  <button
+                    type="button"
+                    onMouseDown={(e) => { e.preventDefault(); heroSearch.goToEntry(s); }}
+                    onMouseEnter={() => heroSearch.setActiveSuggestion(i)}
+                    className={
+                      'flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left transition-colors duration-150 cursor-pointer ' +
+                      (i === heroSearch.activeSuggestion ? 'bg-[#A78A9F]/25' : 'hover:bg-[#A78A9F]/15')
+                    }
+                  >
+                    <Search size={14} className="shrink-0 text-[#A78A9F]" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-medium text-[#381932]">{s.label}</span>
+                      <span className="block truncate text-[11px] text-[#381932]/55">
+                        {s.kind === 'subcategory'
+                          ? `in ${s.category}`
+                          : s.kind === 'category'
+                            ? 'Service category'
+                            : 'Package'}
+                      </span>
+                    </span>
+                    <ArrowRight size={13} className="shrink-0 text-[#381932]/40" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
 
       {/* ========================================================================= */}
       {/* TRUST MARQUEE SECTION                                                    */}
@@ -203,43 +319,51 @@ export const HomePage: React.FC<HomePageProps> = ({
       <div className="flex flex-col gap-10 sm:gap-12 lg:gap-14 pt-8 sm:pt-10 lg:pt-12 pb-10 sm:pb-12">
 
         {/* ========================================================================= */}
-        {/* 2. SHOP BY OCCASION                                                       */}
+        {/* 2. CHOOSE YOUR CELEBRATION                                               */}
         {/* ========================================================================= */}
         {occasions.length > 0 && (
           <section id="curated-decors" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal scroll-mt-24">
-            <div className="flex items-end justify-between gap-4 mb-2">
-              <div>
-                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#381932]">Shop by Occasion</h2>
-                <p className="mt-1.5 text-sm text-[#381932]">Beautiful setups for every moment worth celebrating.</p>
+            <div className="grid gap-4 sm:gap-8 md:grid-cols-[minmax(0,22rem)_1fr] md:items-end mb-8 sm:mb-10">
+              <SectionHeading eyebrow="Made for your moments" lead="Choose Your" script="Celebration" />
+              <div className="flex items-end md:justify-end">
+                <button
+                  type="button"
+                  onClick={() => navigate('/explore')}
+                  className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-[#381932]/30 bg-[#FFF3E6] px-4 py-2 text-[11px] font-serif font-semibold uppercase tracking-[0.16em] text-[#381932] shadow-sm hover:bg-[#381932] hover:text-[#FFF3E6] hover:border-[#381932] transition-colors cursor-pointer"
+                >
+                  View All
+                  <ArrowRight size={13} />
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => navigate('/explore')}
-                className="shrink-0 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#381932] hover:underline cursor-pointer"
-              >
-                View All Occasions
-                <ArrowRight size={13} />
-              </button>
             </div>
 
-            <div className="flex gap-4 sm:gap-6 overflow-x-auto pb-2 pt-6 smooth-horizontal-rail hide-scrollbar snap-x sm:grid sm:grid-cols-4 sm:overflow-visible">
+            <div className="flex gap-4 sm:gap-5 overflow-x-auto pb-2 smooth-horizontal-rail hide-scrollbar snap-x sm:grid sm:grid-cols-3 lg:grid-cols-4 sm:overflow-visible">
               {occasions.map((cat) => (
                 <button
                   key={cat._id || cat.name}
                   type="button"
                   onClick={() => onSelectCategory(cat.name)}
-                  className="group flex-none w-[150px] sm:w-auto snap-start cursor-pointer transition-transform duration-[250ms] ease-out hover:-translate-y-1"
+                  className="group relative flex-none w-[220px] sm:w-auto snap-start cursor-pointer overflow-hidden rounded-2xl border border-[#381932]/12 shadow-[0_1px_3px_rgba(56,25,50,0.08)] transition-all duration-[400ms] ease-out hover:-translate-y-1.5 hover:shadow-[0_30px_55px_-28px_rgba(56,25,50,0.4)]"
                 >
-                  <div className="relative aspect-square w-full rounded-xl overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-[250ms]">
+                  <div className="relative aspect-[3/4]">
                     <img
                       src={OCCASION_IMAGE_OVERRIDES[cat.name] || cat.image || FALLBACK_OCCASION_IMAGE}
                       alt={cat.name}
-                      className="h-full w-full object-cover transition-transform duration-[250ms] ease-out group-hover:scale-[1.03]"
+                      className="h-full w-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.06]"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#381932]/70 via-[#381932]/10 to-transparent" />
-                    <span className="absolute inset-x-0 bottom-0 p-3.5 text-left text-sm font-medium text-[#FFF3E6] leading-tight line-clamp-1">
-                      {cat.name}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#381932]/85 via-[#381932]/20 to-transparent" />
+                    <span className="absolute left-3.5 top-3.5 grid h-10 w-10 place-items-center rounded-full border border-[#FFF3E6]/50 bg-[#381932]/25 backdrop-blur-sm">
+                      <Sparkles size={16} className="text-[#FFF3E6]" strokeWidth={1.75} />
                     </span>
+                    <div className="absolute inset-x-0 bottom-0 p-4 text-left">
+                      <span className="block font-serif text-lg font-semibold uppercase tracking-tight text-[#FFF3E6] leading-tight line-clamp-2">
+                        {cat.name}
+                      </span>
+                      <span className="mt-1.5 inline-flex items-center gap-1.5 text-[10px] font-serif font-semibold uppercase tracking-[0.18em] text-[#FFF3E6]/85 group-hover:text-[#FFF3E6]">
+                        Explore
+                        <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
+                      </span>
+                    </div>
                   </div>
                 </button>
               ))}
@@ -252,11 +376,11 @@ export const HomePage: React.FC<HomePageProps> = ({
         {/* ========================================================================= */}
         <section id="packages" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal scroll-mt-24">
           <div className="flex items-end justify-between gap-4 mb-8 sm:mb-10">
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#381932]">Popular Packages</h2>
+            <SectionHeading eyebrow="Curated celebration bundles" lead="Popular" script="Packages" />
             <button
               type="button"
               onClick={() => navigate('/packages')}
-              className="shrink-0 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#381932] hover:underline cursor-pointer"
+              className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-[#381932]/30 bg-[#FFF3E6] px-4 py-2 text-[11px] font-serif font-semibold uppercase tracking-[0.16em] text-[#381932] shadow-sm hover:bg-[#381932] hover:text-[#FFF3E6] hover:border-[#381932] transition-colors cursor-pointer"
             >
               View All Packages
               <ArrowRight size={13} />
@@ -308,12 +432,12 @@ export const HomePage: React.FC<HomePageProps> = ({
         {/* 6. TOP ACTIVITIES & ADD-ONS                                               */}
         {/* ========================================================================= */}
         <section data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal scroll-mt-24">
-          <div className="flex items-end justify-between gap-4 mb-6 sm:mb-8">
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#381932]">Top Activities &amp; Add-ons</h2>
+          <div className="flex items-end justify-between gap-4 mb-8 sm:mb-10">
+            <SectionHeading eyebrow="Entertainment & extras" lead="Top Activities &" script="Add-ons" />
             <button
               type="button"
               onClick={() => onSelectCategory('Kids Activities')}
-              className="shrink-0 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#381932] hover:underline cursor-pointer"
+              className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-[#381932]/30 bg-[#FFF3E6] px-4 py-2 text-[11px] font-serif font-semibold uppercase tracking-[0.16em] text-[#381932] shadow-sm hover:bg-[#381932] hover:text-[#FFF3E6] hover:border-[#381932] transition-colors cursor-pointer"
             >
               View All Services
               <ArrowRight size={13} />

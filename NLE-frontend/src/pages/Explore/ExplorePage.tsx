@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Sparkles, Filter, ArrowUpDown, Home as HomeIcon, ChevronRight, Check } from 'lucide-react';
+import { Filter, ArrowUpDown, Home as HomeIcon, ChevronRight, Check, X } from 'lucide-react';
 import { useProducts } from '../../hooks/useProducts';
 import { SeoHead } from '../../components/layout/SeoHead';
 import { EmptyState } from '../../components/ui/EmptyState';
@@ -36,6 +36,17 @@ const SORT_OPTIONS: { value: 'featured' | 'price_asc' | 'price_desc'; label: str
   { value: 'price_asc', label: 'Price: Low to High' },
   { value: 'price_desc', label: 'Price: High to Low' },
 ];
+
+const FilterChip: React.FC<{ label: string; onClear: () => void }> = ({ label, onClear }) => (
+  <button
+    type="button"
+    onClick={onClear}
+    className="inline-flex items-center gap-1.5 rounded-full border border-[#381932]/20 bg-[#A78A9F]/12 pl-3 pr-2 py-1 text-[11px] font-semibold text-[#381932] hover:bg-[#A78A9F]/20 transition-colors cursor-pointer"
+  >
+    {label}
+    <X size={11} strokeWidth={2.5} className="text-[#381932]/60" />
+  </button>
+);
 
 export const ExplorePage: React.FC<ExplorePageProps> = ({
   onViewProduct,
@@ -214,41 +225,47 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
         description="Discover signature balloon arches, terrace cabanas, and bespoke birthday themes across Bengaluru."
       />
 
-      <div className="relative min-h-screen bg-[#FFF3E6] dark:bg-[#381932] text-[#381932] dark:text-[#FFF3E6] font-sans antialiased transition-colors pb-20 overflow-x-hidden">
+      {/* No overflow-* here: any value other than `visible` (clip included) turns
+          this into a scroll container and kills position: sticky on the filter
+          card below. Horizontal bleed is already clipped by #root / body. */}
+      <div className="relative min-h-screen bg-[#FFF3E6] dark:bg-[#381932] text-[#381932] dark:text-[#FFF3E6] font-sans antialiased transition-colors pb-20">
         
         {/* ========================================================================= */}
-        {/* 1. CINEMATIC LUXURY FULL-BLEED HERO SECTION WITH UNIFIED SEARCH ISLAND   */}
+        {/* 1. EDITORIAL HERO -- matches the landing-page heading treatment          */}
         {/* ========================================================================= */}
-        <section className="relative w-full min-h-screen overflow-hidden flex flex-col justify-center items-center text-center pt-24 sm:pt-28 pb-8 sm:pb-10 px-4 sm:px-6 bg-[#381932]">
-          {/* High-Resolution Landscape Backdrop with Scrim */}
+        <section className="relative w-full min-h-[56vh] sm:min-h-[62vh] overflow-hidden flex items-center bg-[#381932]">
+          {/* Landscape backdrop */}
           <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-            <img 
-              src="/explore2.jpeg" 
-              alt="The Decor Party Celebration Setups" 
-              className="w-full h-full object-cover object-center brightness-[0.75] contrast-[1.05] saturate-[1.1] transform-gpu scale-100 transition-all duration-700"
+            <img
+              src="/explore2.jpeg"
+              alt="The Decor Party celebration setups"
+              className="w-full h-full object-cover object-center brightness-[0.85] saturate-[1.05]"
             />
-            {/* Soft Ambient Vignette & Scrim Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#381932] via-[#381932]/40 to-[#381932]/70 pointer-events-none" />
-            <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#381932]/20 to-[#381932]/60 pointer-events-none" />
+            {/* Plum scrims -- left for the copy, base for the transition into the page */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#381932]/92 via-[#381932]/45 to-[#381932]/10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#381932]/85 via-transparent to-[#381932]/25" />
           </div>
 
-          {/* Centered Editorial Hero Content */}
-          <div className="relative z-10 max-w-4xl mx-auto w-full flex flex-col items-center justify-center text-center px-4 my-auto pt-6">
-            {/* Small Eyebrow */}
-            <span className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-[#381932]/50 border border-[#381932]/25 text-[#FFF3E6] text-[10px] sm:text-xs font-semibold uppercase tracking-[0.22em] backdrop-blur-md mb-3 shadow-md">
-              <Sparkles className="w-3.5 h-3.5 text-[#A78A9F]" />
-              CURATED CELEBRATION EXPERIENCES
-            </span>
+          {/* Left-aligned editorial content */}
+          <div className="relative z-10 w-full max-w-[1720px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 pt-24 pb-16">
+            <div className="max-w-3xl">
+              <span className="inline-flex items-center gap-3 text-[#FFF3E6] text-[10px] sm:text-xs font-serif font-semibold uppercase tracking-[0.28em]">
+                <span className="h-px w-8 sm:w-12 bg-[#A78A9F]" />
+                Curated Celebration Experiences
+              </span>
 
-            {/* Large Editorial Heading */}
-            <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-[56px] font-semibold text-[#FFF3E6] leading-[1.05] tracking-tight max-w-4xl drop-shadow-[0_4px_24px_rgba(56,25,50,0.85)]">
-              Explore <span className="text-[#381932] italic font-medium tracking-normal">Themes</span> &amp; Setups
-            </h1>
+              <h1 className="mt-4 font-serif text-[2.4rem] leading-[1.06] sm:text-5xl md:text-6xl lg:text-[3.9rem] font-semibold uppercase text-[#FFF3E6] tracking-tight drop-shadow-[0_4px_24px_rgba(56,25,50,0.85)]">
+                Explore{' '}
+                <span className="font-script lowercase normal-case font-normal tracking-normal text-[#A78A9F] text-[1.2em] leading-[0.95] align-baseline drop-shadow-[0_2px_20px_rgba(56,25,50,0.7)]">
+                  Themes
+                </span>{' '}
+                &amp; Setups
+              </h1>
 
-            {/* Short Supporting Text */}
-            <p className="mt-2 max-w-xl text-xs sm:text-sm md:text-base text-[#FFF3E6]/90 font-sans font-light leading-relaxed drop-shadow-[0_2px_10px_rgba(56,25,50,0.85)]">
-              Discover signature balloon arches, terrace cabanas, and bespoke birthday themes styled across Bengaluru.
-            </p>
+              <p className="mt-5 max-w-md text-sm sm:text-base text-[#FFF3E6]/90 font-sans font-light leading-relaxed drop-shadow-[0_2px_10px_rgba(56,25,50,0.85)]">
+                Discover signature balloon arches, terrace cabanas, and bespoke birthday themes styled across Bengaluru.
+              </p>
+            </div>
           </div>
         </section>
 
@@ -273,9 +290,12 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
         <section id="products-grid" className="relative z-20 w-full py-6 sm:py-8 px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1720px] mx-auto">
           <div className="flex flex-col lg:flex-row gap-8">
 
-            {/* ---- Sidebar: Filter By ---- */}
+            {/* ---- Sidebar: Filter By ----
+                 Sticks below the header and never grows taller than the
+                 viewport: the card itself scrolls internally so every filter
+                 stays reachable while the product grid scrolls past. */}
             <aside className="w-full lg:w-64 shrink-0">
-              <div className="lg:sticky lg:top-28 lg:min-h-[calc(100vh-9rem)] rounded-xl border border-[#381932]/30 bg-[#FFF3E6] dark:bg-[#381932] dark:border-[#381932] p-5 flex flex-col gap-6">
+              <div className="lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto rounded-2xl border border-[#381932]/15 bg-[#FFF3E6] dark:bg-[#381932] dark:border-[#381932] p-5 flex flex-col gap-6 shadow-[0_1px_3px_rgba(56,25,50,0.08)] [scrollbar-width:thin] [scrollbar-color:rgba(56,25,50,0.2)_transparent]">
                 <div className="flex items-center justify-between">
                   <h2 className="flex items-center gap-1.5 text-sm font-semibold text-[#381932]">
                     <Filter size={14} /> Filter By
@@ -284,7 +304,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
                     <button
                       type="button"
                       onClick={clearAllFilters}
-                      className="text-[11px] font-semibold text-[#381932] hover:text-[#381932] cursor-pointer"
+                      className="text-[11px] font-semibold text-[#A78A9F] hover:text-[#381932] transition-colors cursor-pointer"
                     >
                       Clear all
                     </button>
@@ -321,7 +341,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
                   </div>
                 </div>
 
-                <div className="h-px bg-[#FFF3E6] dark:bg-[#381932]" />
+                <div className="h-px bg-[#381932]/12 dark:bg-[#FFF3E6]/15" />
 
                 {/* Price */}
                 <div className="flex flex-col gap-2.5">
@@ -357,26 +377,48 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
 
             {/* ---- Main: Sort bar + Grid ---- */}
             <div className="flex-1 min-w-0">
-              <div className="w-full mb-6 flex flex-wrap items-center justify-between gap-3">
-                <span className="text-xs font-semibold text-[#381932] dark:text-[#381932]">
-                  Showing {filteredProducts.length} celebration package{filteredProducts.length === 1 ? '' : 's'}
+              <div className="w-full mb-5 flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#381932]/12">
+                <span className="text-sm font-semibold text-[#381932] dark:text-[#FFF3E6]">
+                  {filteredProducts.length} celebration package{filteredProducts.length === 1 ? '' : 's'}
+                  <span className="ml-1 font-normal text-[#381932]/55 dark:text-[#FFF3E6]/55">
+                    {selectedCategory === 'ALL' ? 'across every theme' : `in ${selectedCategory.charAt(0) + selectedCategory.slice(1).toLowerCase()}`}
+                  </span>
                 </span>
                 <label className="flex items-center gap-2 text-xs font-medium text-[#381932] dark:text-[#FFF3E6]">
-                  <span className="hidden sm:inline text-[#381932] dark:text-[#381932]">Sort by</span>
+                  <span className="hidden sm:inline text-[#381932]/60 dark:text-[#FFF3E6]/60">Sort by</span>
                   <div className="relative flex items-center">
-                    <ArrowUpDown size={12} className="absolute left-3 text-[#381932] pointer-events-none" />
+                    <ArrowUpDown size={12} className="absolute left-3 text-[#381932]/70 pointer-events-none" />
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value as any)}
-                      className="appearance-none rounded-lg border border-[#381932]/30 dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] pl-8 pr-4 py-2 text-xs font-semibold text-[#381932] dark:text-[#FFF3E6] focus:outline-none focus:border-[#381932] cursor-pointer"
+                      className="appearance-none rounded-lg border border-[#381932]/20 dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] pl-8 pr-8 py-2 text-xs font-semibold text-[#381932] dark:text-[#FFF3E6] focus:outline-none focus:border-[#381932] cursor-pointer hover:border-[#381932]/40 transition-colors"
                     >
                       {SORT_OPTIONS.map((opt) => (
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
                       ))}
                     </select>
+                    <ChevronRight size={12} className="absolute right-2.5 rotate-90 text-[#381932]/60 pointer-events-none" />
                   </div>
                 </label>
               </div>
+
+              {/* Active filter chips */}
+              {(searchQuery.trim() || selectedCategory !== 'ALL' || selectedPriceBracket !== 'all') && (
+                <div className="mb-5 flex flex-wrap items-center gap-2">
+                  {searchQuery.trim() && (
+                    <FilterChip label={`“${searchQuery.trim()}”`} onClear={() => { setSearchQuery(''); const p = new URLSearchParams(searchParams); p.delete('q'); setSearchParams(p); }} />
+                  )}
+                  {selectedCategory !== 'ALL' && (
+                    <FilterChip label={selectedCategory.charAt(0) + selectedCategory.slice(1).toLowerCase()} onClear={() => handleCategorySelect('ALL')} />
+                  )}
+                  {selectedPriceBracket !== 'all' && (
+                    <FilterChip
+                      label={PRICE_BRACKETS.find((b) => b.value === selectedPriceBracket)?.label || 'Price'}
+                      onClear={() => setSelectedPriceBracket('all')}
+                    />
+                  )}
+                </div>
+              )}
 
               {loading ? (
                 <div className="py-24 flex flex-col items-center justify-center gap-3">

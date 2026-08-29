@@ -170,6 +170,7 @@ export default function MainLayout({
             showMobileMenu={showMobileMenu}
             categories={categories}
             onSelectCategory={onSelectCategory}
+            transparentOverHero={location.pathname === '/' || location.pathname === ''}
           />
           <main className="flex-1 w-full">{children}</main>
           <Footer

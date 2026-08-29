@@ -48,7 +48,7 @@
 
   html {
     max-width: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
     width: 100%;
     scroll-behavior: smooth;
     scroll-padding-top: 5.5rem;
@@ -66,7 +66,7 @@
     color: var(--color-ink);
     transition: background-color 0.25s ease, color 0.25s ease;
     max-width: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
     width: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -200,7 +200,7 @@
 
   #root {
     max-width: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
     width: 100%;
     min-height: 100vh;
     display: flex;

@@ -73,6 +73,10 @@ export interface HeaderProps {
   onAssistantOpen?: () => void;
   categories?: AdminCategory[];
   onSelectCategory?: (catName: string, subName?: string) => void;
+  /** Landing page only: nav sits transparent over the hero video and fades to
+   * a solid Milk bar once the user scrolls. Every other page leaves this off
+   * and renders the standard sticky bar unchanged. */
+  transparentOverHero?: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -84,6 +88,7 @@ export const Header: React.FC<HeaderProps> = ({
   onAssistantOpen,
   categories: _categories = [],
   onSelectCategory,
+  transparentOverHero = false,
 }) => {
   const { isDark, toggleTheme } = useTheme();
   const { count: wishlistCount } = useWishlist();
@@ -97,6 +102,11 @@ export const Header: React.FC<HeaderProps> = ({
   const [navSearchQuery, setNavSearchQuery] = useState('');
   const [scrollY, setScrollY] = useState(0);
   const [activeSection, setActiveSection] = useState<string>('home');
+
+  // Landing overlay nav: transparent over the hero, solid Milk after a nudge of scroll.
+  const navGlassy = transparentOverHero && scrollY <= 24;
+  // Treat the glassy state like dark mode for text/icon colour (Milk on the video).
+  const onDarkNav = isDark || navGlassy;
   const accountRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -332,8 +342,10 @@ export const Header: React.FC<HeaderProps> = ({
     cn(
       'relative px-1 py-1.5 text-[13px] font-medium whitespace-nowrap transition-colors duration-200 cursor-pointer',
       active
-        ? 'text-[#381932]'
-        : isDark
+        ? onDarkNav
+          ? 'text-[#FFF3E6]'
+          : 'text-[#381932]'
+        : onDarkNav
           ? 'text-[#FFF3E6]/85 hover:text-[#FFF3E6]'
           : 'text-[#381932] hover:text-[#381932]'
     );
@@ -341,7 +353,8 @@ export const Header: React.FC<HeaderProps> = ({
   const navUnderline = (active: boolean) => (
     <span
       className={cn(
-        'pointer-events-none absolute left-0 -bottom-[1px] h-[1.5px] w-full origin-left scale-x-0 bg-[#381932] transition-transform duration-200',
+        'pointer-events-none absolute left-0 -bottom-[1px] h-[1.5px] w-full origin-left scale-x-0 transition-transform duration-200',
+        onDarkNav ? 'bg-[#FFF3E6]' : 'bg-[#381932]',
         active && 'scale-x-100'
       )}
     />
@@ -349,24 +362,31 @@ export const Header: React.FC<HeaderProps> = ({
 
   const iconButtonClass = cn(
     'relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-lg transition-colors duration-200 cursor-pointer',
-    isDark ? 'text-[#FFF3E6] hover:bg-[#FFF3E6]/10' : 'text-[#381932] hover:bg-[#A78A9F]/18'
+    onDarkNav ? 'text-[#FFF3E6] hover:bg-[#FFF3E6]/10' : 'text-[#381932] hover:bg-[#A78A9F]/18'
   );
 
   return (
     <header
       ref={headerPillRef}
       className={cn(
-        'sticky top-0 z-50 w-full transition-colors duration-300',
-        isDark ? 'bg-[#381932]' : 'bg-[#FFF3E6]'
+        'z-50 w-full transition-colors duration-300',
+        transparentOverHero ? 'fixed top-0 left-0' : 'sticky top-0',
+        navGlassy
+          ? 'bg-transparent'
+          : isDark
+            ? 'bg-[#381932]'
+            : 'bg-[#FFF3E6]',
+        transparentOverHero && !navGlassy && 'border-b border-[#381932]/12 dark:border-[#FFF3E6]/12'
       )}
     >
       {/* ================================================================= */}
-      {/* THIN UTILITY STRIP -- hides once the page is scrolled              */}
+      {/* THIN UTILITY STRIP -- hidden entirely when the nav floats over    */}
+      {/* the hero; otherwise collapses once the page is scrolled.          */}
       {/* ================================================================= */}
       <div
         className={cn(
           'w-full overflow-hidden bg-[#381932] text-[#FFF3E6] transition-all duration-300 ease-out',
-          scrollY > 40 ? 'max-h-0 opacity-0' : 'max-h-10 opacity-100'
+          transparentOverHero || scrollY > 40 ? 'max-h-0 opacity-0' : 'max-h-10 opacity-100'
         )}
       >
         <div className="mx-auto flex max-w-[1720px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-12 py-1.5 text-[11px] sm:text-xs">
@@ -400,18 +420,21 @@ export const Header: React.FC<HeaderProps> = ({
       <div className={isHome ? 'w-full' : 'mx-auto max-w-[1720px] px-3 sm:px-5 lg:px-8 py-2 sm:py-3'}>
         <div
           className={cn(
-            'flex items-center gap-2 sm:gap-3 lg:gap-5 h-[68px] sm:h-[76px] lg:h-[80px] backdrop-blur-md transition-colors duration-300',
-            isHome
-              ? cn(
-                  'w-full border-b px-4 sm:px-6 lg:px-12',
-                  isDark ? 'bg-[#381932]/90 border-[#381932]' : 'bg-[#FFF3E6]/90 border-[#381932]/30'
-                )
-              : cn(
-                  'rounded-[18px] sm:rounded-[20px] border px-3 sm:px-5 lg:px-6',
-                  isDark
-                    ? 'bg-[#381932]/90 border-[#381932] shadow-[0_4px_20px_-4px_rgba(56,25,50,0.4)]'
-                    : 'bg-[#FFF3E6]/90 border-[#381932]/30 shadow-[0_2px_16px_rgba(56,25,50,0.06)]'
-                )
+            'flex items-center gap-2 sm:gap-3 lg:gap-5 h-[68px] sm:h-[76px] lg:h-[80px] transition-colors duration-300',
+            !navGlassy && 'backdrop-blur-md',
+            navGlassy
+              ? 'w-full bg-transparent px-4 sm:px-6 lg:px-12'
+              : isHome
+                ? cn(
+                    'w-full border-b px-4 sm:px-6 lg:px-12',
+                    isDark ? 'bg-[#381932]/90 border-[#381932]' : 'bg-[#FFF3E6]/90 border-[#381932]/30'
+                  )
+                : cn(
+                    'rounded-[18px] sm:rounded-[20px] border px-3 sm:px-5 lg:px-6',
+                    isDark
+                      ? 'bg-[#381932]/90 border-[#381932] shadow-[0_4px_20px_-4px_rgba(56,25,50,0.4)]'
+                      : 'bg-[#FFF3E6]/90 border-[#381932]/30 shadow-[0_2px_16px_rgba(56,25,50,0.06)]'
+                  )
           )}
         >
           {/* Brand Logo */}
@@ -425,7 +448,7 @@ export const Header: React.FC<HeaderProps> = ({
               <span
                 className={cn(
                   'font-serif text-[9px] sm:text-[10px] font-bold tracking-[0.28em] uppercase transition-colors duration-300',
-                  isDark ? 'text-[#381932]' : 'text-[#381932]'
+                  onDarkNav ? 'text-[#FFF3E6]/80' : 'text-[#381932]'
                 )}
               >
                 THE
@@ -434,7 +457,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <span
                   className={cn(
                     'font-serif text-base sm:text-lg font-bold tracking-[0.08em] uppercase transition-colors duration-300',
-                    isDark ? 'text-[#FFF3E6]' : 'text-[#381932]'
+                    onDarkNav ? 'text-[#FFF3E6]' : 'text-[#381932]'
                   )}
                 >
                   DECOR
@@ -442,7 +465,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <span
                   className={cn(
                     "font-heading italic lowercase text-[1.1rem] sm:text-[1.2rem] font-medium tracking-normal transition-colors duration-300",
-                    isDark ? 'text-[#381932]' : 'text-[#381932]'
+                    onDarkNav ? 'text-[#A78A9F]' : 'text-[#381932]'
                   )}
                 >
                   Party
@@ -453,7 +476,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Desktop Nav Links (own row, single unified bar) */}
           <div className="hidden xl:block flex-1 min-w-0">
-            <NavigationMenu className={cn(isDark ? 'text-[#FFF3E6]' : 'text-[#381932]')}>
+            <NavigationMenu className={cn(onDarkNav ? 'text-[#FFF3E6]' : 'text-[#381932]')}>
               <NavigationMenuList className="flex items-center justify-center gap-5 2xl:gap-7">
 
                 {/* Home */}
@@ -474,8 +497,8 @@ export const Header: React.FC<HeaderProps> = ({
                     className={cn(
                       'bg-transparent px-1 py-1.5 text-[13px] font-medium transition-colors duration-200 cursor-pointer',
                       activeSection === 'services'
-                        ? 'text-[#381932]'
-                        : isDark
+                        ? onDarkNav ? 'text-[#FFF3E6]' : 'text-[#381932]'
+                        : onDarkNav
                           ? 'text-[#FFF3E6]/85 hover:text-[#FFF3E6] data-[state=open]:text-[#FFF3E6]'
                           : 'text-[#381932] hover:text-[#381932] data-[state=open]:text-[#381932]'
                     )}
@@ -689,7 +712,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Heart size={18} strokeWidth={1.75} />
               {wishlistCount > 0 && (
-                <span className={cn('absolute top-1 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full text-[8px] font-bold', isDark ? 'bg-[#381932] text-[#381932]' : 'bg-[#381932] text-[#FFF3E6]')}>
+                <span className={cn('absolute top-1 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full text-[8px] font-bold', onDarkNav ? 'bg-[#A78A9F] text-[#381932]' : 'bg-[#381932] text-[#FFF3E6]')}>
                   {wishlistCount}
                 </span>
               )}
@@ -704,7 +727,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <ShoppingCart size={18} strokeWidth={1.75} />
               {cartCount > 0 && (
-                <span className={cn('absolute top-1 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full text-[8px] font-bold', isDark ? 'bg-[#381932] text-[#381932]' : 'bg-[#381932] text-[#FFF3E6]')}>
+                <span className={cn('absolute top-1 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full text-[8px] font-bold', onDarkNav ? 'bg-[#A78A9F] text-[#381932]' : 'bg-[#381932] text-[#FFF3E6]')}>
                   {cartCount}
                 </span>
               )}
@@ -728,8 +751,8 @@ export const Header: React.FC<HeaderProps> = ({
                   onClick={() => setAccountOpen((v) => !v)}
                   className={cn(
                     'flex items-center gap-1.5 rounded-lg border py-1.5 px-2.5 transition-colors duration-200 cursor-pointer',
-                    isDark
-                      ? 'border-[#381932] bg-[#FFF3E6]/5 hover:bg-[#FFF3E6]/10 text-[#FFF3E6]'
+                    onDarkNav
+                      ? 'border-[#FFF3E6]/30 bg-[#FFF3E6]/5 hover:bg-[#FFF3E6]/12 text-[#FFF3E6]'
                       : 'border-[#381932]/30 bg-[#FFF3E6] hover:bg-[#A78A9F]/15 text-[#381932]'
                   )}
                 >
@@ -737,7 +760,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <span className="hidden xl:inline text-xs font-semibold max-w-[80px] truncate">
                     {auth.user?.firstName || auth.user?.name || 'Account'}
                   </span>
-                  <ChevronDown size={11} className={isDark ? 'text-[#381932]' : 'text-[#381932]'} />
+                  <ChevronDown size={11} className={onDarkNav ? 'text-[#FFF3E6]/80' : 'text-[#381932]'} />
                 </button>
               ) : (
                 <button
@@ -747,8 +770,8 @@ export const Header: React.FC<HeaderProps> = ({
                   className={cn(
                     'inline-flex items-center gap-1.5 rounded-lg border transition-colors duration-200 cursor-pointer',
                     'h-9 w-9 sm:h-10 sm:w-10 justify-center px-0 xl:h-auto xl:w-auto xl:justify-start xl:px-3 xl:py-2 text-xs font-medium',
-                    isDark
-                      ? 'text-[#FFF3E6] bg-[#FFF3E6]/5 hover:bg-[#FFF3E6]/10 border-[#381932]'
+                    onDarkNav
+                      ? 'text-[#FFF3E6] bg-[#FFF3E6]/5 hover:bg-[#FFF3E6]/12 border-[#FFF3E6]/30'
                       : 'text-[#381932] bg-[#FFF3E6] hover:bg-[#A78A9F]/15 border-[#381932]/30'
                   )}
                 >
@@ -832,7 +855,12 @@ export const Header: React.FC<HeaderProps> = ({
                   navigate('/packages');
                 }
               }}
-              className="hidden md:inline-flex items-center gap-1.5 rounded-lg border border-[#381932]/30 px-4 py-2 text-xs font-medium tracking-wide shadow-sm transition-colors duration-200 cursor-pointer bg-[#FFF3E6] text-[#381932] hover:bg-[#A78A9F]/15"
+              className={cn(
+                'hidden md:inline-flex items-center gap-1.5 rounded-lg border px-4 py-2 text-xs font-medium tracking-wide shadow-sm transition-colors duration-200 cursor-pointer',
+                navGlassy
+                  ? 'bg-[#381932] text-[#FFF3E6] border-[#381932] hover:bg-[#2a121f]'
+                  : 'bg-[#FFF3E6] text-[#381932] border-[#381932]/30 hover:bg-[#A78A9F]/15'
+              )}
             >
               <span>Book Now</span>
               <ArrowRight size={14} strokeWidth={2} />

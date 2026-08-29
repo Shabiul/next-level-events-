@@ -1,11 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Heart, ArrowRight, MapPin } from 'lucide-react';
+import { Heart, ArrowRight, MapPin, ShoppingBag } from 'lucide-react';
+import { toast } from 'react-toastify';
 import type { AdminProduct } from '../../types';
 import { cn } from '../../utils/utils';
 import { useAuth } from '../../hooks/useAuth';
 import { useWishlist } from '../../hooks/useWishlist';
+import { useCart } from '../../hooks/useCart';
 import { trackSelectItem, trackWishlistToggle } from '../../utils/analytics';
 
 const SUPPORT_PHONE = '917022058460';
@@ -27,6 +29,9 @@ export interface ProductCardProps {
   isLanding?: boolean;
   className?: string;
   aspectRatio?: string;
+  /** Trimmed card: no description blurb, actions are just View Details + WhatsApp.
+   * Used on the Services / theme pages. */
+  minimal?: boolean;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
@@ -36,10 +41,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   isAI = false,
   isLanding = false,
   className,
+  minimal = false,
 }) => {
   const navigate = useNavigate();
   const auth = useAuth();
   const { isWished, toggleWishlist } = useWishlist();
+  const { addItem } = useCart();
 
   const wished =
     isWished(product._id) || Boolean(auth.user?.wishlist?.some((id) => String(id) === String(product._id)));
@@ -76,6 +83,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     const next = !wished;
     trackWishlistToggle(next ? 'add' : 'remove', product._id, product.name);
     await toggleWishlist(product, next);
+  };
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addItem(product);
+    toast.success(`"${product.name}" added to cart`);
+  };
+
+  const handleBookNow = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onBook) {
+      onBook(product);
+    } else {
+      navigate(`/booking/${product._id}`, { state: { product, preferredMethod: 'razorpay' } });
+    }
   };
 
   const openWhatsApp = (e: React.MouseEvent) => {
@@ -136,66 +158,97 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </div>
       </div>
 
-      {/* Body */}
+      {/* Body -- fixed-height blocks (tag / title / blurb) keep every card in a
+          row the same height so the action buttons always line up cleanly. */}
       <div className="flex flex-1 flex-col p-4 sm:p-5">
         {/* Category / Location Tag */}
-        <div className="flex items-center gap-1 text-[10px] font-serif font-bold uppercase tracking-wider text-[#A78A9F] mb-1">
+        <div className="flex items-center gap-1 text-[10px] font-serif font-bold uppercase tracking-wider text-[#A78A9F] mb-1.5">
           <MapPin size={11} className="shrink-0" />
           <span className="truncate">{tagLabel}</span>
         </div>
 
-        {/* Title */}
-        <h3 className="font-serif text-lg sm:text-xl font-bold uppercase tracking-tight text-[#381932] leading-[1.15] line-clamp-2 mb-2">
-          {product.name}
-        </h3>
-
-        {/* Price */}
-        <div className="flex items-baseline gap-1.5">
-          <span className="font-serif text-2xl sm:text-[26px] font-bold text-[#381932] tracking-tight">
-            ₹{product.price?.toLocaleString('en-IN')}
-          </span>
-          {hasDiscount && (
-            <span className="text-xs font-normal text-[#381932]/55 line-through">
-              ₹{product.originalPrice?.toLocaleString('en-IN')}
-            </span>
-          )}
-        </div>
-        <span className="text-[11px] text-[#381932]/60 font-medium">starting price</span>
-
-        {/* Actions */}
-        <div className="mt-auto pt-3 flex flex-col gap-2">
-          <div className="flex items-stretch gap-2 border-t border-[#E6D7C5] pt-3">
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleCardClick();
-              }}
-              className="flex-1 inline-flex items-center justify-center rounded-lg bg-[#A78A9F] hover:bg-[#8C6E84] text-[#FFF3E6] py-2 text-[11px] font-serif font-semibold uppercase tracking-wide shadow-sm transition-colors cursor-pointer"
-            >
-              View Details
-            </button>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (onBook) {
-                  onBook(product);
-                } else {
-                  navigate(`/booking/${product._id}`, { state: { product, preferredMethod: 'razorpay' } });
-                }
-              }}
-              className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#381932]/25 bg-[#FFF3E6] hover:bg-[#A78A9F]/15 text-[#381932] py-2 text-[11px] font-serif font-semibold uppercase tracking-wide shadow-sm transition-colors cursor-pointer group/btn"
-            >
-              Book Now
-              <ArrowRight size={12} className="transition-transform group-hover/btn:translate-x-0.5" />
-            </button>
+        {minimal ? (
+          /* Services card: the price sits alongside the theme name */
+          <div className="flex items-start justify-between gap-3 min-h-[2.3em]">
+            <h3 className="flex-1 font-serif text-base sm:text-lg font-bold uppercase tracking-tight text-[#381932] leading-[1.15] line-clamp-2">
+              {product.name}
+            </h3>
+            <div className="shrink-0 text-right">
+              <div className="font-serif text-xl sm:text-2xl font-bold text-[#381932] tracking-tight leading-none whitespace-nowrap">
+                ₹{product.price?.toLocaleString('en-IN')}
+              </div>
+              {hasDiscount && (
+                <div className="mt-1 text-[11px] font-normal text-[#381932]/45 line-through whitespace-nowrap">
+                  ₹{product.originalPrice?.toLocaleString('en-IN')}
+                </div>
+              )}
+              <div className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-[#381932]/45">starting</div>
+            </div>
           </div>
+        ) : (
+          <>
+            {/* Title -- always reserves two lines */}
+            <h3 className="font-serif text-lg sm:text-xl font-bold uppercase tracking-tight text-[#381932] leading-[1.15] line-clamp-2 min-h-[2.3em] mb-1.5">
+              {product.name}
+            </h3>
+
+            {/* Short blurb -- always reserves two lines */}
+            <p className="text-xs leading-relaxed text-[#381932]/60 line-clamp-2 min-h-[2.5em] mb-3">
+              {product.description?.trim() ||
+                `Curated ${String(tagLabel).toLowerCase()} styling — on-site setup, balloon work & teardown across Bengaluru.`}
+            </p>
+
+            {/* Price */}
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-serif text-2xl sm:text-[26px] font-bold text-[#381932] tracking-tight">
+                ₹{product.price?.toLocaleString('en-IN')}
+              </span>
+              {hasDiscount && (
+                <span className="text-xs font-normal text-[#381932]/50 line-through">
+                  ₹{product.originalPrice?.toLocaleString('en-IN')}
+                </span>
+              )}
+              <span className="ml-0.5 text-[11px] font-medium text-[#381932]/55">starting</span>
+            </div>
+          </>
+        )}
+
+        {/* Actions -- 2x2, each with its own colour:
+            View Details (sand) · Book Now (mauve) · Add to Cart (plum) · WhatsApp (green) */}
+        <div className="mt-auto pt-4 grid grid-cols-2 gap-2 border-t border-[#E6D7C5]">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCardClick();
+            }}
+            className="inline-flex items-center justify-center rounded-lg bg-[#EFE3D3] hover:bg-[#E4D2BC] text-[#381932] py-2 text-[11px] font-serif font-semibold uppercase tracking-wide shadow-sm transition-colors cursor-pointer"
+          >
+            View Details
+          </button>
+
+          <button
+            type="button"
+            onClick={handleBookNow}
+            className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#A78A9F] hover:bg-[#8C6E84] text-[#FFF3E6] py-2 text-[11px] font-serif font-semibold uppercase tracking-wide shadow-sm transition-colors cursor-pointer group/btn"
+          >
+            Book Now
+            <ArrowRight size={12} className="transition-transform group-hover/btn:translate-x-0.5" />
+          </button>
+
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#381932] hover:bg-[#4A2542] text-[#FFF3E6] py-2 text-[11px] font-serif font-semibold uppercase tracking-wide shadow-sm transition-colors cursor-pointer"
+          >
+            <ShoppingBag size={12} />
+            Add to Cart
+          </button>
 
           <button
             type="button"
             onClick={openWhatsApp}
-            className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#381932] hover:bg-[#483250] text-[#FFF3E6] py-2 text-[11px] font-serif font-semibold uppercase tracking-wide shadow-sm transition-colors cursor-pointer"
+            className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#1FA855] hover:bg-[#178446] text-white py-2 text-[11px] font-serif font-semibold uppercase tracking-wide shadow-sm transition-colors cursor-pointer"
           >
             {WA_SVG}
             <span>WhatsApp</span>

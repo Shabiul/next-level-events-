@@ -1262,6 +1262,7 @@ export const OccasionPage: React.FC<{
                   >
                     <ProductCard
                       product={product}
+                      minimal
                       onViewDetails={onViewProduct || ((p) => navigate(`/product/${p._id}`, { state: { product: p } }))}
                       onBook={onBookProduct || ((p) => navigate(`/booking/${p._id}`, { state: { product: p, preferredMethod: 'razorpay' } }))}
                     />
