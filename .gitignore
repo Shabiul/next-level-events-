@@ -41,6 +41,7 @@ Thumbs.db
 
 
 # local image-processing scratch
-_tools/
+#   _tools/ is intentionally committed (audit scripts, manifest, screenshots,
+#   and its vendored playwright-core) -- force-added past the node_modules rule.
 _drive_dl*/
 _drive_all/
