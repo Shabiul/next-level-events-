@@ -12,12 +12,12 @@ export const WishlistPage: React.FC = () => {
 
   return (
     <div className="mx-auto max-w-[1920px] px-4 py-6 sm:px-6 md:px-8 lg:px-12 animate-fade-in pb-20">
-      <div className="mb-6 flex items-baseline justify-between border-b border-[#E8E7E3] pb-4 dark:border-[#2E2E2E]">
+      <div className="mb-6 flex items-baseline justify-between border-b border-[#381932]/30 pb-4 dark:border-[#381932]">
         <div>
-          <h1 className="font-editorial text-2xl sm:text-3xl font-bold tracking-tight text-[#1C1C1C] dark:text-white">
+          <h1 className="font-editorial text-2xl sm:text-3xl font-bold tracking-tight text-[#381932] dark:text-[#FFF3E6]">
             Saved Experiences
           </h1>
-          <p className="text-xs sm:text-sm text-[#6F6F6B] dark:text-[#A0A09C] mt-0.5">
+          <p className="text-xs sm:text-sm text-[#381932] dark:text-[#381932] mt-0.5">
             {count} {count === 1 ? 'package' : 'packages'} saved for upcoming celebrations
           </p>
         </div>

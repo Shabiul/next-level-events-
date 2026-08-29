@@ -9,9 +9,9 @@ interface SeoHeadProps {
   siteName?: string;
 }
 
-const defaultTitle = 'TheDecorParty | Premium Event Decoration & Balloon Styling';
+const defaultTitle = 'The Decor Party | Premium Event Decoration & Balloon Styling';
 const defaultDescription = 'Handcrafted surprise setups, balloon decorations, and curated event experiences for every celebration in Bengaluru.';
-const defaultSiteName = 'TheDecorParty';
+const defaultSiteName = 'The Decor Party';
 const defaultUrl = typeof window !== 'undefined' ? window.location.origin : 'https://thedecorparty.com';
 
 const normalizeImage = (image?: string) => {
@@ -29,7 +29,7 @@ export const SeoHead: React.FC<SeoHeadProps> = ({
   type = 'product',
   siteName = defaultSiteName,
 }) => {
-  const resolvedTitle = title ? `${title} | TheDecorParty` : defaultTitle;
+  const resolvedTitle = title ? `${title} | The Decor Party` : defaultTitle;
   const resolvedDescription = description || defaultDescription;
   const resolvedImage = normalizeImage(image);
   const resolvedUrl = url || defaultUrl;

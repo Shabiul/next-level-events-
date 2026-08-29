@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import Activity from "../models/Activity";
+import { requireAdmin } from "../utils/auth";
 
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.get("/", async (_req: Request, res: Response) => {
   }
 });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", requireAdmin, async (req: Request, res: Response) => {
   try {
     const rawIds = Array.isArray(req.body.products) ? req.body.products : [req.body.product];
     const productIds = Array.from(new Set(rawIds.map((id: string) => id?.trim()).filter(Boolean)));
@@ -33,7 +34,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.put("/:id", async (req: Request, res: Response) => {
+router.put("/:id", requireAdmin, async (req: Request, res: Response) => {
   try {
     const update: any = {};
     if (typeof req.body.active === 'boolean') {
@@ -60,7 +61,7 @@ router.put("/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", requireAdmin, async (req: Request, res: Response) => {
   try {
     await Activity.findByIdAndDelete(req.params.id);
     res.json({ message: "Activity deleted" });

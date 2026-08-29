@@ -5,6 +5,7 @@ export { AddonsView } from './AddonsView';
 export { ActivitiesView } from './ActivitiesView';
 export { SlidersView } from './SlidersView';
 export { UsersView } from './UsersView';
+export { EnquiriesView } from './EnquiriesView';
 export { TermsView } from './TermsView';
 export { Modal } from './Modal';
 export { ConfirmModal } from './ConfirmModal';

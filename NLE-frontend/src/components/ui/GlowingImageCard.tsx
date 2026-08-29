@@ -52,7 +52,7 @@ export const GlowingImageCard: React.FC<GlowingImageCardProps> = ({
       onClick={onSelect}
       className={cn(
         'group relative flex flex-col justify-between rounded-[28px] p-[1px] transition-all duration-500 hover:-translate-y-2 cursor-pointer select-none',
-        'shadow-[0_16px_36px_rgba(0,0,0,0.4)] hover:shadow-[0_24px_55px_rgba(0,0,0,0.6)]',
+        'shadow-[0_16px_36px_rgba(56,25,50,0.4)] hover:shadow-[0_24px_55px_rgba(56,25,50,0.6)]',
         className
       )}
     >
@@ -62,7 +62,7 @@ export const GlowingImageCard: React.FC<GlowingImageCardProps> = ({
           className="absolute -inset-[100%] opacity-45 group-hover:opacity-100 transition-opacity duration-500"
           style={{
             background:
-              'conic-gradient(from 0deg, transparent 0deg, transparent 270deg, #483250 310deg, #725D75 340deg, #C9BEAB 360deg)',
+              'conic-gradient(from 0deg, transparent 0deg, transparent 270deg, #381932 310deg, #381932 340deg, #381932 360deg)',
           }}
           animate={{
             rotate: [0, 360],
@@ -74,22 +74,22 @@ export const GlowingImageCard: React.FC<GlowingImageCardProps> = ({
           }}
         />
         {/* Subtle static border layer */}
-        <div className="absolute inset-0 rounded-[28px] border border-[#725D75]/20 group-hover:border-[#C9BEAB]/40 transition-colors" />
+        <div className="absolute inset-0 rounded-[28px] border border-[#381932]/20 group-hover:border-[#381932]/40 transition-colors" />
       </div>
 
       {/* 2. Main Card Body Container */}
-      <div className="relative z-10 flex h-full w-full flex-col justify-between rounded-[27px] bg-[#2B1630] p-4 sm:p-5 overflow-hidden text-[#F9F6F2]">
+      <div className="relative z-10 flex h-full w-full flex-col justify-between rounded-[27px] bg-[#381932] p-4 sm:p-5 overflow-hidden text-[#FFF3E6]">
         {/* Ambient Radial Glow Blobs */}
         <div
           className="pointer-events-none absolute -top-10 -right-10 h-44 w-44 rounded-full opacity-20 blur-[45px] transition-all duration-700 group-hover:scale-135 group-hover:opacity-45"
           style={{
-            background: 'radial-gradient(circle, #725D75 0%, rgba(167,138,159,0) 70%)',
+            background: 'radial-gradient(circle, #381932 0%, rgba(56,25,50,0) 70%)',
           }}
         />
         <div
           className="pointer-events-none absolute -bottom-10 -left-10 h-48 w-48 rounded-full opacity-20 blur-[50px] transition-all duration-700 group-hover:scale-135 group-hover:opacity-40"
           style={{
-            background: 'radial-gradient(circle, #A78A9F 0%, #483250 50%, rgba(52,32,60,0) 75%)',
+            background: 'radial-gradient(circle, #381932 0%, #381932 50%, rgba(56,25,50,0) 75%)',
           }}
         />
 
@@ -98,13 +98,13 @@ export const GlowingImageCard: React.FC<GlowingImageCardProps> = ({
           <div
             className="pointer-events-none absolute -inset-px opacity-30 transition-opacity duration-300 mix-blend-screen rounded-[inherit]"
             style={{
-              background: `radial-gradient(240px circle at ${mousePos.x}px ${mousePos.y}px, rgba(201,190,171,0.22), rgba(167,138,159,0.12), transparent 70%)`,
+              background: `radial-gradient(240px circle at ${mousePos.x}px ${mousePos.y}px, rgba(56,25,50,0.22), rgba(56,25,50,0.12), transparent 70%)`,
             }}
           />
         )}
 
         {/* 3. Larger Image Frame Container (Aspect 4:3 for prominent, grand visual size) */}
-        <div className="relative w-full aspect-[4/3] rounded-[20px] overflow-hidden bg-[#1E0F23] border border-white/10 shadow-inner shrink-0">
+        <div className="relative w-full aspect-[4/3] rounded-[20px] overflow-hidden bg-[#381932] border border-[#381932]/10 shadow-inner shrink-0">
           <img
             src={image}
             alt={imageAlt || title}
@@ -113,12 +113,12 @@ export const GlowingImageCard: React.FC<GlowingImageCardProps> = ({
           />
 
           {/* Subtle vignette */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#381932]/50 via-transparent to-[#381932]/20 pointer-events-none" />
 
           {/* Top-Left Category Tag Badge */}
           {tag && (
             <div className="absolute top-2.5 left-2.5 z-20">
-              <span className="inline-flex items-center gap-1 rounded-full bg-black/50 border border-white/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#A78A9F] backdrop-blur-md shadow-md">
+              <span className="inline-flex items-center gap-1 rounded-full bg-[#381932]/50 border border-[#381932]/20 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#A78A9F] backdrop-blur-md shadow-md">
                 <Sparkles size={10} className="text-[#A78A9F]" />
                 <span>{tag}</span>
               </span>
@@ -135,7 +135,7 @@ export const GlowingImageCard: React.FC<GlowingImageCardProps> = ({
                 {specs.map((spec, specIdx) => (
                   <span
                     key={specIdx}
-                    className="inline-flex items-center gap-1 rounded-full bg-white/06 border border-white/12 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-medium text-[#F9F6F2]/90 backdrop-blur-xs"
+                    className="inline-flex items-center gap-1 rounded-full bg-[#FFF3E6]/06 border border-[#381932]/12 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-medium text-[#FFF3E6]/90 backdrop-blur-xs"
                   >
                     {spec}
                   </span>
@@ -143,30 +143,30 @@ export const GlowingImageCard: React.FC<GlowingImageCardProps> = ({
               </div>
             ) : popularSetup ? (
               <div className="flex flex-wrap items-center gap-1.5 mb-2.5">
-                <span className="inline-flex items-center gap-1 rounded-full bg-white/06 border border-white/12 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-medium text-[#A78A9F] backdrop-blur-xs">
+                <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF3E6]/06 border border-[#381932]/12 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-medium text-[#381932] backdrop-blur-xs">
                   ✨ {popularSetup}
                 </span>
               </div>
             ) : null}
 
             {/* Package Title in Serif Typography */}
-            <h3 className="font-serif text-lg sm:text-xl font-bold tracking-tight text-white group-hover:text-[#A78A9F] transition-colors leading-snug mb-1.5 line-clamp-1">
+            <h3 className="font-serif text-lg sm:text-xl font-bold tracking-tight text-[#FFF3E6] group-hover:text-[#381932] transition-colors leading-snug mb-1.5 line-clamp-1">
               {title}
             </h3>
 
             {/* Description */}
-            <p className="text-xs sm:text-[13px] font-light leading-relaxed text-[#E4DCD2]/80 line-clamp-3 mb-4">
+            <p className="text-xs sm:text-[13px] font-light leading-relaxed text-[#FFF3E6]/80 line-clamp-3 mb-4">
               {description}
             </p>
           </div>
 
           {/* 5. Bottom Action Footer Row */}
-          <div className="pt-3.5 border-t border-white/10 mt-auto flex items-center justify-between">
+          <div className="pt-3.5 border-t border-[#381932]/10 mt-auto flex items-center justify-between">
             <div>
-              <span className="text-[9px] font-semibold uppercase tracking-wider text-[#725D75] block leading-none mb-1">
+              <span className="text-[9px] font-semibold uppercase tracking-wider text-[#381932] block leading-none mb-1">
                 {pricePrefix}
               </span>
-              <span className="font-serif text-sm sm:text-base font-bold text-[#A78A9F] leading-none">
+              <span className="font-serif text-sm sm:text-base font-bold text-[#381932] leading-none">
                 {price}
               </span>
             </div>
@@ -174,12 +174,12 @@ export const GlowingImageCard: React.FC<GlowingImageCardProps> = ({
             {/* Action Link with Animated Arrow */}
             <button
               type="button"
-              className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#A78A9F] group-hover:text-[#F9F6F2] transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#381932] group-hover:text-[#FFF3E6] transition-colors cursor-pointer"
             >
               <span>{buttonText}</span>
               <ArrowRight
                 size={13}
-                className="transition-transform duration-300 group-hover:translate-x-1 text-[#A78A9F] group-hover:text-[#F9F6F2]"
+                className="transition-transform duration-300 group-hover:translate-x-1 text-[#381932] group-hover:text-[#FFF3E6]"
               />
             </button>
           </div>

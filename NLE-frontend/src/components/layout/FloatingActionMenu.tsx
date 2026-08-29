@@ -25,21 +25,21 @@ const actions = [
   {
     label: 'Call Concierge',
     icon: Phone,
-    bg: 'bg-[#4A4A48] text-white hover:bg-[#383836]',
+    bg: 'bg-[#381932] text-[#FFF3E6] hover:opacity-90',
     shadow: 'shadow-md',
     action: 'call',
   },
   {
     label: 'WhatsApp Chat',
     icon: MessageCircle,
-    bg: 'bg-[#25D366] text-white hover:bg-[#1EBE5D]',
+    bg: 'bg-[#381932] text-[#FFF3E6] hover:bg-[#FFF3E6]',
     shadow: 'shadow-md',
     action: 'whatsapp',
   },
   {
     label: 'Instagram',
     icon: InstagramIcon,
-    bg: 'bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] text-white hover:opacity-90',
+    bg: 'bg-gradient-to-tr from-[#FFF3E6] via-[#381932] to-[#381932] text-[#FFF3E6] hover:opacity-90',
     shadow: 'shadow-md',
     action: 'instagram',
   },
@@ -117,7 +117,7 @@ export function FloatingActionMenu({ assistantOpen = false }: FloatingActionMenu
                 }}
                 transition={{ type: 'spring', stiffness: 450, damping: 25 }}
               >
-                <span className="rounded-full bg-white dark:bg-[#1E1E1E] border border-[#E8E7E3] dark:border-[#2E2E2E] px-3 py-1 text-xs font-semibold text-[#1C1C1C] dark:text-white shadow-xs">
+                <span className="rounded-full bg-[#FFF3E6] dark:bg-[#381932] border border-[#381932]/30 dark:border-[#381932] px-3 py-1 text-xs font-semibold text-[#381932] dark:text-[#FFF3E6] shadow-xs">
                   {label}
                 </span>
 
@@ -140,7 +140,7 @@ export function FloatingActionMenu({ assistantOpen = false }: FloatingActionMenu
         aria-label={open ? 'Close quick actions' : 'Open quick actions'}
         aria-expanded={open}
         onClick={() => setOpen(v => !v)}
-        className="pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#1C1C1C] text-white shadow-lg ring-4 ring-white/90 dark:ring-[#121212]/90 hover:bg-black transition-colors cursor-pointer"
+        className="pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#381932] text-[#FFF3E6] shadow-lg ring-4 ring-[#FFF3E6]/90 dark:ring-[#381932]/90 hover:opacity-90 transition-colors cursor-pointer"
         whileTap={{ scale: 0.92 }}
       >
         <motion.span

@@ -58,7 +58,7 @@ export function AccordionItem({
 } & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <AccordionItemContext.Provider value={{ value }}>
-      <div className={cn('border-b border-neutral-200 dark:border-neutral-800', className)} {...props}>
+      <div className={cn('border-b border-[#381932] dark:border-[#381932]', className)} {...props}>
         {children}
       </div>
     </AccordionItemContext.Provider>
@@ -89,7 +89,7 @@ export function AccordionTrigger({
       <span>{children}</span>
       <ChevronDown
         className={cn(
-          'h-4 w-4 shrink-0 transition-transform duration-200 text-neutral-500',
+          'h-4 w-4 shrink-0 transition-transform duration-200 text-[#381932]',
           isOpen && 'rotate-180'
         )}
       />

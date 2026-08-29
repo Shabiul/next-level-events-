@@ -102,8 +102,8 @@ export const ParallaxTourCard: React.FC<ParallaxTourCardProps> = ({
         whileHover={{ scale: 1.02 }}
         transition={{ type: 'spring', damping: 20, stiffness: 300 }}
         className={cn(
-          'group relative overflow-hidden rounded-[28px] sm:rounded-[32px] bg-[#725D75] border border-[#725D75]/25 text-[#F9F6F2]',
-          'shadow-[0_16px_36px_rgba(52,32,60,0.4)] hover:shadow-[0_26px_60px_rgba(167,138,159,0.35)] hover:border-[#725D75]/65',
+          'group relative overflow-hidden rounded-[28px] sm:rounded-[32px] bg-[#381932] border border-[#381932]/25 text-[#FFF3E6]',
+          'shadow-[0_16px_36px_rgba(56,25,50,0.4)] hover:shadow-[0_26px_60px_rgba(56,25,50,0.35)] hover:border-[#381932]/65',
           'transition-shadow duration-500',
           aspectRatio
         )}
@@ -120,14 +120,14 @@ export const ParallaxTourCard: React.FC<ParallaxTourCardProps> = ({
           />
 
           {/* Vignette Overlay */}
-          <div className="absolute inset-0 bg-black/15 pointer-events-none" />
+          <div className="absolute inset-0 bg-[#A78A9F]/20 pointer-events-none" />
 
           {/* Gentle, non-opaque gradient so the full image remains clear */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                'linear-gradient(to top, rgba(30, 15, 35, 0.75) 0%, rgba(0, 0, 0, 0.2) 45%, transparent 100%)',
+                'linear-gradient(to top, rgba(56,25,50,0.75) 0%, rgba(56,25,50,0.2) 45%, transparent 100%)',
             }}
           />
         </div>
@@ -140,7 +140,7 @@ export const ParallaxTourCard: React.FC<ParallaxTourCardProps> = ({
             className="pointer-events-none absolute -inset-px rounded-[inherit] transition-opacity duration-300 z-20 mix-blend-screen"
             style={{
               transform: 'translateZ(15px)',
-              background: `radial-gradient(280px circle at ${glarePos.x}px ${glarePos.y}px, rgba(167, 138, 159, 0.4), rgba(72, 50, 80, 0.15), transparent 75%)`,
+              background: `radial-gradient(280px circle at ${glarePos.x}px ${glarePos.y}px, rgba(56,25,50,0.4), rgba(56,25,50,0.15), transparent 75%)`,
             }}
           />
         )}
@@ -153,7 +153,7 @@ export const ParallaxTourCard: React.FC<ParallaxTourCardProps> = ({
           className="absolute top-4 left-4 right-4 z-30 flex items-center justify-between pointer-events-none"
         >
           {badge ? (
-            <span className="pointer-events-auto inline-flex items-center rounded-full bg-[#725D75]/80 border border-[#725D75]/40 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#A78A9F] backdrop-blur-md shadow-md">
+            <span className="pointer-events-auto inline-flex items-center rounded-full bg-[#381932]/80 border border-[#381932]/40 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#A78A9F] backdrop-blur-md shadow-md">
               {badge}
             </span>
           ) : (
@@ -170,15 +170,15 @@ export const ParallaxTourCard: React.FC<ParallaxTourCardProps> = ({
             transition={{ duration: 0.3 }}
             className={cn(
               'pointer-events-auto flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full',
-              'bg-[#725D75]/80 hover:bg-[#483250] border border-[#725D75]/40 backdrop-blur-md shadow-lg',
-              'text-[#F9F6F2] transition-colors duration-200 cursor-pointer'
+              'bg-[#381932]/80 hover:opacity-90 border border-[#381932]/40 backdrop-blur-md shadow-lg',
+              'text-[#FFF3E6] transition-colors duration-200 cursor-pointer'
             )}
           >
             <Heart
               size={18}
               className={cn(
                 'transition-all duration-200',
-                isLiked ? 'fill-rose-400 text-rose-400 scale-110' : 'text-[#A78A9F] hover:text-[#F9F6F2]'
+                isLiked ? 'fill-[#381932] text-[#381932] scale-110' : 'text-[#381932] hover:text-[#FFF3E6]'
               )}
             />
           </motion.button>
@@ -193,20 +193,20 @@ export const ParallaxTourCard: React.FC<ParallaxTourCardProps> = ({
         >
           {/* Subtitle / Category with dashes in Radiant Lilac */}
           {subtitle && (
-            <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.22em] text-[#A78A9F] drop-shadow-sm mb-1.5 font-sans">
+            <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.22em] text-[#381932] drop-shadow-sm mb-1.5 font-sans">
               {formattedSubtitle}
             </p>
           )}
 
           {/* Main Title */}
-          <h3 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#F9F6F2] drop-shadow-md leading-tight group-hover:text-[#A78A9F] transition-colors">
+          <h3 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#FFF3E6] drop-shadow-md leading-tight group-hover:text-[#381932] transition-colors">
             {title}
           </h3>
 
           {/* Optional Price Pill in Khaki Shell */}
           {price && (
             <div className="mt-2.5 flex items-center gap-2">
-              <span className="inline-flex items-center rounded-full bg-[#483250]/90 border border-[#725D75]/40 px-3 py-1 text-xs font-bold text-[#A78A9F] backdrop-blur-md">
+              <span className="inline-flex items-center rounded-full bg-[#381932]/90 border border-[#381932]/40 px-3 py-1 text-xs font-bold text-[#381932] backdrop-blur-md">
                 {price}
               </span>
             </div>

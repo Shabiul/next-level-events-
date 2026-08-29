@@ -46,7 +46,7 @@ export const BackToTopButton: React.FC = () => {
           onClick={scrollToTop}
           type="button"
           aria-label="Scroll to top"
-          className={`fixed ${isProductPage ? 'bottom-36 sm:bottom-40' : 'bottom-24 sm:bottom-28'} right-5 sm:right-8 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/90 dark:bg-[#201325]/90 text-[#2F2930] dark:text-[#FAF8F5] shadow-xl backdrop-blur-md border border-[#E4DCD2]/70 dark:border-[#483250] transition-colors cursor-pointer group`}
+          className={`fixed ${isProductPage ? 'bottom-36 sm:bottom-40' : 'bottom-24 sm:bottom-28'} right-5 sm:right-8 z-40 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-[#FFF3E6]/90 dark:bg-[#381932]/90 text-[#381932] dark:text-[#FFF3E6] shadow-xl backdrop-blur-md border border-[#381932]/70 dark:border-[#381932] transition-colors cursor-pointer group`}
         >
           {/* Circular Progress Ring */}
           <svg className="absolute inset-0 h-full w-full -rotate-90 pointer-events-none" viewBox="0 0 44 44">
@@ -54,7 +54,7 @@ export const BackToTopButton: React.FC = () => {
               cx="22"
               cy="22"
               r={radius}
-              className="stroke-[#E4DCD2]/30 dark:stroke-white/10"
+              className="stroke-[#FFF3E6]/30 dark:stroke-[#FFF3E6]/10"
               strokeWidth="2"
               fill="transparent"
             />
@@ -62,7 +62,7 @@ export const BackToTopButton: React.FC = () => {
               cx="22"
               cy="22"
               r={radius}
-              className="stroke-[#725D75] dark:stroke-[#C9BEAB] transition-all duration-150"
+              className="stroke-[#381932] dark:stroke-[#381932] transition-all duration-150"
               strokeWidth="2.5"
               strokeDasharray={circumference}
               strokeDashoffset={strokeDashoffset}

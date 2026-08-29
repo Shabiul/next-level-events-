@@ -168,7 +168,7 @@ export function NavigationMenuLink({
   return (
     <a
       className={cn(
-        'group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800',
+        'group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-[#FFF3E6] dark:hover:bg-[#381932]',
         className
       )}
       {...props}

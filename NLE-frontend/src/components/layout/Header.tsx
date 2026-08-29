@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Heart,
   ShoppingCart,
@@ -43,6 +43,13 @@ import {
   AccordionTrigger,
 } from '../base-ui/accordion';
 import { SERVICE_COLUMNS, getServiceThumb } from '../../data/servicesData';
+import { useProducts } from '../../hooks/useProducts';
+import {
+  buildServiceIndex,
+  searchServices,
+  resolveEntryRoute,
+  type SearchEntry,
+} from '../../utils/serviceSearch';
 
 interface AuthSlice {
   isLoggedIn: boolean;
@@ -177,14 +184,108 @@ export const Header: React.FC<HeaderProps> = ({
     return () => window.removeEventListener('keydown', handleKey);
   }, []);
 
+  // ---- Service-based search -------------------------------------------------
+  const { products: liveProducts, categories: liveCategories } = useProducts();
+  const [activeSuggestion, setActiveSuggestion] = useState(-1);
+
+  const searchIndex = useMemo(
+    () => buildServiceIndex(
+      liveCategories && liveCategories.length ? liveCategories : _categories,
+      liveProducts
+    ),
+    [liveCategories, _categories, liveProducts]
+  );
+
+  const suggestions = useMemo(
+    () => (navSearchQuery.trim().length >= 2 ? searchServices(navSearchQuery, searchIndex) : []),
+    [navSearchQuery, searchIndex]
+  );
+
+  useEffect(() => { setActiveSuggestion(-1); }, [navSearchQuery]);
+
+  const closeSearch = () => {
+    setNavSearchQuery('');
+    setSearchOpen(false);
+    setMobileMenuOpen(false);
+  };
+
+  const goToEntry = (entry: SearchEntry) => {
+    closeSearch();
+    navigate(resolveEntryRoute(entry));
+  };
+
+  const runSearch = () => {
+    if (activeSuggestion >= 0 && suggestions[activeSuggestion]) {
+      goToEntry(suggestions[activeSuggestion]);
+      return;
+    }
+    const q = navSearchQuery.trim();
+    if (!q) return;
+    closeSearch();
+    navigate(`/explore?q=${encodeURIComponent(q)}`);
+  };
+
   const submitSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (navSearchQuery.trim()) {
-      navigate(`/explore?q=${encodeURIComponent(navSearchQuery.trim())}`);
-      setNavSearchQuery('');
-      setSearchOpen(false);
-      setMobileMenuOpen(false);
+    runSearch();
+  };
+
+  const onSearchKeyDown = (e: React.KeyboardEvent) => {
+    if (!suggestions.length) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActiveSuggestion((i) => (i + 1) % suggestions.length);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActiveSuggestion((i) => (i <= 0 ? suggestions.length - 1 : i - 1));
     }
+  };
+
+  const renderSuggestions = () => {
+    if (suggestions.length > 0) {
+      return (
+        <ul className="mt-2 max-h-72 overflow-y-auto flex flex-col gap-0.5">
+          {suggestions.map((s, i) => (
+            <li key={`${s.kind}-${s.label}`}>
+              <button
+                type="button"
+                onMouseEnter={() => setActiveSuggestion(i)}
+                onClick={() => goToEntry(s)}
+                className={cn(
+                  'flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-colors duration-150 cursor-pointer',
+                  i === activeSuggestion ? 'bg-[#A78A9F]/25' : 'hover:bg-[#A78A9F]/15'
+                )}
+              >
+                <Search size={14} className="shrink-0 text-[#A78A9F]" />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-medium text-[#381932] dark:text-[#FFF3E6]">
+                    {s.label}
+                  </span>
+                  <span className="block truncate text-[11px] text-[#381932]/55 dark:text-[#FFF3E6]/55">
+                    {s.kind === 'subcategory'
+                      ? `in ${s.category}`
+                      : s.kind === 'category'
+                        ? 'Service category'
+                        : 'Package'}
+                  </span>
+                </span>
+                <ArrowRight size={12} className="shrink-0 text-[#381932]/40 dark:text-[#FFF3E6]/40" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      );
+    }
+    if (navSearchQuery.trim().length >= 2) {
+      return (
+        <div className="mt-2 px-2.5 py-3 text-xs leading-relaxed text-[#381932]/60 dark:text-[#FFF3E6]/60">
+          No celebrations found for “{navSearchQuery.trim()}”.
+          <br />
+          Press Enter to search anyway.
+        </div>
+      );
+    }
+    return null;
   };
 
   /**
@@ -231,16 +332,16 @@ export const Header: React.FC<HeaderProps> = ({
     cn(
       'relative px-1 py-1.5 text-[13px] font-medium whitespace-nowrap transition-colors duration-200 cursor-pointer',
       active
-        ? 'text-[#725D75]'
+        ? 'text-[#381932]'
         : isDark
-          ? 'text-[#F9F6F2]/85 hover:text-white'
-          : 'text-[#2F2930] hover:text-[#725D75]'
+          ? 'text-[#FFF3E6]/85 hover:text-[#FFF3E6]'
+          : 'text-[#381932] hover:text-[#381932]'
     );
 
   const navUnderline = (active: boolean) => (
     <span
       className={cn(
-        'pointer-events-none absolute left-0 -bottom-[1px] h-[1.5px] w-full origin-left scale-x-0 bg-[#725D75] transition-transform duration-200',
+        'pointer-events-none absolute left-0 -bottom-[1px] h-[1.5px] w-full origin-left scale-x-0 bg-[#381932] transition-transform duration-200',
         active && 'scale-x-100'
       )}
     />
@@ -248,7 +349,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const iconButtonClass = cn(
     'relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-lg transition-colors duration-200 cursor-pointer',
-    isDark ? 'text-[#F9F6F2] hover:bg-white/10' : 'text-[#2F2930] hover:bg-[#725D75]/08'
+    isDark ? 'text-[#FFF3E6] hover:bg-[#FFF3E6]/10' : 'text-[#381932] hover:bg-[#A78A9F]/18'
   );
 
   return (
@@ -256,7 +357,7 @@ export const Header: React.FC<HeaderProps> = ({
       ref={headerPillRef}
       className={cn(
         'sticky top-0 z-50 w-full transition-colors duration-300',
-        isDark ? 'bg-[#1B101F]' : 'bg-[#F9F6F2]'
+        isDark ? 'bg-[#381932]' : 'bg-[#FFF3E6]'
       )}
     >
       {/* ================================================================= */}
@@ -264,26 +365,26 @@ export const Header: React.FC<HeaderProps> = ({
       {/* ================================================================= */}
       <div
         className={cn(
-          'w-full overflow-hidden bg-[#725D75] text-[#F9F6F2] transition-all duration-300 ease-out',
+          'w-full overflow-hidden bg-[#381932] text-[#FFF3E6] transition-all duration-300 ease-out',
           scrollY > 40 ? 'max-h-0 opacity-0' : 'max-h-10 opacity-100'
         )}
       >
         <div className="mx-auto flex max-w-[1720px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-12 py-1.5 text-[11px] sm:text-xs">
           <span className="hidden sm:inline-flex items-center gap-1.5 truncate tracking-[0.08em]">
-            <Sparkles size={12} className="text-[#C9BEAB] shrink-0" />
+            <Sparkles size={12} className="text-[#A78A9F] shrink-0" />
             Start Your Celebration with The Decor Party ✦
           </span>
           <span className="flex-1 sm:flex-none text-center inline-flex items-center justify-center gap-1.5 truncate">
-            <Sparkles size={12} className="text-[#C9BEAB] shrink-0" />
+            <Sparkles size={12} className="text-[#A78A9F] shrink-0" />
             Make Every Celebration Magical
           </span>
           <span className="hidden sm:inline-flex items-center gap-3 shrink-0">
-            <button type="button" onClick={() => navigate('/bookings')} className="inline-flex items-center gap-1.5 hover:text-[#C9BEAB] transition-colors cursor-pointer">
+            <button type="button" onClick={() => navigate('/bookings')} className="inline-flex items-center gap-1.5 hover:text-[#381932] transition-colors cursor-pointer">
               <MapPinned size={12} />
               Track Order
             </button>
-            <span className="text-white/30">|</span>
-            <button type="button" onClick={() => navigate('/contact')} className="inline-flex items-center gap-1.5 hover:text-[#C9BEAB] transition-colors cursor-pointer">
+            <span className="text-[#FFF3E6]/30">|</span>
+            <button type="button" onClick={() => navigate('/contact')} className="inline-flex items-center gap-1.5 hover:text-[#381932] transition-colors cursor-pointer">
               <LifeBuoy size={12} />
               Help &amp; Support
             </button>
@@ -303,13 +404,13 @@ export const Header: React.FC<HeaderProps> = ({
             isHome
               ? cn(
                   'w-full border-b px-4 sm:px-6 lg:px-12',
-                  isDark ? 'bg-[#1B101F]/90 border-[#483250]' : 'bg-white/90 border-[#E4DCD2]'
+                  isDark ? 'bg-[#381932]/90 border-[#381932]' : 'bg-[#FFF3E6]/90 border-[#381932]/30'
                 )
               : cn(
                   'rounded-[18px] sm:rounded-[20px] border px-3 sm:px-5 lg:px-6',
                   isDark
-                    ? 'bg-[#1B101F]/90 border-[#483250] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.4)]'
-                    : 'bg-white/90 border-[#E4DCD2] shadow-[0_2px_16px_rgba(47,41,48,0.06)]'
+                    ? 'bg-[#381932]/90 border-[#381932] shadow-[0_4px_20px_-4px_rgba(56,25,50,0.4)]'
+                    : 'bg-[#FFF3E6]/90 border-[#381932]/30 shadow-[0_2px_16px_rgba(56,25,50,0.06)]'
                 )
           )}
         >
@@ -318,13 +419,13 @@ export const Header: React.FC<HeaderProps> = ({
             type="button"
             onClick={onLogoClick || (() => handleNavAnchor('top'))}
             className="flex items-center text-left cursor-pointer focus:outline-none group shrink-0"
-            aria-label="TheDecorParty Home"
+            aria-label="The Decor Party Home"
           >
             <div className="flex flex-col items-start leading-none">
               <span
                 className={cn(
                   'font-serif text-[9px] sm:text-[10px] font-bold tracking-[0.28em] uppercase transition-colors duration-300',
-                  isDark ? 'text-[#725D75]' : 'text-[#746B72]'
+                  isDark ? 'text-[#381932]' : 'text-[#381932]'
                 )}
               >
                 THE
@@ -333,7 +434,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <span
                   className={cn(
                     'font-serif text-base sm:text-lg font-bold tracking-[0.08em] uppercase transition-colors duration-300',
-                    isDark ? 'text-[#F9F6F2]' : 'text-[#2F2930]'
+                    isDark ? 'text-[#FFF3E6]' : 'text-[#381932]'
                   )}
                 >
                   DECOR
@@ -341,7 +442,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <span
                   className={cn(
                     "font-heading italic lowercase text-[1.1rem] sm:text-[1.2rem] font-medium tracking-normal transition-colors duration-300",
-                    isDark ? 'text-[#A78A9F]' : 'text-[#746B72]'
+                    isDark ? 'text-[#381932]' : 'text-[#381932]'
                   )}
                 >
                   Party
@@ -352,7 +453,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Desktop Nav Links (own row, single unified bar) */}
           <div className="hidden xl:block flex-1 min-w-0">
-            <NavigationMenu className={cn(isDark ? 'text-[#F9F6F2]' : 'text-[#2F2930]')}>
+            <NavigationMenu className={cn(isDark ? 'text-[#FFF3E6]' : 'text-[#381932]')}>
               <NavigationMenuList className="flex items-center justify-center gap-5 2xl:gap-7">
 
                 {/* Home */}
@@ -373,16 +474,16 @@ export const Header: React.FC<HeaderProps> = ({
                     className={cn(
                       'bg-transparent px-1 py-1.5 text-[13px] font-medium transition-colors duration-200 cursor-pointer',
                       activeSection === 'services'
-                        ? 'text-[#725D75]'
+                        ? 'text-[#381932]'
                         : isDark
-                          ? 'text-[#F9F6F2]/85 hover:text-white data-[state=open]:text-white'
-                          : 'text-[#2F2930] hover:text-[#725D75] data-[state=open]:text-[#725D75]'
+                          ? 'text-[#FFF3E6]/85 hover:text-[#FFF3E6] data-[state=open]:text-[#FFF3E6]'
+                          : 'text-[#381932] hover:text-[#381932] data-[state=open]:text-[#381932]'
                     )}
                   >
                     Services
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="p-0">
-                    <div className="w-[900px] max-w-[96vw] rounded-3xl border border-[#E4DCD2] dark:border-[#483250] bg-[#F9F6F2] dark:bg-[#201325] p-6 shadow-2xl">
+                    <div className="w-[900px] max-w-[96vw] rounded-3xl border border-[#381932]/30 dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-6 shadow-2xl">
                       <div className="flex flex-col gap-5">
                         {SERVICE_COLUMNS.map((column) => (
                           <div key={column.key} className="text-left">
@@ -393,13 +494,13 @@ export const Header: React.FC<HeaderProps> = ({
                                   ? handleNavAnchor('curated-decors')
                                   : handleNavCategory(column.title)
                               }
-                              className="flex items-center gap-2 pb-2.5 border-b border-[#E4DCD2]/60 dark:border-[#483250]/60 mb-3 w-full text-left hover:opacity-80 transition-opacity cursor-pointer group"
+                              className="flex items-center gap-2 pb-2.5 border-b border-[#381932]/60 dark:border-[#381932]/60 mb-3 w-full text-left hover:opacity-80 transition-opacity cursor-pointer group"
                             >
-                              <column.icon size={16} className="text-[#725D75]" />
-                              <span className="text-xs font-bold uppercase tracking-wider text-[#2F2930] dark:text-[#FAF8F5]">
+                              <column.icon size={16} className="text-[#381932]" />
+                              <span className="text-xs font-bold uppercase tracking-wider text-[#381932] dark:text-[#FFF3E6]">
                                 {column.title}
                               </span>
-                              <ArrowUpRight size={12} className="text-[#746B72] ml-auto group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                              <ArrowUpRight size={12} className="text-[#381932] ml-auto group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                             </button>
                             <div className="grid grid-cols-4 gap-1.5">
                               {column.items.map((item) => {
@@ -412,21 +513,21 @@ export const Header: React.FC<HeaderProps> = ({
                                     e.preventDefault();
                                     handleNavCategory(item.label);
                                   }}
-                                  className="group flex items-center gap-2 rounded-xl px-2 py-1.5 text-xs font-medium text-[#2F2930] hover:bg-[#725D75]/15 dark:text-[#FAF8F5] dark:hover:bg-[#38223E] transition-colors duration-200 cursor-pointer"
+                                  className="group flex items-center gap-2 rounded-xl px-2 py-1.5 text-xs font-medium text-[#381932] hover:bg-[#A78A9F]/22 dark:text-[#FFF3E6] dark:hover:bg-[#381932] transition-colors duration-200 cursor-pointer"
                                 >
                                   {thumb ? (
                                     <img
                                       src={thumb}
                                       alt=""
                                       loading="lazy"
-                                      className="h-8 w-8 shrink-0 rounded-md object-cover ring-1 ring-[#E4DCD2] dark:ring-[#483250]"
+                                      className="h-8 w-8 shrink-0 rounded-md object-cover ring-1 ring-[#FFF3E6] dark:ring-[#381932]"
                                     />
                                   ) : item.icon ? (
-                                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#F9F6F2] text-[#725D75] group-hover:bg-white group-hover:text-[#58445B] transition-colors duration-200 dark:bg-[#2D1C34] dark:text-[#C9BEAB]">
+                                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#FFF3E6] text-[#381932] group-hover:bg-[#FFF3E6] group-hover:text-[#381932] transition-colors duration-200 dark:bg-[#381932] dark:text-[#381932]">
                                       <item.icon size={16} strokeWidth={1.75} />
                                     </span>
                                   ) : null}
-                                  <span className="truncate leading-tight group-hover:text-[#725D75] dark:group-hover:text-[#C9BEAB] transition-colors duration-200">
+                                  <span className="truncate leading-tight group-hover:text-[#381932] dark:group-hover:text-[#381932] transition-colors duration-200">
                                     {item.label}
                                   </span>
                                 </NavigationMenuLink>
@@ -438,18 +539,18 @@ export const Header: React.FC<HeaderProps> = ({
                       </div>
 
                       {/* Express Callout Strip */}
-                      <div className="mt-5 flex items-center justify-between gap-4 rounded-xl bg-[#725D75] px-5 py-3.5 text-[#F9F6F2] shadow-sm">
+                      <div className="mt-5 flex items-center justify-between gap-4 rounded-xl bg-[#381932] px-5 py-3.5 text-[#FFF3E6] shadow-sm">
                         <div className="flex items-center gap-2.5 min-w-0">
-                          <Gift size={16} className="text-[#A78A9F] shrink-0" />
+                          <Gift size={16} className="text-[#381932] shrink-0" />
                           <p className="text-xs font-semibold leading-snug truncate">
-                            <span className="text-[#A78A9F] font-bold uppercase tracking-wider mr-1.5">Express 3hr</span>
+                            <span className="text-[#381932] font-bold uppercase tracking-wider mr-1.5">Express Delivery</span>
                             Same-day Bengaluru surprises — instant slots for tonight.
                           </p>
                         </div>
                         <button
                           type="button"
                           onClick={() => navigate('/explore')}
-                          className="shrink-0 flex items-center justify-center gap-1 rounded-lg bg-[#F9F6F2] px-4 py-2 text-xs font-medium text-[#2F2930] shadow-sm hover:bg-[#C9BEAB] transition-colors cursor-pointer"
+                          className="shrink-0 flex items-center justify-center gap-1 rounded-lg bg-[#FFF3E6] px-4 py-2 text-xs font-medium text-[#381932] shadow-sm hover:opacity-90 transition-colors cursor-pointer"
                         >
                           <span>Explore All</span>
                           <ArrowUpRight size={13} />
@@ -546,29 +647,35 @@ export const Header: React.FC<HeaderProps> = ({
                 <div
                   className={cn(
                     'absolute right-0 top-[calc(100%+10px)] w-[280px] sm:w-[340px] rounded-xl border p-2 shadow-md animate-scale-in z-50',
-                    isDark ? 'bg-[#1B101F] border-[#483250]' : 'bg-white border-[#E4DCD2]'
+                    isDark ? 'bg-[#381932] border-[#381932]' : 'bg-[#FFF3E6] border-[#381932]/30'
                   )}
                 >
                   <form onSubmit={submitSearch} className="flex items-center gap-2">
                     <input
                       ref={searchInputRef}
                       type="text"
-                      placeholder="Search themes, products & more..."
+                      placeholder="Search birthday, baby shower, photography..."
                       value={navSearchQuery}
                       onChange={(e) => setNavSearchQuery(e.target.value)}
+                      onKeyDown={onSearchKeyDown}
+                      autoComplete="off"
+                      role="combobox"
+                      aria-expanded={suggestions.length > 0}
+                      aria-controls="nav-search-suggestions"
                       className={cn(
                         'w-full bg-transparent text-sm border-none outline-none px-2',
-                        isDark ? 'text-[#FAF8F5] placeholder:text-[#A78A9F]/60' : 'text-[#2F2930] placeholder:text-[#746B72]/70'
+                        isDark ? 'text-[#FFF3E6] placeholder:text-[#381932]/60' : 'text-[#381932] placeholder:text-[#381932]/70'
                       )}
                     />
                     <button
                       type="submit"
                       aria-label="Submit search"
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#725D75] text-white hover:bg-[#A78A9F] transition-colors duration-200 cursor-pointer"
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#381932] text-[#FFF3E6] hover:opacity-90 transition-colors duration-200 cursor-pointer"
                     >
                       <Search size={14} />
                     </button>
                   </form>
+                  <div id="nav-search-suggestions">{renderSuggestions()}</div>
                 </div>
               )}
             </div>
@@ -582,7 +689,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Heart size={18} strokeWidth={1.75} />
               {wishlistCount > 0 && (
-                <span className={cn('absolute top-1 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full text-[8px] font-bold', isDark ? 'bg-[#C9BEAB] text-[#1B101F]' : 'bg-[#725D75] text-white')}>
+                <span className={cn('absolute top-1 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full text-[8px] font-bold', isDark ? 'bg-[#381932] text-[#381932]' : 'bg-[#381932] text-[#FFF3E6]')}>
                   {wishlistCount}
                 </span>
               )}
@@ -597,7 +704,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <ShoppingCart size={18} strokeWidth={1.75} />
               {cartCount > 0 && (
-                <span className={cn('absolute top-1 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full text-[8px] font-bold', isDark ? 'bg-[#725D75] text-[#1B101F]' : 'bg-[#725D75] text-white')}>
+                <span className={cn('absolute top-1 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full text-[8px] font-bold', isDark ? 'bg-[#381932] text-[#381932]' : 'bg-[#381932] text-[#FFF3E6]')}>
                   {cartCount}
                 </span>
               )}
@@ -622,15 +729,15 @@ export const Header: React.FC<HeaderProps> = ({
                   className={cn(
                     'flex items-center gap-1.5 rounded-lg border py-1.5 px-2.5 transition-colors duration-200 cursor-pointer',
                     isDark
-                      ? 'border-[#483250] bg-white/5 hover:bg-white/10 text-[#F9F6F2]'
-                      : 'border-[#E4DCD2] bg-white hover:bg-[#725D75]/06 text-[#2F2930]'
+                      ? 'border-[#381932] bg-[#FFF3E6]/5 hover:bg-[#FFF3E6]/10 text-[#FFF3E6]'
+                      : 'border-[#381932]/30 bg-[#FFF3E6] hover:bg-[#A78A9F]/15 text-[#381932]'
                   )}
                 >
                   <Avatar user={auth.user} className="h-5 w-5" />
                   <span className="hidden xl:inline text-xs font-semibold max-w-[80px] truncate">
                     {auth.user?.firstName || auth.user?.name || 'Account'}
                   </span>
-                  <ChevronDown size={11} className={isDark ? 'text-[#A78A9F]' : 'text-[#746B72]'} />
+                  <ChevronDown size={11} className={isDark ? 'text-[#381932]' : 'text-[#381932]'} />
                 </button>
               ) : (
                 <button
@@ -641,8 +748,8 @@ export const Header: React.FC<HeaderProps> = ({
                     'inline-flex items-center gap-1.5 rounded-lg border transition-colors duration-200 cursor-pointer',
                     'h-9 w-9 sm:h-10 sm:w-10 justify-center px-0 xl:h-auto xl:w-auto xl:justify-start xl:px-3 xl:py-2 text-xs font-medium',
                     isDark
-                      ? 'text-[#F9F6F2] bg-white/5 hover:bg-white/10 border-[#483250]'
-                      : 'text-[#2F2930] bg-white hover:bg-[#725D75]/06 border-[#E4DCD2]'
+                      ? 'text-[#FFF3E6] bg-[#FFF3E6]/5 hover:bg-[#FFF3E6]/10 border-[#381932]'
+                      : 'text-[#381932] bg-[#FFF3E6] hover:bg-[#A78A9F]/15 border-[#381932]/30'
                   )}
                 >
                   <UserIcon size={16} strokeWidth={1.75} />
@@ -652,12 +759,12 @@ export const Header: React.FC<HeaderProps> = ({
 
               {/* Account Dropdown */}
               {accountOpen && auth.isLoggedIn && (
-                <div className="absolute right-0 mt-2 w-48 rounded-xl border border-[#E4DCD2]/80 bg-[#F9F6F2] p-1.5 shadow-md dark:bg-[#2D1C34] dark:border-[#483250] animate-scale-in z-50">
-                  <div className="px-3 py-2 border-b border-[#E4DCD2] dark:border-[#483250]">
-                    <p className="text-xs font-bold text-[#2F2930] dark:text-[#FAF8F5] truncate">
+                <div className="absolute right-0 mt-2 w-48 rounded-xl border border-[#381932]/80 bg-[#FFF3E6] p-1.5 shadow-md dark:bg-[#381932] dark:border-[#381932] animate-scale-in z-50">
+                  <div className="px-3 py-2 border-b border-[#381932]/30 dark:border-[#381932]">
+                    <p className="text-xs font-bold text-[#381932] dark:text-[#FFF3E6] truncate">
                       {auth.user?.firstName} {auth.user?.lastName}
                     </p>
-                    <p className="text-[11px] text-[#746B72] dark:text-[#A78A9F] truncate">
+                    <p className="text-[11px] text-[#381932] dark:text-[#381932] truncate">
                       {auth.user?.email || auth.user?.phone}
                     </p>
                   </div>
@@ -668,7 +775,7 @@ export const Header: React.FC<HeaderProps> = ({
                         setAccountOpen(false);
                         navigate('/profile');
                       }}
-                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-[#2F2930] hover:bg-[#F9F6F2] dark:text-[#FAF8F5] dark:hover:bg-[#38223E] text-left cursor-pointer"
+                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-[#381932] hover:bg-[#FFF3E6] dark:text-[#FFF3E6] dark:hover:bg-[#381932] text-left cursor-pointer"
                     >
                       <UserIcon size={14} />
                       <span>My Profile</span>
@@ -679,7 +786,7 @@ export const Header: React.FC<HeaderProps> = ({
                         setAccountOpen(false);
                         navigate('/bookings');
                       }}
-                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-[#2F2930] hover:bg-[#F9F6F2] dark:text-[#FAF8F5] dark:hover:bg-[#38223E] text-left cursor-pointer"
+                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-[#381932] hover:bg-[#FFF3E6] dark:text-[#FFF3E6] dark:hover:bg-[#381932] text-left cursor-pointer"
                     >
                       <Calendar size={14} />
                       <span>My Bookings</span>
@@ -691,21 +798,21 @@ export const Header: React.FC<HeaderProps> = ({
                           setAccountOpen(false);
                           navigate('/admin');
                         }}
-                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-amber-700 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-950/40 text-left cursor-pointer"
+                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-[#381932] hover:bg-[#FFF3E6] dark:text-[#FFF3E6] dark:hover:bg-[#381932]/40 text-left cursor-pointer"
                       >
                         <Layers size={14} />
                         <span>Admin Portal</span>
                       </button>
                     )}
                   </div>
-                  <div className="border-t border-[#E4DCD2] dark:border-[#483250] pt-1">
+                  <div className="border-t border-[#381932]/30 dark:border-[#381932] pt-1">
                     <button
                       type="button"
                       onClick={() => {
                         setAccountOpen(false);
                         auth.logout();
                       }}
-                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 text-left cursor-pointer"
+                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-[#381932] hover:bg-[#FFF3E6] dark:hover:bg-[#381932]/40 text-left cursor-pointer"
                     >
                       <LogOut size={14} />
                       <span>Logout</span>
@@ -725,7 +832,7 @@ export const Header: React.FC<HeaderProps> = ({
                   navigate('/packages');
                 }
               }}
-              className="hidden md:inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-medium tracking-wide shadow-sm transition-colors duration-200 cursor-pointer bg-[#725D75] hover:bg-[#A78A9F] text-white"
+              className="hidden md:inline-flex items-center gap-1.5 rounded-lg border border-[#381932]/30 px-4 py-2 text-xs font-medium tracking-wide shadow-sm transition-colors duration-200 cursor-pointer bg-[#FFF3E6] text-[#381932] hover:bg-[#A78A9F]/15"
             >
               <span>Book Now</span>
               <ArrowRight size={14} strokeWidth={2} />
@@ -743,54 +850,59 @@ export const Header: React.FC<HeaderProps> = ({
                     <Menu size={20} strokeWidth={1.75} />
                   </button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] sm:w-[360px] bg-[#F9F6F2] dark:bg-[#1B101F] p-6 overflow-y-auto">
+                <SheetContent side="right" className="w-[300px] sm:w-[360px] bg-[#FFF3E6] dark:bg-[#381932] p-6 overflow-y-auto">
                   <div className="flex flex-col gap-5 pt-4">
 
                     {/* Brand header */}
-                    <div className="flex items-center justify-between pb-3 border-b border-[#E4DCD2] dark:border-[#483250]">
-                      <span className="font-serif text-sm font-bold tracking-wider text-[#2F2930] dark:text-[#FAF8F5] uppercase">
-                        TheDecorParty
+                    <div className="flex items-center justify-between pb-3 border-b border-[#381932]/30 dark:border-[#381932]">
+                      <span className="font-serif text-sm font-bold tracking-wider text-[#381932] dark:text-[#FFF3E6] uppercase">
+                        The Decor Party
                       </span>
                     </div>
 
                     {/* Mobile Quick Search */}
-                    <form
-                      onSubmit={submitSearch}
-                      className={cn(
-                        'flex items-center gap-2 rounded-lg px-3.5 py-2 border transition-all duration-300',
-                        isDark
-                          ? 'border-white/20 bg-black/40 text-[#F9F6F2]'
-                          : 'border-[#E4DCD2] bg-white text-[#2F2930]'
-                      )}
-                    >
-                      <Search size={14} className="text-[#725D75] shrink-0" />
-                      <input
-                        type="text"
-                        placeholder="Search celebrations, themes..."
-                        value={navSearchQuery}
-                        onChange={(e) => setNavSearchQuery(e.target.value)}
-                        className="w-full bg-transparent text-xs font-medium border-none outline-none placeholder:text-[#725D75]/60 text-[#2F2930] dark:text-[#FAF8F5]"
-                      />
-                    </form>
+                    <div>
+                      <form
+                        onSubmit={submitSearch}
+                        className={cn(
+                          'flex items-center gap-2 rounded-lg px-3.5 py-2 border transition-all duration-300',
+                          isDark
+                            ? 'border-[#381932]/20 bg-[#381932]/40 text-[#FFF3E6]'
+                            : 'border-[#381932]/30 bg-[#FFF3E6] text-[#381932]'
+                        )}
+                      >
+                        <Search size={14} className="text-[#381932] shrink-0" />
+                        <input
+                          type="text"
+                          placeholder="Search birthday, photography, live eateries..."
+                          value={navSearchQuery}
+                          onChange={(e) => setNavSearchQuery(e.target.value)}
+                          onKeyDown={onSearchKeyDown}
+                          autoComplete="off"
+                          className="w-full bg-transparent text-xs font-medium border-none outline-none placeholder:text-[#381932]/60 text-[#381932] dark:text-[#FFF3E6]"
+                        />
+                      </form>
+                      {renderSuggestions()}
+                    </div>
 
-                    <div className="flex flex-col gap-1 text-sm font-semibold text-[#2F2930] dark:text-[#FAF8F5]">
+                    <div className="flex flex-col gap-1 text-sm font-semibold text-[#381932] dark:text-[#FFF3E6]">
 
                       {/* Home */}
                       <button
                         type="button"
                         onClick={() => handleNavAnchor('top')}
-                        className="text-left py-2 px-1 hover:text-[#725D75] transition-colors border-b border-[#E4DCD2]/50 dark:border-[#483250]/50"
+                        className="text-left py-2 px-1 hover:text-[#381932] transition-colors border-b border-[#381932]/50 dark:border-[#381932]/50"
                       >
                         Home
                       </button>
 
                       {/* Services Accordion */}
-                      <Accordion type="single" collapsible className="w-full border-b border-[#E4DCD2]/50 dark:border-[#483250]/50">
+                      <Accordion type="single" collapsible className="w-full border-b border-[#381932]/50 dark:border-[#381932]/50">
                         <AccordionItem value="mobile-services" className="border-none">
-                          <AccordionTrigger className="py-2 px-1 text-sm font-semibold text-[#2F2930] dark:text-[#FAF8F5] hover:no-underline">
+                          <AccordionTrigger className="py-2 px-1 text-sm font-semibold text-[#381932] dark:text-[#FFF3E6] hover:no-underline">
                             Services
                           </AccordionTrigger>
-                          <AccordionContent className="flex flex-col gap-3 pl-3 pt-1 pb-3 text-xs text-[#746B72] dark:text-[#C9BEAB]">
+                          <AccordionContent className="flex flex-col gap-3 pl-3 pt-1 pb-3 text-xs text-[#381932] dark:text-[#381932]">
                             {SERVICE_COLUMNS.map((column) => (
                               <div key={column.key} className="flex flex-col gap-1">
                                 <button
@@ -800,9 +912,9 @@ export const Header: React.FC<HeaderProps> = ({
                                       ? handleNavAnchor('curated-decors')
                                       : handleNavCategory(column.title)
                                   }
-                                  className="flex items-center gap-1.5 text-left py-1 font-bold uppercase tracking-wider text-[10px] text-[#2F2930] dark:text-[#FAF8F5]"
+                                  className="flex items-center gap-1.5 text-left py-1 font-bold uppercase tracking-wider text-[10px] text-[#381932] dark:text-[#FFF3E6]"
                                 >
-                                  <column.icon size={12} className="text-[#725D75]" />
+                                  <column.icon size={12} className="text-[#381932]" />
                                   {column.title}
                                 </button>
                                 {column.items.map((item) => {
@@ -812,17 +924,17 @@ export const Header: React.FC<HeaderProps> = ({
                                     key={item.label}
                                     type="button"
                                     onClick={() => handleNavCategory(item.label)}
-                                    className="group flex items-center gap-2 text-left py-1 pl-2 hover:text-[#725D75] dark:hover:text-white transition-colors duration-200"
+                                    className="group flex items-center gap-2 text-left py-1 pl-2 hover:text-[#381932] dark:hover:text-[#FFF3E6] transition-colors duration-200"
                                   >
                                     {thumb ? (
                                       <img
                                         src={thumb}
                                         alt=""
                                         loading="lazy"
-                                        className="h-6 w-6 shrink-0 rounded-md object-cover ring-1 ring-[#E4DCD2] dark:ring-[#483250]"
+                                        className="h-6 w-6 shrink-0 rounded-md object-cover ring-1 ring-[#FFF3E6] dark:ring-[#381932]"
                                       />
                                     ) : item.icon ? (
-                                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#F9F6F2] text-[#725D75] dark:bg-[#2D1C34] dark:text-[#C9BEAB]">
+                                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#FFF3E6] text-[#381932] dark:bg-[#381932] dark:text-[#381932]">
                                         <item.icon size={12} strokeWidth={1.75} />
                                       </span>
                                     ) : null}
@@ -835,9 +947,9 @@ export const Header: React.FC<HeaderProps> = ({
                             <button
                               type="button"
                               onClick={() => handleNavAnchor('express')}
-                              className="text-left py-1 font-bold uppercase tracking-wider text-[10px] text-[#2F2930] dark:text-[#FAF8F5]"
+                              className="text-left py-1 font-bold uppercase tracking-wider text-[10px] text-[#381932] dark:text-[#FFF3E6]"
                             >
-                              Express 3-Hour Setup
+                              Express Delivery
                             </button>
                           </AccordionContent>
                         </AccordionItem>
@@ -853,8 +965,8 @@ export const Header: React.FC<HeaderProps> = ({
                           }
                         }}
                         className={cn(
-                          "text-left py-2 px-1 hover:text-[#725D75] transition-colors border-b border-[#E4DCD2]/50 dark:border-[#483250]/50",
-                          location.pathname === '/packages' && "text-[#725D75] font-bold"
+                          "text-left py-2 px-1 hover:text-[#381932] transition-colors border-b border-[#381932]/50 dark:border-[#381932]/50",
+                          location.pathname === '/packages' && "text-[#381932] font-bold"
                         )}
                       >
                         Packages &amp; Pricing
@@ -870,8 +982,8 @@ export const Header: React.FC<HeaderProps> = ({
                           }
                         }}
                         className={cn(
-                          "text-left py-2 px-1 hover:text-[#725D75] transition-colors border-b border-[#E4DCD2]/50 dark:border-[#483250]/50",
-                          location.pathname === '/gallery' && "text-[#725D75] font-bold"
+                          "text-left py-2 px-1 hover:text-[#381932] transition-colors border-b border-[#381932]/50 dark:border-[#381932]/50",
+                          location.pathname === '/gallery' && "text-[#381932] font-bold"
                         )}
                       >
                         Visual Gallery
@@ -887,8 +999,8 @@ export const Header: React.FC<HeaderProps> = ({
                           }
                         }}
                         className={cn(
-                          "text-left py-2 px-1 hover:text-[#725D75] transition-colors border-b border-[#E4DCD2]/50 dark:border-[#483250]/50",
-                          location.pathname === '/contact' && "text-[#725D75] font-bold"
+                          "text-left py-2 px-1 hover:text-[#381932] transition-colors border-b border-[#381932]/50 dark:border-[#381932]/50",
+                          location.pathname === '/contact' && "text-[#381932] font-bold"
                         )}
                       >
                         Contact Us
@@ -904,8 +1016,8 @@ export const Header: React.FC<HeaderProps> = ({
                           }
                         }}
                         className={cn(
-                          "text-left py-2 px-1 hover:text-[#725D75] transition-colors border-b border-[#E4DCD2]/50 dark:border-[#483250]/50",
-                          location.pathname === '/about' && "text-[#725D75] font-bold"
+                          "text-left py-2 px-1 hover:text-[#381932] transition-colors border-b border-[#381932]/50 dark:border-[#381932]/50",
+                          location.pathname === '/about' && "text-[#381932] font-bold"
                         )}
                       >
                         About Us
@@ -919,9 +1031,9 @@ export const Header: React.FC<HeaderProps> = ({
                             setMobileMenuOpen(false);
                             auth.open('login');
                           }}
-                          className="flex items-center gap-2 text-left py-2 px-1 hover:text-[#725D75] transition-colors border-b border-[#E4DCD2]/50 dark:border-[#483250]/50"
+                          className="flex items-center gap-2 text-left py-2 px-1 hover:text-[#381932] transition-colors border-b border-[#381932]/50 dark:border-[#381932]/50"
                         >
-                          <LogIn size={14} className="text-[#725D75]" />
+                          <LogIn size={14} className="text-[#381932]" />
                           <span>Login</span>
                         </button>
                       ) : (
@@ -931,9 +1043,9 @@ export const Header: React.FC<HeaderProps> = ({
                             setMobileMenuOpen(false);
                             navigate('/profile');
                           }}
-                          className="flex items-center gap-2 text-left py-2 px-1 hover:text-[#725D75] transition-colors border-b border-[#E4DCD2]/50 dark:border-[#483250]/50"
+                          className="flex items-center gap-2 text-left py-2 px-1 hover:text-[#381932] transition-colors border-b border-[#381932]/50 dark:border-[#381932]/50"
                         >
-                          <UserIcon size={14} className="text-[#725D75]" />
+                          <UserIcon size={14} className="text-[#381932]" />
                           <span>My Profile</span>
                         </button>
                       )}
@@ -946,9 +1058,9 @@ export const Header: React.FC<HeaderProps> = ({
                           if (onAssistantOpen) onAssistantOpen();
                           else navigate('/ai-planner');
                         }}
-                        className="flex items-center gap-2 text-left py-2 px-1 hover:text-[#725D75] transition-colors border-b border-[#E4DCD2]/50 dark:border-[#483250]/50"
+                        className="flex items-center gap-2 text-left py-2 px-1 hover:text-[#381932] transition-colors border-b border-[#381932]/50 dark:border-[#381932]/50"
                       >
-                        <Sparkles size={14} className="text-[#725D75]" />
+                        <Sparkles size={14} className="text-[#A78A9F]" />
                         <span>AI Celebration Planner</span>
                       </button>
                     </div>
@@ -961,7 +1073,7 @@ export const Header: React.FC<HeaderProps> = ({
                           setMobileMenuOpen(false);
                           navigate('/checkout');
                         }}
-                        className="w-full rounded-lg bg-[#725D75] dark:bg-[#C9BEAB] dark:text-[#34203C] text-[#F9F6F2] py-3 text-xs sm:text-sm font-medium tracking-wide text-center cursor-pointer"
+                        className="w-full rounded-lg bg-[#381932] dark:bg-[#381932] dark:text-[#381932] text-[#FFF3E6] py-3 text-xs sm:text-sm font-medium tracking-wide text-center cursor-pointer"
                       >
                         Book Now
                       </button>
@@ -970,9 +1082,9 @@ export const Header: React.FC<HeaderProps> = ({
                         href="https://wa.me/917022058460"
                         target="_blank"
                         rel="noreferrer"
-                        className="flex items-center justify-center gap-2 w-full rounded-lg border border-[#E4DCD2] dark:border-[#483250] py-2.5 text-xs sm:text-sm font-medium tracking-wide text-[#2F2930] dark:text-[#FAF8F5] text-center"
+                        className="flex items-center justify-center gap-2 w-full rounded-lg border border-[#381932]/30 dark:border-[#381932] py-2.5 text-xs sm:text-sm font-medium tracking-wide text-[#381932] dark:text-[#FFF3E6] text-center"
                       >
-                        <Phone size={13} className="text-[#25D366]" />
+                        <Phone size={13} className="text-[#381932]" />
                         <span>WhatsApp Quick Assistance</span>
                       </a>
                     </div>

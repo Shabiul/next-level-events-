@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Menu, Crown, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { AdminView, AuthUser } from '../types';
-import { Sidebar, DashboardView, CategoriesView, ProductsView, AddonsView, ActivitiesView, SlidersView, UsersView, TermsView } from './admin';
+import { Sidebar, DashboardView, CategoriesView, ProductsView, AddonsView, ActivitiesView, SlidersView, UsersView, EnquiriesView, TermsView } from './admin';
 import { getApiUrl } from '../lib/api';
 import { cn } from '../lib/utils';
 
@@ -43,6 +43,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
         return 'orders';
       case 'bookings':
         return 'orders';
+      case 'enquiries':
+        return 'enquiries';
       case 'users':
         return 'users';
       case 'terms':
@@ -61,6 +63,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
       activities: '/admin/activities',
       sliders: '/admin/sliders',
       orders: '/admin/orders',
+      enquiries: '/admin/enquiries',
       users: '/admin/users',
       terms: '/admin/terms',
     };
@@ -197,7 +200,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
   }
 
   return (
-    <div className="flex h-screen w-full bg-slate-50 dark:bg-slate-950 overflow-hidden">
+    <div className="flex h-screen w-full bg-[#FFF3E6] dark:bg-[#381932] overflow-hidden">
       {/* Desktop Persistent Sidebar */}
       <div className="hidden lg:flex w-64 flex-shrink-0">
         <Sidebar currentView={view} onViewChange={navigateToView} user={user} />
@@ -214,7 +217,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
       </div>
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-[150] bg-black/60 backdrop-blur-xs lg:hidden transition-opacity"
+          className="fixed inset-0 z-[150] bg-[#381932]/60 backdrop-blur-xs lg:hidden transition-opacity"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -222,24 +225,24 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
       {/* Main Content Workspace */}
       <div className="flex h-full flex-1 flex-col overflow-hidden">
         {/* Top Navbar */}
-        <div className="sticky top-0 z-[100] flex h-16 shrink-0 items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 md:px-7 shadow-xs">
+        <div className="sticky top-0 z-[100] flex h-16 shrink-0 items-center justify-between border-b border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-4 md:px-7 shadow-xs">
           <div className="flex items-center gap-3">
             <button
               type="button"
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 shadow-2xs transition-all hover:bg-slate-50 dark:hover:bg-slate-700 lg:hidden cursor-pointer"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] text-[#381932] dark:text-[#381932] shadow-2xs transition-all hover:bg-[#FFF3E6] dark:hover:bg-[#381932] lg:hidden cursor-pointer"
               onClick={() => setSidebarOpen(o => !o)}
               aria-label="Toggle menu"
             >
               <Menu size={18} />
             </button>
-            <div className="text-xs sm:text-sm font-bold text-slate-500 dark:text-slate-400">
-              <span className="text-brand-purple dark:text-purple-400">Admin</span> / <span className="capitalize text-slate-900 dark:text-white">{view}</span>
+            <div className="text-xs sm:text-sm font-bold text-[#381932] dark:text-[#381932]">
+              <span className="text-[#381932] dark:text-[#381932]">Admin</span> / <span className="capitalize text-[#381932] dark:text-[#FFF3E6]">{view}</span>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="hidden text-xs font-semibold text-slate-500 dark:text-slate-400 sm:inline truncate max-w-[180px]">{user.email}</span>
-            <span className="flex items-center gap-1 rounded-full bg-purple-100 dark:bg-purple-950/60 px-2.5 py-1 text-xs font-extrabold text-brand-purple dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+            <span className="hidden text-xs font-semibold text-[#381932] dark:text-[#381932] sm:inline truncate max-w-[180px]">{user.email}</span>
+            <span className="flex items-center gap-1 rounded-full bg-[#FFF3E6] dark:bg-[#381932]/60 px-2.5 py-1 text-xs font-extrabold text-[#381932] dark:text-[#381932] border border-[#381932] dark:border-[#381932]">
               <Crown size={12} /> ADMIN
             </span>
           </div>
@@ -256,29 +259,29 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
           {view === 'orders' && (
             <div className="space-y-5">
               {/* Header card */}
-              <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-col gap-3 rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-5 shadow-xs sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <h2 className="text-xl font-black text-slate-900 dark:text-white">Orders &amp; Bookings</h2>
-                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">Search, filter, and manage customer event bookings in real time.</p>
+                  <h2 className="text-xl font-black text-[#381932] dark:text-[#FFF3E6]">Orders &amp; Bookings</h2>
+                  <p className="text-xs font-semibold text-[#381932] dark:text-[#381932] mt-0.5">Search, filter, and manage customer event bookings in real time.</p>
                 </div>
-                {message && <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400">{message}</div>}
+                {message && <div className="text-xs font-bold text-[#381932] dark:text-[#381932]">{message}</div>}
               </div>
 
               {/* Controls & Search */}
-              <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-4">
+              <div className="rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-5 shadow-xs space-y-4">
                 <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                  <label className="flex flex-1 items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3.5 py-2.5 text-xs text-slate-900 dark:text-white outline-none">
-                    <Search size={16} className="text-slate-400" />
+                  <label className="flex flex-1 items-center gap-2 rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3.5 py-2.5 text-xs text-[#381932] dark:text-[#FFF3E6] outline-none">
+                    <Search size={16} className="text-[#381932]" />
                     <input
                       value={search}
                       onChange={e => { setSearch(e.target.value); setPage(1); }}
                       placeholder="Search order number or customer name/email..."
-                      className="w-full bg-transparent outline-none font-semibold placeholder:text-slate-400"
+                      className="w-full bg-transparent outline-none font-semibold placeholder:text-[#381932]"
                     />
                   </label>
 
                   <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
-                    <select value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1); }} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-xs font-bold text-slate-900 dark:text-white outline-none">
+                    <select value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1); }} className="rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3 py-2 text-xs font-bold text-[#381932] dark:text-[#FFF3E6] outline-none">
                       <option value="all">All Statuses</option>
                       <option value="pending">Pending</option>
                       <option value="confirmed">Confirmed</option>
@@ -286,16 +289,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                       <option value="completed">Completed</option>
                       <option value="cancelled">Cancelled</option>
                     </select>
-                    <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-xs font-bold text-slate-900 dark:text-white outline-none">
+                    <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3 py-2 text-xs font-bold text-[#381932] dark:text-[#FFF3E6] outline-none">
                       <option value="createdAt">Created Date</option>
                       <option value="grandTotal">Order Amount</option>
                       <option value="orderNumber">Order Number</option>
                     </select>
-                    <select value={sortDir} onChange={e => setSortDir(e.target.value)} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-xs font-bold text-slate-900 dark:text-white outline-none">
+                    <select value={sortDir} onChange={e => setSortDir(e.target.value)} className="rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3 py-2 text-xs font-bold text-[#381932] dark:text-[#FFF3E6] outline-none">
                       <option value="desc">Newest First</option>
                       <option value="asc">Oldest First</option>
                     </select>
-                    <select value={limit} onChange={e => { setLimit(Number(e.target.value)); setPage(1); }} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-xs font-bold text-slate-900 dark:text-white outline-none">
+                    <select value={limit} onChange={e => { setLimit(Number(e.target.value)); setPage(1); }} className="rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3 py-2 text-xs font-bold text-[#381932] dark:text-[#FFF3E6] outline-none">
                       <option value={10}>10 / page</option>
                       <option value={20}>20 / page</option>
                       <option value={50}>50 / page</option>
@@ -305,16 +308,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
 
                 {/* Orders Content: Table on Desktop, Cards on Mobile/Tablet */}
                 {loadingOrders ? (
-                  <div className="rounded-xl border border-dashed border-slate-200 dark:border-slate-800 p-12 text-center text-xs font-bold text-slate-400">Loading orders...</div>
+                  <div className="rounded-xl border border-dashed border-[#381932] dark:border-[#381932] p-12 text-center text-xs font-bold text-[#381932]">Loading orders...</div>
                 ) : orders.length === 0 ? (
-                  <div className="rounded-xl border border-dashed border-slate-200 dark:border-slate-800 p-12 text-center text-xs font-bold text-slate-400">No orders found.</div>
+                  <div className="rounded-xl border border-dashed border-[#381932] dark:border-[#381932] p-12 text-center text-xs font-bold text-[#381932]">No orders found.</div>
                 ) : (
                   <>
                     {/* Desktop Table View */}
                     <div className="hidden lg:block overflow-x-auto">
                       <table className="w-full text-left text-xs">
                         <thead>
-                          <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500 uppercase tracking-wider font-extrabold">
+                          <tr className="border-b border-[#381932] dark:border-[#381932] text-[#381932] dark:text-[#381932] uppercase tracking-wider font-extrabold">
                             <th className="px-3.5 py-3">Order</th>
                             <th className="px-3.5 py-3">Customer</th>
                             <th className="px-3.5 py-3">Product Package</th>
@@ -325,38 +328,38 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                             <th className="px-3.5 py-3 text-right">Actions</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                        <tbody className="divide-y divide-[#381932] dark:divide-[#381932]">
                           {orders.map((order) => (
-                            <tr key={order._id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors">
-                              <td className="px-3.5 py-3 font-extrabold text-slate-900 dark:text-white">
-                                <button type="button" onClick={() => navigate(`/orders/${order._id}`)} className="hover:text-brand-purple text-left">
+                            <tr key={order._id} className="hover:bg-[#FFF3E6]/60 dark:hover:bg-[#381932]/40 transition-colors">
+                              <td className="px-3.5 py-3 font-extrabold text-[#381932] dark:text-[#FFF3E6]">
+                                <button type="button" onClick={() => navigate(`/orders/${order._id}`)} className="hover:text-[#381932] text-left">
                                   <div>{order.orderNumber || `#${order._id.slice(-8)}`}</div>
-                                  <div className="text-[10px] font-semibold text-slate-400">{new Date(order.createdAt).toLocaleDateString()}</div>
+                                  <div className="text-[10px] font-semibold text-[#381932]">{new Date(order.createdAt).toLocaleDateString()}</div>
                                 </button>
                               </td>
                               <td className="px-3.5 py-3">
-                                <div className="font-bold text-slate-900 dark:text-white">{order.customer?.name || order.booking?.name || 'N/A'}</div>
-                                <div className="text-[11px] text-slate-400 truncate max-w-[150px]">{order.customer?.email || 'N/A'}</div>
+                                <div className="font-bold text-[#381932] dark:text-[#FFF3E6]">{order.customer?.name || order.booking?.name || 'N/A'}</div>
+                                <div className="text-[11px] text-[#381932] truncate max-w-[150px]">{order.customer?.email || 'N/A'}</div>
                               </td>
                               <td className="px-3.5 py-3">
-                                <div className="font-bold text-slate-900 dark:text-white truncate max-w-[180px]">{order.product?.name || order.productName}</div>
-                                <div className="text-[11px] text-slate-400">{order.categoryName || 'General'}</div>
+                                <div className="font-bold text-[#381932] dark:text-[#FFF3E6] truncate max-w-[180px]">{order.product?.name || order.productName}</div>
+                                <div className="text-[11px] text-[#381932]">{order.categoryName || 'General'}</div>
                               </td>
-                              <td className="px-3.5 py-3 font-semibold text-slate-700 dark:text-slate-300">{order.booking?.eventDate || 'N/A'}</td>
-                              <td className="px-3.5 py-3 font-black text-slate-900 dark:text-white">₹{Number(order.grandTotal || order.amount || 0).toLocaleString('en-IN')}</td>
+                              <td className="px-3.5 py-3 font-semibold text-[#381932] dark:text-[#381932]">{order.booking?.eventDate || 'N/A'}</td>
+                              <td className="px-3.5 py-3 font-black text-[#381932] dark:text-[#FFF3E6]">₹{Number(order.grandTotal || order.amount || 0).toLocaleString('en-IN')}</td>
                               <td className="px-3.5 py-3">
                                 <span className={cn(
                                   "inline-block rounded-full px-2 py-0.5 text-[10px] font-extrabold uppercase border",
-                                  order.paymentStatus === 'paid' ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800" : "bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800"
+                                  order.paymentStatus === 'paid' ? "bg-[#FFF3E6] dark:bg-[#381932]/60 text-[#381932] dark:text-[#381932] border-[#381932] dark:border-[#381932]" : "bg-[#FFF3E6] dark:bg-[#381932]/60 text-[#381932] dark:text-[#FFF3E6] border-[#381932] dark:border-[#381932]"
                                 )}>
                                   {order.paymentStatus || 'pending'}
                                 </span>
                               </td>
-                              <td className="px-3.5 py-3 font-semibold text-slate-700 dark:text-slate-300">{order.orderStatus || 'Pending'}</td>
+                              <td className="px-3.5 py-3 font-semibold text-[#381932] dark:text-[#381932]">{order.orderStatus || 'Pending'}</td>
                               <td className="px-3.5 py-3 text-right">
                                 <div className="flex items-center justify-end gap-1.5">
-                                  <button type="button" onClick={() => navigate(`/orders/${order._id}`)} className="rounded-lg border border-purple-200 dark:border-purple-800 px-2.5 py-1 text-[11px] font-bold text-brand-purple dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-950/50 cursor-pointer">Details</button>
-                                  <select value={selectedStatuses[order._id] || order.orderStatus || 'Pending'} onChange={e => setSelectedStatuses(prev => ({ ...prev, [order._id]: e.target.value }))} className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2 py-1 text-xs font-semibold text-slate-900 dark:text-white outline-none">
+                                  <button type="button" onClick={() => navigate(`/orders/${order._id}`)} className="rounded-lg border border-[#381932] dark:border-[#381932] px-2.5 py-1 text-[11px] font-bold text-[#381932] dark:text-[#381932] hover:bg-[#FFF3E6] dark:hover:bg-[#381932]/50 cursor-pointer">Details</button>
+                                  <select value={selectedStatuses[order._id] || order.orderStatus || 'Pending'} onChange={e => setSelectedStatuses(prev => ({ ...prev, [order._id]: e.target.value }))} className="rounded-lg border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-2 py-1 text-xs font-semibold text-[#381932] dark:text-[#FFF3E6] outline-none">
                                     <option value="Pending">Pending</option>
                                     <option value="Confirmed">Confirmed</option>
                                     <option value="Team Assigned">Team Assigned</option>
@@ -365,8 +368,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                                     <option value="Completed">Completed</option>
                                     <option value="Cancelled">Cancelled</option>
                                   </select>
-                                  <button type="button" onClick={() => void updateOrderStatus(order._id, selectedStatuses[order._id] || order.orderStatus || 'Pending')} className="rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 text-[11px] font-bold shadow-xs cursor-pointer">Save</button>
-                                  <button type="button" onClick={() => void deleteOrder(order._id)} className="rounded-lg border border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 px-2 py-1 text-[11px] font-bold hover:bg-rose-100 cursor-pointer">Del</button>
+                                  <button type="button" onClick={() => void updateOrderStatus(order._id, selectedStatuses[order._id] || order.orderStatus || 'Pending')} className="rounded-lg bg-[#381932] hover:opacity-90 text-[#FFF3E6] px-2.5 py-1 text-[11px] font-bold shadow-xs cursor-pointer">Save</button>
+                                  <button type="button" onClick={() => void deleteOrder(order._id)} className="rounded-lg border border-[#381932] dark:border-[#381932]/50 bg-[#FFF3E6]/50 dark:bg-[#381932]/40 text-[#381932] dark:text-[#381932] px-2 py-1 text-[11px] font-bold hover:bg-[#FFF3E6] cursor-pointer">Del</button>
                                 </div>
                               </td>
                             </tr>
@@ -378,12 +381,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                     {/* Mobile & Tablet Card View */}
                     <div className="space-y-3 lg:hidden">
                       {orders.map((order) => (
-                        <div key={order._id} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/50 p-4 space-y-3 shadow-2xs">
-                          <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-700/60 pb-2">
-                            <span className="text-xs font-black text-slate-900 dark:text-white uppercase">{order.orderNumber || `#${order._id.slice(-8)}`}</span>
+                        <div key={order._id} className="rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6]/70 dark:bg-[#381932]/50 p-4 space-y-3 shadow-2xs">
+                          <div className="flex items-center justify-between border-b border-[#381932]/80 dark:border-[#381932]/60 pb-2">
+                            <span className="text-xs font-black text-[#381932] dark:text-[#FFF3E6] uppercase">{order.orderNumber || `#${order._id.slice(-8)}`}</span>
                             <span className={cn(
                               "text-[10px] font-extrabold px-2 py-0.5 rounded-full border uppercase",
-                              order.paymentStatus === 'paid' ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800" : "bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800"
+                              order.paymentStatus === 'paid' ? "bg-[#FFF3E6] dark:bg-[#381932]/60 text-[#381932] dark:text-[#381932] border-[#381932] dark:border-[#381932]" : "bg-[#FFF3E6] dark:bg-[#381932]/60 text-[#381932] dark:text-[#FFF3E6] border-[#381932] dark:border-[#381932]"
                             )}>
                               {order.paymentStatus || 'pending'}
                             </span>
@@ -391,25 +394,25 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
 
                           <div className="grid grid-cols-2 gap-2 text-xs">
                             <div>
-                              <div className="text-[10px] uppercase font-extrabold text-slate-400">Customer</div>
-                              <div className="font-bold text-slate-900 dark:text-white truncate">{order.customer?.name || order.booking?.name || 'N/A'}</div>
+                              <div className="text-[10px] uppercase font-extrabold text-[#381932]">Customer</div>
+                              <div className="font-bold text-[#381932] dark:text-[#FFF3E6] truncate">{order.customer?.name || order.booking?.name || 'N/A'}</div>
                             </div>
                             <div className="text-right">
-                              <div className="text-[10px] uppercase font-extrabold text-slate-400">Amount</div>
-                              <div className="font-black text-slate-900 dark:text-white">₹{Number(order.grandTotal || order.amount || 0).toLocaleString('en-IN')}</div>
+                              <div className="text-[10px] uppercase font-extrabold text-[#381932]">Amount</div>
+                              <div className="font-black text-[#381932] dark:text-[#FFF3E6]">₹{Number(order.grandTotal || order.amount || 0).toLocaleString('en-IN')}</div>
                             </div>
                             <div>
-                              <div className="text-[10px] uppercase font-extrabold text-slate-400">Product Package</div>
-                              <div className="font-bold text-slate-900 dark:text-white truncate">{order.product?.name || order.productName}</div>
+                              <div className="text-[10px] uppercase font-extrabold text-[#381932]">Product Package</div>
+                              <div className="font-bold text-[#381932] dark:text-[#FFF3E6] truncate">{order.product?.name || order.productName}</div>
                             </div>
                             <div className="text-right">
-                              <div className="text-[10px] uppercase font-extrabold text-slate-400">Event Date</div>
-                              <div className="font-bold text-slate-700 dark:text-slate-300">{order.booking?.eventDate || 'N/A'}</div>
+                              <div className="text-[10px] uppercase font-extrabold text-[#381932]">Event Date</div>
+                              <div className="font-bold text-[#381932] dark:text-[#381932]">{order.booking?.eventDate || 'N/A'}</div>
                             </div>
                           </div>
 
-                          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-200/80 dark:border-slate-700/60 pt-2.5">
-                            <select value={selectedStatuses[order._id] || order.orderStatus || 'Pending'} onChange={e => setSelectedStatuses(prev => ({ ...prev, [order._id]: e.target.value }))} className="flex-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-2.5 py-1.5 text-xs font-bold text-slate-900 dark:text-white outline-none">
+                          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#381932]/80 dark:border-[#381932]/60 pt-2.5">
+                            <select value={selectedStatuses[order._id] || order.orderStatus || 'Pending'} onChange={e => setSelectedStatuses(prev => ({ ...prev, [order._id]: e.target.value }))} className="flex-1 rounded-lg border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-2.5 py-1.5 text-xs font-bold text-[#381932] dark:text-[#FFF3E6] outline-none">
                               <option value="Pending">Pending</option>
                               <option value="Confirmed">Confirmed</option>
                               <option value="Team Assigned">Team Assigned</option>
@@ -420,9 +423,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                             </select>
 
                             <div className="flex items-center gap-1.5">
-                              <button type="button" onClick={() => void updateOrderStatus(order._id, selectedStatuses[order._id] || order.orderStatus || 'Pending')} className="rounded-lg bg-emerald-600 text-white px-3 py-1.5 text-xs font-bold shadow-2xs">Save</button>
-                              <button type="button" onClick={() => navigate(`/orders/${order._id}`)} className="rounded-lg border border-purple-200 dark:border-purple-800 bg-white dark:bg-slate-900 px-3 py-1.5 text-xs font-bold text-brand-purple dark:text-purple-300">View</button>
-                              <button type="button" onClick={() => void deleteOrder(order._id)} className="rounded-lg border border-rose-200 text-rose-600 px-2.5 py-1.5 text-xs font-bold">Del</button>
+                              <button type="button" onClick={() => void updateOrderStatus(order._id, selectedStatuses[order._id] || order.orderStatus || 'Pending')} className="rounded-lg bg-[#381932] text-[#FFF3E6] px-3 py-1.5 text-xs font-bold shadow-2xs">Save</button>
+                              <button type="button" onClick={() => navigate(`/orders/${order._id}`)} className="rounded-lg border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3 py-1.5 text-xs font-bold text-[#381932] dark:text-[#381932]">View</button>
+                              <button type="button" onClick={() => void deleteOrder(order._id)} className="rounded-lg border border-[#381932] text-[#381932] px-2.5 py-1.5 text-xs font-bold">Del</button>
                             </div>
                           </div>
                         </div>
@@ -432,17 +435,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
                 )}
 
                 {/* Pagination */}
-                <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-100 dark:border-slate-800 pt-3">
-                  <div className="text-xs font-semibold text-slate-400 dark:text-slate-500">Showing {orders.length} of {pagination.total} orders</div>
+                <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-[#381932] dark:border-[#381932] pt-3">
+                  <div className="text-xs font-semibold text-[#381932] dark:text-[#381932]">Showing {orders.length} of {pagination.total} orders</div>
                   <div className="flex items-center gap-2">
-                    <button type="button" disabled={page <= 1} onClick={() => setPage(p => Math.max(1, p - 1))} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-2 text-xs font-bold text-slate-700 dark:text-slate-200 disabled:opacity-50 cursor-pointer"><ChevronLeft size={16} /></button>
-                    <span className="text-xs font-bold text-slate-900 dark:text-white px-2">Page {pagination.page} / {pagination.totalPages}</span>
-                    <button type="button" disabled={page >= pagination.totalPages} onClick={() => setPage(p => p + 1)} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-2 text-xs font-bold text-slate-700 dark:text-slate-200 disabled:opacity-50 cursor-pointer"><ChevronRight size={16} /></button>
+                    <button type="button" disabled={page <= 1} onClick={() => setPage(p => Math.max(1, p - 1))} className="rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-2 text-xs font-bold text-[#381932] dark:text-[#381932] disabled:opacity-50 cursor-pointer"><ChevronLeft size={16} /></button>
+                    <span className="text-xs font-bold text-[#381932] dark:text-[#FFF3E6] px-2">Page {pagination.page} / {pagination.totalPages}</span>
+                    <button type="button" disabled={page >= pagination.totalPages} onClick={() => setPage(p => p + 1)} className="rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-2 text-xs font-bold text-[#381932] dark:text-[#381932] disabled:opacity-50 cursor-pointer"><ChevronRight size={16} /></button>
                   </div>
                 </div>
               </div>
             </div>
           )}
+          {view === 'enquiries' && <EnquiriesView />}
           {view === 'users' && <UsersView />}
           {view === 'terms' && <TermsView />}
         </div>

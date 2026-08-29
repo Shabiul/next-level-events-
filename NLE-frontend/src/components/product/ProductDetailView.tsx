@@ -32,7 +32,7 @@ const TERMS = [
   'The venue/location must be accessible at least 2 hours before the event start time for setup.',
   'Any damage to props or decor caused by guests will be charged separately.',
   'Add-ons must be confirmed at least 24 hours in advance.',
-  'TheDecorParty reserves the right to substitute items of equal or greater value if specific items are unavailable.',
+  'The Decor Party reserves the right to substitute items of equal or greater value if specific items are unavailable.',
   'Prices are inclusive of setup and breakdown. GST applicable as per government norms.',
   'For outdoor events, we are not responsible for weather-related disruptions.',
 ];
@@ -118,7 +118,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
     }
     return [
       '150+ Organic Eco-Friendly Latex Balloons Arch & Backdrop Styling',
-      'Customized LED Neon Signage / Metallic Name Lettering',
+      'Customised LED Neon Signage / Metallic Name Lettering',
       'Heavy-Duty Arch / Backdrop Stand Structure Frame',
       '2 Ambient Warm Spotlights & Illumination Fixtures',
       'On-Site Stylist Labor & Certified Setup Team',
@@ -260,9 +260,9 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
   return (
     <div className="relative mx-auto max-w-[1920px] px-4 pt-2 sm:pt-3 pb-20 sm:px-6 md:px-8 lg:px-12 overflow-hidden">
       {/* Decorative Luxury 3D Ambient Lighting Orbs */}
-      <div className="pointer-events-none absolute -top-40 right-0 z-0 h-[600px] w-[600px] rounded-full bg-[#A78A9F]/10 blur-[120px]" />
-      <div className="pointer-events-none absolute top-[35%] -left-40 z-0 h-[700px] w-[700px] rounded-full bg-[#C9BEAB]/10 blur-[140px]" />
-      <div className="pointer-events-none absolute bottom-20 -right-20 z-0 h-[500px] w-[500px] rounded-full bg-[#725D75]/08 blur-[110px]" />
+      <div className="pointer-events-none absolute -top-40 right-0 z-0 h-[600px] w-[600px] rounded-full bg-[#A78A9F]/15 blur-[120px]" />
+      <div className="pointer-events-none absolute top-[35%] -left-40 z-0 h-[700px] w-[700px] rounded-full bg-[#A78A9F]/15 blur-[140px]" />
+      <div className="pointer-events-none absolute bottom-20 -right-20 z-0 h-[500px] w-[500px] rounded-full bg-[#A78A9F]/15 blur-[110px]" />
 
       <div className="relative z-10">
         {/* Top Header Actions */}
@@ -273,7 +273,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
               whileHover={{ scale: 1.08, rotate: 5 }}
               whileTap={{ scale: 0.92 }}
               type="button"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E8E7E3] bg-white/90 text-[#1C1C1C] shadow-sm backdrop-blur-md hover:bg-white hover:shadow-md transition-all cursor-pointer dark:bg-[#1E1E1E]/90 dark:border-[#2E2E2E] dark:text-white"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-[#381932]/30 bg-[#FFF3E6]/90 text-[#381932] shadow-sm backdrop-blur-md hover:bg-[#FFF3E6] hover:shadow-md transition-all cursor-pointer dark:bg-[#381932]/90 dark:border-[#381932] dark:text-[#FFF3E6]"
               onClick={handleShareClick}
               aria-label="Share package"
             >
@@ -284,8 +284,8 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
               whileTap={{ scale: 0.92 }}
               type="button"
               className={cn(
-                'flex h-10 w-10 items-center justify-center rounded-full border border-[#E8E7E3] bg-white/90 shadow-sm backdrop-blur-md transition-all cursor-pointer dark:bg-[#1E1E1E]/90 dark:border-[#2E2E2E]',
-                isWished ? 'text-rose-600 border-rose-200 bg-rose-50/80 shadow-rose-200/50' : 'text-[#1C1C1C] hover:text-rose-600 hover:bg-white hover:shadow-md dark:text-white'
+                'flex h-10 w-10 items-center justify-center rounded-full border border-[#381932]/30 bg-[#FFF3E6]/90 shadow-sm backdrop-blur-md transition-all cursor-pointer dark:bg-[#381932]/90 dark:border-[#381932]',
+                isWished ? 'text-[#381932] border-[#381932] bg-[#FFF3E6]/80 shadow-[#381932]/50' : 'text-[#381932] hover:text-[#381932] hover:bg-[#FFF3E6] hover:shadow-md dark:text-[#FFF3E6]'
               )}
               onClick={handleToggleWishlist}
               aria-label={isWished ? 'Remove from wishlist' : 'Add to wishlist'}
@@ -304,7 +304,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
             transition={{ duration: 0.5, ease: 'easeOut' }}
             className="w-full flex flex-col gap-4 perspective-[1200px] transform-gpu"
           >
-            <div className="relative aspect-[4/3] sm:aspect-[16/9] max-h-[460px] md:max-h-[500px] w-full overflow-hidden rounded-3xl border border-[#E4DCD2]/80 bg-gradient-to-b from-[#FAFAF8] to-[#F5F2EA] shadow-[0_20px_50px_rgba(52,32,60,0.12)] transition-shadow duration-500 hover:shadow-[0_30px_70px_rgba(52,32,60,0.18)] dark:bg-gradient-to-b dark:from-[#1A1A1A] dark:to-[#121212] dark:border-[#483250]">
+            <div className="relative aspect-[4/3] sm:aspect-[16/9] max-h-[460px] md:max-h-[500px] w-full overflow-hidden rounded-3xl border border-[#381932]/80 bg-gradient-to-b from-[#FFF3E6] to-[#FFF3E6] shadow-[0_20px_50px_rgba(56,25,50,0.12)] transition-shadow duration-500 hover:shadow-[0_30px_70px_rgba(56,25,50,0.18)] dark:bg-gradient-to-b dark:from-[#381932] dark:to-[#381932] dark:border-[#381932]">
               {/* Fullscreen Button Pill */}
               <div className="absolute right-4 top-4 z-10">
                 <motion.button
@@ -312,9 +312,9 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                   whileTap={{ scale: 0.95 }}
                   type="button"
                   onClick={() => openFullScreen(activeIdx)}
-                  className="flex items-center gap-2 rounded-full border border-white/40 bg-white/80 px-4 py-2 text-xs font-bold text-[#1C1C1C] shadow-lg backdrop-blur-md hover:bg-white hover:shadow-xl transition-all dark:bg-[#1E1E1E]/80 dark:border-white/20 dark:text-white cursor-pointer"
+                  className="flex items-center gap-2 rounded-full border border-[#381932]/40 bg-[#FFF3E6]/80 px-4 py-2 text-xs font-bold text-[#381932] shadow-lg backdrop-blur-md hover:bg-[#FFF3E6] hover:shadow-xl transition-all dark:bg-[#381932]/80 dark:border-[#FFF3E6]/20 dark:text-[#FFF3E6] cursor-pointer"
                 >
-                  <Maximize2 size={14} className="text-[#2F2930] dark:text-amber-400" />
+                  <Maximize2 size={14} className="text-[#381932] dark:text-[#FFF3E6]" />
                   <span>Full View</span>
                 </motion.button>
               </div>
@@ -354,7 +354,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                     whileTap={{ scale: 0.9 }}
                     type="button"
                     aria-label="Previous"
-                    className="absolute left-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#E4DCD2] bg-white/90 text-[#2F2930] shadow-lg backdrop-blur-md disabled:opacity-30 cursor-pointer dark:bg-[#1E1E1E]/90 dark:border-[#483250] dark:text-white"
+                    className="absolute left-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#381932]/30 bg-[#FFF3E6]/90 text-[#381932] shadow-lg backdrop-blur-md disabled:opacity-30 cursor-pointer dark:bg-[#381932]/90 dark:border-[#381932] dark:text-[#FFF3E6]"
                     onClick={() => scrollToIdx(activeIdx - 1)}
                     disabled={activeIdx === 0}
                   >
@@ -365,7 +365,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                     whileTap={{ scale: 0.9 }}
                     type="button"
                     aria-label="Next"
-                    className="absolute right-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#E4DCD2] bg-white/90 text-[#2F2930] shadow-lg backdrop-blur-md disabled:opacity-30 cursor-pointer dark:bg-[#1E1E1E]/90 dark:border-[#483250] dark:text-white"
+                    className="absolute right-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#381932]/30 bg-[#FFF3E6]/90 text-[#381932] shadow-lg backdrop-blur-md disabled:opacity-30 cursor-pointer dark:bg-[#381932]/90 dark:border-[#381932] dark:text-[#FFF3E6]"
                     onClick={() => scrollToIdx(activeIdx + 1)}
                     disabled={activeIdx === allImages.length - 1}
                   >
@@ -385,10 +385,10 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                     type="button"
                     key={i}
                     className={cn(
-                      'h-16 w-16 sm:h-20 sm:w-20 flex-shrink-0 overflow-hidden rounded-2xl border bg-white p-1 transition-all cursor-pointer dark:bg-[#1E1E1E] shadow-sm',
+                      'h-16 w-16 sm:h-20 sm:w-20 flex-shrink-0 overflow-hidden rounded-2xl border bg-[#FFF3E6] p-1 transition-all cursor-pointer dark:bg-[#381932] shadow-sm',
                       i === activeIdx
-                        ? 'border-[#725D75] ring-2 ring-[#725D75] dark:border-amber-400 dark:ring-amber-400 shadow-md scale-105'
-                        : 'border-[#E4DCD2] dark:border-[#483250] opacity-70 hover:opacity-100'
+                        ? 'border-[#381932] ring-2 ring-[#381932] dark:border-[#FFF3E6] dark:ring-[#FFF3E6] shadow-md scale-105'
+                        : 'border-[#381932]/30 dark:border-[#381932] opacity-70 hover:opacity-100'
                     )}
                     onClick={() => scrollToIdx(i)}
                   >
@@ -405,66 +405,66 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.5 }}
-            className="w-full rounded-3xl border border-white/80 bg-white/90 p-6 sm:p-9 shadow-[0_20px_50px_rgba(52,32,60,0.08)] backdrop-blur-md dark:bg-[#201325]/90 dark:border-[#483250] dark:shadow-none"
+            className="w-full rounded-3xl border border-[#381932]/80 bg-[#FFF3E6]/90 p-6 sm:p-9 shadow-[0_20px_50px_rgba(56,25,50,0.08)] backdrop-blur-md dark:bg-[#381932]/90 dark:border-[#381932] dark:shadow-none"
           >
             {/* Category Breadcrumb */}
-            <div className="mb-3 flex items-center gap-2 text-xs text-[#746B72] dark:text-[#A78A9F] uppercase font-bold tracking-wider">
+            <div className="mb-3 flex items-center gap-2 text-xs text-[#381932] dark:text-[#381932] uppercase font-bold tracking-wider">
               <span className="flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+                <span className="h-2 w-2 rounded-full bg-[#381932] animate-pulse" />
                 {product.categoryName}
               </span>
               {product.subcategory && (
                 <>
                   <span>/</span>
-                  <span className="font-semibold text-[#2F2930] dark:text-[#FAF8F5]">{product.subcategory}</span>
+                  <span className="font-semibold text-[#381932] dark:text-[#FFF3E6]">{product.subcategory}</span>
                 </>
               )}
             </div>
 
-            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#2F2930] dark:text-[#FAF8F5] leading-snug">
+            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#381932] dark:text-[#FFF3E6] leading-snug">
               {product.name}
             </h1>
 
             {/* Price Line */}
-            <div className="mt-6 flex flex-wrap items-baseline gap-4 border-t border-[#E4DCD2]/60 pt-6 dark:border-[#483250]/60">
-              <span className="font-serif text-4xl sm:text-5xl font-extrabold text-[#1C1C1C] dark:text-[#FAF8F5]">
+            <div className="mt-6 flex flex-wrap items-baseline gap-4 border-t border-[#381932]/60 pt-6 dark:border-[#381932]/60">
+              <span className="font-serif text-4xl sm:text-5xl font-extrabold text-[#381932] dark:text-[#FFF3E6]">
                 ₹{product.price.toLocaleString('en-IN')}
               </span>
               {Boolean(product.originalPrice && product.originalPrice > product.price) && (
-                <span className="text-lg text-[#746B72] line-through dark:text-[#A78A9F]">
+                <span className="text-lg text-[#381932] line-through dark:text-[#381932]">
                   ₹{product.originalPrice?.toLocaleString('en-IN')}
                 </span>
               )}
               {discount > 0 && (
-                <span className="rounded-full bg-emerald-100 border border-emerald-300 dark:bg-emerald-950/80 dark:border-emerald-700 px-3.5 py-1 text-xs font-extrabold text-emerald-900 dark:text-emerald-300 shadow-xs">
+                <span className="rounded-full bg-[#FFF3E6] border border-[#381932] dark:bg-[#381932]/80 dark:border-[#381932] px-3.5 py-1 text-xs font-extrabold text-[#381932] dark:text-[#381932] shadow-xs">
                   {discount}% OFF
                 </span>
               )}
-              <span className="ml-auto hidden sm:inline-flex items-center gap-1.5 text-xs font-extrabold text-[#2F2930] bg-[#F9F6F2] border border-[#E4DCD2] dark:text-amber-300 dark:bg-amber-400/15 dark:border-amber-400/30 px-3.5 py-1.5 rounded-full shadow-2xs">
+              <span className="ml-auto hidden sm:inline-flex items-center gap-1.5 text-xs font-extrabold text-[#381932] bg-[#FFF3E6] border border-[#381932]/30 dark:text-[#FFF3E6] dark:bg-[#FFF3E6]/15 dark:border-[#FFF3E6]/30 px-3.5 py-1.5 rounded-full shadow-2xs">
                 ⚡ Best Price Guaranteed
               </span>
             </div>
 
-            <p className="mt-2 text-xs sm:text-sm text-[#746B72] dark:text-[#C8B5C3] font-medium">
+            <p className="mt-2 text-xs sm:text-sm text-[#381932] dark:text-[#FFF3E6] font-medium">
               Includes on-site decorator setup, balloon artist labor &amp; teardown across Bengaluru.
             </p>
 
             {/* Description */}
             {product.description && (
-              <div className="mt-6 border-t border-[#E4DCD2]/60 pt-6 dark:border-[#483250]/60">
-                <h2 className="text-xs font-bold uppercase tracking-wider text-[#746B72] dark:text-[#A78A9F] mb-2">
+              <div className="mt-6 border-t border-[#381932]/60 pt-6 dark:border-[#381932]/60">
+                <h2 className="text-xs font-bold uppercase tracking-wider text-[#381932] dark:text-[#381932] mb-2">
                   About This Experience
                 </h2>
-                <p className="text-xs sm:text-sm text-[#2C2C2C] dark:text-[#FAF8F5] leading-relaxed font-medium">
+                <p className="text-xs sm:text-sm text-[#381932] dark:text-[#FFF3E6] leading-relaxed font-medium">
                   {product.description}
                 </p>
               </div>
             )}
 
             {/* Service Promises */}
-            <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 border-t border-[#E4DCD2]/60 pt-6 text-xs dark:border-[#483250]/60">
+            <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 border-t border-[#381932]/60 pt-6 text-xs dark:border-[#381932]/60">
               {[
-                { icon: Zap, label: 'Express 2-Hr Setup' },
+                { icon: Zap, label: 'Express Setup' },
                 { icon: Lock, label: 'Instant Confirmation' },
                 { icon: Palette, label: 'Theme Color Choice' },
                 { icon: ShieldCheck, label: 'Zero Hidden Fees' }
@@ -472,9 +472,9 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                 <motion.div
                   key={idx}
                   whileHover={{ y: -3, scale: 1.03 }}
-                  className="flex items-center gap-2.5 rounded-xl border border-[#EDECE8] bg-[#FAF9F5] p-3 text-[#2F2930] dark:border-[#3A2443] dark:bg-[#2A1830] dark:text-[#FAF8F5] shadow-2xs transition-all"
+                  className="flex items-center gap-2.5 rounded-xl border border-[#381932]/30 bg-[#FFF3E6] p-3 text-[#381932] dark:border-[#381932] dark:bg-[#381932] dark:text-[#FFF3E6] shadow-2xs transition-all"
                 >
-                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#725D75]/08 text-[#2F2930] dark:bg-amber-400/15 dark:text-amber-400">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#A78A9F]/15 text-[#381932] dark:bg-[#FFF3E6]/15 dark:text-[#FFF3E6]">
                     <item.icon size={16} />
                   </div>
                   <span className="font-semibold text-xs">{item.label}</span>
@@ -488,7 +488,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                 <button
                   type="button"
                   onClick={() => handleBookNow('razorpay')}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-transparent bg-[#725D75] hover:bg-[#A78A9F] text-white dark:bg-amber-400 dark:text-slate-950 dark:hover:bg-amber-300 py-3.5 px-4 text-xs sm:text-sm font-medium tracking-wide shadow-sm transition-colors cursor-pointer"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-transparent bg-[#381932] hover:opacity-90 text-[#FFF3E6] dark:bg-[#FFF3E6] dark:text-[#381932] dark:hover:bg-[#FFF3E6] py-3.5 px-4 text-xs sm:text-sm font-medium tracking-wide shadow-sm transition-colors cursor-pointer"
                 >
                   <span className="font-medium">Book Package Online</span>
                   <ArrowRight size={17} />
@@ -500,7 +500,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 onClick={handleAddToCart}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#A78A9F] bg-transparent hover:bg-[#725D75]/08 text-[#725D75] dark:bg-[#2A1830] dark:hover:bg-[#34203C] dark:text-[#FAF8F5] py-3.5 px-4 text-xs sm:text-sm font-medium tracking-wide transition-colors cursor-pointer"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-[#381932] bg-transparent hover:bg-[#A78A9F]/18 text-[#381932] dark:bg-[#381932] dark:hover:bg-[#381932] dark:text-[#FFF3E6] py-3.5 px-4 text-xs sm:text-sm font-medium tracking-wide transition-colors cursor-pointer"
               >
                 <ShoppingCart size={17} />
                 <span>Add to Cart</span>
@@ -511,7 +511,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 onClick={() => handleBookNow('whatsapp')}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 px-4 text-xs sm:text-sm font-medium tracking-wide shadow-sm transition-colors cursor-pointer"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#381932] hover:opacity-90 text-[#FFF3E6] py-3.5 px-4 text-xs sm:text-sm font-medium tracking-wide shadow-sm transition-colors cursor-pointer"
               >
                 {WA_SVG}
                 <span>Instant WhatsApp</span>
@@ -522,7 +522,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
           {/* Sections: Policies, Add-ons, and Similar Products */}
           <div className="w-full flex flex-col gap-10">
             {/* Compact Policy Tabs -- click a word to expand its full section below */}
-            <div className="rounded-2xl border border-[#E8E7E3] bg-white/95 px-3 py-3 sm:px-5 dark:bg-[#1E1E1E]/95 dark:border-[#2E2E2E] shadow-card backdrop-blur-md">
+            <div className="rounded-2xl border border-[#381932]/30 bg-[#FFF3E6]/95 px-3 py-3 sm:px-5 dark:bg-[#381932]/95 dark:border-[#381932] shadow-card backdrop-blur-md">
               <div className="flex flex-wrap items-center gap-x-2 gap-y-2 sm:gap-x-4">
                 {POLICY_TABS.map((tab) => {
                   const isOpen = openPolicies.has(tab.key);
@@ -535,8 +535,8 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                       className={cn(
                         'inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-xs sm:text-[13px] font-bold tracking-wide transition-colors cursor-pointer',
                         isOpen
-                          ? 'bg-[#725D75] text-white dark:bg-amber-400 dark:text-slate-950'
-                          : 'text-[#725D75] hover:bg-[#725D75]/08 dark:text-amber-300 dark:hover:bg-amber-400/10'
+                          ? 'bg-[#381932] text-[#FFF3E6] dark:bg-[#FFF3E6] dark:text-[#381932]'
+                          : 'text-[#381932] hover:bg-[#A78A9F]/18 dark:text-[#FFF3E6] dark:hover:bg-[#FFF3E6]/10'
                       )}
                     >
                       <tab.icon size={15} />
@@ -561,22 +561,22 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                     transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                     className="overflow-hidden"
                   >
-                    <div className="rounded-3xl border border-[#E8E7E3] bg-white/95 p-6 sm:p-8 dark:bg-[#1E1E1E]/95 dark:border-[#2E2E2E] shadow-card backdrop-blur-md">
+                    <div className="rounded-3xl border border-[#381932]/30 bg-[#FFF3E6]/95 p-6 sm:p-8 dark:bg-[#381932]/95 dark:border-[#381932] shadow-card backdrop-blur-md">
                       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
                           <div className={cn(
                             'flex h-10 w-10 items-center justify-center rounded-xl',
                             isInclusions
-                              ? 'bg-emerald-500/10 text-emerald-600 dark:bg-emerald-400/20 dark:text-emerald-400'
-                              : 'bg-[#725D75]/08 text-[#2F2930] dark:bg-amber-400/15 dark:text-amber-400'
+                              ? 'bg-[#A78A9F]/15 text-[#381932] dark:bg-[#381932]/20 dark:text-[#381932]'
+                              : 'bg-[#A78A9F]/15 text-[#381932] dark:bg-[#FFF3E6]/15 dark:text-[#FFF3E6]'
                           )}>
                             <tab.icon size={22} />
                           </div>
                           <div>
-                            <h2 className="font-editorial text-xl font-bold text-[#1C1C1C] dark:text-white">
+                            <h2 className="font-editorial text-xl font-bold text-[#381932] dark:text-[#FFF3E6]">
                               {tab.label}
                             </h2>
-                            <p className="text-xs text-[#746B72] dark:text-[#C8B5C3] font-medium mt-0.5">
+                            <p className="text-xs text-[#381932] dark:text-[#FFF3E6] font-medium mt-0.5">
                               {body.blurb}
                             </p>
                           </div>
@@ -584,7 +584,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                         <button
                           type="button"
                           onClick={() => togglePolicy(tab.key)}
-                          className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E8E7E3] text-[#746B72] hover:bg-[#F9F6F2] dark:border-[#2E2E2E] dark:text-[#C8B5C3] dark:hover:bg-[#25172C] transition-colors cursor-pointer"
+                          className="flex h-8 w-8 items-center justify-center rounded-full border border-[#381932]/30 text-[#381932] hover:bg-[#FFF3E6] dark:border-[#381932] dark:text-[#FFF3E6] dark:hover:bg-[#381932] transition-colors cursor-pointer"
                           aria-label={`Close ${tab.label}`}
                         >
                           <X size={16} />
@@ -595,13 +595,13 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                         {body.items.map((line, i) => (
                           <div
                             key={i}
-                            className="flex items-start gap-3 rounded-2xl border border-[#E8E7E3] bg-[#FAF9F6] dark:bg-[#25172C] dark:border-[#38223E] p-4 text-xs sm:text-sm text-[#242424] dark:text-[#E8E8E8]"
+                            className="flex items-start gap-3 rounded-2xl border border-[#381932]/30 bg-[#FFF3E6] dark:bg-[#381932] dark:border-[#381932] p-4 text-xs sm:text-sm text-[#381932] dark:text-[#FFF3E6]"
                           >
                             <div className={cn(
                               'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-xs font-bold',
                               isInclusions
-                                ? 'bg-emerald-500/15 text-emerald-600 dark:bg-emerald-400/20 dark:text-emerald-400'
-                                : 'bg-[#725D75] text-white dark:bg-amber-400 dark:text-slate-950'
+                                ? 'bg-[#A78A9F]/20 text-[#381932] dark:bg-[#381932]/20 dark:text-[#381932]'
+                                : 'bg-[#381932] text-[#FFF3E6] dark:bg-[#FFF3E6] dark:text-[#381932]'
                             )}>
                               {isInclusions ? <Check size={14} /> : i + 1}
                             </div>
@@ -632,13 +632,13 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.5 }}
-                className="border-t border-[#E8E7E3] dark:border-[#2E2E2E] pt-10"
+                className="border-t border-[#381932]/30 dark:border-[#381932] pt-10"
               >
                 <div className="mb-6">
-                  <h2 className="font-editorial text-2xl font-bold tracking-tight text-[#1C1C1C] dark:text-white">
+                  <h2 className="font-editorial text-2xl font-bold tracking-tight text-[#381932] dark:text-[#FFF3E6]">
                     Similar Celebration Experiences
                   </h2>
-                  <p className="mt-1 text-xs sm:text-sm text-[#746B72] dark:text-[#A0A09C] font-medium">
+                  <p className="mt-1 text-xs sm:text-sm text-[#381932] dark:text-[#381932] font-medium">
                     Explore related setups in {product.categoryName}
                   </p>
                 </div>
@@ -674,17 +674,17 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex flex-col bg-black/95 backdrop-blur-md p-4"
+              className="fixed inset-0 z-50 flex flex-col bg-[#381932]/95 backdrop-blur-md p-4"
               onClick={() => setFullScreenModalOpen(false)}
             >
-              <div className="flex items-center justify-between py-2 text-white">
+              <div className="flex items-center justify-between py-2 text-[#FFF3E6]">
                 <span className="text-xs font-semibold">
                   {fullScreenIdx + 1} / {allImages.length}
                 </span>
                 <button
                   type="button"
                   onClick={() => setFullScreenModalOpen(false)}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-all cursor-pointer"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-[#FFF3E6]/10 text-[#FFF3E6] hover:bg-[#FFF3E6]/20 transition-all cursor-pointer"
                 >
                   <X size={18} />
                 </button>
@@ -705,7 +705,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                       type="button"
                       onClick={() => setFullScreenIdx((prev: number) => Math.max(0, prev - 1))}
                       disabled={fullScreenIdx === 0}
-                      className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/25 disabled:opacity-20 transition-all cursor-pointer"
+                      className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-[#FFF3E6]/15 text-[#FFF3E6] hover:bg-[#FFF3E6]/25 disabled:opacity-20 transition-all cursor-pointer"
                     >
                       <ChevronLeft size={20} />
                     </button>
@@ -713,7 +713,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
                       type="button"
                       onClick={() => setFullScreenIdx((prev: number) => Math.min(allImages.length - 1, prev + 1))}
                       disabled={fullScreenIdx === allImages.length - 1}
-                      className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/25 disabled:opacity-20 transition-all cursor-pointer"
+                      className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-[#FFF3E6]/15 text-[#FFF3E6] hover:bg-[#FFF3E6]/25 disabled:opacity-20 transition-all cursor-pointer"
                     >
                       <ChevronRight size={20} />
                     </button>
@@ -725,16 +725,16 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
         </AnimatePresence>
 
         {/* Sticky Mobile Booking Bottom Bar */}
-        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-[#E8E7E3] bg-white/95 backdrop-blur-md p-3.5 shadow-modal sm:hidden flex items-center justify-between gap-3 dark:bg-[#121212]/95 dark:border-[#2E2E2E]">
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-[#381932]/30 bg-[#FFF3E6]/95 backdrop-blur-md p-3.5 shadow-modal sm:hidden flex items-center justify-between gap-3 dark:bg-[#381932]/95 dark:border-[#381932]">
           <div>
-            <div className="text-[10px] uppercase font-bold text-[#6F6F6B]">Total</div>
-            <div className="text-base font-bold text-[#1C1C1C] dark:text-white">₹{totalPrice.toLocaleString('en-IN')}</div>
+            <div className="text-[10px] uppercase font-bold text-[#381932]">Total</div>
+            <div className="text-base font-bold text-[#381932] dark:text-[#FFF3E6]">₹{totalPrice.toLocaleString('en-IN')}</div>
           </div>
           <div className="flex gap-2">
             <button
               type="button"
               onClick={() => handleBookNow('whatsapp')}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-600 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400"
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#381932] bg-[#FFF3E6] text-[#381932] dark:bg-[#381932]/40 dark:text-[#381932]"
               aria-label="WhatsApp"
             >
               {WA_SVG}
@@ -755,8 +755,8 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
         <ShareDialog
           open={shareOpen}
           onClose={() => setShareOpen(false)}
-          title={`${product.name} - TheDecorParty`}
-          text={`Book this event decoration: ${product.name} on TheDecorParty`}
+          title={`${product.name} - The Decor Party`}
+          text={`Book this event decoration: ${product.name} on The Decor Party`}
           url={window.location.href}
         />
       </div>

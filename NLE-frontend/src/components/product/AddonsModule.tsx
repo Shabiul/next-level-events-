@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import type { CatalogActivity, CatalogAddon, CatalogSelectionItem } from '../../types';
 import { getApiUrl } from '../../services/api.service';
 import { cn } from '../../utils/utils';
+import { AddonDetailModal, type AddonDetailItem } from './AddonDetailModal';
 
 interface Props {
   onSelectionChange?: (addons: CatalogSelectionItem[], activities: CatalogSelectionItem[]) => void;
@@ -62,10 +63,38 @@ const getItemImage = (item: RawCatalogItem): string | undefined => {
   return undefined;
 };
 
+const getItemImages = (item: RawCatalogItem): string[] => {
+  if (!item || typeof item !== 'object') return [];
+  const out: string[] = [];
+  const push = (v: unknown) => {
+    if (typeof v === 'string' && v.trim()) out.push(v.trim());
+    else if (v && typeof v === 'object') {
+      const o = v as Record<string, unknown>;
+      if (typeof o.url === 'string' && o.url.trim()) out.push(o.url.trim());
+      else if (typeof o.src === 'string' && o.src.trim()) out.push(o.src.trim());
+    }
+  };
+  push(item.image ?? item.thumbnail ?? item.coverImage ?? item.featuredImage);
+  if (Array.isArray(item.images)) item.images.forEach(push);
+  if (Array.isArray(item.gallery)) item.gallery.forEach(push);
+  if (Array.isArray(item.moreImages)) item.moreImages.forEach(push);
+  return Array.from(new Set(out));
+};
+
+const getItemInclusions = (item: RawCatalogItem): string[] => {
+  const src = item?.inclusions ?? item?.includes ?? item?.features ?? item?.highlights;
+  if (!Array.isArray(src)) return [];
+  return src
+    .map((v) => (typeof v === 'string' ? v : (v && typeof v === 'object' && typeof (v as any).label === 'string' ? (v as any).label : '')))
+    .filter(Boolean);
+};
+
 const normalizeCatalogItem = (item: RawCatalogItem) => ({
   ...item,
   price: getItemPrice(item),
   image: getItemImage(item),
+  images: getItemImages(item),
+  inclusions: getItemInclusions(item),
 });
 
 const TABS = [
@@ -96,6 +125,7 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
   const [activeCategory, setActiveCategory] = useState('All');
   const [showAll, setShowAll] = useState(false);
   const [wishlistIds, setWishlistIds] = useState<string[]>([]);
+  const [detailItem, setDetailItem] = useState<AddonDetailItem | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const toggleWishlist = (id: string) => {
@@ -225,13 +255,29 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-[#E4DCD2] bg-[#F9F6F2] p-5 text-xs text-[#746B72] dark:bg-[#1E1E1E] dark:border-[#483250]">
+      <div className="rounded-2xl border border-[#381932]/30 bg-[#FFF3E6] p-5 text-xs text-[#381932] dark:bg-[#381932] dark:border-[#381932]">
         Loading add-ons and activities...
       </div>
     );
   }
 
   const themeLabel = recommendedCategory || themeCategory;
+
+  const buildDetailItem = (item: CatalogAddon | CatalogActivity): AddonDetailItem => {
+    const raw = item as RawCatalogItem;
+    return {
+      _id: getItemId(item),
+      name: item.name,
+      description: item.description,
+      price: getItemPrice(raw),
+      priceLabel: getItemPriceLabel(raw),
+      image: item.image,
+      images: Array.isArray(raw.images) ? raw.images : (item.image ? [item.image] : []),
+      category: item.category?.trim() || undefined,
+      inclusions: Array.isArray(raw.inclusions) ? raw.inclusions : [],
+      kind: activeTab === 'addons' ? 'addon' : 'activity',
+    };
+  };
 
   const renderCard = (item: CatalogAddon | CatalogActivity, idx: number) => {
     const itemId = getItemId(item);
@@ -240,6 +286,8 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
       : selectedActivityIds.includes(itemId);
     const wished = wishlistIds.includes(itemId);
     const imgUrl = item.image || 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&q=80';
+    const toggle = () => (activeTab === 'addons' ? toggleAddon(itemId) : toggleActivity(itemId));
+    const openDetail = () => setDetailItem(buildDetailItem(item));
 
     return (
       <motion.div
@@ -250,25 +298,37 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
         className={cn(
           'group relative self-start block overflow-hidden rounded-xl border shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300',
           showAll ? 'w-full' : 'flex-none w-[220px] sm:w-[260px] snap-start',
-          selected ? 'border-[#725D75] ring-2 ring-[#725D75]/40' : 'border-[#E4DCD2] dark:border-[#2E2E2E]'
+          selected ? 'border-[#381932] ring-2 ring-[#381932]/40' : 'border-[#381932]/30 dark:border-[#381932]'
         )}
       >
-        <div className="relative h-72 sm:h-80 w-full">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={openDetail}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              openDetail();
+            }
+          }}
+          className="relative h-72 sm:h-80 w-full cursor-pointer"
+          aria-label={`View ${item.name} details`}
+        >
           <img
             src={imgUrl}
             alt={item.name}
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-[350ms] ease-out group-hover:scale-[1.03]"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#381932]/85 via-[#381932]/25 to-transparent" />
 
           <button
             type="button"
-            onClick={() => toggleWishlist(itemId)}
+            onClick={(e) => { e.stopPropagation(); toggleWishlist(itemId); }}
             aria-label={wished ? 'Remove from wishlist' : 'Add to wishlist'}
             className={cn(
-              'absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-white/40 bg-white/90 shadow-sm backdrop-blur-sm transition-colors cursor-pointer',
-              wished ? 'text-rose-600' : 'text-[#2F2930] hover:text-rose-600'
+              'absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-[#381932]/40 bg-[#FFF3E6]/90 shadow-sm backdrop-blur-sm transition-colors cursor-pointer',
+              wished ? 'text-[#381932]' : 'text-[#381932] hover:text-[#381932]'
             )}
           >
             <Heart size={15} fill={wished ? 'currentColor' : 'none'} />
@@ -276,23 +336,32 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
 
           {/* Overlay text area -- matches Home "Popular Packages" cards */}
           <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-            <h3 className="font-serif text-lg font-bold text-white mb-1 line-clamp-1">{item.name}</h3>
-            <span className="text-lg font-bold text-white block mb-1.5">{getItemPriceLabel(item)}</span>
+            <h3 className="font-serif text-lg font-bold text-[#FFF3E6] mb-1 line-clamp-1">{item.name}</h3>
+            <span className="text-lg font-bold text-[#FFF3E6] block mb-1.5">{getItemPriceLabel(item)}</span>
             {item.description && (
-              <p className="text-xs text-white/80 leading-relaxed line-clamp-2 mb-2.5">{item.description}</p>
+              <p className="text-xs text-[#FFF3E6]/80 leading-relaxed line-clamp-2 mb-2.5">{item.description}</p>
             )}
-            <button
-              type="button"
-              onClick={() => (activeTab === 'addons' ? toggleAddon(itemId) : toggleActivity(itemId))}
-              className={cn(
-                'inline-flex items-center gap-1 rounded-full px-3.5 py-1.5 text-xs font-bold transition-colors cursor-pointer',
-                selected
-                  ? 'bg-[#725D75] text-white'
-                  : 'bg-white/90 text-[#2F2930] hover:bg-white'
-              )}
-            >
-              {selected ? <><Check size={12} /> Added</> : <><Plus size={12} /> Add</>}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); toggle(); }}
+                className={cn(
+                  'inline-flex items-center gap-1 rounded-full px-3.5 py-1.5 text-xs font-bold transition-colors cursor-pointer',
+                  selected
+                    ? 'bg-[#381932] text-[#FFF3E6]'
+                    : 'bg-[#FFF3E6]/90 text-[#381932] hover:bg-[#FFF3E6]'
+                )}
+              >
+                {selected ? <><Check size={12} /> Added</> : <><Plus size={12} /> Add</>}
+              </button>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); openDetail(); }}
+                className="inline-flex items-center rounded-full border border-[#FFF3E6]/60 px-3 py-1.5 text-xs font-bold text-[#FFF3E6] hover:bg-[#FFF3E6]/15 transition-colors cursor-pointer"
+              >
+                View Details
+              </button>
+            </div>
           </div>
         </div>
       </motion.div>
@@ -304,10 +373,10 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
       {/* Section Header -- title + View All, styled like "You May Also Like" */}
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#2F2930] dark:text-white">
+          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#381932] dark:text-[#FFF3E6]">
             Add-ons &amp; Activities
           </h2>
-          <p className="text-xs text-[#746B72] dark:text-[#C8B5C3] font-medium mt-0.5">
+          <p className="text-xs text-[#381932] dark:text-[#FFF3E6] font-medium mt-0.5">
             {themeLabel
               ? `Handpicked for your ${themeLabel} celebration`
               : 'Complete your celebration with popular extras'}
@@ -318,7 +387,7 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
             <button
               type="button"
               onClick={() => scrollItems('left')}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E4DCD2] bg-white text-[#2F2930] hover:bg-[#F9F6F2] dark:bg-[#1E1E1E] dark:border-[#483250] dark:text-white cursor-pointer disabled:opacity-40"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-[#381932]/30 bg-[#FFF3E6] text-[#381932] hover:bg-[#FFF3E6] dark:bg-[#381932] dark:border-[#381932] dark:text-[#FFF3E6] cursor-pointer disabled:opacity-40"
               aria-label="Scroll left"
               disabled={showAll}
             >
@@ -327,7 +396,7 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
             <button
               type="button"
               onClick={() => scrollItems('right')}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E4DCD2] bg-white text-[#2F2930] hover:bg-[#F9F6F2] dark:bg-[#1E1E1E] dark:border-[#483250] dark:text-white cursor-pointer disabled:opacity-40"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-[#381932]/30 bg-[#FFF3E6] text-[#381932] hover:bg-[#FFF3E6] dark:bg-[#381932] dark:border-[#381932] dark:text-[#FFF3E6] cursor-pointer disabled:opacity-40"
               aria-label="Scroll right"
               disabled={showAll}
             >
@@ -337,7 +406,7 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
           <button
             type="button"
             onClick={() => setShowAll((o) => !o)}
-            className="rounded-full border border-[#E4DCD2] dark:border-[#483250] px-3.5 py-1.5 text-xs font-bold text-[#725D75] dark:text-[#C9BEAB] hover:bg-[#725D75]/08 dark:hover:bg-[#25172C] transition-colors cursor-pointer"
+            className="rounded-full border border-[#381932]/30 dark:border-[#381932] px-3.5 py-1.5 text-xs font-bold text-[#381932] dark:text-[#381932] hover:bg-[#A78A9F]/18 dark:hover:bg-[#381932] transition-colors cursor-pointer"
           >
             {showAll ? 'Show Less' : 'View All'}
           </button>
@@ -345,7 +414,7 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
       </div>
 
       {/* Tab Switcher */}
-      <div className="inline-flex rounded-full bg-[#E8E7E3] dark:bg-[#25172C] p-1 border border-[#E4DCD2] dark:border-[#483250]">
+      <div className="inline-flex rounded-full bg-[#FFF3E6] dark:bg-[#381932] p-1 border border-[#381932]/30 dark:border-[#381932]">
         {TABS.map((tab) => (
           <button
             key={tab.key}
@@ -354,8 +423,8 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
             className={cn(
               'rounded-full px-4 py-1.5 text-xs font-bold transition-all cursor-pointer',
               activeTab === tab.key
-                ? 'bg-[#725D75] text-[#F9F6F2] shadow-sm dark:bg-[#C9BEAB] dark:text-[#201325]'
-                : 'text-[#746B72] hover:text-[#2F2930] dark:text-[#C8B5C3]'
+                ? 'bg-[#381932] text-[#FFF3E6] shadow-sm dark:bg-[#381932] dark:text-[#381932]'
+                : 'text-[#381932] hover:text-[#381932] dark:text-[#FFF3E6]'
             )}
           >
             {tab.label}
@@ -375,8 +444,8 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
               className={cn(
                 'whitespace-nowrap rounded-full px-3.5 py-1 text-xs font-semibold transition cursor-pointer border',
                 isActive
-                  ? 'border-[#725D75] bg-[#725D75] text-white dark:border-[#C9BEAB] dark:bg-[#C9BEAB] dark:text-[#201325]'
-                  : 'border-[#E4DCD2] bg-white text-[#746B72] hover:border-[#725D75] dark:bg-[#1E1E1E] dark:border-[#483250] dark:text-neutral-300'
+                  ? 'border-[#381932] bg-[#381932] text-[#FFF3E6] dark:border-[#381932] dark:bg-[#381932] dark:text-[#381932]'
+                  : 'border-[#381932]/30 bg-[#FFF3E6] text-[#381932] hover:border-[#381932] dark:bg-[#381932] dark:border-[#381932] dark:text-[#381932]'
               )}
             >
               {category}
@@ -400,10 +469,27 @@ export const AddonsModule: React.FC<Props> = ({ onSelectionChange, themeCategory
           </div>
         )
       ) : (
-        <div className="w-full rounded-2xl border border-[#E4DCD2] bg-white p-5 text-xs text-[#746B72] dark:bg-[#1E1E1E] dark:border-[#483250]">
+        <div className="w-full rounded-2xl border border-[#381932]/30 bg-[#FFF3E6] p-5 text-xs text-[#381932] dark:bg-[#381932] dark:border-[#381932]">
           No {activeTab === 'addons' ? 'add-ons' : 'activities'} available in this category.
         </div>
       )}
+
+      <AddonDetailModal
+        item={detailItem}
+        selected={
+          detailItem
+            ? (detailItem.kind === 'addon'
+                ? selectedAddonIds.includes(detailItem._id || '')
+                : selectedActivityIds.includes(detailItem._id || ''))
+            : false
+        }
+        onToggle={() => {
+          if (!detailItem?._id) return;
+          if (detailItem.kind === 'addon') toggleAddon(detailItem._id);
+          else toggleActivity(detailItem._id);
+        }}
+        onClose={() => setDetailItem(null)}
+      />
     </div>
   );
 };

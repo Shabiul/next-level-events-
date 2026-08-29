@@ -1,4 +1,3 @@
-import { auth, RecaptchaVerifier, signInWithPhoneNumber } from "../../services/firebase";
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Mail, Lock, User, Phone, Eye, EyeOff, Sparkles, Shield, KeyRound } from 'lucide-react';
@@ -71,21 +70,21 @@ const InputField: React.FC<InputFieldProps> = ({
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between">
-        <label htmlFor={id} className="text-xs font-medium text-[#746B72] tracking-wide">
+        <label htmlFor={id} className="text-xs font-medium text-[#381932] tracking-wide">
           {label}
         </label>
         {labelRight}
       </div>
       <div
         className={cn(
-          'flex h-11 sm:h-12 items-center gap-2.5 rounded-lg border bg-white px-3.5 transition-colors duration-200',
+          'flex h-11 sm:h-12 items-center gap-2.5 rounded-lg border bg-[#FFF3E6] px-3.5 transition-colors duration-200',
           error
-            ? 'border-rose-400 ring-1 ring-rose-400/30'
-            : 'border-[#E4DCD2] focus-within:border-[#A78A9F] focus-within:ring-1 focus-within:ring-[#A78A9F]/30 hover:border-[#A78A9F]/60'
+            ? 'border-[#381932] ring-1 ring-[#381932]/30'
+            : 'border-[#381932]/30 focus-within:border-[#381932] focus-within:ring-1 focus-within:ring-[#381932]/30 hover:border-[#381932]/60'
         )}
       >
-        {icon && <span className="flex-shrink-0 text-[#725D75]">{icon}</span>}
-        {prefix && <span className="flex-shrink-0 text-xs font-medium text-[#746B72]">{prefix}</span>}
+        {icon && <span className="flex-shrink-0 text-[#381932]">{icon}</span>}
+        {prefix && <span className="flex-shrink-0 text-xs font-medium text-[#381932]">{prefix}</span>}
         <input
           id={id}
           type={type}
@@ -94,11 +93,11 @@ const InputField: React.FC<InputFieldProps> = ({
           autoComplete={autoComplete}
           maxLength={maxLength}
           placeholder={placeholder || `Enter your ${label.toLowerCase()}`}
-          className="w-full bg-transparent text-sm text-[#2F2930] outline-none placeholder:text-[#746B72]/50"
+          className="w-full bg-transparent text-sm text-[#381932] outline-none placeholder:text-[#381932]/50"
         />
         {endAdornment}
       </div>
-      {error && <span className="text-[11.5px] font-medium text-rose-500 animate-fade-in">{error}</span>}
+      {error && <span className="text-[11.5px] font-medium text-[#381932] animate-fade-in">{error}</span>}
     </div>
   );
 };
@@ -130,7 +129,7 @@ const PasswordInput: React.FC<{
         <button
           type="button"
           tabIndex={-1}
-          className="flex-shrink-0 text-[#725D75] hover:text-[#A78A9F] transition-colors cursor-pointer"
+          className="flex-shrink-0 text-[#381932] hover:text-[#381932] transition-colors cursor-pointer"
           onClick={() => setShow(s => !s)}
           aria-label={show ? 'Hide password' : 'Show password'}
         >
@@ -145,11 +144,11 @@ const SubmitButton: React.FC<{ loading: boolean; loadingLabel: string; children:
   <button
     type="submit"
     disabled={loading}
-    className="flex h-11 sm:h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#725D75] hover:bg-[#A78A9F] text-white text-sm font-medium shadow-sm transition-colors duration-200 active:scale-[0.98] disabled:opacity-60 cursor-pointer"
+    className="flex h-11 sm:h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#381932] hover:opacity-90 text-[#FFF3E6] text-sm font-medium shadow-sm transition-colors duration-200 active:scale-[0.98] disabled:opacity-60 cursor-pointer"
   >
     {loading ? (
       <>
-        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+        <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#381932]/30 border-t-white" />
         <span>{loadingLabel}</span>
       </>
     ) : (
@@ -166,23 +165,6 @@ const SubmitButton: React.FC<{ loading: boolean; loadingLabel: string; children:
 /* ========================================================================= */
 const RESEND_SECONDS = 30;
 
-function friendlyOtpError(code: string): string {
-  switch (code) {
-    case 'auth/invalid-phone-number':
-      return 'That mobile number looks invalid. Please recheck the 10 digits.';
-    case 'auth/too-many-requests':
-      return 'Too many attempts. Please wait a bit before trying again.';
-    case 'auth/invalid-verification-code':
-      return 'Incorrect OTP. Please check the 6 digits and try again.';
-    case 'auth/code-expired':
-      return 'This OTP has expired. Request a new one.';
-    case 'auth/quota-exceeded':
-      return 'SMS quota exceeded for this project right now. Please try again shortly.';
-    default:
-      return 'Something went wrong. Please try again.';
-  }
-}
-
 const PhoneAuthForm: React.FC<{
   onSuccess: (user: AuthUser, token?: string) => void;
   onAdminPortal: () => void;
@@ -195,9 +177,8 @@ const PhoneAuthForm: React.FC<{
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [resendIn, setResendIn] = useState(0);
+  const [devCode, setDevCode] = useState<string | null>(null);
 
-  const confirmationRef = useRef<import('firebase/auth').ConfirmationResult | null>(null);
-  const verifierRef = useRef<InstanceType<typeof RecaptchaVerifier> | null>(null);
   const pendingTokenRef = useRef<string | undefined>(undefined);
   const otpRefs = useRef<Array<HTMLInputElement | null>>([]);
 
@@ -207,13 +188,6 @@ const PhoneAuthForm: React.FC<{
     return () => clearInterval(t);
   }, [resendIn]);
 
-  const getVerifier = () => {
-    if (!verifierRef.current) {
-      verifierRef.current = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
-    }
-    return verifierRef.current;
-  };
-
   const sendOtp = async () => {
     if (!validatePhone(phone)) {
       setError('Enter a valid 10-digit mobile number');
@@ -222,20 +196,24 @@ const PhoneAuthForm: React.FC<{
     setError('');
     setLoading(true);
     try {
-      const fullPhone = `+91${phone}`;
-      const confirmation = await signInWithPhoneNumber(auth, fullPhone, getVerifier());
-      confirmationRef.current = confirmation;
+      const res = await fetch(getApiUrl('/api/auth/otp/request'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: `+91${phone}` }),
+      });
+      const data = await parseJsonResponse<{ success?: boolean; message?: string; resendIn?: number; devCode?: string }>(res);
+      if (!res.ok || !data?.success) {
+        setError(getApiErrorMessage(data, 'Could not send the OTP. Please try again.'));
+        setLoading(false);
+        return;
+      }
       setStep('otp');
       setOtp(['', '', '', '', '', '']);
-      setResendIn(RESEND_SECONDS);
+      setResendIn(data.resendIn ?? RESEND_SECONDS);
+      setDevCode(data.devCode ?? null);
       setTimeout(() => otpRefs.current[0]?.focus(), 50);
-    } catch (err) {
-      const code = typeof err === 'object' && err !== null && 'code' in err ? String((err as { code?: string }).code) : '';
-      setError(friendlyOtpError(code));
-      // A failed send can leave the invisible widget in a bad state -- reset it
-      // so the next attempt gets a fresh challenge instead of silently failing.
-      verifierRef.current?.clear();
-      verifierRef.current = null;
+    } catch {
+      setError('Network error. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
@@ -276,24 +254,16 @@ const PhoneAuthForm: React.FC<{
       setError('Enter the full 6-digit OTP');
       return;
     }
-    if (!confirmationRef.current) {
-      setError('Your OTP session expired. Please request a new code.');
-      setStep('phone');
-      return;
-    }
     setError('');
     setLoading(true);
     try {
-      const result = await confirmationRef.current.confirm(code);
-      const firebaseUser = result.user;
-
-      const res = await fetch(getApiUrl('/api/auth/phone'), {
+      const res = await fetch(getApiUrl('/api/auth/otp/verify'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ uid: firebaseUser.uid, phone: `+91${phone}` }),
+        body: JSON.stringify({ phone: `+91${phone}`, code }),
       });
-      const data = await parseJsonResponse<{ token?: string; isNewUser?: boolean; user?: { id: string; firstName: string; lastName: string; email: string; role: AuthUser['role']; phone: string }; msg?: string }>(res);
-      if (!res.ok || !data?.token || !data.user) {
+      const data = await parseJsonResponse<{ success?: boolean; token?: string; isNewUser?: boolean; user?: { id: string; firstName: string; lastName: string; email: string; role: AuthUser['role']; phone: string }; message?: string }>(res);
+      if (!res.ok || !data?.success || !data.token || !data.user) {
         setError(getApiErrorMessage(data, 'Could not complete sign-in. Please try again.'));
         setLoading(false);
         return;
@@ -316,9 +286,8 @@ const PhoneAuthForm: React.FC<{
         phone: data.user.phone,
         role: data.user.role,
       }, data.token);
-    } catch (err) {
-      const code2 = typeof err === 'object' && err !== null && 'code' in err ? String((err as { code?: string }).code) : '';
-      setError(friendlyOtpError(code2));
+    } catch {
+      setError('Network error while verifying. Please try again.');
       setLoading(false);
     }
   };
@@ -356,15 +325,13 @@ const PhoneAuthForm: React.FC<{
 
   return (
     <div className="animate-fade-in">
-      <div id="recaptcha-container" />
-
       {step === 'phone' && (
         <form className="flex flex-col gap-4" onSubmit={(e) => { e.preventDefault(); sendOtp(); }} noValidate>
           <div>
-            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#725D75] font-serif">
+            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#381932] font-serif">
               Welcome to The Decor Party
             </h2>
-            <p className="mt-1 text-xs sm:text-[13px] text-[#746B72] font-normal">
+            <p className="mt-1 text-xs sm:text-[13px] text-[#381932] font-normal">
               Enter your mobile number to log in or create an account.
             </p>
           </div>
@@ -387,13 +354,13 @@ const PhoneAuthForm: React.FC<{
             Send OTP →
           </SubmitButton>
 
-          <div className="pt-2 border-t border-[#E4DCD2] text-center">
+          <div className="pt-2 border-t border-[#381932]/30 text-center">
             <button
               type="button"
               onClick={onAdminPortal}
-              className="inline-flex items-center gap-1.5 text-[11.5px] font-medium text-[#A78A9F] hover:text-[#725D75] transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-[11.5px] font-medium text-[#381932] hover:text-[#381932] transition-colors cursor-pointer"
             >
-              <Shield size={13} className="text-[#A78A9F]" />
+              <Shield size={13} className="text-[#381932]" />
               <span>Authorized Staff? Switch to Admin Portal</span>
             </button>
           </div>
@@ -403,12 +370,17 @@ const PhoneAuthForm: React.FC<{
       {step === 'otp' && (
         <form className="flex flex-col gap-4" onSubmit={verifyOtp} noValidate>
           <div>
-            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#725D75] font-serif">
+            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#381932] font-serif">
               Verify Your Number
             </h2>
-            <p className="mt-1 text-xs sm:text-[13px] text-[#746B72] font-normal">
+            <p className="mt-1 text-xs sm:text-[13px] text-[#381932] font-normal">
               Enter the 6-digit OTP sent to +91 {phone}
             </p>
+            {devCode && (
+              <p className="mt-1.5 rounded-md bg-[#A78A9F]/15 px-2 py-1 text-[11px] font-semibold text-[#381932]">
+                Dev mode (no SMS provider): your code is <span className="tracking-widest">{devCode}</span>
+              </p>
+            )}
           </div>
 
           <div className="flex items-center justify-between gap-2">
@@ -423,11 +395,11 @@ const PhoneAuthForm: React.FC<{
                 onChange={(e) => handleOtpChange(idx, e.target.value)}
                 onKeyDown={(e) => handleOtpKeyDown(idx, e)}
                 onPaste={handleOtpPaste}
-                className="h-12 w-11 sm:h-14 sm:w-12 rounded-lg border border-[#E4DCD2] bg-white text-center text-lg font-semibold text-[#2F2930] outline-none focus:border-[#A78A9F] focus:ring-1 focus:ring-[#A78A9F]/30 transition-colors duration-200"
+                className="h-12 w-11 sm:h-14 sm:w-12 rounded-lg border border-[#381932]/30 bg-[#FFF3E6] text-center text-lg font-semibold text-[#381932] outline-none focus:border-[#381932] focus:ring-1 focus:ring-[#381932]/30 transition-colors duration-200"
               />
             ))}
           </div>
-          {error && <span className="text-[11.5px] font-medium text-rose-500 animate-fade-in">{error}</span>}
+          {error && <span className="text-[11.5px] font-medium text-[#381932] animate-fade-in">{error}</span>}
 
           <SubmitButton loading={loading} loadingLabel="Verifying...">
             Verify &amp; Continue →
@@ -437,7 +409,7 @@ const PhoneAuthForm: React.FC<{
             <button
               type="button"
               onClick={() => setStep('phone')}
-              className="font-medium text-[#746B72] hover:text-[#2F2930] transition-colors cursor-pointer"
+              className="font-medium text-[#381932] hover:text-[#381932] transition-colors cursor-pointer"
             >
               ← Change number
             </button>
@@ -445,7 +417,7 @@ const PhoneAuthForm: React.FC<{
               type="button"
               disabled={resendIn > 0}
               onClick={sendOtp}
-              className="font-semibold text-[#725D75] hover:text-[#A78A9F] disabled:text-[#A78A9F]/50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              className="font-semibold text-[#381932] hover:text-[#381932] disabled:text-[#381932]/50 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               {resendIn > 0 ? `Resend OTP in ${resendIn}s` : 'Resend OTP'}
             </button>
@@ -456,10 +428,10 @@ const PhoneAuthForm: React.FC<{
       {step === 'name' && (
         <form className="flex flex-col gap-4" onSubmit={finishProfile} noValidate>
           <div>
-            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#725D75] font-serif">
+            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#381932] font-serif">
               What should we call you?
             </h2>
-            <p className="mt-1 text-xs sm:text-[13px] text-[#746B72] font-normal">
+            <p className="mt-1 text-xs sm:text-[13px] text-[#381932] font-normal">
               One last step to set up your celebration account.
             </p>
           </div>
@@ -554,14 +526,14 @@ const AdminLoginForm: React.FC<{
     <form className="flex flex-col gap-4 animate-fade-in" onSubmit={submit} noValidate>
       {/* Admin Badge & Header */}
       <div>
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C9BEAB]/15 border border-[#C9BEAB]/30 text-[#A78A9F] text-[11px] font-bold uppercase tracking-wider mb-2.5">
-          <Shield size={13} className="text-[#A78A9F]" />
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#A78A9F]/20 border border-[#381932]/30 text-[#381932] text-[11px] font-bold uppercase tracking-wider mb-2.5">
+          <Shield size={13} className="text-[#381932]" />
           <span>Admin Control Portal</span>
         </div>
-        <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#725D75] font-serif">
+        <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#381932] font-serif">
           Administrator Sign In
         </h2>
-        <p className="mt-1 text-xs sm:text-[13px] text-[#746B72] font-normal">
+        <p className="mt-1 text-xs sm:text-[13px] text-[#381932] font-normal">
           Enter authorized administrative credentials to access controls
         </p>
       </div>
@@ -592,18 +564,18 @@ const AdminLoginForm: React.FC<{
           Access Admin Dashboard →
         </SubmitButton>
 
-        <div className="flex items-center justify-between pt-2 border-t border-[#725D75]/20 text-xs">
+        <div className="flex items-center justify-between pt-2 border-t border-[#381932]/20 text-xs">
           <button
             type="button"
             onClick={onAdminRegister}
-            className="text-[#A78A9F] hover:underline font-medium cursor-pointer"
+            className="text-[#381932] hover:underline font-medium cursor-pointer"
           >
             Register Admin Account
           </button>
           <button
             type="button"
             onClick={onUserLogin}
-            className="text-[#A78A9F] hover:text-[#725D75] transition-colors cursor-pointer"
+            className="text-[#381932] hover:text-[#381932] transition-colors cursor-pointer"
           >
             ← Customer Login
           </button>
@@ -700,14 +672,14 @@ const AdminRegisterForm: React.FC<{
   return (
     <form className="flex flex-col gap-3.5 animate-fade-in" onSubmit={submit} noValidate>
       <div>
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C9BEAB]/15 border border-[#C9BEAB]/30 text-[#A78A9F] text-[11px] font-bold uppercase tracking-wider mb-2">
-          <Shield size={13} className="text-[#A78A9F]" />
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#A78A9F]/20 border border-[#381932]/30 text-[#381932] text-[11px] font-bold uppercase tracking-wider mb-2">
+          <Shield size={13} className="text-[#381932]" />
           <span>Staff Registration</span>
         </div>
-        <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#725D75] font-serif">
+        <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#381932] font-serif">
           Register Admin Account
         </h2>
-        <p className="mt-0.5 text-xs sm:text-[13px] text-[#746B72] font-normal">
+        <p className="mt-0.5 text-xs sm:text-[13px] text-[#381932] font-normal">
           Authorized manager / decorator account creation
         </p>
       </div>
@@ -788,18 +760,18 @@ const AdminRegisterForm: React.FC<{
         type="password"
         value={adminSecret}
         onChange={setAdminSecret}
-        icon={<KeyRound size={15} className="text-[#A78A9F]" />}
+        icon={<KeyRound size={15} className="text-[#381932]" />}
         error={errors.adminSecret}
         placeholder="e.g. TDP_ADMIN_2026"
         labelRight={
-          <span className="text-[10.5px] text-[#A78A9F] font-medium">
+          <span className="text-[10.5px] text-[#381932] font-medium">
             (Required for Admin access)
           </span>
         }
       />
 
       {submitError && (
-        <div className="rounded-xl bg-rose-500/20 border border-rose-500/40 p-2.5 text-xs font-medium text-rose-300" role="alert">
+        <div className="rounded-xl bg-[#381932]/20 border border-[#381932]/40 p-2.5 text-xs font-medium text-[#381932]" role="alert">
           {submitError}
         </div>
       )}
@@ -809,18 +781,18 @@ const AdminRegisterForm: React.FC<{
           Register as Admin Account →
         </SubmitButton>
 
-        <div className="flex items-center justify-between pt-2 border-t border-[#725D75]/20 text-xs">
+        <div className="flex items-center justify-between pt-2 border-t border-[#381932]/20 text-xs">
           <button
             type="button"
             onClick={onAdminLogin}
-            className="text-[#A78A9F] hover:underline font-medium cursor-pointer"
+            className="text-[#381932] hover:underline font-medium cursor-pointer"
           >
             Already Admin? Log in
           </button>
           <button
             type="button"
             onClick={onUserLogin}
-            className="text-[#A78A9F] hover:text-[#725D75] transition-colors cursor-pointer"
+            className="text-[#381932] hover:text-[#381932] transition-colors cursor-pointer"
           >
             ← Customer Login
           </button>
@@ -845,10 +817,10 @@ const ForgotForm: React.FC<{ onBack: () => void; onSuccess: (user: AuthUser, tok
   return (
     <form onSubmit={e => { e.preventDefault(); send(); }} className="flex flex-col gap-4 animate-fade-in" noValidate>
       <div>
-        <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#725D75] font-serif">
+        <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#381932] font-serif">
           Reset password
         </h2>
-        <p className="mt-1 text-xs sm:text-[13px] text-[#746B72] font-normal">
+        <p className="mt-1 text-xs sm:text-[13px] text-[#381932] font-normal">
           Enter your email to receive a password reset link.
         </p>
       </div>
@@ -872,7 +844,7 @@ const ForgotForm: React.FC<{ onBack: () => void; onSuccess: (user: AuthUser, tok
 
         <button
           type="button"
-          className="text-center text-xs font-medium text-[#A78A9F] hover:text-[#A78A9F] transition-colors cursor-pointer py-1"
+          className="text-center text-xs font-medium text-[#381932] hover:text-[#381932] transition-colors cursor-pointer py-1"
           onClick={onBack}
         >
           ← Back to login
@@ -889,13 +861,13 @@ const SuccessPanel: React.FC<{ title: string; msg: string; isAdmin?: boolean; on
   const navigate = useNavigate();
   return (
     <div className="flex flex-col items-center gap-3.5 py-6 text-center animate-scale-in">
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#725D75] border border-[#725D75]/40 text-[#A78A9F] shadow-lg">
-        {isAdmin ? <Shield size={26} className="text-[#A78A9F]" /> : <Sparkles size={26} className="text-[#A78A9F]" />}
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#381932] border border-[#381932]/40 text-[#381932] shadow-lg">
+        {isAdmin ? <Shield size={26} className="text-[#381932]" /> : <Sparkles size={26} className="text-[#A78A9F]" />}
       </div>
-      <h2 className="text-xl font-semibold text-[#725D75] font-serif">{title}</h2>
-      <p className="text-xs sm:text-sm text-[#A78A9F] max-w-xs leading-relaxed">{msg}</p>
+      <h2 className="text-xl font-semibold text-[#381932] font-serif">{title}</h2>
+      <p className="text-xs sm:text-sm text-[#381932] max-w-xs leading-relaxed">{msg}</p>
       <button
-        className="mt-3 flex h-11 w-full max-w-xs items-center justify-center rounded-xl bg-[#F9F6F2] hover:bg-[#F2ECE3] text-sm font-semibold text-[#25172C] shadow-lg transition-all cursor-pointer"
+        className="mt-3 flex h-11 w-full max-w-xs items-center justify-center rounded-xl bg-[#FFF3E6] hover:bg-[#FFF3E6] text-sm font-semibold text-[#381932] shadow-lg transition-all cursor-pointer"
         onClick={() => {
           onClose();
           if (isAdmin) navigate('/admin');
@@ -946,7 +918,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, tab, onClose, onSe
     <>
       {/* Dark scrim behind the modal */}
       <div
-        className="fixed inset-0 z-[10000] bg-[#2F2930]/60 backdrop-blur-sm transition-opacity duration-300 animate-fade-in"
+        className="fixed inset-0 z-[10000] bg-[#381932]/60 backdrop-blur-sm transition-opacity duration-300 animate-fade-in"
         onClick={onClose}
       />
 
@@ -958,17 +930,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, tab, onClose, onSe
         {/* Card Container */}
         <div
           className={cn(
-            "relative flex w-full flex-col overflow-hidden rounded-2xl border border-[#E4DCD2] bg-white p-6 sm:p-8 shadow-md animate-scale-in text-[#2F2930] my-auto transition-all duration-300",
+            "relative flex w-full flex-col overflow-hidden rounded-2xl border border-[#381932]/30 bg-[#FFF3E6] p-6 sm:p-8 shadow-md animate-scale-in text-[#381932] my-auto transition-all duration-300",
             isAdminTab || tab === 'register' ? "max-w-[480px]" : "max-w-[440px]"
           )}
         >
           {/* Subtle ambient accents */}
-          <div className="absolute -top-20 -left-20 w-48 h-48 rounded-full bg-[#F3EFE7] blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-20 -right-20 w-48 h-48 rounded-full bg-[#A78A9F]/10 blur-3xl pointer-events-none" />
+          <div className="absolute -top-20 -left-20 w-48 h-48 rounded-full bg-[#FFF3E6] blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-20 -right-20 w-48 h-48 rounded-full bg-[#A78A9F]/15 blur-3xl pointer-events-none" />
 
           {/* Close button */}
           <button
-            className="absolute right-4 top-4 sm:right-5 sm:top-5 flex h-8 w-8 items-center justify-center rounded-full bg-[#F9F6F2] border border-[#E4DCD2] text-[#746B72] hover:text-[#2F2930] hover:bg-white transition-colors cursor-pointer z-20"
+            className="absolute right-4 top-4 sm:right-5 sm:top-5 flex h-8 w-8 items-center justify-center rounded-full bg-[#FFF3E6] border border-[#381932]/30 text-[#381932] hover:text-[#381932] hover:bg-[#FFF3E6] transition-colors cursor-pointer z-20"
             onClick={onClose}
             aria-label="Close modal"
           >
@@ -977,18 +949,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, tab, onClose, onSe
 
           {/* Top Segmented Tab Pill for Admin Auth */}
           {isAdminTab && (
-            <div className="flex items-center rounded-xl bg-[#F3EFE7] border border-[#E4DCD2] p-1 mb-5 w-full relative z-10">
+            <div className="flex items-center rounded-xl bg-[#FFF3E6] border border-[#381932]/30 p-1 mb-5 w-full relative z-10">
               <button
                 type="button"
                 className={cn(
                   'flex-1 flex items-center justify-center gap-1.5 py-2 text-xs sm:text-[13px] font-medium rounded-lg transition-colors duration-200 cursor-pointer text-center',
                   tab === 'admin-login'
-                    ? 'bg-white text-[#725D75] shadow-xs font-semibold'
-                    : 'text-[#746B72] hover:text-[#2F2930]'
+                    ? 'bg-[#FFF3E6] text-[#381932] shadow-xs font-semibold'
+                    : 'text-[#381932] hover:text-[#381932]'
                 )}
                 onClick={() => onSetTab('admin-login')}
               >
-                <Shield size={14} className={tab === 'admin-login' ? 'text-[#725D75]' : 'text-[#A78A9F]'} />
+                <Shield size={14} className={tab === 'admin-login' ? 'text-[#381932]' : 'text-[#381932]'} />
                 <span>Admin Login</span>
               </button>
               <button
@@ -996,12 +968,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, tab, onClose, onSe
                 className={cn(
                   'flex-1 flex items-center justify-center gap-1.5 py-2 text-xs sm:text-[13px] font-medium rounded-lg transition-colors duration-200 cursor-pointer text-center',
                   tab === 'admin-register'
-                    ? 'bg-white text-[#725D75] shadow-xs font-semibold'
-                    : 'text-[#746B72] hover:text-[#2F2930]'
+                    ? 'bg-[#FFF3E6] text-[#381932] shadow-xs font-semibold'
+                    : 'text-[#381932] hover:text-[#381932]'
                 )}
                 onClick={() => onSetTab('admin-register')}
               >
-                <KeyRound size={14} className={tab === 'admin-register' ? 'text-[#725D75]' : 'text-[#A78A9F]'} />
+                <KeyRound size={14} className={tab === 'admin-register' ? 'text-[#381932]' : 'text-[#381932]'} />
                 <span>Register Admin</span>
               </button>
             </div>
@@ -1017,7 +989,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, tab, onClose, onSe
             )}
             {tab === 'admin-login' && (
               <AdminLoginForm
-                onSuccess={(u, token) => handleSuccess(u, token, 'Admin Authorized', 'Welcome to TheDecorParty Administrator Dashboard.')}
+                onSuccess={(u, token) => handleSuccess(u, token, 'Admin Authorized', 'Welcome to The Decor Party Administrator Dashboard.')}
                 onAdminRegister={() => onSetTab('admin-register')}
                 onUserLogin={() => onSetTab('login')}
               />

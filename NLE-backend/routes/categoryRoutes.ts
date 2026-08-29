@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import Category from "../models/Category";
 import Product from "../models/Product";
 import { aiReindexService } from "../src/ai/services/ai-reindex.service";
+import { requireAdmin } from "../utils/auth";
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.get("/", async (_req: Request, res: Response) => {
   }
 });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", requireAdmin, async (req: Request, res: Response) => {
   try {
     const { name } = req.body;
     const existing = await Category.findOne({ name });
@@ -76,9 +77,9 @@ const handleReorder = async (req: Request, res: Response) => {
   }
 };
 
-router.put("/reorder", handleReorder);
+router.put("/reorder", requireAdmin, handleReorder);
 
-router.put("/:id", async (req: Request, res: Response) => {
+router.put("/:id", requireAdmin, async (req: Request, res: Response) => {
   const id = String(req.params.id);
   if (id === "reorder") {
     return handleReorder(req, res);
@@ -99,7 +100,7 @@ router.put("/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", requireAdmin, async (req: Request, res: Response) => {
   const id = String(req.params.id);
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: "Invalid category ID format" });

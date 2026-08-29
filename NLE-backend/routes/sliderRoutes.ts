@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import Slider from "../models/Slider";
+import { requireAdmin } from "../utils/auth";
 
 const router = express.Router();
 
@@ -12,7 +13,7 @@ router.get("/", async (_req: Request, res: Response) => {
   }
 });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", requireAdmin, async (req: Request, res: Response) => {
   try {
     const maxOrder = await Slider.findOne().sort({ order: -1 }).select("order");
     const newOrder = maxOrder ? maxOrder.order + 1 : 0;
@@ -28,7 +29,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.put("/:id", async (req: Request, res: Response) => {
+router.put("/:id", requireAdmin, async (req: Request, res: Response) => {
   try {
     const updated = await Slider.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(updated);
@@ -37,7 +38,7 @@ router.put("/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.put("/reorder/all", async (req: Request, res: Response) => {
+router.put("/reorder/all", requireAdmin, async (req: Request, res: Response) => {
   try {
     const { sliders } = req.body;
     const updatePromises = sliders.map((item: { id: string; order: number }) => Slider.findByIdAndUpdate(item.id, { order: item.order }));
@@ -50,7 +51,7 @@ router.put("/reorder/all", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", requireAdmin, async (req: Request, res: Response) => {
   try {
     await Slider.findByIdAndDelete(req.params.id);
     res.json({ message: "Slider deleted" });

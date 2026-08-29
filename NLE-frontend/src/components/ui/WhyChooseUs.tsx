@@ -27,7 +27,7 @@ const DEFAULT_FEATURES: FeatureItem[] = [
   {
     icon: Clock,
     title: 'On-Time, Every Time',
-    description: 'Express 3-hour setup slots, delivered right on schedule.',
+    description: 'Express Delivery, delivered right on schedule.',
   },
 ];
 
@@ -98,7 +98,7 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
       ref={sectionRef}
       id="why-us"
       data-nav-theme="light"
-      className="relative w-full bg-[#F9F6F2]"
+      className="relative w-full bg-[#FFF3E6]"
     >
       <div className="relative mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
@@ -111,7 +111,7 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="text-xs font-semibold tracking-wide text-[#A78A9F] mb-3"
+              className="text-[11px] font-poppins font-semibold uppercase tracking-[0.2em] text-[#A78A9F] mb-3"
             >
               {eyebrow}
             </motion.p>
@@ -121,9 +121,9 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-              className="font-serif text-3xl sm:text-4xl md:text-5xl font-medium leading-[1.15] text-[#725D75] tracking-tight mb-5"
+              className="font-serif text-3xl sm:text-4xl md:text-[44px] font-bold uppercase leading-[1.08] text-[#381932] tracking-tight mb-5"
             >
-              {title} <span className="italic text-[#A78A9F]">{titleAccent}</span>
+              {title} <span className="text-[#A78A9F]">{titleAccent}</span>
             </motion.h2>
 
             <motion.p
@@ -131,12 +131,12 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
-              className="text-sm sm:text-base leading-relaxed text-[#746B72] max-w-lg mb-8 sm:mb-10"
+              className="text-sm sm:text-[15px] leading-relaxed text-[#381932]/80 max-w-lg mb-8 sm:mb-10"
             >
               {description}
             </motion.p>
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3.5">
               {features.map((item, idx) => {
                 const IconComponent = item.icon;
                 return (
@@ -147,16 +147,16 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: 0.24 + idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                    className="flex items-start gap-4 rounded-xl border border-[#E4DCD2] bg-white p-4 sm:p-5"
+                    className="flex items-start gap-4 rounded-[18px] border border-[#E6D7C5] bg-[#FFF3E6] p-4 sm:p-5 shadow-[0_10px_30px_-22px_rgba(56,25,50,0.4)] transition-transform duration-300 hover:-translate-y-1"
                   >
-                    <div className="w-10 h-10 shrink-0 rounded-full bg-[#F3EFE7] flex items-center justify-center text-[#725D75]">
+                    <div className="w-11 h-11 shrink-0 rounded-full bg-[#A78A9F] flex items-center justify-center text-[#FFF3E6] shadow-[0_8px_18px_-8px_rgba(167,138,159,0.9)]">
                       <IconComponent size={18} />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-[#2F2930] mb-1.5">
+                      <h3 className="font-serif text-sm font-bold uppercase tracking-tight text-[#381932] mb-1">
                         {item.title}
                       </h3>
-                      <p className="text-sm leading-relaxed text-[#746B72]">
+                      <p className="text-[13px] leading-relaxed text-[#381932]/70">
                         {item.description}
                       </p>
                     </div>
@@ -171,14 +171,14 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: 0.24 + features.length * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                className="mt-6"
+                className="mt-7"
               >
                 <Link
                   to={ctaHref}
-                  className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#725D75] hover:underline"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#381932] hover:bg-[#483250] text-[#FFF3E6] px-5 py-2.5 text-[11px] font-serif font-semibold uppercase tracking-wide shadow-sm transition-colors group/btn"
                 >
                   {ctaLabel}
-                  <ArrowRight size={13} />
+                  <ArrowRight size={13} className="transition-transform group-hover/btn:translate-x-0.5" />
                 </Link>
               </motion.div>
             )}
@@ -196,7 +196,7 @@ export const WhyChooseUs: React.FC<WhyChooseUsProps> = ({
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="relative w-full h-[340px] sm:h-[420px] lg:h-full rounded-2xl overflow-hidden shadow-sm group"
+              className="relative w-full h-[340px] sm:h-[420px] lg:h-full rounded-[24px] overflow-hidden border border-[#E6D7C5] shadow-[0_24px_60px_-34px_rgba(56,25,50,0.45)] group"
             >
               <AnimatePresence mode="wait">
                 <motion.img

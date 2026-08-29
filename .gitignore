@@ -39,3 +39,8 @@ Thumbs.db
 *lan-hd.mp4
 *lan-hd.avi
 
+
+# local image-processing scratch
+_tools/
+_drive_dl*/
+_drive_all/

@@ -57,9 +57,9 @@ export const Footer: React.FC<FooterProps> = ({
   onSelectCategory,
 }) => {
   const linkClass =
-    'text-xs sm:text-[13px] font-normal tracking-wide text-[#F9F6F2]/75 hover:text-[#C9BEAB] transition-colors duration-200 cursor-pointer text-left flex items-center gap-1.5 group';
+    'text-xs sm:text-[13px] font-normal tracking-wide text-[#FFF3E6]/75 hover:text-[#FFF3E6] transition-colors duration-200 cursor-pointer text-left flex items-center gap-1.5 group';
   const colTitleClass =
-    'mb-4 text-xs font-semibold uppercase tracking-wider text-[#A78A9F] font-serif';
+    'mb-4 text-xs font-semibold uppercase tracking-wider text-[#FFF3E6] font-serif';
 
   const quickLinks: { label: string; key: 'about' | 'privacy' | 'terms' | 'refund' }[] = [
     { label: 'About Us', key: 'about' },
@@ -72,7 +72,7 @@ export const Footer: React.FC<FooterProps> = ({
   ];
 
   const packagesList = [
-    'Express 3-Hour Surprise',
+    'Express Delivery',
     'Pastel Balloon Arches',
     'Terrace Candlelight Cabana',
     'Milestone Neon Ring Backdrops',
@@ -81,15 +81,15 @@ export const Footer: React.FC<FooterProps> = ({
   ];
 
   const whatsappUrl = `https://wa.me/917022058460?text=${encodeURIComponent(
-    "Hi TheDecorParty! I'd like to plan an event. Can you help me with the details?"
+    "Hi The Decor Party! I'd like to plan an event. Can you help me with the details?"
   )}`;
 
   return (
-    <footer id="footer" data-nav-theme="dark" className="relative bg-[#1B101F] text-[#F9F6F2] border-t border-white/10 overflow-hidden scroll-mt-24 sm:scroll-mt-28">
+    <footer id="footer" data-nav-theme="dark" className="relative bg-[#381932] text-[#FFF3E6] border-t border-[#FFF3E6]/10 overflow-hidden scroll-mt-24 sm:scroll-mt-28">
 
       {/* Ambient background glows -- low intensity Khaki/Lilac against the dark base */}
-      <div className="pointer-events-none absolute -top-40 -right-40 h-96 w-96 rounded-full bg-[#C9BEAB]/10 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#A78A9F]/10 blur-3xl" />
+      <div className="pointer-events-none absolute -top-40 -right-40 h-96 w-96 rounded-full bg-[#A78A9F]/15 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#A78A9F]/15 blur-3xl" />
 
       {/* ===================================================================== */}
       {/* 1. FINAL CTA BAND -- same "Let's Plan Your Perfect Celebration" offer */}
@@ -97,25 +97,25 @@ export const Footer: React.FC<FooterProps> = ({
       {/* every page.                                                          */}
       {/* ===================================================================== */}
       <div
-        className="relative overflow-hidden py-12 sm:py-14 px-6 sm:px-10 text-center border-b border-white/10"
-        style={{ background: 'linear-gradient(145deg, #26112A 0%, #371A3F 55%, #46224F 100%)' }}
+        className="relative overflow-hidden py-12 sm:py-14 px-6 sm:px-10 text-center border-b border-[#FFF3E6]/10"
+        style={{ background: 'linear-gradient(145deg, #381932 0%, #381932 55%, #381932 100%)' }}
       >
-        <Sparkles className="absolute left-[8%] top-8 h-6 w-6 text-[#A78A9F]/40 hidden sm:block" />
-        <Sparkles className="absolute right-[8%] bottom-8 h-8 w-8 text-[#C9BEAB]/50 hidden sm:block" />
+        <Sparkles className="absolute left-[8%] top-8 h-6 w-6 text-[#FFF3E6]/40 hidden sm:block" />
+        <Sparkles className="absolute right-[8%] bottom-8 h-8 w-8 text-[#FFF3E6]/50 hidden sm:block" />
 
         <div className="relative z-10 max-w-2xl mx-auto flex flex-col items-center gap-3 sm:gap-4">
-          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15] text-[#F9F6F2]">
+          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight leading-[1.15] text-[#FFF3E6]">
             Let&apos;s Plan Your Perfect Celebration!
           </h2>
 
-          <p className="text-xs sm:text-sm text-[#F9F6F2]/75 max-w-lg leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#FFF3E6]/75 max-w-lg leading-relaxed">
             Share your ideas and we&apos;ll bring them to life — tell us where you&apos;re celebrating and what theme you need.
           </p>
 
           <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
             <Link
               to="/explore"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#725D75] to-[#A78A9F] hover:from-[#C9BEAB] hover:to-[#725D75] px-6 sm:px-7 py-2.5 sm:py-3 text-xs sm:text-sm font-bold tracking-wide text-white hover:text-[#25172C] shadow-lg transition-all cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#FFF3E6] px-6 sm:px-7 py-2.5 sm:py-3 text-xs sm:text-sm font-bold tracking-wide text-[#381932] hover:opacity-90 shadow-lg transition-all cursor-pointer"
             >
               <Sparkles size={14} />
               <span>Get a Free Quote</span>
@@ -126,9 +126,9 @@ export const Footer: React.FC<FooterProps> = ({
               target="_blank"
               rel="noreferrer"
               onClick={() => trackWhatsappClick('footer_cta')}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 border border-white/20 px-6 sm:px-7 py-2.5 sm:py-3 text-xs sm:text-sm font-medium tracking-wide text-[#F9F6F2] hover:bg-white/15 transition-colors cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#FFF3E6]/10 border border-[#FFF3E6]/20 px-6 sm:px-7 py-2.5 sm:py-3 text-xs sm:text-sm font-medium tracking-wide text-[#FFF3E6] hover:bg-[#FFF3E6]/15 transition-colors cursor-pointer"
             >
-              <MessageSquare size={15} className="text-[#25D366]" />
+              <MessageSquare size={15} className="text-[#FFF3E6]" />
               <span>Chat on WhatsApp</span>
             </a>
           </div>
@@ -147,17 +147,17 @@ export const Footer: React.FC<FooterProps> = ({
               <div className="mb-3.5 flex items-center gap-2.5">
                 <img
                   src="/final_logo.jpeg"
-                  alt="TheDecorParty"
-                  className="h-8 w-8 rounded-lg object-contain shadow-xs border border-white/15"
+                  alt="The Decor Party"
+                  className="h-8 w-8 rounded-lg object-contain shadow-xs border border-[#FFF3E6]/15"
                 />
-                <span className="font-serif text-lg font-semibold tracking-wide text-[#C9BEAB]">
-                  TheDecorParty
+                <span className="font-serif text-lg font-semibold tracking-wide text-[#FFF3E6]">
+                  The Decor Party
                 </span>
               </div>
 
-              <p className="mb-5 text-xs sm:text-[13px] font-normal leading-relaxed text-[#F9F6F2]/60 max-w-xs">
+              <p className="mb-5 text-xs sm:text-[13px] font-normal leading-relaxed text-[#FFF3E6]/60 max-w-xs">
                 {t?.footer_copy ||
-                  'A Bangalore-based celebration and décor studio offering bespoke balloon styling, romantic candlelight setups, milestone themes, and custom party experiences across Karnataka.'}
+                  'A Bengaluru-based celebration and décor studio offering bespoke balloon styling, romantic candlelight setups, milestone themes, and custom party experiences across Karnataka.'}
               </p>
             </div>
 
@@ -168,7 +168,7 @@ export const Footer: React.FC<FooterProps> = ({
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Facebook"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-[#F9F6F2]/70 hover:bg-white/10 hover:text-[#C9BEAB] transition-colors"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#FFF3E6]/15 bg-[#FFF3E6]/5 text-[#FFF3E6]/70 hover:bg-[#FFF3E6]/10 hover:text-[#FFF3E6] transition-colors"
               >
                 <FacebookIcon />
               </a>
@@ -177,7 +177,7 @@ export const Footer: React.FC<FooterProps> = ({
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Instagram"
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-[#F9F6F2]/70 hover:bg-white/10 hover:text-[#C9BEAB] transition-colors"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#FFF3E6]/15 bg-[#FFF3E6]/5 text-[#FFF3E6]/70 hover:bg-[#FFF3E6]/10 hover:text-[#FFF3E6] transition-colors"
               >
                 <InstagramIcon />
               </a>
@@ -187,7 +187,7 @@ export const Footer: React.FC<FooterProps> = ({
                 rel="noreferrer"
                 aria-label="WhatsApp"
                 onClick={() => trackWhatsappClick('footer')}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-[#25D366] hover:bg-white/10 transition-colors"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#FFF3E6]/15 bg-[#FFF3E6]/5 text-[#FFF3E6] hover:bg-[#FFF3E6]/10 transition-colors"
               >
                 <WhatsAppIcon />
               </a>
@@ -195,7 +195,7 @@ export const Footer: React.FC<FooterProps> = ({
                 href="mailto:thedecorparty.team@gmail.com"
                 aria-label="Email"
                 onClick={() => trackContactClick('email', 'footer')}
-                className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-[#F9F6F2]/70 hover:bg-white/10 hover:text-[#C9BEAB] transition-colors"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#FFF3E6]/15 bg-[#FFF3E6]/5 text-[#FFF3E6]/70 hover:bg-[#FFF3E6]/10 hover:text-[#FFF3E6] transition-colors"
               >
                 <Mail size={14} />
               </a>
@@ -219,18 +219,18 @@ export const Footer: React.FC<FooterProps> = ({
               <li>
                 <Link
                   to="/ai-planner"
-                  className={`${linkClass} text-[#C9BEAB] hover:text-[#A78A9F] font-medium`}
+                  className={`${linkClass} text-[#FFF3E6] hover:text-[#FFF3E6] font-medium`}
                 >
-                  <Sparkles size={13} className="text-[#A78A9F]" />
+                  <Sparkles size={13} className="text-[#FFF3E6]" />
                   <span>AI Party Planner ✨</span>
                 </Link>
               </li>
               <li>
                 <Link
                   to="/admin/login"
-                  className={`${linkClass} text-[#C9BEAB] hover:text-[#A78A9F] font-medium`}
+                  className={`${linkClass} text-[#FFF3E6] hover:text-[#FFF3E6] font-medium`}
                 >
-                  <Shield size={12} className="text-[#A78A9F]" />
+                  <Shield size={12} className="text-[#FFF3E6]" />
                   <span>Admin Portal</span>
                 </Link>
               </li>
@@ -289,50 +289,67 @@ export const Footer: React.FC<FooterProps> = ({
               <a
                 href="tel:+917022058460"
                 onClick={() => trackContactClick('phone', 'footer')}
-                className="flex items-center gap-2.5 text-xs text-[#F9F6F2]/85 hover:text-[#C9BEAB] transition-colors"
+                className="flex items-center gap-2.5 text-xs text-[#FFF3E6]/85 hover:text-[#FFF3E6] transition-colors"
               >
-                <Phone size={14} className="text-[#C9BEAB] shrink-0" />
+                <Phone size={14} className="text-[#FFF3E6] shrink-0" />
                 <span className="font-medium">+91 70220 58460</span>
               </a>
 
               <a
                 href="tel:+918660924212"
                 onClick={() => trackContactClick('phone', 'footer')}
-                className="flex items-center gap-2.5 text-xs text-[#F9F6F2]/85 hover:text-[#C9BEAB] transition-colors"
+                className="flex items-center gap-2.5 text-xs text-[#FFF3E6]/85 hover:text-[#FFF3E6] transition-colors"
               >
-                <Phone size={14} className="text-[#C9BEAB] shrink-0" />
+                <Phone size={14} className="text-[#FFF3E6] shrink-0" />
                 <span className="font-medium">+91 86609 24212</span>
               </a>
 
               <a
                 href="mailto:thedecorparty.team@gmail.com"
                 onClick={() => trackContactClick('email', 'footer')}
-                className="flex items-center gap-2.5 text-xs text-[#F9F6F2]/85 hover:text-[#C9BEAB] transition-colors"
+                className="flex items-center gap-2.5 text-xs text-[#FFF3E6]/85 hover:text-[#FFF3E6] transition-colors"
               >
-                <Mail size={14} className="text-[#C9BEAB] shrink-0" />
+                <Mail size={14} className="text-[#FFF3E6] shrink-0" />
                 <span className="truncate">thedecorparty.team@gmail.com</span>
               </a>
 
-              <div className="flex items-start gap-2.5 text-xs text-[#F9F6F2]/85 pt-0.5">
-                <MapPin size={14} className="text-[#C9BEAB] shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2.5 text-xs text-[#FFF3E6]/85 pt-0.5">
+                <MapPin size={14} className="text-[#FFF3E6] shrink-0 mt-0.5" />
                 <div className="flex flex-col gap-1">
-                  <span className="text-[11px] leading-relaxed text-[#F9F6F2]/55">
-                    Indiranagar &amp; HSR Layout Hubs, Bengaluru, Karnataka 560038
+                  <span className="text-[11px] leading-relaxed text-[#FFF3E6]/55">
+                    JP Nagar 2nd Block, Bengaluru, Karnataka 560078
                   </span>
                   <a
-                    href="https://maps.google.com/?q=Bengaluru"
+                    href="https://maps.app.goo.gl/QBxcs1d8v4KjpxuLA"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[11px] font-semibold text-[#C9BEAB] hover:underline transition-colors"
+                    className="text-[11px] font-semibold text-[#FFF3E6] hover:underline transition-colors"
                   >
-                    Get Directions
+                    View on Google Maps
                   </a>
                 </div>
               </div>
 
+              {/* Embedded Google Map -- same studio location as the Contact page */}
+              <a
+                href="https://maps.app.goo.gl/QBxcs1d8v4KjpxuLA"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Open The Decor Party studio location in Google Maps"
+                className="mt-1 block overflow-hidden rounded-xl border border-[#FFF3E6]/15 group"
+              >
+                <iframe
+                  title="The Decor Party studio location"
+                  src="https://www.google.com/maps?q=12.914333,77.573889&z=15&hl=en&output=embed"
+                  className="h-32 w-full border-0 pointer-events-none grayscale-[0.15] group-hover:grayscale-0 transition-all duration-300"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </a>
+
               <Link
                 to="/contact"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-[#C9BEAB] hover:text-[#A78A9F] transition-colors pt-1"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[#FFF3E6] hover:text-[#FFF3E6] transition-colors pt-1"
               >
                 <span>Send Custom Enquiry →</span>
               </Link>
@@ -344,10 +361,10 @@ export const Footer: React.FC<FooterProps> = ({
         {/* =================================================================== */}
         {/* 3. BENGALURU SERVICE HUBS PILL RIBBON                               */}
         {/* =================================================================== */}
-        <div className="mt-8 pt-5 border-t border-white/10">
+        <div className="mt-8 pt-5 border-t border-[#FFF3E6]/10">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-[#F9F6F2]/55 shrink-0">
-              <MapPin size={13} className="text-[#C9BEAB]" />
+            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-[#FFF3E6]/55 shrink-0">
+              <MapPin size={13} className="text-[#FFF3E6]" />
               <span>Direct Setup Zones:</span>
             </div>
 
@@ -355,7 +372,7 @@ export const Footer: React.FC<FooterProps> = ({
               {BENGALURU_HUBS.map((hub) => (
                 <span
                   key={hub}
-                  className="rounded-full bg-white/5 border border-white/15 px-2.5 py-0.5 text-[10px] font-medium text-[#F9F6F2]/60 hover:border-[#A78A9F] hover:text-[#C9BEAB] transition-colors cursor-default"
+                  className="rounded-full bg-[#FFF3E6]/5 border border-[#FFF3E6]/15 px-2.5 py-0.5 text-[10px] font-medium text-[#FFF3E6]/60 hover:border-[#381932] hover:text-[#FFF3E6] transition-colors cursor-default"
                 >
                   {hub}
                 </span>
@@ -369,35 +386,35 @@ export const Footer: React.FC<FooterProps> = ({
       {/* ===================================================================== */}
       {/* 4. BOTTOM COPYRIGHT & LEGAL BAR                                       */}
       {/* ===================================================================== */}
-      <div className="border-t border-white/10 bg-[#150C18] px-5 sm:px-8 lg:px-12 py-3.5">
-        <div className="mx-auto flex max-w-[1720px] flex-col sm:flex-row items-center justify-between gap-2.5 text-center text-[11px] text-[#F9F6F2]/50">
-          <p>© 2026 TheDecorParty. All rights reserved. Registered celebration partner.</p>
+      <div className="border-t border-[#FFF3E6]/10 bg-[#381932] px-5 sm:px-8 lg:px-12 py-3.5">
+        <div className="mx-auto flex max-w-[1720px] flex-col sm:flex-row items-center justify-between gap-2.5 text-center text-[11px] text-[#FFF3E6]/50">
+          <p>© 2026 The Decor Party. All rights reserved. Registered celebration partner.</p>
 
           <div className="flex items-center gap-4 text-[11px]">
             <button
               onClick={() => onPageOpen?.('privacy')}
-              className="hover:text-[#C9BEAB] transition-colors"
+              className="hover:text-[#FFF3E6] transition-colors"
             >
               Privacy Policy
             </button>
             <span>•</span>
             <button
               onClick={() => onPageOpen?.('terms')}
-              className="hover:text-[#C9BEAB] transition-colors"
+              className="hover:text-[#FFF3E6] transition-colors"
             >
               Terms of Service
             </button>
             <span>•</span>
             <button
               onClick={() => onPageOpen?.('refund')}
-              className="hover:text-[#C9BEAB] transition-colors"
+              className="hover:text-[#FFF3E6] transition-colors"
             >
               Refund Policy
             </button>
           </div>
 
-          <p className="flex items-center gap-1.5 text-[#C9BEAB]">
-            <Sparkles size={11} className="text-[#A78A9F]" />
+          <p className="flex items-center gap-1.5 text-[#FFF3E6]">
+            <Sparkles size={11} className="text-[#FFF3E6]" />
             <span>Curated celebrations &amp; luxury event styling</span>
           </p>
         </div>

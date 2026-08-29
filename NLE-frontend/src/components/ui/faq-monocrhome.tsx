@@ -25,7 +25,7 @@ const defaultFaqs: FAQItem[] = [
   {
     question: "How early should I book my surprise or event decoration?",
     answer:
-      "We recommend booking 24 to 48 hours in advance for custom neon signage and tailored themes. For last-minute surprises, same-day 3-hour express setups are available across Bengaluru.",
+      "We recommend booking 24 to 48 hours in advance for custom neon signage and tailored themes. For last-minute surprises, Express Delivery is available across Bengaluru.",
     meta: "Booking",
   },
   {
@@ -35,10 +35,10 @@ const defaultFaqs: FAQItem[] = [
     meta: "Pricing",
   },
   {
-    question: "Can I customize colors, neon signs, and milestone numbers?",
+    question: "Can I customise colors, neon signs, and milestone numbers?",
     answer:
-      "Absolutely. Every package is fully customizable with your choice of premium pastel or metallic palettes, custom LED neon words, milestone numbers, and bespoke props.",
-    meta: "Customization",
+      "Absolutely. Every package is fully customisable with your choice of premium pastel or metallic palettes, custom LED neon words, milestone numbers, and bespoke props.",
+    meta: "Customisation",
   },
   {
     question: "What balloon quality and materials do you use?",
@@ -57,46 +57,46 @@ const defaultFaqs: FAQItem[] = [
 // Brand Theme Palettes (Khaki Shell, Radiant Lilac, Banished Brown, Shadow Purple, Japanese Violet)
 const palettes = {
   dark: {
-    surface: "bg-[#1B101F] text-[#F9F6F2]",
-    panel: "bg-[#2D1C34]/80",
-    border: "border-[#483250]/70",
-    heading: "text-[#F9F6F2]",
-    muted: "text-[#A78A9F]",
-    iconRing: "border-[#725D75]/40",
-    iconSurface: "bg-[#725D75]/90 text-[#A78A9F]",
-    icon: "text-[#A78A9F]",
-    toggle: "border-[#483250] text-[#F9F6F2]",
-    toggleSurface: "bg-[#2D1C34]",
-    glow: "rgba(201, 190, 171, 0.14)",
-    aurora: "radial-gradient(ellipse 60% 100% at 10% 0%, rgba(167, 138, 159, 0.22), transparent 65%), radial-gradient(circle at 90% 20%, rgba(72, 50, 80, 0.35), transparent 50%), #1B101F",
-    shadow: "shadow-[0_36px_140px_-60px_rgba(27,16,31,0.95)]",
-    overlay: "linear-gradient(130deg, rgba(201,190,171,0.05) 0%, transparent 65%)",
-    badgeBorder: "border-[#C9BEAB]/25",
-    badgeBg: "bg-[#725D75]/70",
-    badgeText: "text-[#F9F6F2]",
-    metaBorder: "border-[#725D75]/30",
-    metaText: "text-[#A78A9F]",
+    surface: "bg-[#381932] text-[#FFF3E6]",
+    panel: "bg-[#381932]/80",
+    border: "border-[#381932]/70",
+    heading: "text-[#FFF3E6]",
+    muted: "text-[#381932]",
+    iconRing: "border-[#381932]/40",
+    iconSurface: "bg-[#381932]/90 text-[#381932]",
+    icon: "text-[#381932]",
+    toggle: "border-[#381932] text-[#FFF3E6]",
+    toggleSurface: "bg-[#381932]",
+    glow: "rgba(56,25,50,0.14)",
+    aurora: "radial-gradient(ellipse 60% 100% at 10% 0%, rgba(56,25,50,0.22), transparent 65%), radial-gradient(circle at 90% 20%, rgba(56,25,50,0.35), transparent 50%), #381932",
+    shadow: "shadow-[0_36px_140px_-60px_rgba(56,25,50,0.95)]",
+    overlay: "linear-gradient(130deg, rgba(56,25,50,0.05) 0%, transparent 65%)",
+    badgeBorder: "border-[#381932]/25",
+    badgeBg: "bg-[#381932]/70",
+    badgeText: "text-[#FFF3E6]",
+    metaBorder: "border-[#381932]/30",
+    metaText: "text-[#381932]",
   },
   light: {
-    surface: "bg-[#F9F6F2] text-[#2F2930]",
-    panel: "bg-white/85",
-    border: "border-[#E4DCD2]",
-    heading: "text-[#2F2930]",
-    muted: "text-[#746B72]",
-    iconRing: "border-[#E4DCD2]",
-    iconSurface: "bg-[#F9F6F2] text-[#2F2930]",
-    icon: "text-[#2F2930]",
-    toggle: "border-[#E4DCD2] text-[#2F2930]",
-    toggleSurface: "bg-white",
-    glow: "rgba(114, 93, 117, 0.08)",
-    aurora: "radial-gradient(ellipse 60% 100% at 10% 0%, rgba(167, 138, 159, 0.14), rgba(250, 248, 245, 0.95) 70%), radial-gradient(circle at 90% 80%, rgba(201, 190, 171, 0.22), transparent 60%)",
-    shadow: "shadow-[0_36px_120px_-70px_rgba(52,32,60,0.1)]",
-    overlay: "linear-gradient(130deg, rgba(114,93,117,0.04) 0%, transparent 70%)",
-    badgeBorder: "border-[#A78A9F]/20",
-    badgeBg: "bg-[#F9F6F2]/90",
-    badgeText: "text-[#2F2930]",
-    metaBorder: "border-[#E4DCD2]",
-    metaText: "text-[#746B72]",
+    surface: "bg-[#FFF3E6] text-[#381932]",
+    panel: "bg-[#FFF3E6]/85",
+    border: "border-[#381932]/30",
+    heading: "text-[#381932]",
+    muted: "text-[#381932]",
+    iconRing: "border-[#381932]/30",
+    iconSurface: "bg-[#FFF3E6] text-[#381932]",
+    icon: "text-[#381932]",
+    toggle: "border-[#381932]/30 text-[#381932]",
+    toggleSurface: "bg-[#FFF3E6]",
+    glow: "rgba(56,25,50,0.08)",
+    aurora: "radial-gradient(ellipse 60% 100% at 10% 0%, rgba(56,25,50,0.14), rgba(56,25,50,0.95) 70%), radial-gradient(circle at 90% 80%, rgba(56,25,50,0.22), transparent 60%)",
+    shadow: "shadow-[0_36px_120px_-70px_rgba(56,25,50,0.1)]",
+    overlay: "linear-gradient(130deg, rgba(56,25,50,0.04) 0%, transparent 70%)",
+    badgeBorder: "border-[#381932]/20",
+    badgeBg: "bg-[#FFF3E6]/90",
+    badgeText: "text-[#381932]",
+    metaBorder: "border-[#381932]/30",
+    metaText: "text-[#381932]",
   },
 };
 
@@ -104,7 +104,7 @@ function FAQ1({
   id,
   items = defaultFaqs,
   title = "Frequently Asked Questions",
-  subtitle = "Everything you need to know about booking, package inclusions, bespoke customizations, and party setups.",
+  subtitle = "Everything you need to know about booking, package inclusions, bespoke customisations, and party setups.",
   badgeText = "Signal FAQ",
   categoryLabel = "Questions",
   showThemeToggle = true,
@@ -166,9 +166,9 @@ function FAQ1({
         padding: 0.85rem 1.4rem;
         border-radius: 9999px;
         overflow: hidden;
-        border: 1px solid rgba(201, 190, 171, 0.25);
-        background: rgba(52, 32, 60, 0.42);
-        color: rgba(250, 248, 245, 0.95);
+        border: 1px solid rgba(56,25,50,0.25);
+        background: rgba(56,25,50,0.42);
+        color: rgba(56,25,50,0.95);
         text-transform: uppercase;
         letter-spacing: 0.35em;
         font-size: 0.65rem;
@@ -183,9 +183,9 @@ function FAQ1({
         isolation: isolate;
       }
       .faq1-intro--light {
-        border-color: rgba(114, 93, 117, 0.2);
-        background: rgba(250, 248, 245, 0.92);
-        color: rgba(52, 32, 60, 0.85);
+        border-color: rgba(56,25,50,0.2);
+        background: rgba(56,25,50,0.92);
+        color: rgba(56,25,50,0.85);
         mix-blend-mode: multiply;
       }
       .faq1-intro--active {
@@ -201,12 +201,12 @@ function FAQ1({
         border-radius: 50%;
       }
       .faq1-intro__beam {
-        background: conic-gradient(from 160deg, rgba(201, 190, 171, 0.3), transparent 32%, rgba(167, 138, 159, 0.28) 58%, transparent 78%, rgba(201, 190, 171, 0.2));
+        background: conic-gradient(from 160deg, rgba(56,25,50,0.3), transparent 32%, rgba(56,25,50,0.28) 58%, transparent 78%, rgba(56,25,50,0.2));
         animation: faq1-beam-spin 18s linear infinite;
         opacity: 0.65;
       }
       .faq1-intro--light .faq1-intro__beam {
-        background: conic-gradient(from 180deg, rgba(167, 138, 159, 0.25), transparent 30%, rgba(114, 93, 117, 0.2) 58%, transparent 80%, rgba(167, 138, 159, 0.18));
+        background: conic-gradient(from 180deg, rgba(56,25,50,0.25), transparent 30%, rgba(56,25,50,0.2) 58%, transparent 80%, rgba(56,25,50,0.18));
       }
       .faq1-intro__pulse {
         border: 1px solid currentColor;
@@ -237,11 +237,11 @@ function FAQ1({
         height: 0.55rem;
         border-radius: 9999px;
         background: currentColor;
-        box-shadow: 0 0 0 4px rgba(201, 190, 171, 0.2);
+        box-shadow: 0 0 0 4px rgba(56,25,50,0.2);
         animation: faq1-tick 3.2s ease-in-out infinite;
       }
       .faq1-intro--light .faq1-intro__tick {
-        box-shadow: 0 0 0 4px rgba(114, 93, 117, 0.12);
+        box-shadow: 0 0 0 4px rgba(56,25,50,0.12);
       }
       .faq1-fade {
         opacity: 0;
@@ -413,12 +413,12 @@ function FAQ1({
               <span className="relative flex h-6 w-6 items-center justify-center">
                 <span
                   className={`pointer-events-none absolute inset-0 rounded-full border opacity-40 ${
-                    theme === "dark" ? "border-[#C9BEAB]/40 animate-pulse" : "border-[#A78A9F]/40"
+                    theme === "dark" ? "border-[#381932]/40 animate-pulse" : "border-[#381932]/40"
                   }`}
                 />
                 <span
                   className={`h-3 w-3 rounded-full transition-all duration-500 ${
-                    theme === "dark" ? "bg-[#C9BEAB]" : "bg-[#725D75]"
+                    theme === "dark" ? "bg-[#381932]" : "bg-[#381932]"
                   }`}
                 />
               </span>
@@ -458,7 +458,7 @@ function FAQ1({
                   onClick={() => toggleQuestion(index)}
                   style={{
                     ["--faq-outline" as string]:
-                      theme === "dark" ? "rgba(201,190,171,0.35)" : "rgba(52,32,60,0.25)",
+                      theme === "dark" ? "rgba(56,25,50,0.35)" : "rgba(56,25,50,0.25)",
                   }}
                   className="relative flex w-full items-start gap-5 px-6 py-6 sm:gap-6 sm:px-8 sm:py-7 text-left transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--faq-outline)] cursor-pointer"
                 >

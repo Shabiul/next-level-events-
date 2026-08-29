@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import Product from "../models/Product";
 import { aiReindexService } from "../src/ai/services/ai-reindex.service";
+import { requireAdmin } from "../utils/auth";
 
 const router = express.Router();
 
@@ -90,7 +91,7 @@ router.get("/category/:categoryId", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", requireAdmin, async (req: Request, res: Response) => {
   try {
     const payload = {
       ...req.body,
@@ -108,7 +109,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.put("/:id", async (req: Request, res: Response) => {
+router.put("/:id", requireAdmin, async (req: Request, res: Response) => {
   try {
     const payload = {
       ...req.body,
@@ -126,7 +127,7 @@ router.put("/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", requireAdmin, async (req: Request, res: Response) => {
   try {
     const deleted = await Product.findByIdAndDelete(req.params.id);
     if (deleted) {

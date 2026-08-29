@@ -7,13 +7,13 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-[#F4F3F0] text-[#1C1C1C] border border-[#E8E7E3] dark:bg-[#262626] dark:text-white dark:border-[#333]',
-        outline: 'bg-transparent text-[#1C1C1C] border border-[#E8E7E3] dark:text-white dark:border-[#333]',
-        success: 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800',
-        warning: 'bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800',
-        danger: 'bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800',
-        neutral: 'bg-[#F4F3F0] text-[#6F6F6B] dark:bg-[#222] dark:text-[#A0A09C]',
-        dark: 'bg-[#1C1C1C] text-white dark:bg-white dark:text-black',
+        default: 'bg-[#FFF3E6] text-[#381932] border border-[#381932]/30 dark:bg-[#381932] dark:text-[#FFF3E6] dark:border-[#381932]',
+        outline: 'bg-transparent text-[#381932] border border-[#381932]/30 dark:text-[#FFF3E6] dark:border-[#381932]',
+        success: 'bg-[#FFF3E6] text-[#381932] border border-[#381932] dark:bg-[#381932]/40 dark:text-[#381932] dark:border-[#381932]',
+        warning: 'bg-[#FFF3E6] text-[#381932] border border-[#381932] dark:bg-[#381932]/40 dark:text-[#FFF3E6] dark:border-[#381932]',
+        danger: 'bg-[#FFF3E6] text-[#381932] border border-[#381932] dark:bg-[#381932]/40 dark:text-[#381932] dark:border-[#381932]',
+        neutral: 'bg-[#FFF3E6] text-[#381932] dark:bg-[#381932] dark:text-[#381932]',
+        dark: 'bg-[#381932] text-[#FFF3E6] dark:bg-[#FFF3E6] dark:text-[#381932]',
       },
     },
     defaultVariants: { variant: 'default' },

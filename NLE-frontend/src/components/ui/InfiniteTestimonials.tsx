@@ -50,7 +50,7 @@ const testimonialsRow1: Testimonial[] = [
     rating: 5,
     verified: true,
     content:
-      'We wanted an organic pastel jungle safari theme for our son’s 1st birthday. The balloons stayed firm and glossy for 3 full days! Every single guest asked for TheDecorParty’s contact.',
+      'We wanted an organic pastel jungle safari theme for our son’s 1st birthday. The balloons stayed firm and glossy for 3 full days! Every single guest asked for The Decor Party’s contact.',
   },
   {
     id: 'r4',
@@ -68,7 +68,7 @@ const testimonialsRow1: Testimonial[] = [
     id: 'r5',
     name: 'Karthik Ramanathan',
     location: 'HSR Layout Sector 2, Bengaluru',
-    occasion: '3-Hour Express Room Surprise',
+    occasion: 'Express Delivery Room Surprise',
     date: 'Booked on 2nd Aug',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
     rating: 5,
@@ -101,7 +101,7 @@ const testimonialsRow2: Testimonial[] = [
     rating: 5,
     verified: true,
     content:
-      'Exceeded every expectation. The fairy light tunnel and personalized welcome easel were stunning. Best event styling service in Bangalore by far.',
+      'Exceeded every expectation. The fairy light tunnel and personalised welcome easel were stunning. Best event styling service in Bengaluru by far.',
   },
   {
     id: 'r8',
@@ -149,7 +149,7 @@ const testimonialsRow2: Testimonial[] = [
     rating: 5,
     verified: true,
     content:
-      'The LED numbers, customized photo timeline string, and champagne balloon ring made our parents’ anniversary celebration truly unforgettable.',
+      'The LED numbers, customised photo timeline string, and champagne balloon ring made our parents’ anniversary celebration truly unforgettable.',
   },
   {
     id: 'r12',
@@ -174,25 +174,25 @@ function TestimonialCard({ testimonial }: TestimonialCardProps) {
     <motion.div
       whileHover={{ y: -3 }}
       transition={{ duration: 0.2 }}
-      className="flex h-[250px] w-[380px] flex-shrink-0 flex-col justify-between rounded-xl border border-[#E4DCD2] bg-white p-6 shadow-sm select-none transition-shadow hover:shadow-md"
+      className="flex h-[250px] w-[380px] flex-shrink-0 flex-col justify-between rounded-xl border border-[#381932]/30 bg-[#FFF3E6] p-6 shadow-sm select-none transition-shadow hover:shadow-md"
     >
       <div>
         {/* Rating Stars */}
         <div className="flex items-center gap-1 pb-3">
           {Array.from({ length: testimonial.rating }).map((_, i) => (
-            <Star key={i} className="h-3.5 w-3.5 fill-[#725D75] text-[#725D75]" />
+            <Star key={i} className="h-3.5 w-3.5 fill-[#381932] text-[#381932]" />
           ))}
-          <span className="ml-1 text-[11px] font-semibold text-[#746B72]">{testimonial.rating.toFixed(1)}</span>
+          <span className="ml-1 text-[11px] font-semibold text-[#381932]">{testimonial.rating.toFixed(1)}</span>
         </div>
 
         {/* Real Review Content */}
-        <p className="line-clamp-4 text-sm leading-relaxed font-normal text-[#2F2930]">
+        <p className="line-clamp-4 text-sm leading-relaxed font-normal text-[#381932]">
           {testimonial.content}
         </p>
       </div>
 
       {/* Verified Customer Details Footer */}
-      <div className="flex items-center gap-3 pt-3.5 border-t border-[#E4DCD2]">
+      <div className="flex items-center gap-3 pt-3.5 border-t border-[#381932]/30">
         <img
           src={testimonial.avatar}
           alt={testimonial.name}
@@ -201,15 +201,15 @@ function TestimonialCard({ testimonial }: TestimonialCardProps) {
         />
         <div className="flex flex-col min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="truncate text-sm font-semibold tracking-tight text-[#2F2930]">
+            <span className="truncate text-sm font-semibold tracking-tight text-[#381932]">
               {testimonial.name}
             </span>
             {testimonial.verified && (
-              <CheckCircle className="h-3.5 w-3.5 flex-shrink-0 text-[#A78A9F]" />
+              <CheckCircle className="h-3.5 w-3.5 flex-shrink-0 text-[#381932]" />
             )}
           </div>
-          <div className="flex items-center gap-1 truncate text-[11px] font-medium text-[#746B72]">
-            <MapPin className="h-3 w-3 flex-shrink-0 text-[#A78A9F]" />
+          <div className="flex items-center gap-1 truncate text-[11px] font-medium text-[#381932]">
+            <MapPin className="h-3 w-3 flex-shrink-0 text-[#381932]" />
             <span className="truncate">{testimonial.location}</span>
           </div>
         </div>
@@ -274,31 +274,31 @@ export default function InfiniteTestimonials({
   className = '',
 }: InfiniteTestimonialsProps) {
   return (
-    <section className={`relative w-full overflow-hidden bg-[#F9F6F2] dark:bg-[#1B101F] py-4 sm:py-5 lg:py-6 transition-colors duration-300 ${className}`}>
+    <section className={`relative w-full overflow-hidden bg-[#FFF3E6] dark:bg-[#381932] py-4 sm:py-5 lg:py-6 transition-colors duration-300 ${className}`}>
       {/* Header Section */}
       <div className="mx-auto max-w-7xl px-6 text-center mb-8 sm:mb-10">
         {badgeText && (
-          <span className="inline-block rounded-full border border-[#E4DCD2] dark:border-[#483250] bg-[#F3EFE7] dark:bg-[#2D1C34] px-3.5 py-1 text-[11px] font-semibold tracking-wide text-[#725D75] dark:text-[#C9BEAB] mb-3">
+          <span className="inline-block rounded-full border border-[#381932]/30 dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3.5 py-1 text-[11px] font-semibold tracking-wide text-[#381932] dark:text-[#381932] mb-3">
             {badgeText}
           </span>
         )}
-        <h2 className="text-3xl font-serif font-semibold tracking-tight text-[#725D75] dark:text-[#FAF8F5] sm:text-4xl md:text-5xl mb-3">
+        <h2 className="text-3xl font-serif font-semibold tracking-tight text-[#381932] dark:text-[#FFF3E6] sm:text-4xl md:text-5xl mb-3">
           {title ? (
             title
           ) : (
             <>
               Loved by{' '}
               <AnimatedNumber
-                className="inline-flex font-serif text-[#725D75] dark:text-[#C9BEAB]"
+                className="inline-flex font-serif text-[#381932] dark:text-[#381932]"
                 value={5200}
                 decimalPlaces={0}
                 springOptions={{ bounce: 0, duration: 2000 }}
               />
-              <span className="text-[#725D75]">+</span> Bengaluru Hosts
+              <span className="text-[#381932]">+</span> Bengaluru Hosts
             </>
           )}
         </h2>
-        <p className="mx-auto max-w-2xl text-sm leading-relaxed text-[#746B72] dark:text-[#C8B5C3] sm:text-base">
+        <p className="mx-auto max-w-2xl text-sm leading-relaxed text-[#381932] dark:text-[#FFF3E6] sm:text-base">
           {subtitle}
         </p>
       </div>
@@ -309,7 +309,7 @@ export default function InfiniteTestimonials({
         <div
           className="pointer-events-none absolute inset-y-0 left-0 z-20 w-24 sm:w-40 md:w-56"
           style={{
-            background: 'linear-gradient(to right, #F9F6F2 0%, rgba(249, 246, 242, 0) 100%)',
+            background: 'linear-gradient(to right, #FFF3E6 0%, rgba(56,25,50,0) 100%)',
           }}
         />
 
@@ -317,7 +317,7 @@ export default function InfiniteTestimonials({
         <div
           className="pointer-events-none absolute inset-y-0 right-0 z-20 w-24 sm:w-40 md:w-56"
           style={{
-            background: 'linear-gradient(to left, #F9F6F2 0%, rgba(249, 246, 242, 0) 100%)',
+            background: 'linear-gradient(to left, #FFF3E6 0%, rgba(56,25,50,0) 100%)',
           }}
         />
 

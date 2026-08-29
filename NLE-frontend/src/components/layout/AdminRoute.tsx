@@ -12,7 +12,7 @@ export default function AdminRoute({ children }: AdminRouteProps) {
 
   if (auth.isLoading || !auth.initialized) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FAFAF8] text-sm text-[#6F6F6B] dark:bg-[#121212] dark:text-[#A0A09C]">
+      <div className="min-h-screen flex items-center justify-center bg-[#FFF3E6] text-sm text-[#381932] dark:bg-[#381932] dark:text-[#381932]">
         Verifying admin access...
       </div>
     );

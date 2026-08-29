@@ -18,7 +18,7 @@ export const HeroSlider: React.FC = () => {
     <div className="relative w-full">
       {/* Hero Container with 92vh viewport scale */}
       <div
-        className="relative w-full overflow-hidden bg-[#2D1C34] min-h-[90vh] lg:min-h-[94vh] flex items-center justify-center"
+        className="relative w-full overflow-hidden bg-[#381932] min-h-[90vh] lg:min-h-[94vh] flex items-center justify-center"
         onTouchStart={e => { touchX.current = e.touches[0].clientX; }}
         onTouchEnd={e => {
           const dx = touchX.current - e.changedTouches[0].clientX;
@@ -49,9 +49,9 @@ export const HeroSlider: React.FC = () => {
               </video>
 
               {/* Luxury Vignette & Soft Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#2D1C34] via-[#2D1C34]/55 to-[#2D1C34]/30 pointer-events-none" />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#2D1C34]/70 via-transparent to-[#2D1C34]/65 pointer-events-none" />
-              <div className="absolute inset-0 bg-radial from-transparent via-[#2D1C34]/20 to-[#2D1C34]/60 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#381932] via-[#381932]/55 to-[#381932]/30 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#381932]/70 via-transparent to-[#381932]/65 pointer-events-none" />
+              <div className="absolute inset-0 bg-radial from-transparent via-[#381932]/20 to-[#381932]/60 pointer-events-none" />
 
               {/* Centered Content Container */}
               <div
@@ -60,18 +60,18 @@ export const HeroSlider: React.FC = () => {
               >
                 {/* Eyebrow */}
                 <div
-                  className="inline-flex items-center gap-2 rounded-full border border-[#C9BEAB]/30 bg-[#725D75]/35 px-4 py-1.5 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.24em] text-[#F9F6F2] backdrop-blur-md"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#381932]/30 bg-[#381932]/35 px-4 py-1.5 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.24em] text-[#FFF3E6] backdrop-blur-md"
                   style={{ animation: 'fadeIn 0.35s ease both' }}
                 >
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#725D75] animate-pulse" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#381932] animate-pulse" />
                   <span>{slide.chip || 'CELEBRATIONS, BEAUTIFULLY CURATED'}</span>
                 </div>
 
                 {/* H1 Primary Page Headline: Editorial Playfair Display with Great Vibes Accent */}
                 <h1
-                  className="font-serif text-balance text-4xl sm:text-6xl md:text-7xl lg:text-[76px] xl:text-[84px] leading-[1.04] tracking-tight text-[#F9F6F2] font-normal max-w-7xl mx-auto"
+                  className="font-serif text-balance text-4xl sm:text-6xl md:text-7xl lg:text-[76px] xl:text-[84px] leading-[1.04] tracking-tight text-[#FFF3E6] font-normal max-w-7xl mx-auto"
                   style={{
-                    textShadow: '0 4px 30px rgba(52, 32, 60, 0.85)',
+                    textShadow: '0 4px 30px rgba(56,25,50,0.85)',
                     animation: 'fadeInUp 0.4s ease 0.05s both',
                   }}
                 >
@@ -79,7 +79,7 @@ export const HeroSlider: React.FC = () => {
                     <>
                       Celebrations,<br className="hidden sm:inline" />
                       Thoughtfully{' '}
-                      <span className="font-heading text-[#A78A9F] lowercase text-[1.05em] font-medium tracking-normal italic ml-1">
+                      <span className="font-heading text-[#381932] lowercase text-[1.05em] font-medium tracking-normal italic ml-1">
                         Designed.
                       </span>
                     </>
@@ -90,9 +90,9 @@ export const HeroSlider: React.FC = () => {
 
                 {/* Supporting Subtitle */}
                 <p
-                  className="max-w-2xl text-balance text-xs sm:text-sm md:text-base leading-relaxed text-[#E4DCD2]/95 font-light"
+                  className="max-w-2xl text-balance text-xs sm:text-sm md:text-base leading-relaxed text-[#FFF3E6]/95 font-light"
                   style={{
-                    textShadow: '0 2px 12px rgba(0,0,0,0.6)',
+                    textShadow: '0 2px 12px rgba(56,25,50,0.6)',
                     animation: 'fadeInUp 0.4s ease 0.12s both',
                   }}
                 >
@@ -107,7 +107,7 @@ export const HeroSlider: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => navigate('/explore')}
-                    className="inline-flex items-center gap-2 rounded-full bg-[#725D75] text-[#2F2930] hover:bg-[#C9BEAB] px-7 py-3.5 text-xs font-bold uppercase tracking-wider shadow-lg hover:shadow-xl hover:scale-104 active:scale-95 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#381932] text-[#381932] hover:opacity-90 px-7 py-3.5 text-xs font-bold uppercase tracking-wider shadow-lg hover:shadow-xl hover:scale-104 active:scale-95 transition-all cursor-pointer"
                   >
                     <span>Plan Your Celebration</span>
                     <ArrowRight size={14} />
@@ -123,7 +123,7 @@ export const HeroSlider: React.FC = () => {
                         navigate('/explore');
                       }
                     }}
-                    className="group inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-white/[0.08] hover:bg-white/[0.18] hover:border-white/50 px-6 py-3.5 text-xs font-medium uppercase tracking-wider text-[#F9F6F2] transition-all backdrop-blur-sm cursor-pointer"
+                    className="group inline-flex items-center gap-1.5 rounded-full border border-[#381932]/30 bg-[#FFF3E6]/[0.08] hover:bg-[#FFF3E6]/[0.18] hover:border-[#FFF3E6]/50 px-6 py-3.5 text-xs font-medium uppercase tracking-wider text-[#FFF3E6] transition-all backdrop-blur-sm cursor-pointer"
                   >
                     <span>Explore Our Work</span>
                     <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -139,7 +139,7 @@ export const HeroSlider: React.FC = () => {
           type="button"
           aria-label="Previous slide"
           onClick={handlePrev}
-          className="absolute left-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-[#725D75]/60 text-[#F9F6F2] backdrop-blur-xs border border-[#C9BEAB]/30 transition-all hover:bg-[#725D75] hover:scale-105 active:scale-90 cursor-pointer sm:left-6 sm:h-11 sm:w-11"
+          className="absolute left-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-[#381932]/60 text-[#FFF3E6] backdrop-blur-xs border border-[#381932]/30 transition-all hover:opacity-90 hover:scale-105 active:scale-90 cursor-pointer sm:left-6 sm:h-11 sm:w-11"
         >
           <ChevronLeft size={20} />
         </button>
@@ -149,7 +149,7 @@ export const HeroSlider: React.FC = () => {
           type="button"
           aria-label="Next slide"
           onClick={handleNext}
-          className="absolute right-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-[#725D75]/60 text-[#F9F6F2] backdrop-blur-xs border border-[#C9BEAB]/30 transition-all hover:bg-[#725D75] hover:scale-105 active:scale-90 cursor-pointer sm:right-6 sm:h-11 sm:w-11"
+          className="absolute right-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-[#381932]/60 text-[#FFF3E6] backdrop-blur-xs border border-[#381932]/30 transition-all hover:opacity-90 hover:scale-105 active:scale-90 cursor-pointer sm:right-6 sm:h-11 sm:w-11"
         >
           <ChevronRight size={20} />
         </button>
@@ -165,8 +165,8 @@ export const HeroSlider: React.FC = () => {
               className={cn(
                 'h-1.5 rounded-full transition-all duration-300 cursor-pointer',
                 i === index
-                  ? 'w-6 bg-[#725D75]'
-                  : 'w-1.5 bg-[#F9F6F2]/50 hover:bg-[#F9F6F2]/80'
+                  ? 'w-6 bg-[#381932]'
+                  : 'w-1.5 bg-[#FFF3E6]/50 hover:bg-[#FFF3E6]/80'
               )}
             />
           ))}

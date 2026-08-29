@@ -22,13 +22,13 @@ export const TermsPage: React.FC<TermsPageProps> = ({ pageKey, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-[900] flex items-center justify-center bg-black/50 p-4 sm:items-center"
+      className="fixed inset-0 z-[900] flex items-center justify-center bg-[#381932]/50 p-4 sm:items-center"
       onClick={e => e.target === e.currentTarget && onClose()}
     >
-      <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white dark:bg-slate-900 shadow-2xl border border-transparent dark:border-slate-800 sm:self-auto">
+      <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-[#FFF3E6] dark:bg-[#381932] shadow-2xl border border-transparent dark:border-[#381932] sm:self-auto">
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <h2 className="text-lg font-bold text-ink">{title}</h2>
-          <button className="flex h-8 w-8 items-center justify-center rounded-full text-ink-muted hover:bg-black/5 dark:hover:bg-white/10" onClick={onClose} aria-label="Close">
+          <button className="flex h-8 w-8 items-center justify-center rounded-full text-ink-muted hover:bg-[#381932]/5 dark:hover:bg-[#FFF3E6]/10" onClick={onClose} aria-label="Close">
             <X size={18} />
           </button>
         </div>
@@ -36,7 +36,7 @@ export const TermsPage: React.FC<TermsPageProps> = ({ pageKey, onClose }) => {
           {loading
             ? <div className="py-10 text-center text-sm text-ink-muted">Loading...</div>
             : <div
-                className="text-sm leading-relaxed text-[#1F2937] dark:text-[#E5E7EB] [&_h1]:mb-3 [&_h1]:mt-4 [&_h1]:text-lg [&_h1]:font-bold [&_h1]:text-[#111827] dark:[&_h1]:text-white [&_h2]:mb-2 [&_h2]:mt-4 [&_h2]:text-base [&_h2]:font-bold [&_h2]:text-[#111827] dark:[&_h2]:text-white [&_p]:mb-3 [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-2 [&_li]:font-medium [&_li::marker]:text-amber-500 [&_li::marker]:font-bold"
+                className="text-sm leading-relaxed text-[#381932] dark:text-[#FFF3E6] [&_h1]:mb-3 [&_h1]:mt-4 [&_h1]:text-lg [&_h1]:font-bold [&_h1]:text-[#381932] dark:[&_h1]:text-[#FFF3E6] [&_h2]:mb-2 [&_h2]:mt-4 [&_h2]:text-base [&_h2]:font-bold [&_h2]:text-[#381932] dark:[&_h2]:text-[#FFF3E6] [&_p]:mb-3 [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-2 [&_li]:font-medium [&_li::marker]:text-[#381932] [&_li::marker]:font-bold"
                 dangerouslySetInnerHTML={{ __html: content }}
               />
           }

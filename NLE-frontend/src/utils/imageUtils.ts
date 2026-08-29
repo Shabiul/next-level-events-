@@ -6,7 +6,17 @@ export function resolveProductCardImage(product: {
 }, isLanding?: boolean): string {
   const name = (product.name || '').toLowerCase();
   const sub = (product.subcategory || '').toLowerCase();
-  const cat = (product.categoryName || '').toLowerCase();
+
+  // If the product already carries a real, curated local photo, use it as-is
+  // -- the keyword rules below are only a fallback for products whose image
+  // is missing, an external URL, or a generic placeholder. This keeps
+  // per-card distinct gallery images (e.g. "Gift Hampers Theme Setup 1..7")
+  // from all collapsing to a single keyword-matched picture.
+  const GENERIC_IMAGES = ['/cardddd.jpeg', '/final_logo.jpeg', '/nav bar.jpeg', '/refrence card.jpeg', '/webbbb.jpeg'];
+  const img = (product.image || '').trim();
+  if (img.startsWith('/') && !GENERIC_IMAGES.includes(img.toLowerCase())) {
+    return img;
+  }
 
   // Ice Gola Counter
   if (name.includes('ice gola') || sub.includes('ice gola') || name.includes('gola') || sub.includes('gola')) {
@@ -44,10 +54,66 @@ export function resolveProductCardImage(product: {
     return '/pop corn.jpeg';
   }
 
+  // --- Pre & Post Wedding sub-services ---
+  {
+    const wv = `${name} ${sub}`;
+    if (wv.includes('groom-to-be') || wv.includes('groom to be')) return '/groom to be.jpeg';
+    if (wv.includes('bride-to-be') || wv.includes('bride to be')) return '/bride to be.jpeg';
+  }
+
+  // --- Proposal Setup sub-services & related ---
+  // NOTE: match on the product NAME only (never the shared subcategory),
+  // so real DB products in these groups keep their own distinct photos and
+  // only the curated fallback cards (whose names contain the keyword) map here.
+  {
+    if (name.includes('heart arch')) return '/heart arch set up 1.jpeg';
+    if (name.includes('candlelight pathway') || name.includes('candelight pathway')) return '/candelight pathway 1.jpeg';
+    if (name.includes('terrace proposal') || name.includes('terrace propsal')) return '/terrace propsal set up.jpeg';
+    if (name.includes('boy theme') || name.includes('boy kids theme')) return '/boy theme.jpeg';
+    if (name.includes('naming ceremon') || name.includes('namkaran')) return '/NAMING CERMERIONS CARD.jpeg';
+  }
+
+  // --- Other Services sub-services ---
+  {
+    const ov = `${name} ${sub}`;
+    if (ov.includes('return gift')) return '/return gift.jpeg';
+    if (ov.includes('flower bouquet') || ov.includes('flower bouqet') || ov.includes('bouquet')) return '/flower bouqets.jpeg';
+    if (ov.includes('customised cake') || ov.includes('customized cake') || ov.includes('custom cake')) return '/customsid cakes.jpeg';
+    if (ov.includes('gift hamper') || ov.includes('hamper')) return '/gift hamper.jpeg';
+  }
+
+  // --- Live Eateries / Catering sub-services ---
+  {
+    const ev = `${name} ${sub}`;
+    if (ev.includes('maggi') || ev.includes('maggie')) return '/instant maggi.jpeg';
+    if (ev.includes('chaat') || ev.includes('chat counter')) return '/chat counter.jpeg';
+    if (ev.includes('fruit salad')) return '/fruit salad.jpeg';
+    if (ev.includes('pani puri') || ev.includes('panipuri') || ev.includes('golgappa') || ev.includes('puchka')) return '/pani puri.jpeg';
+    if (ev.includes('ice cream')) return '/ice cream.jpeg';
+  }
+
   // Tattoo Artist
   if (name.includes('tattoo') || sub.includes('tattoo') || name.includes('tatoo') || sub.includes('tatoo')) {
-    return '/tatoo.jpeg';
+    return '/tatoot 3.jpeg';
   }
+
+  // --- Kids Activities & Entertainment sub-services ---
+  const kv = `${name} ${sub}`;
+  if (kv.includes('trampolin')) return '/trampoling.jpeg';
+  if (kv.includes('juggl')) return '/kids jungle activites.jpeg';
+  if (kv.includes('mehendi') || kv.includes('mehandi') || kv.includes('henna')) return '/mehandi.jpeg';
+  if (kv.includes('mascot')) return '/mascot.jpeg';
+  if (kv.includes('magician') || kv.includes('magic show')) return '/MAGICIAN.jpeg';
+  if (kv.includes('caricat')) return '/caricatore.jpeg';
+  if (kv.includes('bouncy') || kv.includes('bounce castle')) return '/bouncy castle.jpeg';
+  if (kv.includes('braid')) return '/hair braiding.jpeg';
+  if (kv.includes('pottery') || kv.includes('clay')) return '/pottery.jpeg';
+  if (kv.includes('nail art') || kv.includes('nailart')) return '/nail art.jpeg';
+  if (kv.includes('pebble')) return '/pebble stone paint.jpeg';
+  if (kv.includes('balloon shoot') || kv.includes('ballon shoot')) return '/balloan shooting.jpeg';
+  if (kv.includes('balloon model') || kv.includes('balloon twist')) return '/balloon modelling.jpeg';
+  if (kv.includes('anchor') || kv.includes('emcee') || kv.includes('mc ')) return '/anchore.jpeg';
+  if (kv.includes('game') || kv.includes(' host')) return '/game host2.jpeg';
 
   // Proposal / Terrace
   if (
@@ -73,13 +139,14 @@ export function resolveProductCardImage(product: {
     return '/kkkk.jpeg';
   }
 
-  // Kids Themes
+  // Kids Themes -- only for products whose own NAME says so (never the
+  // shared "Kids Themes" / "Boy Kids Themes" subcategory, which would
+  // collapse every distinct product in that group to one photo).
   if (
     name.includes('teddy bear') ||
     name.includes('cloud arch') ||
-    (cat.includes('kids') && sub.includes('kids theme')) ||
     name.includes('kids theme') ||
-    sub.includes('kids theme')
+    name.includes('pastel teddy')
   ) {
     return '/kids theme.jpeg';
   }
@@ -111,7 +178,7 @@ export function resolveProductImagePosition(product: {
   }
 
   // Kids theme portrait: focus on decor
-  if (name.includes('teddy bear') || name.includes('cloud arch') || name.includes('kids theme') || sub.includes('kids theme')) {
+  if (name.includes('teddy bear') || name.includes('cloud arch') || name.includes('kids theme')) {
     return 'object-[center_60%]';
   }
 

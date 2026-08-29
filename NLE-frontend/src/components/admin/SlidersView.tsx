@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { GripVertical, Pencil, Eye, EyeOff, Trash2, Upload, Link as LinkIcon, X, Check, Lightbulb, Copy } from "lucide-react";
 import { EmptyState } from "../EmptyState";
 import { cn } from "../../lib/utils";
-import { getApiUrl } from '../../lib/api';
+import { getApiUrl, authFetch } from '../../lib/api';
 import { CLOUDINARY_UPLOAD_URL, CLOUDINARY_UPLOAD_PRESET } from '../../lib/cloudinary';
 
 const API = getApiUrl('/api/sliders');
@@ -16,12 +16,12 @@ const PRODUCT_API = getApiUrl('/api/products');
 type CTADestination = 'products' | 'category' | 'subcategory' | 'product' | 'custom';
 
 const GRADIENT_PRESETS = [
-  { name: "Purple Pink", value: "linear-gradient(135deg, rgba(107,33,168,0.85), rgba(236,72,153,0.75))" },
-  { name: "Blue Teal", value: "linear-gradient(135deg, rgba(37,99,235,0.85), rgba(20,184,166,0.75))" },
-  { name: "Orange Red", value: "linear-gradient(135deg, rgba(249,115,22,0.85), rgba(239,68,68,0.75))" },
-  { name: "Green Emerald", value: "linear-gradient(135deg, rgba(34,197,94,0.85), rgba(16,185,129,0.75))" },
-  { name: "Dark Purple", value: "linear-gradient(135deg, rgba(88,28,135,0.9), rgba(107,33,168,0.8))" },
-  { name: "Pink Rose", value: "linear-gradient(135deg, rgba(236,72,153,0.85), rgba(244,114,182,0.75))" },
+  { name: "Purple Pink", value: "linear-gradient(135deg, rgba(56,25,50,0.85), rgba(56,25,50,0.75))" },
+  { name: "Blue Teal", value: "linear-gradient(135deg, rgba(56,25,50,0.85), rgba(56,25,50,0.75))" },
+  { name: "Orange Red", value: "linear-gradient(135deg, rgba(56,25,50,0.85), rgba(56,25,50,0.75))" },
+  { name: "Green Emerald", value: "linear-gradient(135deg, rgba(56,25,50,0.85), rgba(56,25,50,0.75))" },
+  { name: "Dark Purple", value: "linear-gradient(135deg, rgba(56,25,50,0.9), rgba(56,25,50,0.8))" },
+  { name: "Pink Rose", value: "linear-gradient(135deg, rgba(56,25,50,0.85), rgba(56,25,50,0.75))" },
 ];
 
 export const SlidersView = () => {
@@ -57,7 +57,7 @@ export const SlidersView = () => {
 
   const fetchSliders = async () => {
     try {
-      const res = await fetch(API);
+      const res = await authFetch(API);
       const data = await res.json();
       setSliders(data);
     } catch {
@@ -67,7 +67,7 @@ export const SlidersView = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch(CATEGORY_API);
+      const res = await authFetch(CATEGORY_API);
       const data = await res.json();
       setCategories(Array.isArray(data) ? data.filter((c) => c.active) : []);
     } catch {
@@ -77,7 +77,7 @@ export const SlidersView = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch(PRODUCT_API);
+      const res = await authFetch(PRODUCT_API);
       const data = await res.json();
       setProducts(Array.isArray(data) ? data.filter((p) => p.active) : []);
     } catch {
@@ -239,7 +239,7 @@ export const SlidersView = () => {
     formData.append("folder", "ems/sliders");
 
     try {
-      const response = await fetch(
+      const response = await authFetch(
         CLOUDINARY_UPLOAD_URL,
         {
           method: "POST",
@@ -314,7 +314,7 @@ export const SlidersView = () => {
 
     if (editing) {
       try {
-        const res = await fetch(`${API}/${editing._id}`, {
+        const res = await authFetch(`${API}/${editing._id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -326,7 +326,7 @@ export const SlidersView = () => {
         toast.error("Failed to update slider");
       }
     } else {
-      const res = await fetch(API, {
+      const res = await authFetch(API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -340,14 +340,14 @@ export const SlidersView = () => {
   };
 
   const del = async (id: string) => {
-    await fetch(`${API}/${id}`, { method: "DELETE" });
+    await authFetch(`${API}/${id}`, { method: "DELETE" });
     setSliders((prev) => prev.filter((s) => s._id !== id));
     setDeleteConfirm(null);
     toast.success("Slider deleted!");
   };
 
   const toggle = async (id: string, active: boolean) => {
-    await fetch(`${API}/${id}`, {
+    await authFetch(`${API}/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ active }),
@@ -382,7 +382,7 @@ export const SlidersView = () => {
     }));
 
     try {
-      await fetch(`${API}/reorder/all`, {
+      await authFetch(`${API}/reorder/all`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sliders: reorderedSliders }),
@@ -398,23 +398,23 @@ export const SlidersView = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-5 shadow-xs">
         <div>
-          <h2 className="text-xl font-black text-slate-900 dark:text-white">Hero Sliders &amp; Banners</h2>
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">Manage homepage banner slides. Drag and drop slides to reorder.</p>
+          <h2 className="text-xl font-black text-[#381932] dark:text-[#FFF3E6]">Hero Sliders &amp; Banners</h2>
+          <p className="text-xs font-semibold text-[#381932] dark:text-[#381932] mt-0.5">Manage homepage banner slides. Drag and drop slides to reorder.</p>
         </div>
         <button 
           type="button" 
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-purple hover:bg-brand-purple-dark text-white px-4 py-2.5 text-xs font-bold shadow-md shadow-purple-600/20 active:scale-95 transition-all cursor-pointer" 
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#381932] hover:opacity-90 text-[#FFF3E6] px-4 py-2.5 text-xs font-bold shadow-md shadow-[#381932]/20 active:scale-95 transition-all cursor-pointer" 
           onClick={openAdd}
         >
           + Add Slider
         </button>
       </div>
 
-      <div className="flex items-start gap-2.5 rounded-2xl bg-purple-50 dark:bg-purple-950/40 p-4 text-xs font-semibold text-slate-600 dark:text-slate-300 border border-purple-100 dark:border-purple-900/50">
-        <Lightbulb size={16} className="mt-0.5 shrink-0 text-brand-purple dark:text-purple-400" />
-        <span><strong className="font-extrabold text-slate-900 dark:text-white">Pro Tip:</strong> Drag and drop slides to reorder their display order on the homepage banner.</span>
+      <div className="flex items-start gap-2.5 rounded-2xl bg-[#FFF3E6] dark:bg-[#381932]/40 p-4 text-xs font-semibold text-[#381932] dark:text-[#381932] border border-[#381932] dark:border-[#381932]/50">
+        <Lightbulb size={16} className="mt-0.5 shrink-0 text-[#381932] dark:text-[#381932]" />
+        <span><strong className="font-extrabold text-[#381932] dark:text-[#FFF3E6]">Pro Tip:</strong> Drag and drop slides to reorder their display order on the homepage banner.</span>
       </div>
 
       <div className="space-y-3">
@@ -422,7 +422,7 @@ export const SlidersView = () => {
           <div
             key={slide._id}
             className={cn(
-              'flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-xs transition-all',
+              'flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-4 shadow-xs transition-all',
               !slide.active && 'opacity-60',
               draggedIndex === idx && 'opacity-40'
             )}
@@ -432,15 +432,15 @@ export const SlidersView = () => {
             onDragEnd={handleDragEnd}
           >
             <div className="flex items-center gap-3 min-w-0 flex-1">
-              <span className="shrink-0 cursor-grab text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"><GripVertical size={18} /></span>
-              <span className="shrink-0 text-xs font-black text-slate-400 dark:text-slate-500">#{idx + 1}</span>
-              <img src={slide.image} alt={slide.headline} className="h-14 w-24 shrink-0 rounded-xl object-cover border border-slate-200 dark:border-slate-800" />
+              <span className="shrink-0 cursor-grab text-[#381932] hover:text-[#381932] dark:hover:text-[#381932] transition-colors"><GripVertical size={18} /></span>
+              <span className="shrink-0 text-xs font-black text-[#381932] dark:text-[#381932]">#{idx + 1}</span>
+              <img src={slide.image} alt={slide.headline} className="h-14 w-24 shrink-0 rounded-xl object-cover border border-[#381932] dark:border-[#381932]" />
               <div className="min-w-0 flex-1">
-                {slide.chip && <div className="mb-0.5 inline-block rounded-full bg-purple-100 dark:bg-purple-950/80 px-2 py-0.5 text-[10px] font-extrabold text-brand-purple dark:text-purple-300">{slide.chip}</div>}
-                <div className="truncate text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white">{slide.headline}</div>
-                {slide.subtext && <div className="truncate text-xs font-medium text-slate-500 dark:text-slate-400">{slide.subtext}</div>}
-                <div className="mt-0.5 text-[11px] font-semibold text-slate-400 dark:text-slate-500 truncate">
-                  CTA: <em className="not-italic font-bold text-slate-700 dark:text-slate-300">{slide.ctaText}</em> &rarr; <code className="text-[10px] font-mono">{slide.ctaLink}</code>
+                {slide.chip && <div className="mb-0.5 inline-block rounded-full bg-[#FFF3E6] dark:bg-[#381932]/80 px-2 py-0.5 text-[10px] font-extrabold text-[#381932] dark:text-[#381932]">{slide.chip}</div>}
+                <div className="truncate text-xs sm:text-sm font-extrabold text-[#381932] dark:text-[#FFF3E6]">{slide.headline}</div>
+                {slide.subtext && <div className="truncate text-xs font-medium text-[#381932] dark:text-[#381932]">{slide.subtext}</div>}
+                <div className="mt-0.5 text-[11px] font-semibold text-[#381932] dark:text-[#381932] truncate">
+                  CTA: <em className="not-italic font-bold text-[#381932] dark:text-[#381932]">{slide.ctaText}</em> &rarr; <code className="text-[10px] font-mono">{slide.ctaLink}</code>
                 </div>
               </div>
             </div>
@@ -448,21 +448,21 @@ export const SlidersView = () => {
             <div className="flex items-center gap-1.5 self-end sm:self-center shrink-0">
               <button 
                 type="button" 
-                className="inline-flex items-center gap-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer" 
+                className="inline-flex items-center gap-1 rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3 py-1.5 text-xs font-bold text-[#381932] dark:text-[#381932] hover:bg-[#FFF3E6] dark:hover:bg-[#381932] transition-colors cursor-pointer" 
                 onClick={() => openEdit(slide)}
               >
                 <Pencil size={12} /> Edit
               </button>
               <button 
                 type="button" 
-                className="inline-flex items-center gap-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer" 
+                className="inline-flex items-center gap-1 rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3 py-1.5 text-xs font-bold text-[#381932] dark:text-[#381932] hover:bg-[#FFF3E6] dark:hover:bg-[#381932] transition-colors cursor-pointer" 
                 onClick={() => toggle(slide._id, !slide.active)}
               >
                 {slide.active ? <EyeOff size={12} /> : <Eye size={12} />} {slide.active ? "Hide" : "Show"}
               </button>
               <button
                 type="button"
-                className="inline-flex items-center gap-1 rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50 dark:bg-rose-950/40 px-2.5 py-1.5 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-100 cursor-pointer"
+                className="inline-flex items-center gap-1 rounded-xl border border-[#381932] dark:border-[#381932]/50 bg-[#FFF3E6] dark:bg-[#381932]/40 px-2.5 py-1.5 text-xs font-bold text-[#381932] dark:text-[#381932] hover:bg-[#FFF3E6] cursor-pointer"
                 onClick={() => setDeleteConfirm({ id: slide._id, headline: slide.headline })}
               >
                 <Trash2 size={12} /> Delete
@@ -597,11 +597,11 @@ export const SlidersView = () => {
                     key={preset.name}
                     type="button"
                     className="relative h-12 rounded-lg border-2 transition-colors"
-                    style={{ background: preset.value, borderColor: form.gradient === preset.value ? '#6B21A8' : 'transparent' }}
+                    style={{ background: preset.value, borderColor: form.gradient === preset.value ? '#381932' : 'transparent' }}
                     onClick={() => setForm((f) => ({ ...f, gradient: preset.value }))}
                     title={preset.name}
                   >
-                    {form.gradient === preset.value && <Check size={16} className="absolute inset-0 m-auto text-white" />}
+                    {form.gradient === preset.value && <Check size={16} className="absolute inset-0 m-auto text-[#FFF3E6]" />}
                   </button>
                 ))}
               </div>
@@ -630,7 +630,7 @@ export const SlidersView = () => {
                     <button
                       key={option.value}
                       type="button"
-                      className={`rounded-lg border px-3 py-2 text-sm text-left transition cursor-pointer ${ctaDestination === option.value ? 'border-brand-purple bg-brand-purple/10 text-brand-purple dark:text-purple-300 dark:bg-purple-950/40' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700'}`}
+                      className={`rounded-lg border px-3 py-2 text-sm text-left transition cursor-pointer ${ctaDestination === option.value ? 'border-[#381932] bg-[#A78A9F]/15 text-[#381932] dark:text-[#381932] dark:bg-[#381932]/40' : 'border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] text-[#381932] dark:text-[#FFF3E6] hover:bg-[#FFF3E6] dark:hover:bg-[#381932]'}`}
                       onClick={() => setCtaDestination(option.value)}
                     >
                       {option.label}
@@ -648,26 +648,26 @@ export const SlidersView = () => {
                         onChange={(e) => setCategorySearch(e.target.value)}
                         placeholder="Search categories"
                       />
-                      <div className="max-h-48 overflow-auto rounded-card border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-2">
+                      <div className="max-h-48 overflow-auto rounded-card border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-2">
                         {filteredCategories.length > 0 ? filteredCategories.map((cat) => (
                           <button
                             key={cat._id}
                             type="button"
-                            className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm cursor-pointer ${selectedCategoryId === cat._id ? 'bg-brand-purple/10 text-brand-purple dark:text-purple-300 dark:bg-purple-950/40' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-900 dark:text-white'}`}
+                            className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm cursor-pointer ${selectedCategoryId === cat._id ? 'bg-[#A78A9F]/15 text-[#381932] dark:text-[#381932] dark:bg-[#381932]/40' : 'hover:bg-[#FFF3E6] dark:hover:bg-[#381932]/60 text-[#381932] dark:text-[#FFF3E6]'}`}
                             onClick={() => setSelectedCategoryId(cat._id)}
                           >
                             <span>{cat.name}</span>
-                            <span className="text-xs text-slate-400 dark:text-slate-500">{cat.productCount || 0}</span>
+                            <span className="text-xs text-[#381932] dark:text-[#381932]">{cat.productCount || 0}</span>
                           </button>
                         )) : (
-                          <div className="py-3 text-sm text-slate-400 dark:text-slate-500">No categories found.</div>
+                          <div className="py-3 text-sm text-[#381932] dark:text-[#381932]">No categories found.</div>
                         )}
                       </div>
                       {selectedCategory && (
-                        <div className="rounded-card border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-3 text-sm text-slate-900 dark:text-white">
+                        <div className="rounded-card border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932]/60 p-3 text-sm text-[#381932] dark:text-[#FFF3E6]">
                           <div className="font-semibold">Preview</div>
                           <div className="mt-1">{selectedCategory.name}</div>
-                          <div className="mt-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-white">{`/category/${encodeURIComponent(selectedCategory.name)}`}</div>
+                          <div className="mt-1 rounded-lg bg-[#FFF3E6] dark:bg-[#381932] border border-[#381932] dark:border-[#381932] px-3 py-2 text-sm text-[#381932] dark:text-[#FFF3E6]">{`/category/${encodeURIComponent(selectedCategory.name)}`}</div>
                           <button type="button" className="adm-btn-secondary mt-3 inline-flex items-center gap-2" onClick={() => copyToClipboard(`/category/${encodeURIComponent(selectedCategory.name)}`)}>
                             <Copy size={14} /> Copy CTA Link
                           </button>
@@ -684,26 +684,26 @@ export const SlidersView = () => {
                         onChange={(e) => setSubcategorySearch(e.target.value)}
                         placeholder="Search subcategories"
                       />
-                      <div className="max-h-48 overflow-auto rounded-card border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-2">
+                      <div className="max-h-48 overflow-auto rounded-card border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-2">
                         {subcategoryOptions.length > 0 ? subcategoryOptions.map((sub) => (
                           <button
                             key={`${sub.parentName}-${sub.name}`}
                             type="button"
-                            className={`flex w-full flex-col items-start rounded-lg px-3 py-2 text-left text-sm cursor-pointer ${selectedSubcategory === sub.name ? 'bg-brand-purple/10 text-brand-purple dark:text-purple-300 dark:bg-purple-950/40' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-900 dark:text-white'}`}
+                            className={`flex w-full flex-col items-start rounded-lg px-3 py-2 text-left text-sm cursor-pointer ${selectedSubcategory === sub.name ? 'bg-[#A78A9F]/15 text-[#381932] dark:text-[#381932] dark:bg-[#381932]/40' : 'hover:bg-[#FFF3E6] dark:hover:bg-[#381932]/60 text-[#381932] dark:text-[#FFF3E6]'}`}
                             onClick={() => setSelectedSubcategory(sub.name)}
                           >
                             <span className="font-medium">{sub.name}</span>
-                            <span className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{sub.parentName}</span>
+                            <span className="mt-0.5 text-xs text-[#381932] dark:text-[#381932]">{sub.parentName}</span>
                           </button>
                         )) : (
-                          <div className="py-3 text-sm text-slate-400 dark:text-slate-500">No subcategories found.</div>
+                          <div className="py-3 text-sm text-[#381932] dark:text-[#381932]">No subcategories found.</div>
                         )}
                       </div>
                       {selectedSubcategory && (
-                        <div className="rounded-card border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-3 text-sm text-slate-900 dark:text-white">
+                        <div className="rounded-card border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932]/60 p-3 text-sm text-[#381932] dark:text-[#FFF3E6]">
                           <div className="font-semibold">Preview</div>
                           <div className="mt-1">{selectedSubcategory}</div>
-                          <div className="mt-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-white">{`/category/${encodeURIComponent(selectedCategory?.name || '')}/${encodeURIComponent(selectedSubcategory)}`}</div>
+                          <div className="mt-1 rounded-lg bg-[#FFF3E6] dark:bg-[#381932] border border-[#381932] dark:border-[#381932] px-3 py-2 text-sm text-[#381932] dark:text-[#FFF3E6]">{`/category/${encodeURIComponent(selectedCategory?.name || '')}/${encodeURIComponent(selectedSubcategory)}`}</div>
                           <button type="button" className="adm-btn-secondary mt-3 inline-flex items-center gap-2" onClick={() => copyToClipboard(`/category/${encodeURIComponent(selectedCategory?.name || '')}/${encodeURIComponent(selectedSubcategory)}`)}>
                             <Copy size={14} /> Copy CTA Link
                           </button>
@@ -720,30 +720,30 @@ export const SlidersView = () => {
                         onChange={(e) => setProductSearch(e.target.value)}
                         placeholder="Search products"
                       />
-                      <div className="max-h-48 overflow-auto rounded-card border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-2">
+                      <div className="max-h-48 overflow-auto rounded-card border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-2">
                         {filteredProducts.length > 0 ? filteredProducts.map((prod) => (
                           <button
                             key={prod._id}
                             type="button"
-                            className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left cursor-pointer ${selectedProductId === prod._id ? 'bg-brand-purple/10 text-brand-purple dark:text-purple-300 dark:bg-purple-950/40' : 'hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-900 dark:text-white'}`}
+                            className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left cursor-pointer ${selectedProductId === prod._id ? 'bg-[#A78A9F]/15 text-[#381932] dark:text-[#381932] dark:bg-[#381932]/40' : 'hover:bg-[#FFF3E6] dark:hover:bg-[#381932]/60 text-[#381932] dark:text-[#FFF3E6]'}`}
                             onClick={() => setSelectedProductId(prod._id)}
                           >
-                            <img src={prod.image} alt={prod.name} className="h-10 w-10 rounded-md object-cover border border-slate-200 dark:border-slate-700" />
+                            <img src={prod.image} alt={prod.name} className="h-10 w-10 rounded-md object-cover border border-[#381932] dark:border-[#381932]" />
                             <div className="min-w-0 flex-1">
                               <div className="text-sm font-medium truncate">{prod.name}</div>
-                              <div className="mt-0.5 text-xs text-slate-400 dark:text-slate-500 truncate">{prod.categoryName}</div>
+                              <div className="mt-0.5 text-xs text-[#381932] dark:text-[#381932] truncate">{prod.categoryName}</div>
                             </div>
-                            <span className="text-xs text-slate-400 dark:text-slate-500 font-bold">₹{prod.price}</span>
+                            <span className="text-xs text-[#381932] dark:text-[#381932] font-bold">₹{prod.price}</span>
                           </button>
                         )) : (
-                          <div className="py-3 text-sm text-slate-400 dark:text-slate-500">No products found.</div>
+                          <div className="py-3 text-sm text-[#381932] dark:text-[#381932]">No products found.</div>
                         )}
                       </div>
                       {selectedProduct && (
-                        <div className="rounded-card border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-3 text-sm text-slate-900 dark:text-white">
+                        <div className="rounded-card border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932]/60 p-3 text-sm text-[#381932] dark:text-[#FFF3E6]">
                           <div className="font-semibold">Preview</div>
                           <div className="mt-1">{selectedProduct.name}</div>
-                          <div className="mt-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-white">{`/product/${selectedProduct._id}`}</div>
+                          <div className="mt-1 rounded-lg bg-[#FFF3E6] dark:bg-[#381932] border border-[#381932] dark:border-[#381932] px-3 py-2 text-sm text-[#381932] dark:text-[#FFF3E6]">{`/product/${selectedProduct._id}`}</div>
                           <button type="button" className="adm-btn-secondary mt-3 inline-flex items-center gap-2" onClick={() => copyToClipboard(`/product/${selectedProduct._id}`)}>
                             <Copy size={14} /> Copy CTA Link
                           </button>
@@ -760,9 +760,9 @@ export const SlidersView = () => {
                         onChange={(e) => setCustomCtaUrl(e.target.value)}
                         placeholder="/contact or /about"
                       />
-                      <div className="rounded-card border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-3 text-sm text-slate-900 dark:text-white">
+                      <div className="rounded-card border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932]/60 p-3 text-sm text-[#381932] dark:text-[#FFF3E6]">
                         <div className="font-semibold">Preview</div>
-                        <div className="mt-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-white">{customCtaUrl || form.ctaLink}</div>
+                        <div className="mt-1 rounded-lg bg-[#FFF3E6] dark:bg-[#381932] border border-[#381932] dark:border-[#381932] px-3 py-2 text-sm text-[#381932] dark:text-[#FFF3E6]">{customCtaUrl || form.ctaLink}</div>
                         <button type="button" className="adm-btn-secondary mt-3 inline-flex items-center gap-2" onClick={() => copyToClipboard(customCtaUrl || form.ctaLink)}>
                           <Copy size={14} /> Copy CTA Link
                         </button>

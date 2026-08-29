@@ -16,7 +16,7 @@ const SUGGESTIONS = [
 
 export const AIPlannerPage: React.FC = () => {
   const navigate = useNavigate();
-  const { messages, loading, sendMessage, input, setInput } = useAI();
+  const { messages, loading, sendMessage, retryLast, canRetry, input, setInput } = useAI();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -38,29 +38,29 @@ export const AIPlannerPage: React.FC = () => {
     <div className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 md:px-8 animate-fade-in pb-24 sm:pb-12">
       {/* Header */}
       <div className="mb-8 text-center max-w-2xl mx-auto">
-        <div className="inline-flex items-center gap-1.5 rounded-full bg-[#F4F3F0] dark:bg-[#262626] px-3.5 py-1 text-xs font-semibold text-[#1C1C1C] dark:text-white mb-3">
-          <Sparkles size={13} className="text-amber-600" />
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-[#FFF3E6] dark:bg-[#381932] px-3.5 py-1 text-xs font-semibold text-[#381932] dark:text-[#FFF3E6] mb-3">
+          <Sparkles size={13} className="text-[#A78A9F]" />
           <span>AI-Powered Event Concierge</span>
         </div>
-        <h1 className="font-editorial text-3xl sm:text-4xl font-bold tracking-tight text-[#1C1C1C] dark:text-white">
+        <h1 className="font-editorial text-3xl sm:text-4xl font-bold tracking-tight text-[#381932] dark:text-[#FFF3E6]">
           Plan Your Dream Celebration
         </h1>
-        <p className="mt-2 text-xs sm:text-sm text-[#6F6F6B] dark:text-[#A0A09C]">
+        <p className="mt-2 text-xs sm:text-sm text-[#381932] dark:text-[#381932]">
           Tell our intelligent stylist what you're celebrating, your theme ideas, or budget. We'll curate exact matching packages in real time.
         </p>
       </div>
 
       {/* Main Chat & Recommendation Interface */}
-      <div className="rounded-2xl border border-[#E8E7E3] bg-white shadow-card overflow-hidden dark:bg-[#1E1E1E] dark:border-[#2E2E2E] flex flex-col h-[min(72dvh,650px)] sm:h-[650px]">
+      <div className="rounded-2xl border border-[#381932]/30 bg-[#FFF3E6] shadow-card overflow-hidden dark:bg-[#381932] dark:border-[#381932] flex flex-col h-[min(72dvh,650px)] sm:h-[650px]">
         {/* Messages Feed */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
           {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center max-w-md mx-auto">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F4F3F0] dark:bg-[#262626] mb-3 text-[#1C1C1C] dark:text-white">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FFF3E6] dark:bg-[#381932] mb-3 text-[#381932] dark:text-[#FFF3E6]">
                 <Bot size={24} />
               </div>
-              <h3 className="text-base font-bold text-[#1C1C1C] dark:text-white">What are we celebrating?</h3>
-              <p className="text-xs text-[#6F6F6B] dark:text-[#A0A09C] mt-1 mb-6">
+              <h3 className="text-base font-bold text-[#381932] dark:text-[#FFF3E6]">What are we celebrating?</h3>
+              <p className="text-xs text-[#381932] dark:text-[#381932] mt-1 mb-6">
                 Pick a popular inspiration below or type your custom event requirements.
               </p>
 
@@ -70,7 +70,7 @@ export const AIPlannerPage: React.FC = () => {
                     key={i}
                     type="button"
                     onClick={() => handleSuggestionClick(suggestion)}
-                    className="text-left text-xs font-medium rounded-xl border border-[#E8E7E3] bg-[#FAFAF8] p-3 text-[#1C1C1C] hover:border-[#1C1C1C] hover:bg-white dark:bg-[#181818] dark:border-[#2E2E2E] dark:text-neutral-200 dark:hover:border-white transition-all cursor-pointer shadow-xs"
+                    className="text-left text-xs font-medium rounded-xl border border-[#381932]/30 bg-[#FFF3E6] p-3 text-[#381932] hover:border-[#381932] hover:bg-[#FFF3E6] dark:bg-[#381932] dark:border-[#381932] dark:text-[#381932] dark:hover:border-[#FFF3E6] transition-all cursor-pointer shadow-xs"
                   >
                     ✨ {suggestion}
                   </button>
@@ -86,8 +86,8 @@ export const AIPlannerPage: React.FC = () => {
                 <div
                   className={`max-w-[85%] rounded-2xl p-4 text-xs sm:text-sm leading-relaxed ${
                     msg.sender === 'user'
-                      ? 'bg-[#1C1C1C] text-white dark:bg-white dark:text-black rounded-tr-xs shadow-xs'
-                      : 'bg-[#F4F3F0] text-[#1C1C1C] dark:bg-[#262626] dark:text-white rounded-tl-xs'
+                      ? 'bg-[#381932] text-[#FFF3E6] dark:bg-[#FFF3E6] dark:text-[#381932] rounded-tr-xs shadow-xs'
+                      : 'bg-[#FFF3E6] text-[#381932] dark:bg-[#381932] dark:text-[#FFF3E6] rounded-tl-xs'
                   }`}
                 >
                   <p className="whitespace-pre-line">{msg.text}</p>
@@ -95,9 +95,9 @@ export const AIPlannerPage: React.FC = () => {
 
                 {/* Product Recommendation Rail */}
                 {msg.products && msg.products.length > 0 && (
-                  <div className="w-full rounded-xl border border-[#E8E7E3] bg-[#FAFAF8] p-4 dark:bg-[#161616] dark:border-[#2E2E2E] mt-1">
-                    <div className="mb-3 flex items-center gap-1.5 text-xs font-bold text-[#1C1C1C] dark:text-white uppercase tracking-wider">
-                      <Sparkles size={13} className="text-amber-600" />
+                  <div className="w-full rounded-xl border border-[#381932]/30 bg-[#FFF3E6] p-4 dark:bg-[#381932] dark:border-[#381932] mt-1">
+                    <div className="mb-3 flex items-center gap-1.5 text-xs font-bold text-[#381932] dark:text-[#FFF3E6] uppercase tracking-wider">
+                      <Sparkles size={13} className="text-[#A78A9F]" />
                       Recommended Setups For Your Event
                     </div>
 
@@ -145,24 +145,34 @@ export const AIPlannerPage: React.FC = () => {
           )}
 
           {loading && (
-            <div className="flex items-center gap-2 text-xs text-[#6F6F6B] dark:text-[#A0A09C] bg-[#F4F3F0] dark:bg-[#262626] px-4 py-2.5 rounded-2xl w-fit">
-              <Sparkles size={14} className="animate-spin text-amber-600" />
+            <div className="flex items-center gap-2 text-xs text-[#381932] dark:text-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-4 py-2.5 rounded-2xl w-fit">
+              <Sparkles size={14} className="animate-spin text-[#A78A9F]" />
               <span>Analyzing catalog &amp; crafting custom suggestions...</span>
             </div>
+          )}
+
+          {canRetry && !loading && (
+            <button
+              type="button"
+              onClick={retryLast}
+              className="w-fit rounded-full border border-[#381932] bg-[#FFF3E6] px-4 py-2 text-xs font-serif font-semibold uppercase tracking-wide text-[#381932] hover:bg-[#A78A9F]/15 transition-colors"
+            >
+              Try again
+            </button>
           )}
 
           <div ref={messagesEndRef} />
         </div>
 
         {/* Input Bar */}
-        <form onSubmit={handleSubmit} className="border-t border-[#E8E7E3] bg-white p-3 sm:p-4 dark:bg-[#1A1A1A] dark:border-[#2E2E2E] flex items-center gap-2">
+        <form onSubmit={handleSubmit} className="border-t border-[#381932]/30 bg-[#FFF3E6] p-3 sm:p-4 dark:bg-[#381932] dark:border-[#381932] flex items-center gap-2">
           <input
             ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="e.g. We want a terrace birthday surprise for wife under ₹5,000..."
-            className="flex-1 rounded-full border border-[#E8E7E3] bg-[#FAFAF8] px-4 py-2.5 text-xs sm:text-sm text-[#1C1C1C] outline-none placeholder:text-[#6F6F6B]/60 focus:border-[#1C1C1C] dark:bg-[#262626] dark:border-[#333] dark:text-white"
+            className="flex-1 rounded-full border border-[#381932]/30 bg-[#FFF3E6] px-4 py-2.5 text-xs sm:text-sm text-[#381932] outline-none placeholder:text-[#381932]/60 focus:border-[#381932] dark:bg-[#381932] dark:border-[#381932] dark:text-[#FFF3E6]"
           />
           <Button
             type="submit"

@@ -181,34 +181,34 @@ export default function OrderDetailsPage() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="mb-4 inline-flex items-center gap-2 text-sm font-bold text-brand-purple dark:text-purple-400 hover:underline cursor-pointer print:hidden"
+          className="mb-4 inline-flex items-center gap-2 text-sm font-bold text-[#381932] dark:text-[#381932] hover:underline cursor-pointer print:hidden"
         >
           <ArrowLeft size={16} /> Back to Orders
         </button>
 
         {loading ? (
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-12 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">
+          <div className="rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-12 text-center text-sm font-semibold text-[#381932] dark:text-[#381932]">
             Loading order details...
           </div>
         ) : !order ? (
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-12 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">
+          <div className="rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-12 text-center text-sm font-semibold text-[#381932] dark:text-[#381932]">
             Order not found.
           </div>
         ) : (
           <div className="space-y-6">
             
             {/* Header & Price Banner */}
-            <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm md:p-7 print:hidden">
+            <section className="rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-5 shadow-sm md:p-7 print:hidden">
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <div className="flex items-center gap-2 text-brand-purple dark:text-purple-400">
+                  <div className="flex items-center gap-2 text-[#381932] dark:text-[#381932]">
                     <Package size={18} />
                     <span className="text-xs uppercase font-extrabold tracking-wider">Order Details</span>
                   </div>
-                  <h1 className="mt-1 text-2xl font-black text-slate-900 dark:text-white">
+                  <h1 className="mt-1 text-2xl font-black text-[#381932] dark:text-[#FFF3E6]">
                     {order.orderNumber || `Order #${order._id.slice(-8)}`}
                   </h1>
-                  <p className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400">
+                  <p className="mt-1 text-xs font-medium text-[#381932] dark:text-[#381932]">
                     Track your decor setup workflow and event timing details below.
                   </p>
                 </div>
@@ -217,43 +217,43 @@ export default function OrderDetailsPage() {
                   <button
                     type="button"
                     onClick={() => window.print()}
-                    className="inline-flex items-center gap-2 rounded-xl bg-brand-purple hover:bg-brand-purple-dark text-white px-4 py-2.5 text-xs font-bold shadow-md shadow-purple-600/20 active:scale-95 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#381932] hover:opacity-90 text-[#FFF3E6] px-4 py-2.5 text-xs font-bold shadow-md shadow-[#381932]/20 active:scale-95 transition-all cursor-pointer"
                   >
                     <Download size={15} /> Download Invoice
                   </button>
 
-                  <div className="rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/80 px-4 py-3 text-sm text-slate-900 dark:text-white text-right">
-                    <div className="text-xs uppercase font-extrabold text-slate-400 dark:text-slate-500">Total Paid</div>
-                    <div className="text-xl font-black text-slate-900 dark:text-white">₹{amount.toLocaleString('en-IN')}</div>
+                  <div className="rounded-xl border border-[#381932] dark:border-[#381932]/80 bg-[#FFF3E6] dark:bg-[#381932]/80 px-4 py-3 text-sm text-[#381932] dark:text-[#FFF3E6] text-right">
+                    <div className="text-xs uppercase font-extrabold text-[#381932] dark:text-[#381932]">Total Paid</div>
+                    <div className="text-xl font-black text-[#381932] dark:text-[#FFF3E6]">₹{amount.toLocaleString('en-IN')}</div>
                   </div>
                 </div>
               </div>
 
               {/* Step Progress Visualizer */}
-              <div className="mt-6 rounded-2xl border border-purple-100 dark:border-slate-800 bg-gradient-to-r from-purple-50/60 to-slate-50 dark:from-purple-950/30 dark:to-slate-900 p-4 sm:p-5">
+              <div className="mt-6 rounded-2xl border border-[#381932] dark:border-[#381932] bg-gradient-to-r from-[#FFF3E6]/60 to-[#FFF3E6] dark:from-[#381932]/30 dark:to-[#381932] p-4 sm:p-5">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                   <div>
-                    <div className="text-sm font-extrabold text-brand-purple dark:text-purple-300">Order Progress</div>
-                    <div className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Track current status of your decoration team.</div>
+                    <div className="text-sm font-extrabold text-[#381932] dark:text-[#381932]">Order Progress</div>
+                    <div className="mt-0.5 text-xs text-[#381932] dark:text-[#381932]">Track current status of your decoration team.</div>
                   </div>
                   <div className="flex-1 max-w-2xl">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
                       {statusSteps.map((step, index) => {
                         const state = getStepState(index);
                         const stateClasses = state === 'completed'
-                          ? 'bg-emerald-500 text-white border-emerald-500'
+                          ? 'bg-[#381932] text-[#FFF3E6] border-[#381932]'
                           : state === 'current'
-                          ? 'bg-brand-purple text-white border-brand-purple shadow-md shadow-purple-500/20 ring-2 ring-purple-400/30'
+                          ? 'bg-[#381932] text-[#FFF3E6] border-[#381932] shadow-md shadow-[#381932]/20 ring-2 ring-[#381932]/30'
                           : state === 'cancelled'
-                          ? 'bg-rose-500 text-white border-rose-500'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700';
+                          ? 'bg-[#381932] text-[#FFF3E6] border-[#381932]'
+                          : 'bg-[#FFF3E6] dark:bg-[#381932] text-[#381932] dark:text-[#381932] border-[#381932] dark:border-[#381932]';
 
                         return (
-                          <div key={step.key} className="flex items-center gap-2.5 rounded-xl border border-slate-200/60 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 p-2">
+                          <div key={step.key} className="flex items-center gap-2.5 rounded-xl border border-[#381932]/60 dark:border-[#381932] bg-[#FFF3E6]/70 dark:bg-[#381932]/70 p-2">
                             <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-bold ${stateClasses}`}>
                               {state === 'completed' ? '✓' : state === 'current' ? '●' : state === 'cancelled' ? '✕' : index + 1}
                             </div>
-                            <div className="text-xs font-bold text-slate-900 dark:text-slate-200 truncate">{step.label}</div>
+                            <div className="text-xs font-bold text-[#381932] dark:text-[#381932] truncate">{step.label}</div>
                           </div>
                         );
                       })}
@@ -264,17 +264,17 @@ export default function OrderDetailsPage() {
 
               {/* Admin Status Controls */}
               {auth.isAdmin && (
-                <div className="mt-5 rounded-2xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-950/20 p-4">
+                <div className="mt-5 rounded-2xl border border-[#381932] dark:border-[#381932]/50 bg-[#FFF3E6]/50 dark:bg-[#381932]/20 p-4">
                   <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                     <div>
-                      <div className="text-sm font-extrabold text-slate-900 dark:text-white">Admin Status Control</div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">Update event setup progress for this order.</div>
+                      <div className="text-sm font-extrabold text-[#381932] dark:text-[#FFF3E6]">Admin Status Control</div>
+                      <div className="text-xs text-[#381932] dark:text-[#381932]">Update event setup progress for this order.</div>
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
                       <select
                         value={selectedStatus}
                         onChange={e => setSelectedStatus(e.target.value)}
-                        className="rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-xs font-bold text-slate-900 dark:text-white outline-none"
+                        className="rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3 py-2 text-xs font-bold text-[#381932] dark:text-[#FFF3E6] outline-none"
                       >
                         <option value="Pending">Pending</option>
                         <option value="Confirmed">Confirmed</option>
@@ -288,46 +288,46 @@ export default function OrderDetailsPage() {
                         type="button"
                         onClick={() => void updateOrderStatus()}
                         disabled={savingStatus}
-                        className="rounded-xl bg-brand-purple px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-brand-purple-dark transition-all disabled:opacity-60 cursor-pointer"
+                        className="rounded-xl bg-[#381932] px-4 py-2 text-xs font-bold text-[#FFF3E6] shadow-sm hover:opacity-90 transition-all disabled:opacity-60 cursor-pointer"
                       >
                         {savingStatus ? 'Saving...' : 'Update Status'}
                       </button>
                     </div>
                   </div>
-                  {statusMessage && <div className="mt-2 text-xs font-bold text-emerald-600 dark:text-emerald-400">{statusMessage}</div>}
+                  {statusMessage && <div className="mt-2 text-xs font-bold text-[#381932] dark:text-[#381932]">{statusMessage}</div>}
                 </div>
               )}
             </section>
 
             {/* Summary Grid: Event Date, Time, Venue & Payment details */}
             <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-              <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm md:p-7">
-                <h2 className="text-base font-extrabold text-slate-900 dark:text-white mb-4">Booking &amp; Event Summary</h2>
+              <div className="rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-5 shadow-sm md:p-7">
+                <h2 className="text-base font-extrabold text-[#381932] dark:text-[#FFF3E6] mb-4">Booking &amp; Event Summary</h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {summaryItems.map(item => (
-                    <div key={item.label} className="rounded-xl border border-slate-150 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/50 p-3">
-                      <div className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500">{item.label}</div>
-                      <div className="mt-1 text-sm font-extrabold text-slate-900 dark:text-white break-words">{item.value}</div>
+                    <div key={item.label} className="rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6]/70 dark:bg-[#381932]/50 p-3">
+                      <div className="text-[11px] font-extrabold uppercase tracking-wider text-[#381932] dark:text-[#381932]">{item.label}</div>
+                      <div className="mt-1 text-sm font-extrabold text-[#381932] dark:text-[#FFF3E6] break-words">{item.value}</div>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Payment IDs Card */}
-              <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm md:p-7">
-                <h2 className="text-base font-extrabold text-slate-900 dark:text-white mb-4">Payment Verification</h2>
+              <div className="rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-5 shadow-sm md:p-7">
+                <h2 className="text-base font-extrabold text-[#381932] dark:text-[#FFF3E6] mb-4">Payment Verification</h2>
                 <div className="space-y-3">
-                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/50 p-3">
+                  <div className="rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6]/70 dark:bg-[#381932]/50 p-3">
                     <div className="flex items-center justify-between gap-2">
                       <div>
-                        <div className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500">Razorpay Payment ID</div>
-                        <div className="mt-1 break-all text-xs font-mono font-bold text-slate-900 dark:text-slate-200">{order.razorpayPaymentId || 'N/A'}</div>
+                        <div className="text-[11px] font-extrabold uppercase tracking-wider text-[#381932] dark:text-[#381932]">Razorpay Payment ID</div>
+                        <div className="mt-1 break-all text-xs font-mono font-bold text-[#381932] dark:text-[#381932]">{order.razorpayPaymentId || 'N/A'}</div>
                       </div>
                       {order.razorpayPaymentId && (
                         <button
                           type="button"
                           onClick={() => copyToClipboard(order.razorpayPaymentId || '', 'payment')}
-                          className="rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer"
+                          className="rounded-lg border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-2.5 py-1.5 text-xs font-bold text-[#381932] dark:text-[#381932] cursor-pointer"
                         >
                           {copiedField === 'payment' ? 'Copied' : <><Copy size={13} className="mr-1 inline" /> Copy</>}
                         </button>
@@ -335,17 +335,17 @@ export default function OrderDetailsPage() {
                     </div>
                   </div>
 
-                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/50 p-3">
+                  <div className="rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6]/70 dark:bg-[#381932]/50 p-3">
                     <div className="flex items-center justify-between gap-2">
                       <div>
-                        <div className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500">Razorpay Order ID</div>
-                        <div className="mt-1 break-all text-xs font-mono font-bold text-slate-900 dark:text-slate-200">{order.razorpayOrderId || 'N/A'}</div>
+                        <div className="text-[11px] font-extrabold uppercase tracking-wider text-[#381932] dark:text-[#381932]">Razorpay Order ID</div>
+                        <div className="mt-1 break-all text-xs font-mono font-bold text-[#381932] dark:text-[#381932]">{order.razorpayOrderId || 'N/A'}</div>
                       </div>
                       {order.razorpayOrderId && (
                         <button
                           type="button"
                           onClick={() => copyToClipboard(order.razorpayOrderId || '', 'order')}
-                          className="rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer"
+                          className="rounded-lg border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-2.5 py-1.5 text-xs font-bold text-[#381932] dark:text-[#381932] cursor-pointer"
                         >
                           {copiedField === 'order' ? 'Copied' : <><Copy size={13} className="mr-1 inline" /> Copy</>}
                         </button>
@@ -358,72 +358,72 @@ export default function OrderDetailsPage() {
 
             {/* Customer & Package Details */}
             <section className="grid gap-6 lg:grid-cols-2">
-              <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm md:p-7">
-                <div className="flex items-center gap-2 text-brand-purple dark:text-purple-400 mb-4 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-5 shadow-sm md:p-7">
+                <div className="flex items-center gap-2 text-[#381932] dark:text-[#381932] mb-4 border-b border-[#381932] dark:border-[#381932] pb-3">
                   <User size={18} />
-                  <h2 className="text-base font-extrabold text-slate-900 dark:text-white">Customer Details</h2>
+                  <h2 className="text-base font-extrabold text-[#381932] dark:text-[#FFF3E6]">Customer Details</h2>
                 </div>
-                <div className="space-y-2.5 text-xs text-slate-700 dark:text-slate-300 font-medium">
-                  <div><span className="font-bold text-slate-900 dark:text-white">Name:</span> {customer.name || bookingDetailsObj?.name || 'N/A'}</div>
-                  <div><span className="font-bold text-slate-900 dark:text-white">Email:</span> {customer.email || bookingDetailsObj?.email || 'N/A'}</div>
-                  <div><span className="font-bold text-slate-900 dark:text-white">Phone:</span> {customer.phone || bookingDetailsObj?.mobile || 'N/A'}</div>
-                  <div><span className="font-bold text-slate-900 dark:text-white">Venue Address:</span> {venueLocationVal}</div>
+                <div className="space-y-2.5 text-xs text-[#381932] dark:text-[#381932] font-medium">
+                  <div><span className="font-bold text-[#381932] dark:text-[#FFF3E6]">Name:</span> {customer.name || bookingDetailsObj?.name || 'N/A'}</div>
+                  <div><span className="font-bold text-[#381932] dark:text-[#FFF3E6]">Email:</span> {customer.email || bookingDetailsObj?.email || 'N/A'}</div>
+                  <div><span className="font-bold text-[#381932] dark:text-[#FFF3E6]">Phone:</span> {customer.phone || bookingDetailsObj?.mobile || 'N/A'}</div>
+                  <div><span className="font-bold text-[#381932] dark:text-[#FFF3E6]">Venue Address:</span> {venueLocationVal}</div>
                   {bookingDetailsObj?.requests && (
-                    <div><span className="font-bold text-slate-900 dark:text-white">Special Instructions:</span> {bookingDetailsObj.requests}</div>
+                    <div><span className="font-bold text-[#381932] dark:text-[#FFF3E6]">Special Instructions:</span> {bookingDetailsObj.requests}</div>
                   )}
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm md:p-7">
-                <div className="flex items-center gap-2 text-brand-purple dark:text-purple-400 mb-4 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-5 shadow-sm md:p-7">
+                <div className="flex items-center gap-2 text-[#381932] dark:text-[#381932] mb-4 border-b border-[#381932] dark:border-[#381932] pb-3">
                   <Package size={18} />
-                  <h2 className="text-base font-extrabold text-slate-900 dark:text-white">Product &amp; Package Details</h2>
+                  <h2 className="text-base font-extrabold text-[#381932] dark:text-[#FFF3E6]">Product &amp; Package Details</h2>
                 </div>
-                <div className="space-y-2.5 text-xs text-slate-700 dark:text-slate-300 font-medium">
-                  <div><span className="font-bold text-slate-900 dark:text-white">Package Name:</span> {product.name || order.productName || 'N/A'}</div>
-                  <div><span className="font-bold text-slate-900 dark:text-white">Category:</span> {product.categoryName || order.categoryName || 'N/A'}</div>
+                <div className="space-y-2.5 text-xs text-[#381932] dark:text-[#381932] font-medium">
+                  <div><span className="font-bold text-[#381932] dark:text-[#FFF3E6]">Package Name:</span> {product.name || order.productName || 'N/A'}</div>
+                  <div><span className="font-bold text-[#381932] dark:text-[#FFF3E6]">Category:</span> {product.categoryName || order.categoryName || 'N/A'}</div>
                   { (product.subcategory || order.subcategory) && (
-                    <div><span className="font-bold text-slate-900 dark:text-white">Subcategory:</span> {product.subcategory || order.subcategory}</div>
+                    <div><span className="font-bold text-[#381932] dark:text-[#FFF3E6]">Subcategory:</span> {product.subcategory || order.subcategory}</div>
                   )}
-                  <div><span className="font-bold text-slate-900 dark:text-white">Base Package Price:</span> ₹{Number(product.price || order.packagePrice || 0).toLocaleString('en-IN')}</div>
+                  <div><span className="font-bold text-[#381932] dark:text-[#FFF3E6]">Base Package Price:</span> ₹{Number(product.price || order.packagePrice || 0).toLocaleString('en-IN')}</div>
                 </div>
               </div>
             </section>
 
             {/* Addons & Activities */}
             <section className="grid gap-6 lg:grid-cols-2">
-              <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm md:p-7">
-                <div className="flex items-center gap-2 text-brand-purple dark:text-purple-400 mb-4 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-5 shadow-sm md:p-7">
+                <div className="flex items-center gap-2 text-[#381932] dark:text-[#381932] mb-4 border-b border-[#381932] dark:border-[#381932] pb-3">
                   <CheckCircle2 size={18} />
-                  <h2 className="text-base font-extrabold text-slate-900 dark:text-white">Selected Add-ons</h2>
+                  <h2 className="text-base font-extrabold text-[#381932] dark:text-[#FFF3E6]">Selected Add-ons</h2>
                 </div>
                 {addons.length === 0 ? (
-                  <div className="text-xs text-slate-400 dark:text-slate-500 font-medium">No add-ons selected.</div>
+                  <div className="text-xs text-[#381932] dark:text-[#381932] font-medium">No add-ons selected.</div>
                 ) : (
                   <div className="space-y-2">
                     {addons.map((item: any, index: number) => (
-                      <div key={`${item.name}-${index}`} className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 px-3.5 py-2.5 text-xs font-bold text-slate-900 dark:text-white">
+                      <div key={`${item.name}-${index}`} className="flex items-center justify-between rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932]/60 px-3.5 py-2.5 text-xs font-bold text-[#381932] dark:text-[#FFF3E6]">
                         <span>{item.name}</span>
-                        <span className="text-brand-purple dark:text-purple-300">+₹{Number(item.price || 0).toLocaleString('en-IN')}</span>
+                        <span className="text-[#381932] dark:text-[#381932]">+₹{Number(item.price || 0).toLocaleString('en-IN')}</span>
                       </div>
                     ))}
                   </div>
                 )}
               </div>
 
-              <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm md:p-7">
-                <div className="flex items-center gap-2 text-brand-purple dark:text-purple-400 mb-4 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-5 shadow-sm md:p-7">
+                <div className="flex items-center gap-2 text-[#381932] dark:text-[#381932] mb-4 border-b border-[#381932] dark:border-[#381932] pb-3">
                   <CalendarDays size={18} />
-                  <h2 className="text-base font-extrabold text-slate-900 dark:text-white">Selected Activities</h2>
+                  <h2 className="text-base font-extrabold text-[#381932] dark:text-[#FFF3E6]">Selected Activities</h2>
                 </div>
                 {activities.length === 0 ? (
-                  <div className="text-xs text-slate-400 dark:text-slate-500 font-medium">No activities selected.</div>
+                  <div className="text-xs text-[#381932] dark:text-[#381932] font-medium">No activities selected.</div>
                 ) : (
                   <div className="space-y-2">
                     {activities.map((item: any, index: number) => (
-                      <div key={`${item.name}-${index}`} className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 px-3.5 py-2.5 text-xs font-bold text-slate-900 dark:text-white">
+                      <div key={`${item.name}-${index}`} className="flex items-center justify-between rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932]/60 px-3.5 py-2.5 text-xs font-bold text-[#381932] dark:text-[#FFF3E6]">
                         <span>{item.name}</span>
-                        <span className="text-brand-purple dark:text-purple-300">+₹{Number(item.price || 0).toLocaleString('en-IN')}</span>
+                        <span className="text-[#381932] dark:text-[#381932]">+₹{Number(item.price || 0).toLocaleString('en-IN')}</span>
                       </div>
                     ))}
                   </div>
@@ -436,70 +436,70 @@ export default function OrderDetailsPage() {
 
         {/* PRINTABLE TAX INVOICE (Visible ONLY when printing / downloading invoice) */}
         {order && (
-          <div className="hidden print:block font-sans text-slate-900 bg-white p-4">
-            <div className="flex items-center justify-between border-b-2 border-purple-900 pb-4 mb-6">
+          <div className="hidden print:block font-sans text-[#381932] bg-[#FFF3E6] p-4">
+            <div className="flex items-center justify-between border-b-2 border-[#381932] pb-4 mb-6">
               <div>
-                <h1 className="text-2xl font-black text-purple-900 tracking-tight">TheDecorParty</h1>
-                <p className="text-xs font-semibold text-slate-600">Premium Event &amp; Party Decoration Services</p>
-                <p className="text-[11px] text-slate-500 mt-0.5">Website: www.thedecorparty.com | Phone: +91 7975581697</p>
+                <h1 className="text-2xl font-black text-[#381932] tracking-tight">The Decor Party</h1>
+                <p className="text-xs font-semibold text-[#381932]">Premium Event &amp; Party Decoration Services</p>
+                <p className="text-[11px] text-[#381932] mt-0.5">Website: www.thedecorparty.com | Phone: +91 7975581697</p>
               </div>
               <div className="text-right">
-                <h2 className="text-xl font-black text-slate-900 uppercase">TAX INVOICE</h2>
-                <p className="text-xs font-bold text-slate-800 mt-1">Invoice #: {order.orderNumber || `#${order._id.slice(-8)}`}</p>
-                <p className="text-[11px] text-slate-500">Date: {order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A'}</p>
-                <span className="mt-1 inline-block text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
+                <h2 className="text-xl font-black text-[#381932] uppercase">TAX INVOICE</h2>
+                <p className="text-xs font-bold text-[#381932] mt-1">Invoice #: {order.orderNumber || `#${order._id.slice(-8)}`}</p>
+                <p className="text-[11px] text-[#381932]">Date: {order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A'}</p>
+                <span className="mt-1 inline-block text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-[#FFF3E6] text-[#381932] border border-[#381932]">
                   Payment Status: PAID
                 </span>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-6 mb-6">
-              <div className="rounded-xl border border-slate-300 p-4 bg-slate-50/50">
-                <h3 className="text-[10px] uppercase font-extrabold text-slate-400 mb-1 tracking-wider">Billed To</h3>
-                <p className="text-sm font-black text-slate-900">{customer.name || bookingDetailsObj?.name || 'Valued Customer'}</p>
-                <p className="text-xs text-slate-600 font-medium">{customer.phone || bookingDetailsObj?.mobile || 'N/A'}</p>
-                <p className="text-xs text-slate-600 font-medium">{customer.email || bookingDetailsObj?.email || 'N/A'}</p>
-                <p className="text-xs text-slate-600 mt-1.5 font-medium"><strong>Venue:</strong> {venueLocationVal}</p>
+              <div className="rounded-xl border border-[#381932] p-4 bg-[#FFF3E6]/50">
+                <h3 className="text-[10px] uppercase font-extrabold text-[#381932] mb-1 tracking-wider">Billed To</h3>
+                <p className="text-sm font-black text-[#381932]">{customer.name || bookingDetailsObj?.name || 'Valued Customer'}</p>
+                <p className="text-xs text-[#381932] font-medium">{customer.phone || bookingDetailsObj?.mobile || 'N/A'}</p>
+                <p className="text-xs text-[#381932] font-medium">{customer.email || bookingDetailsObj?.email || 'N/A'}</p>
+                <p className="text-xs text-[#381932] mt-1.5 font-medium"><strong>Venue:</strong> {venueLocationVal}</p>
               </div>
 
-              <div className="rounded-xl border border-slate-300 p-4 bg-slate-50/50">
-                <h3 className="text-[10px] uppercase font-extrabold text-slate-400 mb-1 tracking-wider">Event &amp; Payment Info</h3>
-                <p className="text-xs text-slate-700">Event Date: <strong>{eventDateVal}</strong></p>
-                <p className="text-xs text-slate-700 mt-0.5">Start Time: <strong>{eventTimeVal}</strong></p>
-                <p className="text-xs text-slate-700 mt-0.5">Payment Method: <strong>Razorpay (Online)</strong></p>
+              <div className="rounded-xl border border-[#381932] p-4 bg-[#FFF3E6]/50">
+                <h3 className="text-[10px] uppercase font-extrabold text-[#381932] mb-1 tracking-wider">Event &amp; Payment Info</h3>
+                <p className="text-xs text-[#381932]">Event Date: <strong>{eventDateVal}</strong></p>
+                <p className="text-xs text-[#381932] mt-0.5">Start Time: <strong>{eventTimeVal}</strong></p>
+                <p className="text-xs text-[#381932] mt-0.5">Payment Method: <strong>Razorpay (Online)</strong></p>
                 {order.razorpayPaymentId && (
-                  <p className="text-xs text-slate-700 mt-0.5 break-all">Payment ID: <strong>{order.razorpayPaymentId}</strong></p>
+                  <p className="text-xs text-[#381932] mt-0.5 break-all">Payment ID: <strong>{order.razorpayPaymentId}</strong></p>
                 )}
               </div>
             </div>
 
             <table className="w-full border-collapse mb-6 text-xs">
               <thead>
-                <tr className="bg-purple-900 text-white text-left">
+                <tr className="bg-[#381932] text-[#FFF3E6] text-left">
                   <th className="py-2.5 px-3 font-extrabold rounded-tl-lg">Item / Package Description</th>
                   <th className="py-2.5 px-3 font-extrabold text-center">Qty</th>
                   <th className="py-2.5 px-3 font-extrabold text-right rounded-tr-lg">Amount (₹)</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 border-b border-slate-300">
+              <tbody className="divide-y divide-[#381932] border-b border-[#381932]">
                 <tr>
                   <td className="py-3 px-3">
-                    <div className="font-bold text-slate-900 text-sm">{product.name || order.productName || 'Party Setup'}</div>
-                    <div className="text-[11px] text-slate-500">{order.categoryName || ''} {order.subcategory ? `• ${order.subcategory}` : ''}</div>
+                    <div className="font-bold text-[#381932] text-sm">{product.name || order.productName || 'Party Setup'}</div>
+                    <div className="text-[11px] text-[#381932]">{order.categoryName || ''} {order.subcategory ? `• ${order.subcategory}` : ''}</div>
                   </td>
                   <td className="py-3 px-3 text-center font-bold">1</td>
-                  <td className="py-3 px-3 text-right font-bold text-slate-900">₹{Number(order.packagePrice || amount).toLocaleString('en-IN')}</td>
+                  <td className="py-3 px-3 text-right font-bold text-[#381932]">₹{Number(order.packagePrice || amount).toLocaleString('en-IN')}</td>
                 </tr>
                 {addons.map((a: any, i: number) => (
                   <tr key={`addon-${i}`}>
-                    <td className="py-2 px-3 text-slate-700 font-medium">+ Addon: {a.name}</td>
+                    <td className="py-2 px-3 text-[#381932] font-medium">+ Addon: {a.name}</td>
                     <td className="py-2 px-3 text-center font-semibold">{a.qty || 1}</td>
                     <td className="py-2 px-3 text-right font-semibold">₹{(Number(a.price || 0) * (a.qty || 1)).toLocaleString('en-IN')}</td>
                   </tr>
                 ))}
                 {activities.map((act: any, i: number) => (
                   <tr key={`act-${i}`}>
-                    <td className="py-2 px-3 text-slate-700 font-medium">+ Activity: {act.name}</td>
+                    <td className="py-2 px-3 text-[#381932] font-medium">+ Activity: {act.name}</td>
                     <td className="py-2 px-3 text-center font-semibold">{act.qty || 1}</td>
                     <td className="py-2 px-3 text-right font-semibold">₹{(Number(act.price || 0) * (act.qty || 1)).toLocaleString('en-IN')}</td>
                   </tr>
@@ -508,26 +508,26 @@ export default function OrderDetailsPage() {
             </table>
 
             <div className="flex justify-end mb-8">
-              <div className="w-72 space-y-2 border-t-2 border-slate-300 pt-3 text-xs">
-                <div className="flex justify-between text-slate-600">
+              <div className="w-72 space-y-2 border-t-2 border-[#381932] pt-3 text-xs">
+                <div className="flex justify-between text-[#381932]">
                   <span>Subtotal:</span>
                   <span>₹{(order.subtotal || order.packagePrice || amount).toLocaleString('en-IN')}</span>
                 </div>
                 {(order.addonTotal > 0 || order.activityTotal > 0) && (
-                  <div className="flex justify-between text-slate-600">
+                  <div className="flex justify-between text-[#381932]">
                     <span>Addons &amp; Activities:</span>
                     <span>₹{((order.addonTotal || 0) + (order.activityTotal || 0)).toLocaleString('en-IN')}</span>
                   </div>
                 )}
-                <div className="flex justify-between font-black text-base text-slate-900 border-t border-slate-300 pt-2">
+                <div className="flex justify-between font-black text-base text-[#381932] border-t border-[#381932] pt-2">
                   <span>Grand Total Paid:</span>
-                  <span className="text-purple-900">₹{amount.toLocaleString('en-IN')}</span>
+                  <span className="text-[#381932]">₹{amount.toLocaleString('en-IN')}</span>
                 </div>
               </div>
             </div>
 
-            <div className="border-t border-slate-300 pt-4 text-center text-xs text-slate-500">
-              <p className="font-bold text-slate-700">Thank you for choosing TheDecorParty!</p>
+            <div className="border-t border-[#381932] pt-4 text-center text-xs text-[#381932]">
+              <p className="font-bold text-[#381932]">Thank you for choosing The Decor Party!</p>
               <p className="mt-0.5">This is a computer-generated tax invoice and requires no physical signature.</p>
             </div>
           </div>

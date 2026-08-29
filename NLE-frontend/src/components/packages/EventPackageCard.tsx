@@ -1,22 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Crown, ImageOff, Sparkles, Wand2 } from 'lucide-react';
+import { ArrowRight, Crown, Sparkles, Wand2, Heart } from 'lucide-react';
 import { cn } from '../../utils/utils';
+import { CardImage } from '../ui/CardImage';
 import { CATEGORY_META, PACKAGE_IMAGES, type EventPackage } from './eventPackages.data';
 
 const BADGE_META = {
-  'Most Popular': {
-    icon: Sparkles,
-    className: 'bg-[#725D75] text-white border-[#725D75]/60',
-  },
-  Luxury: {
-    icon: Crown,
-    className: 'bg-gradient-to-r from-[#C9BEAB] to-[#A69882] text-white border-[#C9BEAB]/60',
-  },
-  Custom: {
-    icon: Wand2,
-    className: 'bg-[#725D75] text-white border-[#2F2930]/60',
-  },
+  'Most Popular': { icon: Sparkles, label: 'Popular', className: 'bg-[#381932] text-[#FFF3E6]' },
+  Luxury: { icon: Crown, label: 'Luxury', className: 'bg-[#A78A9F] text-[#FFF3E6]' },
+  Custom: { icon: Wand2, label: 'Custom', className: 'bg-[#381932] text-[#FFF3E6]' },
 } as const;
 
 export interface EventPackageCardProps {
@@ -24,6 +16,8 @@ export interface EventPackageCardProps {
   index?: number;
   onView: (pkg: EventPackage) => void;
   onBook: (pkg: EventPackage) => void;
+  wished?: boolean;
+  onToggleWishlist?: (pkg: EventPackage) => void;
   className?: string;
 }
 
@@ -32,116 +26,119 @@ export const EventPackageCard: React.FC<EventPackageCardProps> = ({
   index = 0,
   onView,
   onBook,
+  wished = false,
+  onToggleWishlist,
   className,
 }) => {
   const badgeMeta = pkg.badge ? BADGE_META[pkg.badge] : null;
   const BadgeIcon = badgeMeta?.icon;
   const shownCategories = pkg.categories.slice(0, 4);
+  const extra = pkg.categories.length - shownCategories.length;
   const image = PACKAGE_IMAGES[pkg.id];
-  const FallbackIcon = CATEGORY_META[shownCategories[0]?.key]?.icon || ImageOff;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 22 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, delay: (index % 4) * 0.07 }}
+      transition={{ duration: 0.5, delay: (index % 4) * 0.06 }}
+      onClick={() => onView(pkg)}
       className={cn(
-        'group relative flex h-full flex-col rounded-[28px] border bg-white p-6 sm:p-7 shadow-[0_2px_16px_-4px_rgba(52,32,60,0.08)] transition-all duration-400 hover:-translate-y-1.5 hover:shadow-[0_20px_45px_-12px_rgba(143,111,196,0.28)] cursor-pointer',
-        pkg.badge ? 'border-[#C9BEAB]' : 'border-[#E4DCD2]',
+        'group relative flex h-full flex-col overflow-hidden rounded-[22px] border border-[#E6D7C5] bg-[#FFF3E6] shadow-[0_10px_30px_-20px_rgba(56,25,50,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_-24px_rgba(56,25,50,0.4)] cursor-pointer',
         className
       )}
-      onClick={() => onView(pkg)}
     >
-      {/* Photo header -- real decor photography, matching the Home "Popular
-          Packages" card style, not an abstract gradient/icon placeholder. */}
-      <div className="relative -mx-6 -mt-6 sm:-mx-7 sm:-mt-7 mb-5 h-36 sm:h-40 rounded-t-xl overflow-hidden bg-[#F9F6F2] border-b border-[#E4DCD2]">
-        {image ? (
-          <img
-            src={image}
-            alt={pkg.name}
-            className="h-full w-full object-cover transition-transform duration-[350ms] ease-out group-hover:scale-[1.04]"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center bg-[#F3EFE7]">
-            <FallbackIcon size={32} className="text-[#725D75]/40" />
-          </div>
-        )}
+      {/* Event image -- full image, never cropped */}
+      <div className="relative">
+        <CardImage src={image} alt={pkg.name} ratio="aspect-[4/3]" />
 
         {badgeMeta && BadgeIcon && (
           <span
             className={cn(
-              'absolute top-3 right-3 inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider shadow-md',
+              'absolute top-3 left-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider shadow-sm font-serif',
               badgeMeta.className
             )}
           >
-            <BadgeIcon size={11} />
-            {pkg.badge}
+            <BadgeIcon size={10} />
+            {badgeMeta.label}
           </span>
+        )}
+
+        {onToggleWishlist && (
+          <button
+            type="button"
+            aria-label={wished ? 'Remove from wishlist' : 'Add to wishlist'}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleWishlist(pkg);
+            }}
+            className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#FFF3E6] text-[#381932] shadow-md transition-transform duration-200 hover:scale-110 active:scale-95 cursor-pointer"
+          >
+            <Heart size={14} fill={wished ? 'currentColor' : 'none'} />
+          </button>
         )}
       </div>
 
-      {/* Name + price */}
-      <h3 className="font-serif text-lg sm:text-xl font-bold tracking-tight text-[#2F2930] leading-snug mb-1.5">
-        {pkg.name}
-      </h3>
-      <div className="flex items-baseline gap-1.5 mb-3">
-        <span className="font-serif text-2xl sm:text-[28px] font-bold text-[#725D75] tracking-tight">
-          {pkg.price}
-        </span>
-        <span className="text-[11px] text-[#746B72] font-medium">/ package</span>
-      </div>
+      {/* Body */}
+      <div className="flex flex-1 flex-col p-6 sm:p-7">
+        <h3 className="font-serif text-lg sm:text-xl font-bold uppercase tracking-tight text-[#381932] leading-[1.15] mb-2">
+          {pkg.name}
+        </h3>
 
-      {/* Description */}
-      <p className="text-xs text-[#746B72] font-light leading-relaxed line-clamp-2 mb-4">
-        {pkg.description}
-      </p>
+        <div className="flex items-baseline gap-1.5 mb-3">
+          <span className="font-serif text-2xl sm:text-[26px] font-bold text-[#381932] tracking-tight">
+            {pkg.price}
+          </span>
+          <span className="text-[11px] text-[#381932]/60 font-medium">per package</span>
+        </div>
 
-      {/* Category chips */}
-      <div className="flex flex-wrap gap-1.5 mb-6">
-        {shownCategories.map((cat) => {
-          const meta = CATEGORY_META[cat.key];
-          const Icon = meta.icon;
-          return (
-            <span
-              key={cat.key}
-              className="inline-flex items-center gap-1 rounded-full bg-[#F9F6F2] border border-[#E4DCD2] px-2.5 py-1 text-[10px] font-semibold text-[#746B72]"
-            >
-              <Icon size={11} className="text-[#725D75] shrink-0" />
-              {cat.labelOverride || meta.label}
+        <p className="text-[13px] text-[#381932]/75 leading-relaxed line-clamp-2 mb-5">
+          {pkg.description}
+        </p>
+
+        {/* Feature inclusions -- clean 2-column list */}
+        <div className="grid grid-cols-2 gap-x-3 gap-y-2 mb-5">
+          {shownCategories.map((cat) => {
+            const meta = CATEGORY_META[cat.key];
+            return (
+              <span key={cat.key} className="flex items-center gap-1.5 text-[11px] text-[#381932]/80">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#A78A9F]/20">
+                  <Heart size={9} className="text-[#A78A9F] fill-[#A78A9F]" />
+                </span>
+                <span className="truncate">{cat.labelOverride || meta.label}</span>
+              </span>
+            );
+          })}
+          {extra > 0 && (
+            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-[#A78A9F]">
+              +{extra} more
             </span>
-          );
-        })}
-        {pkg.categories.length > 4 && (
-          <span className="inline-flex items-center rounded-full bg-[#F9F6F2] border border-[#E4DCD2] px-2.5 py-1 text-[10px] font-semibold text-[#725D75]">
-            +{pkg.categories.length - 4} more
-          </span>
-        )}
-      </div>
+          )}
+        </div>
 
-      {/* CTAs */}
-      <div className="mt-auto flex items-center gap-2.5 pt-4 border-t border-[#E4DCD2]/70">
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onView(pkg);
-          }}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#A78A9F] text-[#725D75] hover:bg-[#725D75]/08 py-2.5 text-xs font-medium tracking-wide transition-colors cursor-pointer"
-        >
-          View Package
-        </button>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onBook(pkg);
-          }}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#725D75] hover:bg-[#A78A9F] text-white py-2.5 text-xs font-medium tracking-wide shadow-sm transition-colors cursor-pointer"
-        >
-          Book Now
-          <ArrowRight size={12} />
-        </button>
+        <div className="mt-auto flex items-stretch gap-2.5 border-t border-[#E6D7C5] pt-4">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onView(pkg);
+            }}
+            className="flex-1 inline-flex items-center justify-center rounded-lg border border-[#381932] bg-[#FFF3E6] text-[#381932] hover:bg-[#A78A9F]/15 py-2.5 text-[11px] font-serif font-semibold uppercase tracking-wide transition-colors cursor-pointer"
+          >
+            View Details
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onBook(pkg);
+            }}
+            className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#381932] hover:bg-[#483250] text-[#FFF3E6] py-2.5 text-[11px] font-serif font-semibold uppercase tracking-wide shadow-sm transition-colors cursor-pointer group/btn"
+          >
+            Book Now
+            <ArrowRight size={12} className="transition-transform group-hover/btn:translate-x-0.5" />
+          </button>
+        </div>
       </div>
     </motion.div>
   );

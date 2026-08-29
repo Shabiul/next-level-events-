@@ -82,11 +82,14 @@ export const AppRoutes: React.FC = () => {
   };
 
   const handleViewProduct = (p: AdminProduct) => {
-    navigate(`/product/${p._id}`);
+    // Pass the full product in navigation state so synthetic / gallery
+    // fallback cards (which have no server-side record) still open a
+    // working detail page when "View Details" is clicked.
+    navigate(`/product/${p._id}`, { state: { product: p } });
   };
 
   const handleBookProduct = (p: AdminProduct) => {
-    navigate(`/booking/${p._id}`);
+    navigate(`/booking/${p._id}`, { state: { product: p, preferredMethod: 'razorpay' } });
   };
 
   return (
@@ -229,18 +232,32 @@ export const AppRoutes: React.FC = () => {
             element={<ProductPage />}
           />
 
-          {/* Booking & Checkout */}
+          {/* Booking & Checkout -- require an authenticated customer. The
+              route stays put while the login modal is shown, so the pending
+              booking (passed via router state) is never lost. */}
           <Route
             path="/booking/:id"
-            element={<BookingPage />}
+            element={
+              <ProtectedRoute>
+                <BookingPage />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/checkout"
-            element={<BookingPage />}
+            element={
+              <ProtectedRoute>
+                <BookingPage />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/checkout/:id"
-            element={<BookingPage />}
+            element={
+              <ProtectedRoute>
+                <BookingPage />
+              </ProtectedRoute>
+            }
           />
 
           {/* Order Details & Bookings */}
@@ -310,6 +327,7 @@ export const AppRoutes: React.FC = () => {
           <Route path="/admin/users" element={<AdminRoute><AdminPage /></AdminRoute>} />
           <Route path="/admin/orders" element={<AdminRoute><AdminPage /></AdminRoute>} />
           <Route path="/admin/bookings" element={<AdminRoute><AdminPage /></AdminRoute>} />
+          <Route path="/admin/enquiries" element={<AdminRoute><AdminPage /></AdminRoute>} />
           <Route path="/admin/sliders" element={<AdminRoute><AdminPage /></AdminRoute>} />
           <Route path="/admin/terms" element={<AdminRoute><AdminPage /></AdminRoute>} />
 

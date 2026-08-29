@@ -7,11 +7,11 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-[#725D75] text-[#2F2930] shadow hover:bg-[#C9BEAB]',
-        destructive: 'bg-red-600 text-white shadow-xs hover:bg-red-700',
-        outline: 'border border-neutral-200 bg-transparent shadow-xs hover:bg-neutral-100 hover:text-neutral-900 dark:border-neutral-800 dark:hover:bg-neutral-800 dark:hover:text-neutral-50',
-        secondary: 'bg-neutral-100 text-neutral-900 shadow-xs hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-50',
-        ghost: 'hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-50',
+        default: 'bg-[#381932] text-[#381932] shadow hover:opacity-90',
+        destructive: 'bg-[#381932] text-[#FFF3E6] shadow-xs hover:opacity-90',
+        outline: 'border border-[#381932] bg-transparent shadow-xs hover:bg-[#FFF3E6] hover:text-[#381932] dark:border-[#381932] dark:hover:bg-[#381932] dark:hover:text-[#381932]',
+        secondary: 'bg-[#FFF3E6] text-[#381932] shadow-xs hover:bg-[#FFF3E6] dark:bg-[#381932] dark:text-[#381932]',
+        ghost: 'hover:bg-[#FFF3E6] hover:text-[#381932] dark:hover:bg-[#381932] dark:hover:text-[#381932]',
         link: 'text-primary underline-offset-4 hover:underline',
       },
       size: {

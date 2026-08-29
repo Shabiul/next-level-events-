@@ -17,9 +17,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={inputId} className="text-xs font-medium tracking-wide text-[#746B72] dark:text-neutral-300">
+          <label htmlFor={inputId} className="text-xs font-medium tracking-wide text-[#381932] dark:text-[#381932]">
             {label}
-            {required && <span className="text-red-500 ml-0.5">*</span>}
+            {required && <span className="text-[#381932] ml-0.5">*</span>}
           </label>
         )}
         <input
@@ -29,21 +29,21 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           aria-invalid={!!error || undefined}
           aria-describedby={cn(hintId, errorId) || undefined}
           className={cn(
-            'h-10 w-full rounded-lg border border-[#E4DCD2] bg-white px-3.5 text-sm text-[#2F2930] placeholder:text-[#746B72]/70',
-            'transition-colors focus:outline-none focus:ring-1 focus:ring-[#A78A9F] focus:border-[#A78A9F]',
-            'disabled:opacity-50 disabled:cursor-not-allowed dark:bg-[#1E1E1E] dark:border-[#2E2E2E] dark:text-white dark:placeholder:text-neutral-500 dark:focus:ring-white dark:focus:border-white',
-            error && 'border-red-500 focus:ring-red-500 focus:border-red-500',
+            'h-10 w-full rounded-lg border border-[#381932]/30 bg-[#FFF3E6] px-3.5 text-sm text-[#381932] placeholder:text-[#381932]/70',
+            'transition-colors focus:outline-none focus:ring-1 focus:ring-[#381932] focus:border-[#381932]',
+            'disabled:opacity-50 disabled:cursor-not-allowed dark:bg-[#381932] dark:border-[#381932] dark:text-[#FFF3E6] dark:placeholder:text-[#381932] dark:focus:ring-[#FFF3E6] dark:focus:border-[#FFF3E6]',
+            error && 'border-[#381932] focus:ring-[#381932] focus:border-[#381932]',
             className
           )}
           {...props}
         />
         {hint && !error && (
-          <p id={hintId} className="text-xs text-[#746B72] dark:text-neutral-400">
+          <p id={hintId} className="text-xs text-[#381932] dark:text-[#381932]">
             {hint}
           </p>
         )}
         {error && (
-          <p id={errorId} className="text-xs text-red-500 font-medium" role="alert">
+          <p id={errorId} className="text-xs text-[#381932] font-medium" role="alert">
             {error}
           </p>
         )}

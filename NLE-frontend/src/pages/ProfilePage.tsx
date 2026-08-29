@@ -156,7 +156,7 @@ export default function ProfilePage() {
   };
 
   const fullName = getUserDisplayName(user) || user?.email || '';
-  const avatar = <Avatar user={user} alt={fullName || 'User avatar'} className="h-20 w-20 ring-4 ring-purple-100 dark:ring-purple-950/50" />;
+  const avatar = <Avatar user={user} alt={fullName || 'User avatar'} className="h-20 w-20 ring-4 ring-[#381932] dark:ring-[#381932]/50" />;
 
   return (
     <MainLayout
@@ -192,18 +192,18 @@ export default function ProfilePage() {
       <main className="mx-auto max-w-7xl px-4 py-6 md:px-6 min-h-[85vh]">
         <div className="mb-5 flex items-center gap-3">
           <BackButton onClick={() => navigate('/')} />
-          <h1 className="text-xl font-black text-slate-900 dark:text-white md:text-2xl">My Account</h1>
+          <h1 className="text-xl font-black text-[#381932] dark:text-[#FFF3E6] md:text-2xl">My Account</h1>
         </div>
 
         {/* User Card Header */}
-        <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs md:p-7">
-          <div className="flex flex-col items-center gap-4 border-b border-slate-100 dark:border-slate-800 pb-6 text-center sm:flex-row sm:text-left">
+        <section className="rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-5 shadow-xs md:p-7">
+          <div className="flex flex-col items-center gap-4 border-b border-[#381932] dark:border-[#381932] pb-6 text-center sm:flex-row sm:text-left">
             {avatar}
             <div>
-              <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">{fullName}</h2>
-              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">{user.email}</p>
+              <h2 className="text-xl font-extrabold text-[#381932] dark:text-[#FFF3E6]">{fullName}</h2>
+              <p className="text-xs font-semibold text-[#381932] dark:text-[#381932] mt-0.5">{user.email}</p>
               {user.role === 'admin' && (
-                <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-purple-100 dark:bg-purple-950/60 px-2.5 py-0.5 text-[11px] font-bold text-brand-purple dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-[#FFF3E6] dark:bg-[#381932]/60 px-2.5 py-0.5 text-[11px] font-bold text-[#381932] dark:text-[#381932] border border-[#381932] dark:border-[#381932]">
                   👑 Admin Account
                 </span>
               )}
@@ -212,12 +212,12 @@ export default function ProfilePage() {
 
           <form onSubmit={saveProfile}>
             <div className="mb-4 mt-6 flex items-center justify-between gap-3">
-              <h2 className="text-base font-extrabold text-slate-900 dark:text-white">Personal Information</h2>
+              <h2 className="text-base font-extrabold text-[#381932] dark:text-[#FFF3E6]">Personal Information</h2>
               <button
                 type="button"
                 onClick={() => { setEditing(true); setSaveMessage(''); }}
                 disabled={editing}
-                className="rounded-xl border border-brand-purple px-4 py-2 text-xs font-bold text-brand-purple dark:text-purple-300 transition hover:bg-brand-purple hover:text-white disabled:cursor-default disabled:opacity-50 cursor-pointer"
+                className="rounded-xl border border-[#381932] px-4 py-2 text-xs font-bold text-[#381932] dark:text-[#381932] transition hover:opacity-90 hover:text-[#FFF3E6] disabled:cursor-default disabled:opacity-50 cursor-pointer"
               >
                 Edit Details
               </button>
@@ -230,16 +230,16 @@ export default function ProfilePage() {
                 ['city', 'City', MapPin], ['state', 'State', MapPin],
                 ['country', 'Country', MapPin], ['pincode', 'Pincode', MapPin],
               ].map(([field, label, Icon]) => (
-                <label key={field as string} className="flex flex-col gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300">
-                  <span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400"><Icon size={14} />{label as string}</span>
+                <label key={field as string} className="flex flex-col gap-1.5 text-xs font-semibold text-[#381932] dark:text-[#381932]">
+                  <span className="flex items-center gap-1.5 text-[#381932] dark:text-[#381932]"><Icon size={14} />{label as string}</span>
                   {field === 'gender' ? (
                     <select
                       value={form.gender}
                       onChange={event => updateField('gender', event.target.value)}
                       disabled={!editing}
                       className={cn(
-                        'rounded-xl border border-slate-200 dark:border-slate-700 px-3.5 py-2.5 text-sm text-slate-900 dark:text-white outline-none transition-all',
-                        editing ? 'bg-white dark:bg-slate-800 focus:ring-2 focus:ring-brand-purple/40' : 'cursor-default bg-slate-50 dark:bg-slate-900/60'
+                        'rounded-xl border border-[#381932] dark:border-[#381932] px-3.5 py-2.5 text-sm text-[#381932] dark:text-[#FFF3E6] outline-none transition-all',
+                        editing ? 'bg-[#FFF3E6] dark:bg-[#381932] focus:ring-2 focus:ring-[#381932]/40' : 'cursor-default bg-[#FFF3E6] dark:bg-[#381932]/60'
                       )}
                     >
                       <option value="">Select gender</option>
@@ -255,16 +255,16 @@ export default function ProfilePage() {
                       onChange={event => updateField(field as keyof typeof form, event.target.value)}
                       readOnly={!editing}
                       className={cn(
-                        'rounded-xl border border-slate-200 dark:border-slate-700 px-3.5 py-2.5 text-sm text-slate-900 dark:text-white outline-none transition-all',
-                        editing ? 'bg-white dark:bg-slate-800 focus:ring-2 focus:ring-brand-purple/40' : 'cursor-default bg-slate-50 dark:bg-slate-900/60'
+                        'rounded-xl border border-[#381932] dark:border-[#381932] px-3.5 py-2.5 text-sm text-[#381932] dark:text-[#FFF3E6] outline-none transition-all',
+                        editing ? 'bg-[#FFF3E6] dark:bg-[#381932] focus:ring-2 focus:ring-[#381932]/40' : 'cursor-default bg-[#FFF3E6] dark:bg-[#381932]/60'
                       )}
                     />
                   )}
                 </label>
               ))}
-              <div className="flex flex-col gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300">
-                <span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400"><Mail size={14} />Email Address</span>
-                <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-3.5 py-2.5 text-sm font-medium text-slate-500 dark:text-slate-400">
+              <div className="flex flex-col gap-1.5 text-xs font-semibold text-[#381932] dark:text-[#381932]">
+                <span className="flex items-center gap-1.5 text-[#381932] dark:text-[#381932]"><Mail size={14} />Email Address</span>
+                <div className="rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932]/60 px-3.5 py-2.5 text-sm font-medium text-[#381932] dark:text-[#381932]">
                   {valueOrEmpty(user.email)}
                 </div>
               </div>
@@ -273,24 +273,24 @@ export default function ProfilePage() {
               <button
                 type="submit"
                 disabled={!editing || saving}
-                className="rounded-xl bg-brand-purple px-5 py-2.5 text-xs font-bold text-white shadow-md hover:bg-brand-purple-dark disabled:cursor-default disabled:opacity-60 cursor-pointer"
+                className="rounded-xl bg-[#381932] px-5 py-2.5 text-xs font-bold text-[#FFF3E6] shadow-md hover:opacity-90 disabled:cursor-default disabled:opacity-60 cursor-pointer"
               >
                 {saving ? 'Saving...' : 'Save Profile'}
               </button>
               {saveMessage && (
-                <span className={cn('text-xs font-bold', saveMessage.includes('successfully') ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400')}>
+                <span className={cn('text-xs font-bold', saveMessage.includes('successfully') ? 'text-[#381932] dark:text-[#381932]' : 'text-[#381932] dark:text-[#381932]')}>
                   {saveMessage}
                 </span>
               )}
             </div>
           </form>
 
-          <div className="mt-7 border-t border-slate-100 dark:border-slate-800 pt-6">
-            <h2 className="mb-2 text-base font-extrabold text-slate-900 dark:text-white">{t.language_preferences || 'Language Preferences'}</h2>
+          <div className="mt-7 border-t border-[#381932] dark:border-[#381932] pt-6">
+            <h2 className="mb-2 text-base font-extrabold text-[#381932] dark:text-[#FFF3E6]">{t.language_preferences || 'Language Preferences'}</h2>
             <select
               value={langCode}
               onChange={e => changeLang(e.target.value as typeof langCode)}
-              className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2.5 text-xs font-bold text-slate-900 dark:text-white sm:max-w-xs outline-none"
+              className="w-full rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3.5 py-2.5 text-xs font-bold text-[#381932] dark:text-[#FFF3E6] sm:max-w-xs outline-none"
             >
               {LANGS.filter(language => ['en', 'kn', 'te', 'ta'].includes(language.code)).map(language => <option key={language.code} value={language.code}>{language.label}</option>)}
             </select>
@@ -298,30 +298,30 @@ export default function ProfilePage() {
         </section>
 
         {/* Premium E-commerce My Orders Section */}
-        <section className="mt-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs md:p-7">
-          <div className="mb-5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+        <section className="mt-6 rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-5 shadow-xs md:p-7">
+          <div className="mb-5 flex items-center justify-between border-b border-[#381932] dark:border-[#381932] pb-4">
             <div className="flex items-center gap-2.5">
-              <Package size={20} className="text-brand-purple dark:text-purple-400" />
-              <h2 className="text-lg font-black text-slate-900 dark:text-white">My Orders &amp; Event Bookings</h2>
+              <Package size={20} className="text-[#381932] dark:text-[#381932]" />
+              <h2 className="text-lg font-black text-[#381932] dark:text-[#FFF3E6]">My Orders &amp; Event Bookings</h2>
             </div>
-            <span className="text-xs font-extrabold text-slate-400 dark:text-slate-500">
+            <span className="text-xs font-extrabold text-[#381932] dark:text-[#381932]">
               {orders.filter(o => String(o.paymentStatus).toLowerCase() === 'paid' || String(o.paymentStatus).toLowerCase() === 'success').length} confirmed order(s)
             </span>
           </div>
 
           {ordersLoading ? (
-            <div className="rounded-xl border border-dashed border-slate-200 dark:border-slate-800 p-12 text-center text-xs font-bold text-slate-400 dark:text-slate-500">
+            <div className="rounded-xl border border-dashed border-[#381932] dark:border-[#381932] p-12 text-center text-xs font-bold text-[#381932] dark:text-[#381932]">
               Loading your bookings...
             </div>
           ) : orders.filter(o => String(o.paymentStatus).toLowerCase() === 'paid' || String(o.paymentStatus).toLowerCase() === 'success').length === 0 ? (
-            <div className="rounded-xl border border-dashed border-slate-200 dark:border-slate-800 p-12 text-center">
-              <Sparkles size={28} className="mx-auto text-slate-300 dark:text-slate-600 mb-2" />
-              <div className="text-sm font-bold text-slate-900 dark:text-white">No confirmed bookings found</div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Explore our premium party &amp; decor packages for your next event.</p>
+            <div className="rounded-xl border border-dashed border-[#381932] dark:border-[#381932] p-12 text-center">
+              <Sparkles size={28} className="mx-auto text-[#A78A9F] dark:text-[#381932] mb-2" />
+              <div className="text-sm font-bold text-[#381932] dark:text-[#FFF3E6]">No confirmed bookings found</div>
+              <p className="text-xs text-[#381932] dark:text-[#381932] mt-1">Explore our premium party &amp; decor packages for your next event.</p>
               <button
                 type="button"
                 onClick={() => navigate('/')}
-                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-brand-purple px-5 py-2.5 text-xs font-bold text-white shadow-md hover:bg-brand-purple-dark transition-all cursor-pointer"
+                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-[#381932] px-5 py-2.5 text-xs font-bold text-[#FFF3E6] shadow-md hover:opacity-90 transition-all cursor-pointer"
               >
                 Browse Packages
               </button>
@@ -345,16 +345,16 @@ export default function ProfilePage() {
                 return (
                   <div
                     key={order._id}
-                    className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/60 p-4 sm:p-5 transition-all hover:border-purple-300 dark:hover:border-purple-700/60 shadow-xs"
+                    className="rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6]/70 dark:bg-[#381932]/60 p-4 sm:p-5 transition-all hover:border-[#381932] dark:hover:border-[#381932]/60 shadow-xs"
                   >
                     {/* Top Bar: Order ID, Date & Workflow Status */}
-                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/80 dark:border-slate-700/60 pb-3 mb-3.5">
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#381932]/80 dark:border-[#381932]/60 pb-3 mb-3.5">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wide">
+                        <span className="text-xs font-black text-[#381932] dark:text-[#FFF3E6] uppercase tracking-wide">
                           {order.orderNumber || `#${order._id.slice(-8)}`}
                         </span>
                         {order.createdAt && (
-                          <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500">
+                          <span className="text-[11px] font-semibold text-[#381932] dark:text-[#381932]">
                             • {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
                           </span>
                         )}
@@ -364,15 +364,15 @@ export default function ProfilePage() {
                         <span className={cn(
                           "text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border uppercase tracking-wider",
                           orderStatusStr === 'Completed'
-                            ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800"
+                            ? "bg-[#FFF3E6] dark:bg-[#381932]/60 text-[#381932] dark:text-[#381932] border-[#381932] dark:border-[#381932]"
                             : orderStatusStr === 'Cancelled'
-                            ? "bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800"
-                            : "bg-purple-50 dark:bg-purple-950/60 text-brand-purple dark:text-purple-300 border-purple-200 dark:border-purple-800"
+                            ? "bg-[#FFF3E6] dark:bg-[#381932]/60 text-[#381932] dark:text-[#381932] border-[#381932] dark:border-[#381932]"
+                            : "bg-[#FFF3E6] dark:bg-[#381932]/60 text-[#381932] dark:text-[#381932] border-[#381932] dark:border-[#381932]"
                         )}>
                           Status: {orderStatusStr}
                         </span>
 
-                        <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border uppercase tracking-wider bg-emerald-500 text-white border-emerald-600 shadow-2xs">
+                        <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border uppercase tracking-wider bg-[#381932] text-[#FFF3E6] border-[#381932] shadow-2xs">
                           ✓ PAID
                         </span>
                       </div>
@@ -386,23 +386,23 @@ export default function ProfilePage() {
                         <img
                           src={imageSrc}
                           alt={product.name || order.productName || 'Event Decor'}
-                          className="h-16 w-16 rounded-xl object-cover border border-slate-200 dark:border-slate-700 p-0.5 bg-white dark:bg-slate-900 shrink-0 shadow-2xs"
+                          className="h-16 w-16 rounded-xl object-cover border border-[#381932] dark:border-[#381932] p-0.5 bg-[#FFF3E6] dark:bg-[#381932] shrink-0 shadow-2xs"
                           onError={(e) => { (e.target as HTMLImageElement).src = '/final_logo.jpeg'; }}
                         />
                         
                         <div className="min-w-0 flex-1">
-                          <h3 className="text-sm font-black text-slate-900 dark:text-white truncate">
+                          <h3 className="text-sm font-black text-[#381932] dark:text-[#FFF3E6] truncate">
                             {product.name || order.productName || 'Party Setup'}
                           </h3>
 
-                          <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-slate-600 dark:text-slate-300 font-semibold">
+                          <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-[#381932] dark:text-[#381932] font-semibold">
                             <span className="flex items-center gap-1.5">
-                              <Calendar size={13} className="text-brand-purple dark:text-purple-400" />
+                              <Calendar size={13} className="text-[#381932] dark:text-[#381932]" />
                               <span>Event: <strong>{eventDateVal}</strong></span>
                             </span>
                             {eventTimeVal && (
                               <span className="flex items-center gap-1.5">
-                                <Clock size={13} className="text-brand-purple dark:text-purple-400" />
+                                <Clock size={13} className="text-[#381932] dark:text-[#381932]" />
                                 <span>Time: <strong>{eventTimeVal}</strong></span>
                               </span>
                             )}
@@ -411,16 +411,16 @@ export default function ProfilePage() {
                       </div>
 
                       {/* Right: Amount & View Details CTA */}
-                      <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto border-t sm:border-t-0 border-slate-200/80 dark:border-slate-700/60 pt-3 sm:pt-0 gap-2">
+                      <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto border-t sm:border-t-0 border-[#381932]/80 dark:border-[#381932]/60 pt-3 sm:pt-0 gap-2">
                         <div className="text-left sm:text-right">
-                          <div className="text-[10px] uppercase font-extrabold text-slate-400 dark:text-slate-500">Amount Paid</div>
-                          <div className="text-base sm:text-lg font-black text-slate-900 dark:text-white">₹{amount.toLocaleString('en-IN')}</div>
+                          <div className="text-[10px] uppercase font-extrabold text-[#381932] dark:text-[#381932]">Amount Paid</div>
+                          <div className="text-base sm:text-lg font-black text-[#381932] dark:text-[#FFF3E6]">₹{amount.toLocaleString('en-IN')}</div>
                         </div>
 
                         <button
                           type="button"
                           onClick={() => navigate(`/orders/${order._id}`)}
-                          className="inline-flex items-center justify-center gap-1 rounded-xl bg-brand-purple hover:bg-brand-purple-dark text-white px-4 py-2 text-xs font-bold shadow-md shadow-purple-600/20 active:scale-95 transition-all cursor-pointer"
+                          className="inline-flex items-center justify-center gap-1 rounded-xl bg-[#381932] hover:opacity-90 text-[#FFF3E6] px-4 py-2 text-xs font-bold shadow-md shadow-[#381932]/20 active:scale-95 transition-all cursor-pointer"
                         >
                           View Details <ChevronRight size={14} />
                         </button>
@@ -430,8 +430,8 @@ export default function ProfilePage() {
 
                     {/* Bottom Venue Address Row */}
                     {locationVal && (
-                      <div className="mt-3 flex items-center gap-1.5 border-t border-slate-200/60 dark:border-slate-700/60 pt-2.5 text-xs text-slate-600 dark:text-slate-400 font-medium truncate">
-                        <MapPin size={13} className="text-brand-purple shrink-0" />
+                      <div className="mt-3 flex items-center gap-1.5 border-t border-[#381932]/60 dark:border-[#381932]/60 pt-2.5 text-xs text-[#381932] dark:text-[#381932] font-medium truncate">
+                        <MapPin size={13} className="text-[#381932] shrink-0" />
                         <span className="truncate">{locationVal}</span>
                       </div>
                     )}
@@ -443,18 +443,18 @@ export default function ProfilePage() {
         </section>
 
         {/* Account Actions Section */}
-        <section className="mt-6 flex flex-col gap-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs sm:flex-row sm:items-center sm:justify-between md:p-7">
+        <section className="mt-6 flex flex-col gap-3 rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-5 shadow-xs sm:flex-row sm:items-center sm:justify-between md:p-7">
           <button
             type="button"
             onClick={() => navigate('/forgot-password')}
-            className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2.5 text-xs font-bold text-slate-900 dark:text-white transition hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer"
+            className="flex items-center justify-center gap-2 rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-4 py-2.5 text-xs font-bold text-[#381932] dark:text-[#FFF3E6] transition hover:bg-[#FFF3E6] dark:hover:bg-[#381932] cursor-pointer"
           >
             <KeyRound size={16} /> Change Password
           </button>
           <button
             type="button"
             onClick={() => { auth.logout(); navigate('/'); }}
-            className="flex items-center justify-center gap-2 rounded-xl border border-rose-200 dark:border-rose-900/60 bg-rose-50/60 dark:bg-rose-950/40 px-4 py-2.5 text-xs font-bold text-rose-600 dark:text-rose-400 transition hover:bg-rose-100 dark:hover:bg-rose-900/60 cursor-pointer"
+            className="flex items-center justify-center gap-2 rounded-xl border border-[#381932] dark:border-[#381932]/60 bg-[#FFF3E6]/60 dark:bg-[#381932]/40 px-4 py-2.5 text-xs font-bold text-[#381932] dark:text-[#381932] transition hover:bg-[#FFF3E6] dark:hover:bg-[#381932]/60 cursor-pointer"
           >
             <LogOut size={16} /> Sign Out
           </button>

@@ -10,17 +10,17 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: 'bg-[#725D75] text-white font-semibold hover:bg-[#483250] shadow-xs active:scale-[0.98] dark:bg-amber-400 dark:text-slate-950 dark:hover:bg-amber-300',
-        secondary: 'bg-transparent text-[#2F2930] border border-[#725D75] hover:bg-[#725D75]/10 dark:bg-transparent dark:text-[#FAF8F5] dark:border-[#A78A9F] dark:hover:bg-[#A78A9F]/15',
-        outline: 'bg-transparent text-[#2F2930] border border-[#E4DCD2] hover:border-[#725D75] hover:bg-[#F9F6F2] dark:text-[#C9BEAB] dark:border-[#483250] dark:hover:bg-[#2D1C34]',
-        subtle: 'bg-[#F9F6F2] text-[#2F2930] hover:bg-[#F9F6F2] dark:bg-[#2D1C34] dark:text-[#FAF8F5] dark:hover:bg-[#38223E]',
-        ghost: 'text-[#2F2930] hover:bg-[#F9F6F2] dark:text-[#FAF8F5] dark:hover:bg-[#2D1C34]',
-        khaki: 'bg-[#C9BEAB] text-[#2F2930] font-semibold hover:bg-[#F9F6F2] shadow-xs',
-        lilac: 'bg-[#725D75] text-[#2F2930] font-semibold hover:bg-[#C9BEAB] shadow-xs',
-        violet: 'bg-[#725D75] text-[#F9F6F2] font-semibold hover:bg-[#483250] shadow-xs',
-        gold: 'bg-[#C9BEAB] text-[#2F2930] hover:bg-[#F9F6F2] shadow-xs',
-        danger: 'bg-red-600 text-white hover:bg-red-700',
-        link: 'text-[#725D75] hover:text-[#746B72] underline-offset-4 hover:underline p-0 h-auto font-medium dark:text-[#C9BEAB]',
+        primary: 'bg-[#381932] text-[#FFF3E6] font-semibold hover:opacity-90 shadow-xs active:scale-[0.98] dark:bg-[#FFF3E6] dark:text-[#381932] dark:hover:bg-[#FFF3E6]',
+        secondary: 'bg-transparent text-[#381932] border border-[#381932] hover:bg-[#A78A9F]/18 dark:bg-transparent dark:text-[#FFF3E6] dark:border-[#381932] dark:hover:bg-[#A78A9F]/22',
+        outline: 'bg-transparent text-[#381932] border border-[#381932]/30 hover:border-[#381932] hover:bg-[#FFF3E6] dark:text-[#381932] dark:border-[#381932] dark:hover:bg-[#381932]',
+        subtle: 'bg-[#FFF3E6] text-[#381932] hover:bg-[#FFF3E6] dark:bg-[#381932] dark:text-[#FFF3E6] dark:hover:bg-[#381932]',
+        ghost: 'text-[#381932] hover:bg-[#FFF3E6] dark:text-[#FFF3E6] dark:hover:bg-[#381932]',
+        khaki: 'bg-[#381932] text-[#381932] font-semibold hover:bg-[#FFF3E6] shadow-xs',
+        lilac: 'bg-[#381932] text-[#381932] font-semibold hover:opacity-90 shadow-xs',
+        violet: 'bg-[#381932] text-[#FFF3E6] font-semibold hover:opacity-90 shadow-xs',
+        gold: 'bg-[#381932] text-[#381932] hover:bg-[#FFF3E6] shadow-xs',
+        danger: 'bg-[#381932] text-[#FFF3E6] hover:opacity-90',
+        link: 'text-[#381932] hover:text-[#381932] underline-offset-4 hover:underline p-0 h-auto font-medium dark:text-[#381932]',
       },
       size: {
         sm: 'h-8 px-3 text-xs rounded-md',

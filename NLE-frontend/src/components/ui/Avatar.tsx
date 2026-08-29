@@ -33,7 +33,7 @@ export default function Avatar({ user, className = '', alt }: AvatarProps) {
   return (
     <span
       className={cn(
-        'flex items-center justify-center rounded-full text-white text-xs font-semibold',
+        'flex items-center justify-center rounded-full text-[#FFF3E6] text-xs font-semibold',
         getAvatarColor(getAvatarIdentifier(user)),
         className
       )}

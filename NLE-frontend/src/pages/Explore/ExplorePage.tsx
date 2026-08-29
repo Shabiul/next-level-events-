@@ -7,6 +7,7 @@ import { SeoHead } from '../../components/layout/SeoHead';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { ProductCard } from '../../components/product/ProductCard';
 import { cn } from '../../utils/utils';
+import { productMatchesQuery, expandQuery, EMPTY_SEARCH_HINT } from '../../utils/serviceSearch';
 import type { AdminProduct } from '../../types';
 
 interface ExplorePageProps {
@@ -144,16 +145,9 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
       });
     }
 
-    // Search query filter
+    // Search query filter -- partial, case-insensitive, synonym / plural aware
     if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
-      list = list.filter(
-        (p: AdminProduct) =>
-          p.name.toLowerCase().includes(q) ||
-          (p.categoryName && p.categoryName.toLowerCase().includes(q)) ||
-          (p.subcategory && p.subcategory.toLowerCase().includes(q)) ||
-          (p.description && p.description.toLowerCase().includes(q))
-      );
+      list = list.filter((p: AdminProduct) => productMatchesQuery(p, searchQuery));
     }
 
     // Price bracket filter
@@ -170,6 +164,18 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
       list.sort((a, b) => a.price - b.price);
     } else if (sortBy === 'price_desc') {
       list.sort((a, b) => b.price - a.price);
+    } else if (searchQuery.trim()) {
+      // Default sort with an active search -> most relevant first
+      const terms = expandQuery(searchQuery);
+      const rank = (p: AdminProduct) => {
+        const name = (p.name || '').toLowerCase();
+        const meta = `${p.categoryName || ''} ${p.subcategory || ''}`.toLowerCase();
+        if (terms.some((t) => name.startsWith(t))) return 0;
+        if (terms.some((t) => name.includes(t))) return 1;
+        if (terms.some((t) => meta.includes(t))) return 2;
+        return 3;
+      };
+      list.sort((a, b) => rank(a) - rank(b) || (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
     } else {
       list.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
     }
@@ -204,43 +210,43 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
   return (
     <>
       <SeoHead
-        title="Explore Celebration Setups & Packages — TheDecorParty"
+        title="Explore Celebration Setups & Packages — The Decor Party"
         description="Discover signature balloon arches, terrace cabanas, and bespoke birthday themes across Bengaluru."
       />
 
-      <div className="relative min-h-screen bg-[#F9F6F2] dark:bg-[#120B16] text-[#2F2930] dark:text-[#FAF8F5] font-sans antialiased transition-colors pb-20 overflow-x-hidden">
+      <div className="relative min-h-screen bg-[#FFF3E6] dark:bg-[#381932] text-[#381932] dark:text-[#FFF3E6] font-sans antialiased transition-colors pb-20 overflow-x-hidden">
         
         {/* ========================================================================= */}
         {/* 1. CINEMATIC LUXURY FULL-BLEED HERO SECTION WITH UNIFIED SEARCH ISLAND   */}
         {/* ========================================================================= */}
-        <section className="relative w-full min-h-screen overflow-hidden flex flex-col justify-center items-center text-center pt-24 sm:pt-28 pb-8 sm:pb-10 px-4 sm:px-6 bg-[#1B101F]">
+        <section className="relative w-full min-h-screen overflow-hidden flex flex-col justify-center items-center text-center pt-24 sm:pt-28 pb-8 sm:pb-10 px-4 sm:px-6 bg-[#381932]">
           {/* High-Resolution Landscape Backdrop with Scrim */}
           <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
             <img 
               src="/explore2.jpeg" 
-              alt="TheDecorParty Celebration Setups" 
+              alt="The Decor Party Celebration Setups" 
               className="w-full h-full object-cover object-center brightness-[0.75] contrast-[1.05] saturate-[1.1] transform-gpu scale-100 transition-all duration-700"
             />
             {/* Soft Ambient Vignette & Scrim Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1B101F] via-[#1B101F]/40 to-[#1B101F]/70 pointer-events-none" />
-            <div className="absolute inset-0 bg-radial-gradient from-transparent via-black/20 to-black/60 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#381932] via-[#381932]/40 to-[#381932]/70 pointer-events-none" />
+            <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#381932]/20 to-[#381932]/60 pointer-events-none" />
           </div>
 
           {/* Centered Editorial Hero Content */}
           <div className="relative z-10 max-w-4xl mx-auto w-full flex flex-col items-center justify-center text-center px-4 my-auto pt-6">
             {/* Small Eyebrow */}
-            <span className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-black/50 border border-white/25 text-[#F9F6F2] text-[10px] sm:text-xs font-semibold uppercase tracking-[0.22em] backdrop-blur-md mb-3 shadow-md">
+            <span className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-[#381932]/50 border border-[#381932]/25 text-[#FFF3E6] text-[10px] sm:text-xs font-semibold uppercase tracking-[0.22em] backdrop-blur-md mb-3 shadow-md">
               <Sparkles className="w-3.5 h-3.5 text-[#A78A9F]" />
               CURATED CELEBRATION EXPERIENCES
             </span>
 
             {/* Large Editorial Heading */}
-            <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-[56px] font-semibold text-[#F9F6F2] leading-[1.05] tracking-tight max-w-4xl drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
-              Explore <span className="text-[#C9BEAB] italic font-medium tracking-normal">Themes</span> &amp; Setups
+            <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-[56px] font-semibold text-[#FFF3E6] leading-[1.05] tracking-tight max-w-4xl drop-shadow-[0_4px_24px_rgba(56,25,50,0.85)]">
+              Explore <span className="text-[#381932] italic font-medium tracking-normal">Themes</span> &amp; Setups
             </h1>
 
             {/* Short Supporting Text */}
-            <p className="mt-2 max-w-xl text-xs sm:text-sm md:text-base text-[#F9F6F2]/90 font-sans font-light leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]">
+            <p className="mt-2 max-w-xl text-xs sm:text-sm md:text-base text-[#FFF3E6]/90 font-sans font-light leading-relaxed drop-shadow-[0_2px_10px_rgba(56,25,50,0.85)]">
               Discover signature balloon arches, terrace cabanas, and bespoke birthday themes styled across Bengaluru.
             </p>
           </div>
@@ -250,12 +256,12 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
         {/* 2. BREADCRUMB                                                            */}
         {/* ========================================================================= */}
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1720px] mx-auto pt-6">
-          <nav className="flex items-center gap-1.5 text-xs font-medium text-[#746B72] dark:text-[#A78A9F]">
-            <button type="button" onClick={() => navigate('/')} className="flex items-center gap-1 hover:text-[#725D75] cursor-pointer">
+          <nav className="flex items-center gap-1.5 text-xs font-medium text-[#381932] dark:text-[#381932]">
+            <button type="button" onClick={() => navigate('/')} className="flex items-center gap-1 hover:text-[#381932] cursor-pointer">
               <HomeIcon size={12} /> Home
             </button>
             <ChevronRight size={12} />
-            <span className="text-[#2F2930] dark:text-[#FAF8F5] font-semibold">
+            <span className="text-[#381932] dark:text-[#FFF3E6] font-semibold">
               {selectedCategory === 'ALL' ? 'Shop' : selectedCategory.charAt(0) + selectedCategory.slice(1).toLowerCase()}
             </span>
           </nav>
@@ -269,16 +275,16 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
 
             {/* ---- Sidebar: Filter By ---- */}
             <aside className="w-full lg:w-64 shrink-0">
-              <div className="lg:sticky lg:top-28 lg:min-h-[calc(100vh-9rem)] rounded-xl border border-[#E4DCD2] bg-white dark:bg-[#1A1220] dark:border-[#483250] p-5 flex flex-col gap-6">
+              <div className="lg:sticky lg:top-28 lg:min-h-[calc(100vh-9rem)] rounded-xl border border-[#381932]/30 bg-[#FFF3E6] dark:bg-[#381932] dark:border-[#381932] p-5 flex flex-col gap-6">
                 <div className="flex items-center justify-between">
-                  <h2 className="flex items-center gap-1.5 text-sm font-semibold text-[#725D75]">
+                  <h2 className="flex items-center gap-1.5 text-sm font-semibold text-[#381932]">
                     <Filter size={14} /> Filter By
                   </h2>
                   {(searchQuery || selectedCategory !== 'ALL' || selectedPriceBracket !== 'all' || sortBy !== 'featured') && (
                     <button
                       type="button"
                       onClick={clearAllFilters}
-                      className="text-[11px] font-semibold text-[#A78A9F] hover:text-[#725D75] cursor-pointer"
+                      className="text-[11px] font-semibold text-[#381932] hover:text-[#381932] cursor-pointer"
                     >
                       Clear all
                     </button>
@@ -287,7 +293,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
 
                 {/* Category */}
                 <div className="flex flex-col gap-2.5">
-                  <span className="text-[11px] font-semibold uppercase tracking-wide text-[#746B72] dark:text-[#A78A9F]">Category</span>
+                  <span className="text-[11px] font-semibold uppercase tracking-wide text-[#A78A9F] dark:text-[#381932]">Category</span>
                   <div className="flex flex-col gap-1">
                     {categoryTabs.map((cat) => (
                       <button
@@ -297,17 +303,17 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
                         className={cn(
                           'flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition-colors cursor-pointer',
                           selectedCategory === cat
-                            ? 'bg-[#725D75]/10 text-[#725D75] font-semibold'
-                            : 'text-[#2F2930] dark:text-[#FAF8F5] hover:bg-[#F3EFE7] dark:hover:bg-white/5'
+                            ? 'bg-[#A78A9F]/15 text-[#381932] font-semibold'
+                            : 'text-[#381932] dark:text-[#FFF3E6] hover:bg-[#FFF3E6] dark:hover:bg-[#FFF3E6]/5'
                         )}
                       >
                         <span
                           className={cn(
                             'flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border',
-                            selectedCategory === cat ? 'border-[#725D75] bg-[#725D75]' : 'border-[#E4DCD2] dark:border-[#483250]'
+                            selectedCategory === cat ? 'border-[#381932] bg-[#381932]' : 'border-[#381932]/30 dark:border-[#381932]'
                           )}
                         >
-                          {selectedCategory === cat && <Check size={9} className="text-white" />}
+                          {selectedCategory === cat && <Check size={9} className="text-[#FFF3E6]" />}
                         </span>
                         <span className="line-clamp-1">{cat.charAt(0) + cat.slice(1).toLowerCase()}</span>
                       </button>
@@ -315,11 +321,11 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
                   </div>
                 </div>
 
-                <div className="h-px bg-[#E4DCD2] dark:bg-[#483250]" />
+                <div className="h-px bg-[#FFF3E6] dark:bg-[#381932]" />
 
                 {/* Price */}
                 <div className="flex flex-col gap-2.5">
-                  <span className="text-[11px] font-semibold uppercase tracking-wide text-[#746B72] dark:text-[#A78A9F]">Price</span>
+                  <span className="text-[11px] font-semibold uppercase tracking-wide text-[#A78A9F] dark:text-[#381932]">Price</span>
                   <div className="flex flex-col gap-1">
                     {PRICE_BRACKETS.map((bracket) => (
                       <button
@@ -329,17 +335,17 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
                         className={cn(
                           'flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition-colors cursor-pointer',
                           selectedPriceBracket === bracket.value
-                            ? 'bg-[#725D75]/10 text-[#725D75] font-semibold'
-                            : 'text-[#2F2930] dark:text-[#FAF8F5] hover:bg-[#F3EFE7] dark:hover:bg-white/5'
+                            ? 'bg-[#A78A9F]/15 text-[#381932] font-semibold'
+                            : 'text-[#381932] dark:text-[#FFF3E6] hover:bg-[#FFF3E6] dark:hover:bg-[#FFF3E6]/5'
                         )}
                       >
                         <span
                           className={cn(
                             'flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border',
-                            selectedPriceBracket === bracket.value ? 'border-[#725D75] bg-[#725D75]' : 'border-[#E4DCD2] dark:border-[#483250]'
+                            selectedPriceBracket === bracket.value ? 'border-[#381932] bg-[#381932]' : 'border-[#381932]/30 dark:border-[#381932]'
                           )}
                         >
-                          {selectedPriceBracket === bracket.value && <Check size={9} className="text-white" />}
+                          {selectedPriceBracket === bracket.value && <Check size={9} className="text-[#FFF3E6]" />}
                         </span>
                         {bracket.label}
                       </button>
@@ -352,17 +358,17 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
             {/* ---- Main: Sort bar + Grid ---- */}
             <div className="flex-1 min-w-0">
               <div className="w-full mb-6 flex flex-wrap items-center justify-between gap-3">
-                <span className="text-xs font-semibold text-[#746B72] dark:text-[#A78A9F]">
+                <span className="text-xs font-semibold text-[#381932] dark:text-[#381932]">
                   Showing {filteredProducts.length} celebration package{filteredProducts.length === 1 ? '' : 's'}
                 </span>
-                <label className="flex items-center gap-2 text-xs font-medium text-[#2F2930] dark:text-[#FAF8F5]">
-                  <span className="hidden sm:inline text-[#746B72] dark:text-[#A78A9F]">Sort by</span>
+                <label className="flex items-center gap-2 text-xs font-medium text-[#381932] dark:text-[#FFF3E6]">
+                  <span className="hidden sm:inline text-[#381932] dark:text-[#381932]">Sort by</span>
                   <div className="relative flex items-center">
-                    <ArrowUpDown size={12} className="absolute left-3 text-[#725D75] pointer-events-none" />
+                    <ArrowUpDown size={12} className="absolute left-3 text-[#381932] pointer-events-none" />
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value as any)}
-                      className="appearance-none rounded-lg border border-[#E4DCD2] dark:border-[#483250] bg-white dark:bg-[#1A1220] pl-8 pr-4 py-2 text-xs font-semibold text-[#2F2930] dark:text-[#FAF8F5] focus:outline-none focus:border-[#A78A9F] cursor-pointer"
+                      className="appearance-none rounded-lg border border-[#381932]/30 dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] pl-8 pr-4 py-2 text-xs font-semibold text-[#381932] dark:text-[#FFF3E6] focus:outline-none focus:border-[#381932] cursor-pointer"
                     >
                       {SORT_OPTIONS.map((opt) => (
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -374,15 +380,23 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
 
               {loading ? (
                 <div className="py-24 flex flex-col items-center justify-center gap-3">
-                  <div className="h-8 w-8 rounded-full border-2 border-[#725D75] dark:border-white border-t-transparent animate-spin" />
-                  <span className="text-xs font-medium text-[#746B72] dark:text-[#FAF8F5]">
+                  <div className="h-8 w-8 rounded-full border-2 border-[#381932] dark:border-[#FFF3E6] border-t-transparent animate-spin" />
+                  <span className="text-xs font-medium text-[#381932] dark:text-[#FFF3E6]">
                     Loading celebration packages...
                   </span>
                 </div>
               ) : filteredProducts.length === 0 ? (
                 <EmptyState
-                  title="No packages found"
-                  description="We couldn't find any decoration experiences matching your selected filters."
+                  title={
+                    searchQuery.trim()
+                      ? `No celebrations found for “${searchQuery.trim()}”`
+                      : 'No packages found'
+                  }
+                  description={
+                    searchQuery.trim()
+                      ? EMPTY_SEARCH_HINT
+                      : "We couldn't find any decoration experiences matching your selected filters."
+                  }
                   actionLabel="Clear All Filters"
                   onAction={clearAllFilters}
                 />

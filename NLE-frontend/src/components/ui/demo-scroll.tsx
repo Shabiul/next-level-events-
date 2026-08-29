@@ -32,7 +32,7 @@ const values = {
     },
     {
       num: "05",
-      title: "Express 3-Hour Same-Day Bookings",
+      title: "Express Delivery",
       description: "Last-minute surprise? Our express fleet covers all Bengaluru zones from Indiranagar to Whitefield, HSR, and Electronic City.",
       media: "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=1200&auto=format&fit=crop&q=85",
       badge: "Bengaluru Express",

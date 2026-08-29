@@ -1,8 +1,7 @@
-import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import User from "../models/User";
-import sendEmail from "../utils/sendEmail";
+import { signAuthToken } from "../utils/auth";
 
 const ADMIN_EMAIL = "admin@nextlevelevents.com";
 const isKnownAdminEmail = (email: string) => email.toLowerCase() === ADMIN_EMAIL;
@@ -34,7 +33,7 @@ export const login = async (req: Request, res: Response) => {
       await user.save();
     }
 
-    const token = jwt.sign({ id: user._id, role }, process.env.JWT_SECRET || "secret", { expiresIn: "1d" });
+    const token = signAuthToken({ id: String(user._id), role }, "1d");
 
     res.json({
       token,

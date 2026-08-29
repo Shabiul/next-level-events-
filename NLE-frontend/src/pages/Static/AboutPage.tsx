@@ -1,23 +1,31 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import {
-  Sparkles,
-  Clock,
-  Camera,
-  UserCheck,
-  ShieldCheck,
   Palette,
-  HeartHandshake,
   Quote,
   Shield,
   Truck,
   Users,
   CheckCircle2,
   ThumbsUp,
+  Heart,
+  ArrowRight,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { SeoHead } from '../../components/layout/SeoHead';
 import { AnimatedNumber } from '../../components/core/animated-number';
-import { TiltGlareCard } from '../../components/ui/TiltGlareCard';
+
+const HERO_IMAGE = '/about-purple-banner.png';
+const STORY_IMAGE = '/about-aesthetic.png';
+
+/* Inline botanical sprig -- matches the Packages page accent */
+const Sprig: React.FC<{ className?: string }> = ({ className = '' }) => (
+  <svg viewBox="0 0 80 24" fill="none" className={className} aria-hidden="true">
+    <path d="M2 12h44" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    <path d="M46 12c6 0 10-4 12-9M46 12c6 0 10 4 12 9M46 12c7 0 12 0 16-3M46 12c7 0 12 0 16 3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    <circle cx="70" cy="12" r="2.4" fill="currentColor" />
+  </svg>
+);
 
 const PROCESS_STEPS = [
   {
@@ -28,12 +36,12 @@ const PROCESS_STEPS = [
   {
     step: '02',
     title: 'Select Date & Location',
-    desc: 'Choose your event date and Bengaluru area. Select express 3-hour same-day or future schedule.',
+    desc: 'Choose your event date and Bengaluru area. Select Express Delivery or a future schedule.',
   },
   {
     step: '03',
-    title: 'Bespoke Customization',
-    desc: 'Add personalized neon signs, color choices, milestone numbers, or talk directly with lead stylists on WhatsApp.',
+    title: 'Bespoke Customisation',
+    desc: 'Add personalised neon signs, colour choices, milestone numbers, or talk directly with lead stylists on WhatsApp.',
   },
   {
     step: '04',
@@ -51,432 +59,266 @@ const WHY_CHOOSE_US = [
   { icon: ThumbsUp, title: '100% Satisfaction', description: 'Your happiness matters' },
 ];
 
-// Interactive 3D Tilt Card Component
-const ThreeDCard: React.FC<{
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}> = ({ children, className = '', delay = 0 }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [rotX, setRotX] = React.useState(0);
-  const [rotY, setRotY] = React.useState(0);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    setRotX((-y / rect.height) * 10);
-    setRotY((x / rect.width) * 10);
-  };
-
-  const handleMouseLeave = () => {
-    setRotX(0);
-    setRotY(0);
-  };
-
-  return (
-    <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0, y: 35 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        transformStyle: 'preserve-3d',
-        perspective: 1000,
-      }}
-      animate={{
-        rotateX: rotX,
-        rotateY: rotY,
-      }}
-      className={`transition-transform duration-200 ease-out ${className}`}
-    >
-      <div style={{ transform: 'translateZ(20px)' }}>{children}</div>
-    </motion.div>
-  );
-};
-
 export const AboutPage: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const splitRef = useRef<HTMLDivElement>(null);
-
-  // Scroll Progress Bindings for 3D Parallax & Depth
   const { scrollYProgress: heroScroll } = useScroll({
     target: containerRef,
     offset: ['start start', 'end start'],
   });
-
-  const { scrollYProgress: splitScroll } = useScroll({
-    target: splitRef,
-    offset: ['start end', 'end start'],
-  });
-
-  // Smooth Spring Transforms
-  const heroScale = useSpring(useTransform(heroScroll, [0, 0.6], [1, 0.94]), {
-    stiffness: 100,
-    damping: 20,
-  });
-  const heroRotateX = useSpring(useTransform(heroScroll, [0, 0.6], [0, 6]), {
-    stiffness: 100,
-    damping: 20,
-  });
-  const heroImgY = useTransform(heroScroll, [0, 0.6], [0, 50]);
-
-  const splitImgRotateY = useSpring(
-    useTransform(splitScroll, [0, 1], [-8, 8]),
-    { stiffness: 100, damping: 20 }
-  );
-  const splitImgY = useTransform(splitScroll, [0, 1], [-30, 30]);
-
-  const pillars = [
-    {
-      icon: Clock,
-      title: 'Prime Location & Timing',
-      description:
-        'We value your time above all else. Our dedicated styling crew arrives promptly to ensure your setup is completed well before your guests arrive.',
-    },
-    {
-      icon: Camera,
-      title: 'Real-to-Photo Guarantee',
-      description:
-        'What you see in our catalog is exactly what you get at your event. We guarantee 100% fidelity in colors, balloon density, and aesthetic arrangement.',
-    },
-    {
-      icon: UserCheck,
-      title: 'Verified Master Stylists',
-      description:
-        'Our decorators undergo rigorous training and background checks. They bring professional finesse, safety standards, and artistic care to your home or venue.',
-    },
-    {
-      icon: ShieldCheck,
-      title: 'Upfront & Honest Pricing',
-      description:
-        'No hidden fees or unexpected surcharges on event day. All costs are transparently detailed upfront so you can plan your budget with complete confidence.',
-    },
-    {
-      icon: Palette,
-      title: 'Bespoke Customization',
-      description:
-        'Every setup can be personalized to fit your theme, color scheme, and venue layout. We tailor fonts, neon signs, and backdrops to match your vision.',
-    },
-    {
-      icon: HeartHandshake,
-      title: 'End-to-End Execution',
-      description:
-        'From initial concept and material delivery to post-event teardown options, we manage the complete lifecycle so you enjoy a hassle-free celebration.',
-    },
-  ];
+  const heroImgY = useTransform(heroScroll, [0, 0.6], [0, 60]);
 
   return (
     <>
       <SeoHead
-        title="About Us — TheDecorParty | Bespoke Celebration & Event Styling"
-        description="Providing Bengaluru's finest bespoke styling and surprise experiences. Discover our story, standards, and founder commitment at TheDecorParty."
+        title="About Us — The Decor Party | Bespoke Celebration & Event Styling"
+        description="Providing Bengaluru's finest bespoke styling and surprise experiences. Discover our story, standards, and founder commitment at The Decor Party."
       />
 
       <div
         ref={containerRef}
-        className="w-full bg-[#F8F6F2] text-[#2F2930] font-sans antialiased selection:bg-[#725D75]/20 overflow-x-hidden"
+        className="w-full bg-[#FFF3E6] text-[#381932] font-poppins antialiased selection:bg-[#381932]/20 overflow-x-hidden"
       >
-        {/* ========================================================================= */}
-        {/* SECTION 1 — HERO HEADER BANNER (3D Parallax Scroll)                      */}
-        {/* ========================================================================= */}
-        <section data-nav-theme="light" className="w-full max-w-7xl mx-auto pt-8 pb-4 px-6 perspective-[1200px]">
+        {/* ===================================================================== */}
+        {/* SECTION 1 — HERO                                                      */}
+        {/* ===================================================================== */}
+        <section data-nav-theme="light" className="w-full max-w-7xl mx-auto pt-8 pb-4 px-6">
           <motion.div
-            style={{
-              scale: heroScale,
-              rotateX: heroRotateX,
-              transformStyle: 'preserve-3d',
-            }}
-            className="relative w-full h-[280px] sm:h-[380px] rounded-[32px] sm:rounded-[40px] overflow-hidden shadow-2xl border border-[#725D75]/30 bg-[#725D75]"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="relative w-full h-[300px] sm:h-[420px] rounded-[24px] sm:rounded-[32px] overflow-hidden border border-[#E6D7C5] shadow-[0_24px_60px_-30px_rgba(56,25,50,0.5)] bg-[#381932]"
           >
-            {/* Background Image with 3D Parallax */}
             <motion.img
               style={{ y: heroImgY }}
-              src="/about-purple-banner.png"
-              alt="TheDecorParty Luxury Setup"
-              className="w-full h-[120%] object-cover object-center scale-105"
+              src={HERO_IMAGE}
+              alt="The Decor Party bespoke celebration styling"
+              className="w-full h-[118%] object-cover object-center"
             />
+            {/* layered scrim -- vertical wash + centre vignette for text legibility */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#25101f]/95 via-[#381932]/70 to-[#381932]/45" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(37,16,31,0.55)_0%,transparent_65%)]" />
 
-            {/* Gradient Overlay matching Reference */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#2A1732]/90 via-[#725D75]/60 to-black/35 backdrop-blur-[1px]" />
-
-            {/* Centered Headline matching Murudeshwara layout */}
             <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-6 z-10">
+              <motion.span
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.25 }}
+                className="inline-flex items-center gap-2 rounded-full border border-[#FFF3E6]/25 bg-[#25101f]/40 px-4 py-1.5 text-[10px] sm:text-[11px] font-poppins font-semibold uppercase tracking-[0.28em] text-[#FFF3E6] backdrop-blur-sm mb-4"
+              >
+                <Heart size={12} className="fill-[#C8B5C3] text-[#C8B5C3]" />
+                Our Story
+              </motion.span>
               <motion.h1
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.2 }}
-                className="font-serif text-4xl sm:text-5xl lg:text-[64px] font-normal tracking-tight text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)] mb-3"
+                transition={{ duration: 0.7, delay: 0.15 }}
+                className="font-serif text-4xl sm:text-5xl lg:text-[64px] font-bold uppercase tracking-tight text-[#FFF3E6] leading-[1.05] [text-shadow:0_2px_24px_rgba(37,16,31,0.85)]"
               >
-                About Us
+                About <span className="text-[#C8B5C3]">The Decor Party</span>
               </motion.h1>
-
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.35 }}
-                className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-[0.3em] text-[#A78A9F] drop-shadow-md"
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="font-script text-2xl sm:text-3xl text-[#FFF3E6] mt-3 [text-shadow:0_2px_18px_rgba(37,16,31,0.9)]"
               >
-                <Sparkles size={14} className="text-[#A78A9F]" />
-                <span>OUR STORY</span>
-              </motion.div>
+                celebrations, beautifully styled
+              </motion.p>
             </div>
           </motion.div>
         </section>
 
-        {/* ========================================================================= */}
-        {/* SECTION 2 — NARRATIVE SPLIT SECTION ("WHO WE ARE")                        */}
-        {/* ========================================================================= */}
-        <section
-          ref={splitRef}
-          data-nav-theme="light"
-          className="w-full max-w-7xl mx-auto py-16 sm:py-20 px-6"
-        >
+        {/* ===================================================================== */}
+        {/* SECTION 2 — WHO WE ARE (split)                                        */}
+        {/* ===================================================================== */}
+        <section data-nav-theme="light" className="w-full max-w-7xl mx-auto py-10 sm:py-12 px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            {/* Left Column (7 cols) */}
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
+              initial={{ opacity: 0, x: -24 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.7 }}
               className="lg:col-span-7 flex flex-col text-left"
             >
-              <div className="flex items-center gap-2 text-sm sm:text-base font-extrabold uppercase tracking-[0.32em] text-[#725D75] mb-4">
-                <span>WHO WE ARE</span>
-              </div>
+              <span className="inline-flex items-center gap-2 text-[11px] font-poppins font-semibold uppercase tracking-[0.2em] text-[#A78A9F] mb-4">
+                <Sprig className="w-14 h-5 text-[#A78A9F]" />
+                Who We Are
+              </span>
 
-              <h2 className="font-serif text-4xl sm:text-5xl lg:text-[56px] font-semibold leading-[1.12] text-[#2F2930] mb-7">
-                Providing the Best Bespoke Celebration Experience in{' '}
-                <span className="font-serif italic text-[#746B72]">
-                  Bengaluru
-                </span>
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-[48px] font-bold uppercase leading-[1.1] tracking-tight text-[#381932] mb-6">
+                Bengaluru's Finest{' '}
+                <span className="text-[#A78A9F]">Bespoke Celebration</span> Experience
               </h2>
 
-              <div className="space-y-5 text-lg sm:text-xl text-[#746B72] leading-relaxed font-normal">
+              <div className="space-y-4 text-[15px] sm:text-base text-[#381932]/80 leading-relaxed">
                 <p>
-                  At TheDecorParty, we are committed to delivering top-tier styling and surprise celebration services. From intimate residential anniversaries to grand milestone extravagances, we ensure every aspect of your event is handled with absolute professionalism.
+                  At The Decor Party, we are committed to delivering top-tier styling and surprise
+                  celebration services. From intimate residential anniversaries to grand milestone
+                  extravagances, we ensure every aspect of your event is handled with absolute
+                  professionalism.
                 </p>
                 <p>
-                  Our team of experienced master stylists and friendly event coordinators work around the clock to create seamless, memorable journeys and picture-perfect backdrops across Bengaluru.
+                  Our team of experienced master stylists and friendly event coordinators work around
+                  the clock to create seamless, memorable journeys and picture-perfect backdrops
+                  across Bengaluru.
                 </p>
               </div>
 
-              {/* Trust Stats Bar */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-0 sm:divide-x divide-[#725D75]/25 mt-9 py-4 border-y border-[#725D75]/20">
-                <div className="sm:pr-5 sm:pl-0">
-                  <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#2F2930] tracking-tight">
-                    <AnimatedNumber value={4.9} decimalPlaces={1} springOptions={{ bounce: 0, duration: 2000 }} />
-                    <span className="text-[#725D75] ml-1 text-xl sm:text-2xl">★</span>
+              {/* Stats */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-6 mt-9 py-6 border-y border-[#E6D7C5]">
+                {[
+                  { value: 4.9, dp: 1, suffix: '★', label: 'Guest Rating' },
+                  { value: 5200, dp: 0, suffix: '+', label: 'Happy Guests' },
+                  { value: 100, dp: 0, suffix: '%', label: 'Real-to-Photo' },
+                  { value: 500, dp: 0, suffix: '+', label: 'Curated Setups' },
+                ].map((s) => (
+                  <div key={s.label}>
+                    <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[32px] font-bold text-[#381932] tracking-tight">
+                      <AnimatedNumber value={s.value} decimalPlaces={s.dp} springOptions={{ bounce: 0, duration: 2000 }} />
+                      <span className="ml-1 text-[#A78A9F] text-xl sm:text-2xl">{s.suffix}</span>
+                    </div>
+                    <p className="text-[10px] sm:text-[11px] font-poppins font-semibold uppercase tracking-[0.14em] text-[#381932]/60 mt-1">
+                      {s.label}
+                    </p>
                   </div>
-                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#746B72] mt-1">
-                    Guest Rating
-                  </p>
-                </div>
-
-                <div className="sm:px-5">
-                  <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#2F2930] tracking-tight">
-                    <AnimatedNumber value={5200} decimalPlaces={0} springOptions={{ bounce: 0, duration: 2000 }} />
-                    <span className="text-[#725D75] font-serif text-xl sm:text-2xl">+</span>
-                  </div>
-                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#746B72] mt-1">
-                    Happy Guests
-                  </p>
-                </div>
-
-                <div className="sm:px-5">
-                  <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#2F2930] tracking-tight">
-                    <AnimatedNumber value={100} decimalPlaces={0} springOptions={{ bounce: 0, duration: 2000 }} />
-                    <span className="text-[#725D75] font-serif text-xl sm:text-2xl">%</span>
-                  </div>
-                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#746B72] mt-1">
-                    Real-to-Photo
-                  </p>
-                </div>
-
-                <div className="sm:pl-5 sm:pr-0">
-                  <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-[34px] font-bold text-[#2F2930] tracking-tight">
-                    <AnimatedNumber value={3} decimalPlaces={0} springOptions={{ bounce: 0, duration: 2000 }} />
-                    <span className="text-[#725D75] font-serif text-lg sm:text-xl ml-0.5">-Hour</span>
-                  </div>
-                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.14em] text-[#746B72] mt-1">
-                    Express Setup
-                  </p>
-                </div>
+                ))}
               </div>
             </motion.div>
 
-            {/* Right Column 3D Image Showcase (5 cols) */}
             <motion.div
-              style={{
-                rotateY: splitImgRotateY,
-                y: splitImgY,
-                transformStyle: 'preserve-3d',
-              }}
-              className="lg:col-span-5 w-full perspective-[1000px]"
+              initial={{ opacity: 0, x: 24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="lg:col-span-5 w-full"
             >
-              <div className="relative w-full rounded-[32px] sm:rounded-[36px] overflow-hidden shadow-2xl border border-[#725D75]/25 aspect-[4/5] bg-[#725D75]">
+              <div className="relative w-full rounded-[26px] overflow-hidden border border-[#E6D7C5] shadow-[0_24px_55px_-30px_rgba(56,25,50,0.5)] aspect-[4/5] bg-[#381932] group">
                 <img
-                  src="/about-aesthetic.png"
-                  alt="Bespoke Celebration Experience"
-                  className="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-105"
+                  src={STORY_IMAGE}
+                  alt="Bespoke celebration experience by The Decor Party"
+                  className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.04]"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#725D75]/70 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#381932]/60 via-transparent to-transparent pointer-events-none" />
               </div>
             </motion.div>
           </div>
         </section>
 
-        {/* ========================================================================= */}
-        {/* SECTION 2.5 — WHY CHOOSE THE DECOR PARTY -- simple icon row              */}
-        {/* ========================================================================= */}
-        <section data-nav-theme="light" className="w-full bg-[#F9F6F2] py-12 sm:py-14 border-y border-[#725D75]/15">
-          <div className="mx-auto max-w-7xl px-6">
-            <h2 className="text-center font-serif text-2xl sm:text-3xl font-bold text-[#2F2930] mb-8 sm:mb-10">
-              Why Choose The Decor Party?
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8">
+        {/* ===================================================================== */}
+        {/* SECTION 3 — WHY CHOOSE US (icon row)                                  */}
+        {/* ===================================================================== */}
+        <section data-nav-theme="light" className="w-full py-10 sm:py-12 px-6">
+          <div className="mx-auto max-w-7xl">
+            <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
+              <span className="inline-flex items-center gap-2 text-[11px] font-poppins font-semibold uppercase tracking-[0.2em] text-[#A78A9F] mb-3">
+                <Sprig className="w-14 h-5 text-[#A78A9F]" />
+                The Difference
+                <Sprig className="w-14 h-5 text-[#A78A9F] -scale-x-100" />
+              </span>
+              <h2 className="font-serif text-3xl sm:text-4xl font-bold uppercase tracking-tight text-[#381932]">
+                Why Choose The Decor Party
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-5">
               {WHY_CHOOSE_US.map(({ icon: Icon, title, description }) => (
-                <div key={title} className="flex flex-col items-center text-center gap-2">
-                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-[#725D75] shadow-sm">
-                    <Icon size={22} />
+                <div
+                  key={title}
+                  className="flex flex-col items-center text-center gap-2.5 rounded-[20px] border border-[#E6D7C5] bg-[#FFF3E6] p-5 shadow-[0_10px_30px_-22px_rgba(56,25,50,0.4)] transition-transform duration-300 hover:-translate-y-1"
+                >
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#A78A9F] text-[#FFF3E6] shadow-[0_8px_18px_-8px_rgba(167,138,159,0.9)]">
+                    <Icon size={20} />
                   </span>
-                  <span className="text-xs font-bold text-[#2F2930]">{title}</span>
-                  <span className="text-[11px] text-[#746B72] font-light">{description}</span>
+                  <span className="font-serif text-[13px] font-bold uppercase tracking-tight text-[#381932] leading-tight">
+                    {title}
+                  </span>
+                  <span className="text-[11px] text-[#381932]/60">{description}</span>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ========================================================================= */}
-        {/* SECTION 3 — CORE PILLARS GRID ("Why Bengaluru Chooses Us")               */}
-        {/* ========================================================================= */}
-        <section
-          data-nav-theme="light"
-          className="w-full py-20 px-6 bg-[#F9F6F2] border-y border-[#725D75]/15"
-        >
-          <div className="max-w-7xl mx-auto">
-            {/* Centered Title matching Reference Image 3 */}
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="font-serif text-3xl sm:text-4xl lg:text-[48px] font-normal text-[#2F2930] mb-4 tracking-tight"
-              >
-                Why Bengaluru Chooses Us
-              </motion.h2>
-              <p className="text-base text-[#746B72] max-w-xl mx-auto">
-                Discover the foundational standards that make every celebration with us effortless and unforgettable.
-              </p>
-            </div>
-
-            {/* 3D Feature Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {pillars.map((pillar, idx) => {
-                const Icon = pillar.icon;
-                return (
-                  <ThreeDCard key={pillar.title} delay={idx * 0.1}>
-                    <div className="h-full bg-white rounded-[28px] p-8 border border-[#725D75]/20 shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group">
-                      <div>
-                        {/* Circular Icon Pill Badge */}
-                        <div className="w-12 h-12 rounded-full bg-[#F9F6F2] border border-[#725D75]/25 flex items-center justify-center text-[#725D75] mb-6 shadow-sm group-hover:bg-[#725D75] group-hover:text-[#A78A9F] transition-colors">
-                          <Icon size={20} />
-                        </div>
-
-                        <h3 className="font-serif text-xl font-bold text-[#2F2930] mb-3">
-                          {pillar.title}
-                        </h3>
-
-                        <p className="text-sm sm:text-[15px] text-[#746B72] leading-relaxed font-light">
-                          {pillar.description}
-                        </p>
-                      </div>
-                    </div>
-                  </ThreeDCard>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* ========================================================================= */}
-        {/* SECTION 3.5 — HOW IT WORKS / BOOKING JOURNEY                             */}
-        {/* ========================================================================= */}
-        <section id="process" data-nav-theme="light" className="w-full py-20 px-6">
+        {/* ===================================================================== */}
+        {/* SECTION 5 — HOW IT WORKS                                              */}
+        {/* ===================================================================== */}
+        <section id="process" data-nav-theme="light" className="w-full py-10 sm:py-12 px-6">
           <div className="max-w-7xl mx-auto">
             <div className="text-center max-w-2xl mx-auto mb-12">
-              <p className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-[#746B72] mb-2.5">
-                <span className="eyebrow-line bg-[#725D75]" />
+              <span className="inline-flex items-center gap-2 text-[11px] font-poppins font-semibold uppercase tracking-[0.2em] text-[#A78A9F] mb-3">
+                <Sprig className="w-14 h-5 text-[#A78A9F]" />
                 Seamless Booking Flow
-                <span className="eyebrow-line bg-[#725D75]" />
-              </p>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-[44px] font-normal uppercase tracking-tight text-[#2F2930] leading-[1.08]">
+                <Sprig className="w-14 h-5 text-[#A78A9F] -scale-x-100" />
+              </span>
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-[44px] font-bold uppercase tracking-tight text-[#381932]">
                 How It Works
               </h2>
-              <p className="text-sm sm:text-base font-light leading-relaxed text-[#746B72] mt-2 max-w-md mx-auto">
-                From discovering your aesthetic to verified decorators setting up at your door.
-              </p>
             </div>
 
-            {/* 4-Step 3D Tilt + Glare Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
-              {PROCESS_STEPS.map((step) => (
-                <TiltGlareCard
+              {PROCESS_STEPS.map((step, i) => (
+                <motion.div
                   key={step.step}
-                  step={step.step}
-                  title={step.title}
-                  desc={step.desc}
-                />
+                  initial={{ opacity: 0, y: 22 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  transition={{ duration: 0.5, delay: i * 0.07 }}
+                  className="relative h-full rounded-[22px] bg-[#FFF3E6] p-6 border border-[#E6D7C5] shadow-[0_12px_34px_-22px_rgba(56,25,50,0.4)] transition-transform duration-300 hover:-translate-y-1"
+                >
+                  <span className="font-serif text-3xl font-bold text-[#A78A9F]/45">{step.step}</span>
+                  <h3 className="font-serif text-base font-bold uppercase tracking-tight text-[#381932] mt-2 mb-2">
+                    {step.title}
+                  </h3>
+                  <p className="text-[13px] text-[#381932]/75 leading-relaxed">{step.desc}</p>
+                </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ========================================================================= */}
-        {/* SECTION 4 — FOUNDER SIGN-OFF & LEADERSHIP SECTION                        */}
-        {/* ========================================================================= */}
-        <section data-nav-theme="dark" className="w-full max-w-6xl mx-auto py-16 px-6">
-          <ThreeDCard delay={0.1}>
-            <div className="bg-[#725D75] rounded-[32px] p-8 sm:p-14 border border-[#725D75]/30 text-center flex flex-col items-center gap-6 shadow-2xl relative overflow-hidden">
-              {/* Soft Ambient Radial Glows */}
-              <div className="absolute top-0 right-0 w-80 h-80 bg-[#725D75]/10 rounded-full blur-3xl pointer-events-none" />
-              <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#483250]/40 rounded-full blur-3xl pointer-events-none" />
+        {/* ===================================================================== */}
+        {/* SECTION 6 — FOUNDER SIGN-OFF                                          */}
+        {/* ===================================================================== */}
+        <section data-nav-theme="dark" className="w-full max-w-6xl mx-auto py-10 px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative bg-[#381932] rounded-[28px] p-8 sm:p-14 border border-[#E6D7C5]/20 text-center flex flex-col items-center gap-6 shadow-[0_30px_70px_-35px_rgba(56,25,50,0.8)] overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 w-80 h-80 bg-[#A78A9F]/20 rounded-full blur-3xl pointer-events-none" />
 
-              <div className="relative z-10 flex flex-col items-center gap-5">
-                {/* Quote Icon */}
-                <div className="w-12 h-12 rounded-full bg-[#725D75]/20 text-[#A78A9F] border border-[#725D75]/30 flex items-center justify-center shadow-inner">
-                  <Quote size={20} />
-                </div>
-
-                {/* Quote Message */}
-                <blockquote className="font-serif text-xl sm:text-2xl lg:text-[28px] italic font-normal text-[#F9F6F2] leading-relaxed max-w-3xl">
-                  “Every celebration is someone’s once-in-a-lifetime moment. We started TheDecorParty to ensure every setup feels effortless, personal, and impeccably styled.”
-                </blockquote>
-
-                <div className="w-24 h-[1px] bg-[#725D75]/40 my-2" />
-
-                {/* Founder Identity */}
-                <div className="flex flex-col items-center gap-1">
-                  <span className="font-serif text-xl sm:text-2xl font-semibold text-[#A78A9F]">
-                    Prashanth B S
-                  </span>
-                  <span className="text-xs sm:text-sm font-medium tracking-wider text-[#725D75] uppercase">
-                    Founders &amp; Creative Directors, TheDecorParty
-                  </span>
-
-                  <div className="font-serif italic text-2xl text-[#A78A9F] opacity-80 tracking-widest mt-2 select-none">
-                    Prashanth B S
-                  </div>
-                </div>
+            <div className="relative z-10 flex flex-col items-center gap-5">
+              <div className="w-12 h-12 rounded-full bg-[#A78A9F]/25 text-[#FFF3E6] flex items-center justify-center">
+                <Quote size={20} />
               </div>
+
+              <blockquote className="font-serif text-xl sm:text-2xl lg:text-[26px] font-medium uppercase tracking-tight text-[#FFF3E6] leading-[1.35] max-w-3xl">
+                Every celebration is someone's once-in-a-lifetime moment. We started The Decor Party
+                to ensure every setup feels effortless, personal, and impeccably styled.
+              </blockquote>
+
+              <div className="w-16 h-[1px] bg-[#A78A9F]/50 my-1" />
+
+              <div className="flex flex-col items-center gap-1">
+                <span className="font-script text-2xl sm:text-3xl text-[#A78A9F]">
+                  Revanth &amp; Prashanth B S
+                </span>
+                <span className="text-[11px] sm:text-xs font-poppins font-medium tracking-[0.16em] text-[#FFF3E6]/70 uppercase">
+                  Founders &amp; Creative Directors, The Decor Party
+                </span>
+              </div>
+
+              <Link
+                to="/packages"
+                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#FFF3E6] text-[#381932] px-6 py-3 text-[11px] font-serif font-semibold uppercase tracking-wide shadow-sm hover:bg-[#A78A9F] hover:text-[#FFF3E6] transition-colors group/btn"
+              >
+                Explore Our Packages
+                <ArrowRight size={13} className="transition-transform group-hover/btn:translate-x-0.5" />
+              </Link>
             </div>
-          </ThreeDCard>
+          </motion.div>
         </section>
       </div>
     </>
@@ -484,4 +326,3 @@ export const AboutPage: React.FC = () => {
 };
 
 export default AboutPage;
-

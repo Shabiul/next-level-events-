@@ -103,14 +103,14 @@ export const HomePage: React.FC<HomePageProps> = ({
   const homePackages = HOME_PACKAGE_INDICES.map((i) => EVENT_PACKAGES[i]).filter(Boolean);
 
   return (
-    <div className="flex flex-col pb-0 bg-[#F9F6F2] text-[#2F2930] font-sans antialiased transition-colors">
+    <div className="flex flex-col pb-0 bg-[#FFF3E6] text-[#381932] font-sans antialiased transition-colors">
 
       {/* ========================================================================= */}
       {/* 1. CINEMATIC LUXURY FULL-SCREEN HERO SECTION (original video hero)       */}
       {/* ========================================================================= */}
       <section
         data-nav-theme="dark"
-        className="relative w-full min-h-[100vh] sm:min-h-[100svh] overflow-hidden flex flex-col justify-center items-center text-center shadow-2xl bg-[#0F0A12] px-4 sm:px-6"
+        className="relative w-full min-h-[100vh] sm:min-h-[100svh] overflow-hidden flex flex-col justify-center items-center text-center shadow-2xl bg-[#381932] px-4 sm:px-6"
       >
         {/* Background Video Media with Scrim & Vignette Overlays */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
@@ -129,21 +129,21 @@ export const HomePage: React.FC<HomePageProps> = ({
             <source src="/landing page.mp4" type="video/mp4" />
           </video>
           {/* Ambient vignette & gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/45 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#381932]/80 via-[#381932]/25 to-[#381932]/45 pointer-events-none" />
         </div>
 
         {/* Hero Editorial Content */}
         <div className="relative z-10 max-w-4xl mx-auto w-full flex flex-col items-center justify-center text-center px-4 my-auto pt-16 sm:pt-20">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/40 border border-white/20 text-[#F9F6F2] text-[10px] sm:text-xs font-medium uppercase tracking-[0.28em] backdrop-blur-md mb-5 shadow-sm">
-            <Sparkles className="w-3.5 h-3.5 text-[#C9BEAB]" />
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#381932]/40 border border-[#381932]/20 text-[#FFF3E6] text-[10px] sm:text-xs font-medium uppercase tracking-[0.28em] backdrop-blur-md mb-5 shadow-sm">
+            <Sparkles className="w-3.5 h-3.5 text-[#A78A9F]" />
             Curated Celebrations • Beautifully Styled
           </span>
 
-          <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-[76px] font-semibold text-[#F9F6F2] leading-[1] tracking-tight max-w-4xl drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)]">
-            Celebrate <span className="text-[#C9BEAB] italic font-medium tracking-normal">Every Moment</span> Beautifully
+          <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-[76px] font-semibold text-[#FFF3E6] leading-[1] tracking-tight max-w-4xl drop-shadow-[0_4px_30px_rgba(56,25,50,0.9)]">
+            Celebrate <span className="font-script text-[#FFF3E6] font-normal tracking-normal">Every Moment</span> Beautifully
           </h1>
 
-          <p className="mt-5 max-w-xl text-sm sm:text-base text-[#F9F6F2]/85 font-sans font-light leading-relaxed tracking-wide drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+          <p className="mt-5 max-w-xl text-sm sm:text-base text-[#FFF3E6]/85 font-sans font-light leading-relaxed tracking-wide drop-shadow-[0_2px_12px_rgba(56,25,50,0.85)]">
             Thoughtfully styled celebrations, beautiful surprises, and unforgettable moments — designed around you.
           </p>
 
@@ -151,7 +151,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <button
               type="button"
               onClick={() => navigate('/explore')}
-              className="inline-flex items-center gap-2 rounded-full bg-[#F9F6F2] text-[#2F2930] hover:bg-[#C9BEAB] px-8 py-3.5 text-xs sm:text-sm font-medium tracking-[0.06em] shadow-sm transition-colors duration-300 cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-full bg-[#FFF3E6] text-[#381932] hover:opacity-90 px-8 py-3.5 text-xs sm:text-sm font-medium tracking-[0.06em] shadow-sm transition-colors duration-300 cursor-pointer"
             >
               <span>Explore Celebrations</span>
               <ArrowRight size={14} />
@@ -159,7 +159,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <button
               type="button"
               onClick={() => navigate('/packages')}
-              className="inline-flex items-center gap-2 rounded-full bg-transparent hover:bg-white/10 text-[#F9F6F2] border border-white/40 px-8 py-3.5 text-xs sm:text-sm font-medium tracking-[0.06em] transition-colors duration-300 cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-full bg-transparent hover:bg-[#FFF3E6]/10 text-[#FFF3E6] border border-[#381932]/40 px-8 py-3.5 text-xs sm:text-sm font-medium tracking-[0.06em] transition-colors duration-300 cursor-pointer"
             >
               <span>View All Packages</span>
             </button>
@@ -170,30 +170,30 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* ========================================================================= */}
       {/* TRUST MARQUEE SECTION                                                    */}
       {/* ========================================================================= */}
-      <div id="trust-marquee" data-nav-theme="dark" className="relative z-10 overflow-hidden bg-[#725D75] py-4 sm:py-5 text-[#F9F6F2]">
+      <div id="trust-marquee" data-nav-theme="dark" className="relative z-10 overflow-hidden bg-[#381932] py-4 sm:py-5 text-[#FFF3E6]">
         <div className="animate-marquee whitespace-nowrap text-sm sm:text-base font-medium tracking-wide">
           {[0, 1].map((rep) => (
             <React.Fragment key={rep}>
               <span className="mx-6 inline-flex items-center gap-2">
-                <Shield size={16} className="text-[#C9BEAB]" /> Verified Master Stylists
+                <Shield size={16} className="text-[#381932]" /> Verified Master Stylists
               </span>
-              <span className="mx-2 text-white/25">|</span>
+              <span className="mx-2 text-[#FFF3E6]/25">|</span>
               <span className="mx-6 inline-flex items-center gap-2">
-                <Clock size={16} className="text-[#C9BEAB]" /> Express 3-Hour Setup
+                <Clock size={16} className="text-[#381932]" /> Express Delivery
               </span>
-              <span className="mx-2 text-white/25">|</span>
+              <span className="mx-2 text-[#FFF3E6]/25">|</span>
               <span className="mx-6 inline-flex items-center gap-2">
-                <MapPin size={16} className="text-[#C9BEAB]" /> All Bengaluru Locations
+                <MapPin size={16} className="text-[#381932]" /> All Bengaluru Locations
               </span>
-              <span className="mx-2 text-white/25">|</span>
+              <span className="mx-2 text-[#FFF3E6]/25">|</span>
               <span className="mx-6 inline-flex items-center gap-2">
-                <CheckCircle2 size={16} className="text-[#C9BEAB]" /> 100% Picture-Match Guarantee
+                <CheckCircle2 size={16} className="text-[#381932]" /> 100% Picture-Match Guarantee
               </span>
-              <span className="mx-2 text-white/25">|</span>
+              <span className="mx-2 text-[#FFF3E6]/25">|</span>
               <span className="mx-6 inline-flex items-center gap-2">
-                <Sparkles size={16} className="text-[#C9BEAB]" /> Zero Hidden Fees
+                <Sparkles size={16} className="text-[#A78A9F]" /> Zero Hidden Fees
               </span>
-              <span className="mx-2 text-white/25">|</span>
+              <span className="mx-2 text-[#FFF3E6]/25">|</span>
             </React.Fragment>
           ))}
         </div>
@@ -209,13 +209,13 @@ export const HomePage: React.FC<HomePageProps> = ({
           <section id="curated-decors" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal scroll-mt-24">
             <div className="flex items-end justify-between gap-4 mb-2">
               <div>
-                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#2F2930]">Shop by Occasion</h2>
-                <p className="mt-1.5 text-sm text-[#746B72]">Beautiful setups for every moment worth celebrating.</p>
+                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#381932]">Shop by Occasion</h2>
+                <p className="mt-1.5 text-sm text-[#381932]">Beautiful setups for every moment worth celebrating.</p>
               </div>
               <button
                 type="button"
                 onClick={() => navigate('/explore')}
-                className="shrink-0 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#725D75] hover:underline cursor-pointer"
+                className="shrink-0 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#381932] hover:underline cursor-pointer"
               >
                 View All Occasions
                 <ArrowRight size={13} />
@@ -236,8 +236,8 @@ export const HomePage: React.FC<HomePageProps> = ({
                       alt={cat.name}
                       className="h-full w-full object-cover transition-transform duration-[250ms] ease-out group-hover:scale-[1.03]"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                    <span className="absolute inset-x-0 bottom-0 p-3.5 text-left text-sm font-medium text-white leading-tight line-clamp-1">
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#381932]/70 via-[#381932]/10 to-transparent" />
+                    <span className="absolute inset-x-0 bottom-0 p-3.5 text-left text-sm font-medium text-[#FFF3E6] leading-tight line-clamp-1">
                       {cat.name}
                     </span>
                   </div>
@@ -252,11 +252,11 @@ export const HomePage: React.FC<HomePageProps> = ({
         {/* ========================================================================= */}
         <section id="packages" data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal scroll-mt-24">
           <div className="flex items-end justify-between gap-4 mb-8 sm:mb-10">
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#2F2930]">Popular Packages</h2>
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#381932]">Popular Packages</h2>
             <button
               type="button"
               onClick={() => navigate('/packages')}
-              className="shrink-0 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#725D75] hover:underline cursor-pointer"
+              className="shrink-0 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#381932] hover:underline cursor-pointer"
             >
               View All Packages
               <ArrowRight size={13} />
@@ -269,7 +269,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 key={pkg.id}
                 type="button"
                 onClick={() => navigate('/packages')}
-                className="group relative self-start block w-full rounded-xl border border-[#E4DCD2] overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer text-left"
+                className="group relative self-start block w-full rounded-xl border border-[#381932]/30 overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer text-left"
               >
                 <div className="relative h-72 sm:h-80 w-full">
                   <img
@@ -277,18 +277,18 @@ export const HomePage: React.FC<HomePageProps> = ({
                     alt={pkg.name}
                     className="h-full w-full object-cover transition-transform duration-[350ms] ease-out group-hover:scale-[1.03]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#381932]/85 via-[#381932]/25 to-transparent" />
                   {pkg.badge === 'Most Popular' && (
-                    <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-[#725D75] text-white px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-sm">
+                    <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-[#381932] text-[#FFF3E6] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide shadow-sm">
                       <Crown size={11} />
                       Most Popular
                     </span>
                   )}
                   <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-                    <h3 className="font-serif text-lg font-bold text-white mb-1 line-clamp-1">{pkg.name}</h3>
-                    <span className="text-lg font-bold text-white block mb-1.5">{pkg.price}</span>
-                    <p className="text-xs text-white/80 leading-relaxed line-clamp-2 mb-2.5">{pkg.description}</p>
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-white group-hover:text-[#C9BEAB] transition-colors">
+                    <h3 className="font-serif text-lg font-bold text-[#FFF3E6] mb-1 line-clamp-1">{pkg.name}</h3>
+                    <span className="text-lg font-bold text-[#FFF3E6] block mb-1.5">{pkg.price}</span>
+                    <p className="text-xs text-[#FFF3E6]/80 leading-relaxed line-clamp-2 mb-2.5">{pkg.description}</p>
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#FFF3E6] group-hover:text-[#381932] transition-colors">
                       View Details
                       <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform" />
                     </span>
@@ -309,11 +309,11 @@ export const HomePage: React.FC<HomePageProps> = ({
         {/* ========================================================================= */}
         <section data-nav-theme="light" className="mx-auto max-w-[1720px] px-4 sm:px-6 md:px-8 lg:px-12 w-full scroll-reveal scroll-mt-24">
           <div className="flex items-end justify-between gap-4 mb-6 sm:mb-8">
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#2F2930]">Top Activities &amp; Add-ons</h2>
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#381932]">Top Activities &amp; Add-ons</h2>
             <button
               type="button"
               onClick={() => onSelectCategory('Kids Activities')}
-              className="shrink-0 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#725D75] hover:underline cursor-pointer"
+              className="shrink-0 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-[#381932] hover:underline cursor-pointer"
             >
               View All Services
               <ArrowRight size={13} />
@@ -328,7 +328,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 onClick={() => onSelectCategory('Kids Activities', activity.name)}
                 className="group flex-none w-[190px] sm:w-auto snap-start cursor-pointer transition-transform duration-[250ms] ease-out hover:-translate-y-1"
               >
-                <div className="relative aspect-square rounded-xl overflow-hidden shadow-sm group-hover:shadow-md border border-[#E4DCD2] flex items-center justify-center group-hover:border-[#725D75]/40 transition-all duration-[250ms]">
+                <div className="relative aspect-square rounded-xl overflow-hidden shadow-sm group-hover:shadow-md border border-[#381932]/30 flex items-center justify-center group-hover:border-[#381932]/40 transition-all duration-[250ms]">
                   {activity.image ? (
                     <>
                       <img
@@ -336,15 +336,15 @@ export const HomePage: React.FC<HomePageProps> = ({
                         alt={activity.name}
                         className="h-full w-full object-cover transition-transform duration-[350ms] ease-out group-hover:scale-[1.03]"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                      <span className="absolute inset-x-0 bottom-0 p-3.5 text-left text-sm font-medium text-white">
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#381932]/70 via-[#381932]/10 to-transparent" />
+                      <span className="absolute inset-x-0 bottom-0 p-3.5 text-left text-sm font-medium text-[#FFF3E6]">
                         {activity.name}
                       </span>
                     </>
                   ) : (
                     <>
-                      <activity.icon size={44} className="text-[#725D75] transition-transform duration-300 group-hover:scale-110" />
-                      <span className="absolute inset-x-0 bottom-0 p-3.5 text-left text-sm font-medium text-[#2F2930]">
+                      <activity.icon size={44} className="text-[#381932] transition-transform duration-300 group-hover:scale-110" />
+                      <span className="absolute inset-x-0 bottom-0 p-3.5 text-left text-sm font-medium text-[#381932]">
                         {activity.name}
                       </span>
                     </>

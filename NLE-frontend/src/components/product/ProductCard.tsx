@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Heart, ArrowRight, MapPin } from 'lucide-react';
 import type { AdminProduct } from '../../types';
 import { cn } from '../../utils/utils';
 import { useAuth } from '../../hooks/useAuth';
-import { getApiUrl } from '../../services/api.service';
+import { useWishlist } from '../../hooks/useWishlist';
 import { trackSelectItem, trackWishlistToggle } from '../../utils/analytics';
 
 const SUPPORT_PHONE = '917022058460';
@@ -16,7 +16,8 @@ const WA_SVG = (
   </svg>
 );
 
-import { resolveProductCardImage, resolveProductImagePosition } from '../../utils/imageUtils';
+import { resolveProductCardImage } from '../../utils/imageUtils';
+import { CardImage } from '../ui/CardImage';
 
 export interface ProductCardProps {
   product: AdminProduct;
@@ -37,12 +38,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   className,
 }) => {
   const navigate = useNavigate();
-  const [wished, setWished] = useState(false);
   const auth = useAuth();
+  const { isWished, toggleWishlist } = useWishlist();
 
-  useEffect(() => {
-    setWished(Boolean(auth.user?.wishlist?.includes(product._id)));
-  }, [auth.user?.wishlist, product._id]);
+  const wished =
+    isWished(product._id) || Boolean(auth.user?.wishlist?.some((id) => String(id) === String(product._id)));
 
   const hasDiscount = Boolean(product.originalPrice && product.originalPrice > product.price);
   const discount = hasDiscount && product.originalPrice
@@ -69,39 +69,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   const handleWishlistToggle = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const next = !wished;
-    setWished(next);
-    trackWishlistToggle(next ? 'add' : 'remove', product._id, product.name);
-
     if (!auth.isLoggedIn) {
       auth.open('login');
       return;
     }
-
-    try {
-      await fetch(getApiUrl('/api/wishlist/toggle'), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({ productId: product._id }),
-      });
-      if (auth.user) {
-        const currentWishlist = auth.user.wishlist || [];
-        const updated = next
-          ? [...currentWishlist, product._id]
-          : currentWishlist.filter((id) => id !== product._id);
-        auth.updateUser({ ...auth.user, wishlist: updated });
-      }
-    } catch {
-      setWished(!next);
-    }
+    const next = !wished;
+    trackWishlistToggle(next ? 'add' : 'remove', product._id, product.name);
+    await toggleWishlist(product, next);
   };
 
   const openWhatsApp = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const text = `Hi TheDecorParty! I'm interested in customizing the "${product.name}" package. Can you share availability and details?`;
+    const text = `Hi The Decor Party! I'm interested in customising the "${product.name}" package. Can you share availability and details?`;
     const url = `https://wa.me/${SUPPORT_PHONE}?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   };
@@ -109,142 +88,117 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const tagLabel = product.subcategory || product.categoryName || 'Bengaluru Setup';
 
   const cardImage = resolveProductCardImage(product, isLanding);
-  const imagePosition = resolveProductImagePosition(product);
 
   return (
     <motion.div
-      whileHover={{ y: -6 }}
+      whileHover={{ y: -4 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        'group flex flex-col rounded-2xl border border-[#E4DCD2] dark:border-[#483250] bg-white dark:bg-[#201325] text-[#2F2930] dark:text-[#FAF8F5] overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 text-left select-none cursor-pointer w-full h-full',
+        'group relative flex h-full w-full flex-col overflow-hidden rounded-[22px] border border-[#E6D7C5] bg-[#FFF3E6] text-[#381932]',
+        'shadow-[0_10px_30px_-20px_rgba(56,25,50,0.35)] transition-all duration-300',
+        'hover:-translate-y-1 hover:shadow-[0_24px_50px_-24px_rgba(56,25,50,0.4)]',
+        'text-left select-none cursor-pointer',
         className
       )}
       onClick={handleCardClick}
     >
-      {/* Top Image Showcase -- clean product shot, no text overlay (badge + wishlist heart only) */}
-      <div>
-        <div className="relative w-full h-[220px] sm:h-[240px] overflow-hidden bg-[#725D75]/10">
-          <img
-            src={cardImage}
-            alt={product.name}
-            loading="lazy"
-            className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-108 ${imagePosition}`}
-          />
+      {/* Top Image Showcase -- full image, never cropped (badge + wishlist heart overlay only) */}
+      <div className="relative">
+        <CardImage src={cardImage} alt={product.name} ratio="aspect-[4/3]" />
 
-          {/* Top Badges & Wishlist */}
-          <div className="absolute top-3.5 left-3.5 right-3.5 z-20 flex items-center justify-between pointer-events-none">
-            <div className="flex items-center gap-1.5 pointer-events-auto">
-              {!isAI && product.badge && (
-                <span className="rounded-full bg-[#725D75] text-white px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider shadow-md">
-                  {product.badge}
-                </span>
-              )}
-              {!isAI && discount > 0 && (
-                <span className="rounded-full bg-emerald-600 text-white px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-md">
-                  {discount}% OFF
-                </span>
-              )}
-            </div>
-
-            {!isAI && (
-              <motion.button
-                type="button"
-                aria-label={wished ? 'Remove from wishlist' : 'Add to wishlist'}
-                onClick={handleWishlistToggle}
-                whileTap={{ scale: 0.85 }}
-                animate={{ scale: wished ? [1, 1.25, 1] : 1 }}
-                className={cn(
-                  'pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full',
-                  'bg-white/90 hover:bg-white border border-[#E4DCD2] backdrop-blur-md shadow-md',
-                  'text-[#2F2930] transition-colors duration-200 cursor-pointer'
-                )}
-              >
-                <Heart
-                  size={16}
-                  className={cn(
-                    'transition-all duration-200',
-                    wished ? 'fill-rose-500 text-rose-500 scale-110' : 'text-[#2F2930]/70 hover:text-[#2F2930]'
-                  )}
-                />
-              </motion.button>
+        {/* Top Badges & Wishlist */}
+        <div className="absolute top-3 left-3 right-3 z-20 flex items-start justify-between pointer-events-none">
+          <div className="flex items-center gap-1.5 pointer-events-auto">
+            {!isAI && product.badge && (
+              <span className="rounded-full bg-[#381932] text-[#FFF3E6] px-2.5 py-1 text-[10px] font-serif font-bold uppercase tracking-wider shadow-sm">
+                {product.badge}
+              </span>
+            )}
+            {!isAI && discount > 0 && (
+              <span className="rounded-full bg-[#A78A9F] text-[#FFF3E6] px-2.5 py-1 text-[10px] font-serif font-bold uppercase tracking-wider shadow-sm">
+                {discount}% OFF
+              </span>
             )}
           </div>
-        </div>
 
-        {/* Card Content Body */}
-        <div className="p-5 sm:p-6 flex flex-col">
-          {/* Category / Location Tag */}
-          <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-[#725D75] mb-1.5">
-            <MapPin size={11} className="shrink-0" />
-            <span>{tagLabel}</span>
-          </div>
-
-          {/* Title */}
-          <h3 className="font-serif text-lg sm:text-xl font-bold tracking-tight text-[#2F2930] dark:text-white leading-tight line-clamp-1">
-            {product.name}
-          </h3>
+          {!isAI && (
+            <motion.button
+              type="button"
+              aria-label={wished ? 'Remove from wishlist' : 'Add to wishlist'}
+              onClick={handleWishlistToggle}
+              whileTap={{ scale: 0.85 }}
+              animate={{ scale: wished ? [1, 1.25, 1] : 1 }}
+              className="pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full bg-[#FFF3E6] text-[#381932] shadow-md transition-transform duration-200 hover:scale-110 active:scale-95 cursor-pointer"
+            >
+              <Heart size={14} fill={wished ? 'currentColor' : 'none'} />
+            </motion.button>
+          )}
         </div>
       </div>
 
-      {/* Card Actions Footer -- mt-auto pins it to the bottom of the card
-          without stretching the gap between the title and the price row
-          for shorter titles (that used to come from justify-between on
-          the whole card). */}
-      <div className="px-5 sm:px-6 pb-6 pt-0 mt-auto flex flex-col gap-3">
-        <div className="flex items-center justify-between border-t border-[#E4DCD2]/50 dark:border-[#483250]/50 pt-3">
-          <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#746B72] dark:text-[#A78A9F] block">
-              Starting Price
-            </span>
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-serif text-lg sm:text-xl font-bold text-[#2F2930] dark:text-[#FAF8F5]">
-                ₹{product.price?.toLocaleString('en-IN')}
-              </span>
-              {hasDiscount && (
-                <span className="text-xs font-normal text-[#746B72]/60 line-through">
-                  ₹{product.originalPrice?.toLocaleString('en-IN')}
-                </span>
-              )}
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleCardClick();
-            }}
-            className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-[#2F2930] dark:text-[#C9BEAB] hover:text-[#725D75] group/btn cursor-pointer"
-          >
-            <span>VIEW DETAILS</span>
-            <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
-          </button>
+      {/* Body */}
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
+        {/* Category / Location Tag */}
+        <div className="flex items-center gap-1 text-[10px] font-serif font-bold uppercase tracking-wider text-[#A78A9F] mb-1">
+          <MapPin size={11} className="shrink-0" />
+          <span className="truncate">{tagLabel}</span>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 mt-1">
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (onBook) {
-                onBook(product);
-              } else {
-                navigate(`/booking/${product._id}`, { state: { product, preferredMethod: 'razorpay' } });
-              }
-            }}
-            className="w-full flex items-center justify-center gap-1.5 rounded-lg bg-[#725D75] dark:bg-[#C9BEAB] text-white dark:text-[#25172C] py-2.5 text-[11px] font-bold uppercase tracking-wider shadow-sm hover:bg-[#A78A9F] dark:hover:bg-white transition-colors cursor-pointer"
-          >
-            <span>BOOK NOW</span>
-            <ArrowRight size={12} />
-          </button>
+        {/* Title */}
+        <h3 className="font-serif text-lg sm:text-xl font-bold uppercase tracking-tight text-[#381932] leading-[1.15] line-clamp-2 mb-2">
+          {product.name}
+        </h3>
+
+        {/* Price */}
+        <div className="flex items-baseline gap-1.5">
+          <span className="font-serif text-2xl sm:text-[26px] font-bold text-[#381932] tracking-tight">
+            ₹{product.price?.toLocaleString('en-IN')}
+          </span>
+          {hasDiscount && (
+            <span className="text-xs font-normal text-[#381932]/55 line-through">
+              ₹{product.originalPrice?.toLocaleString('en-IN')}
+            </span>
+          )}
+        </div>
+        <span className="text-[11px] text-[#381932]/60 font-medium">starting price</span>
+
+        {/* Actions */}
+        <div className="mt-auto pt-3 flex flex-col gap-2">
+          <div className="flex items-stretch gap-2 border-t border-[#E6D7C5] pt-3">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleCardClick();
+              }}
+              className="flex-1 inline-flex items-center justify-center rounded-lg bg-[#A78A9F] hover:bg-[#8C6E84] text-[#FFF3E6] py-2 text-[11px] font-serif font-semibold uppercase tracking-wide shadow-sm transition-colors cursor-pointer"
+            >
+              View Details
+            </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onBook) {
+                  onBook(product);
+                } else {
+                  navigate(`/booking/${product._id}`, { state: { product, preferredMethod: 'razorpay' } });
+                }
+              }}
+              className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#381932]/25 bg-[#FFF3E6] hover:bg-[#A78A9F]/15 text-[#381932] py-2 text-[11px] font-serif font-semibold uppercase tracking-wide shadow-sm transition-colors cursor-pointer group/btn"
+            >
+              Book Now
+              <ArrowRight size={12} className="transition-transform group-hover/btn:translate-x-0.5" />
+            </button>
+          </div>
 
           <button
             type="button"
             onClick={openWhatsApp}
-            className="w-full flex items-center justify-center gap-1.5 rounded-lg border border-emerald-600/50 bg-emerald-50/50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 py-2.5 text-[11px] font-bold uppercase tracking-wider hover:bg-emerald-100/60 transition-colors cursor-pointer"
+            className="w-full inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#381932] hover:bg-[#483250] text-[#FFF3E6] py-2 text-[11px] font-serif font-semibold uppercase tracking-wide shadow-sm transition-colors cursor-pointer"
           >
             {WA_SVG}
-            <span>WHATSAPP</span>
+            <span>WhatsApp</span>
           </button>
         </div>
       </div>

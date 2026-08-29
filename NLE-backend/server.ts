@@ -17,6 +17,9 @@ import addonRoutes from "./routes/addonRoutes";
 import activityRoutes from "./routes/activityRoutes";
 import catalogRoutes from "./routes/catalogRoutes";
 import orderRoutes from "./routes/orderRoutes";
+import contactRoutes from "./routes/contactRoutes";
+import cartRoutes from "./routes/cartRoutes";
+import otpRoutes from "./routes/otpRoutes";
 import { connectDatabase } from "./src/db/connection";
 import Product from "./models/Product";
 
@@ -100,9 +103,32 @@ app.use((req, res, next) => {
   console.log("➡️", req.method, req.originalUrl);
   next();
 });
-// cors() already sends Access-Control-Allow-Origin: * by default; the
-// duplicate manual header block that used to sit here was redundant.
-app.use(cors());
+
+// Restrict CORS to known frontends. Set CORS_ORIGINS (comma-separated) to add
+// more; FRONTEND_URL is always allowed. In non-production, localhost is allowed.
+const allowedOrigins = new Set(
+  [
+    process.env.FRONTEND_URL,
+    ...(process.env.CORS_ORIGINS || "").split(","),
+    ...(process.env.NODE_ENV !== "production"
+      ? ["http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:3000"]
+      : []),
+  ]
+    .map((o) => (o || "").trim().replace(/\/$/, ""))
+    .filter(Boolean)
+);
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Allow non-browser clients (curl, server-to-server) with no Origin header.
+      if (!origin || allowedOrigins.has(origin.replace(/\/$/, ""))) {
+        return callback(null, true);
+      }
+      return callback(new Error(`Origin ${origin} not allowed by CORS`));
+    },
+  })
+);
 
 app.use(express.json());
 
@@ -163,6 +189,9 @@ app.use("/api/addons", addonRoutes);
 app.use("/api/activities", activityRoutes);
 app.use("/api/catalog", catalogRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/contact", contactRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/auth/otp", otpRoutes);
 
 app.get("/product/:productId", (req: Request, res: Response) => {
   const frontend = (process.env.FRONTEND_URL || "https://www.thedecorparty.com").replace(/\/$/, "");

@@ -5,7 +5,7 @@ import { ConfirmModal } from "./ConfirmModal";
 import { toast } from "react-toastify";
 import { Pencil, Eye, EyeOff, Trash2, Upload, Link as LinkIcon, X, Star, Lightbulb, Copy } from "lucide-react";
 import { cn } from "../../lib/utils";
-import { getApiUrl } from '../../lib/api';
+import { getApiUrl, authFetch } from '../../lib/api';
 import { CLOUDINARY_UPLOAD_URL, CLOUDINARY_UPLOAD_PRESET } from '../../lib/cloudinary';
 import { BADGE_COLORS, getAdminBadgeColorClass } from '../../lib/badges';
 import { trackAdminAction } from '../../lib/analytics';
@@ -60,7 +60,7 @@ export const ProductsView = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch(API);
+      const res = await authFetch(API);
       const data = await res.json();
       setProducts(data);
     } catch {
@@ -70,7 +70,7 @@ export const ProductsView = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch(CAT_API);
+      const res = await authFetch(CAT_API);
       const data = await res.json();
       setCategories(data);
     } catch {
@@ -80,7 +80,7 @@ export const ProductsView = () => {
 
   const fetchAddons = async () => {
     try {
-      const res = await fetch(getApiUrl('/api/addons/active'));
+      const res = await authFetch(getApiUrl('/api/addons/active'));
       const data = await res.json();
       setAvailableAddons(Array.isArray(data) ? data : []);
     } catch {
@@ -170,7 +170,7 @@ export const ProductsView = () => {
     formData.append("folder", "ems/products");
 
     try {
-      const response = await fetch(
+      const response = await authFetch(
         CLOUDINARY_UPLOAD_URL,
         {
           method: "POST",
@@ -223,7 +223,7 @@ export const ProductsView = () => {
     formData.append("folder", "ems/products");
 
     try {
-      const response = await fetch(
+      const response = await authFetch(
         CLOUDINARY_UPLOAD_URL,
         {
           method: "POST",
@@ -301,7 +301,7 @@ export const ProductsView = () => {
 
     if (editing) {
       try {
-        const res = await fetch(`${API}/${editing._id}`, {
+        const res = await authFetch(`${API}/${editing._id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -314,7 +314,7 @@ export const ProductsView = () => {
         toast.error("Failed to update product");
       }
     } else {
-      const res = await fetch(API, {
+      const res = await authFetch(API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -329,7 +329,7 @@ export const ProductsView = () => {
   };
 
   const del = async (id: string) => {
-    await fetch(`${API}/${id}`, { method: "DELETE" });
+    await authFetch(`${API}/${id}`, { method: "DELETE" });
     setProducts((prev) => prev.filter((p) => p._id !== id));
     setDeleteConfirm(null);
     trackAdminAction('delete_product', 'product', id);
@@ -337,7 +337,7 @@ export const ProductsView = () => {
   };
 
   const toggle = async (id: string, active: boolean) => {
-    await fetch(`${API}/${id}`, {
+    await authFetch(`${API}/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ active }),
@@ -366,7 +366,7 @@ export const ProductsView = () => {
     }
 
     try {
-      const res = await fetch(CAT_API, {
+      const res = await authFetch(CAT_API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -397,14 +397,14 @@ export const ProductsView = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-5 shadow-xs">
         <div>
-          <h2 className="text-xl font-black text-slate-900 dark:text-white">Event Decoration Packages</h2>
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">Manage decor packages, pricing, inclusions, and photo galleries.</p>
+          <h2 className="text-xl font-black text-[#381932] dark:text-[#FFF3E6]">Event Decoration Packages</h2>
+          <p className="text-xs font-semibold text-[#381932] dark:text-[#381932] mt-0.5">Manage decor packages, pricing, inclusions, and photo galleries.</p>
         </div>
         <button 
           type="button" 
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-purple hover:bg-brand-purple-dark text-white px-4 py-2.5 text-xs font-bold shadow-md shadow-purple-600/20 active:scale-95 transition-all cursor-pointer" 
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#381932] hover:opacity-90 text-[#FFF3E6] px-4 py-2.5 text-xs font-bold shadow-md shadow-[#381932]/20 active:scale-95 transition-all cursor-pointer" 
           onClick={openAdd}
         >
           + Add Product
@@ -413,9 +413,9 @@ export const ProductsView = () => {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {products.map((prod) => (
-          <div key={prod._id} className={cn('overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between transition-all', !prod.active && 'opacity-60')}>
+          <div key={prod._id} className={cn('overflow-hidden rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] shadow-xs flex flex-col justify-between transition-all', !prod.active && 'opacity-60')}>
             <div>
-              <div className="relative aspect-video w-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+              <div className="relative aspect-video w-full bg-[#FFF3E6] dark:bg-[#381932] overflow-hidden">
                 <img src={prod.image} alt={prod.name} className="h-full w-full object-cover" />
                 {prod.badge && (
                   <span className={cn('absolute left-2.5 top-2.5 rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase border', getAdminBadgeColorClass(prod.badgeColor))}>
@@ -423,20 +423,20 @@ export const ProductsView = () => {
                   </span>
                 )}
                 {prod.featured && (
-                  <span className="absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 dark:bg-slate-900/90 text-amber-500 shadow-xs">
+                  <span className="absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-full bg-[#FFF3E6]/90 dark:bg-[#381932]/90 text-[#381932] shadow-xs">
                     <Star size={14} fill="currentColor" />
                   </span>
                 )}
               </div>
               <div className="p-4 space-y-1">
-                <h3 className="truncate text-sm font-bold text-slate-900 dark:text-white">{prod.name}</h3>
-                <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 truncate">
+                <h3 className="truncate text-sm font-bold text-[#381932] dark:text-[#FFF3E6]">{prod.name}</h3>
+                <p className="text-xs font-semibold text-[#381932] dark:text-[#381932] truncate">
                   {prod.categoryName} {prod.subcategory && `\u00b7 ${prod.subcategory}`}
                 </p>
                 <div className="mt-2 flex items-baseline gap-2">
-                  <span className="text-sm font-black text-brand-purple dark:text-purple-400">&#8377;{Number(prod.price || 0).toLocaleString('en-IN')}</span>
+                  <span className="text-sm font-black text-[#381932] dark:text-[#381932]">&#8377;{Number(prod.price || 0).toLocaleString('en-IN')}</span>
                   {(prod.originalPrice ?? 0) > 0 && (
-                    <span className="text-xs text-slate-400 line-through">&#8377;{Number(prod.originalPrice || 0).toLocaleString('en-IN')}</span>
+                    <span className="text-xs text-[#381932] line-through">&#8377;{Number(prod.originalPrice || 0).toLocaleString('en-IN')}</span>
                   )}
                 </div>
               </div>
@@ -445,14 +445,14 @@ export const ProductsView = () => {
             <div className="p-4 pt-0 flex items-center gap-1.5">
               <button 
                 type="button" 
-                className="flex-1 inline-flex items-center justify-center gap-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer" 
+                className="flex-1 inline-flex items-center justify-center gap-1 rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3 py-2 text-xs font-bold text-[#381932] dark:text-[#381932] hover:bg-[#FFF3E6] dark:hover:bg-[#381932] transition-colors cursor-pointer" 
                 onClick={() => openEdit(prod)}
               >
                 <Pencil size={12} /> Edit
               </button>
               <button 
                 type="button" 
-                className="inline-flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-2 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 cursor-pointer" 
+                className="inline-flex items-center justify-center rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-2 text-xs font-bold text-[#381932] dark:text-[#381932] hover:bg-[#FFF3E6] cursor-pointer" 
                 onClick={() => copyToClipboard(`/product/${prod._id}`)}
                 title="Copy Product Link"
               >
@@ -460,14 +460,14 @@ export const ProductsView = () => {
               </button>
               <button 
                 type="button" 
-                className="inline-flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-2 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 cursor-pointer" 
+                className="inline-flex items-center justify-center rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-2 text-xs font-bold text-[#381932] dark:text-[#381932] hover:bg-[#FFF3E6] cursor-pointer" 
                 onClick={() => toggle(prod._id, !prod.active)}
               >
                 {prod.active ? <EyeOff size={14} /> : <Eye size={14} />}
               </button>
               <button
                 type="button"
-                className="inline-flex items-center justify-center rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50 dark:bg-rose-950/40 p-2 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-100 cursor-pointer"
+                className="inline-flex items-center justify-center rounded-xl border border-[#381932] dark:border-[#381932]/50 bg-[#FFF3E6] dark:bg-[#381932]/40 p-2 text-xs font-bold text-[#381932] dark:text-[#381932] hover:bg-[#FFF3E6] cursor-pointer"
                 onClick={() => setDeleteConfirm({ id: prod._id, name: prod.name })}
               >
                 <Trash2 size={14} />
@@ -718,11 +718,11 @@ export const ProductsView = () => {
             {form.moreImages.length > 0 && (
               <div className="mt-2 grid grid-cols-4 gap-2 sm:grid-cols-6">
                 {form.moreImages.map((img, idx) => (
-                  <div key={idx} className="group relative aspect-square overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800">
+                  <div key={idx} className="group relative aspect-square overflow-hidden rounded-lg border border-[#381932] dark:border-[#381932]">
                     <img src={img} alt={`More ${idx + 1}`} className="h-full w-full object-cover" />
                     <button
                       type="button"
-                      className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                      className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#381932]/60 text-[#FFF3E6] opacity-0 transition-opacity group-hover:opacity-100"
                       onClick={() => removeMoreImage(idx)}
                       title="Remove"
                     >
@@ -754,9 +754,9 @@ export const ProductsView = () => {
             {form.inclusions.length > 0 && (
               <ul className="mt-2 flex flex-col gap-1.5">
                 {form.inclusions.map((inc, idx) => (
-                  <li key={idx} className="flex items-center justify-between rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 text-sm text-slate-900 dark:text-white">
+                  <li key={idx} className="flex items-center justify-between rounded-lg bg-[#FFF3E6] dark:bg-[#381932] border border-[#381932] dark:border-[#381932] px-3 py-1.5 text-sm text-[#381932] dark:text-[#FFF3E6]">
                     {inc}
-                    <button type="button" className="text-slate-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-400" onClick={() => removeInclusion(idx)}>
+                    <button type="button" className="text-[#381932] dark:text-[#381932] hover:text-[#381932] dark:hover:text-[#381932]" onClick={() => removeInclusion(idx)}>
                       <X size={13} />
                     </button>
                   </li>
@@ -860,8 +860,8 @@ export const ProductsView = () => {
                 }
               }}
             />
-            <p className="mt-2 flex items-start gap-1.5 text-xs text-slate-500 dark:text-slate-400">
-              <Lightbulb size={13} className="mt-0.5 flex-shrink-0 text-brand-purple dark:text-purple-400" />
+            <p className="mt-2 flex items-start gap-1.5 text-xs text-[#381932] dark:text-[#381932]">
+              <Lightbulb size={13} className="mt-0.5 flex-shrink-0 text-[#381932] dark:text-[#381932]" />
               Quick add: Category will be created with default settings. You can edit it later from the Categories page.
             </p>
             <div className="adm-modal-footer">

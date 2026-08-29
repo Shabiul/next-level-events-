@@ -125,7 +125,7 @@ export const EVENT_PACKAGES: EventPackage[] = [
     price: '₹24,999',
     numericPrice: 24999,
     description:
-      'Vibrant colour-themed decor with entertainment and treats — perfect for a lively, memorable celebration.',
+      'Vibrant color-themed decor with entertainment and treats — perfect for a lively, memorable celebration.',
     categories: [
       {
         key: 'decor',
@@ -133,7 +133,7 @@ export const EVENT_PACKAGES: EventPackage[] = [
         items: [
           { label: 'Premium round arch / double U-arch' },
           { label: 'Premium customised flex backdrop' },
-          { label: 'Colour-theme balloon decoration' },
+          { label: 'Color-theme balloon decoration' },
           { label: 'Cake table setup with props' },
           { label: 'Welcome board' },
           { label: 'Balloon bunches' },
@@ -258,7 +258,7 @@ export const EVENT_PACKAGES: EventPackage[] = [
         items: [
           { label: 'Customised theme decor — 18 × 24 ft stage' },
           { label: 'Customised welcome board with balloon decor' },
-          { label: 'Customised colour balloon welcome arch' },
+          { label: 'Customised color balloon welcome arch' },
           { label: 'Cake table setup with suitable props' },
           { label: '12-month milestone board' },
           { label: 'Balloon baby photo pathway — 6 stands' },

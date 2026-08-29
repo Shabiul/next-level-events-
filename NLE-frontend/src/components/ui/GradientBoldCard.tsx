@@ -18,9 +18,9 @@ export const GradientBoldCard: React.FC<GradientBoldCardProps> = ({
   className,
   popular = false,
   glowColors = {
-    gold: '#C9BEAB',
-    rose: '#725D75',
-    violet: '#483250',
+    gold: '#381932',
+    rose: '#381932',
+    violet: '#381932',
   },
 }) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -42,8 +42,8 @@ export const GradientBoldCard: React.FC<GradientBoldCardProps> = ({
       className={cn(
         'group relative flex flex-col justify-between rounded-[28px] p-[1px] transition-all duration-500 hover:-translate-y-2 select-none',
         popular
-          ? 'shadow-[0_20px_50px_-10px_rgba(52,32,60,0.45),0_0_25px_rgba(201,190,171,0.25)]'
-          : 'shadow-[0_16px_36px_-6px_rgba(52,32,60,0.4)] hover:shadow-[0_24px_50px_-8px_rgba(201,190,171,0.22)]',
+          ? 'shadow-[0_20px_50px_-10px_rgba(56,25,50,0.45),0_0_25px_rgba(56,25,50,0.25)]'
+          : 'shadow-[0_16px_36px_-6px_rgba(56,25,50,0.4)] hover:shadow-[0_24px_50px_-8px_rgba(56,25,50,0.22)]',
         className
       )}
     >
@@ -65,18 +65,18 @@ export const GradientBoldCard: React.FC<GradientBoldCardProps> = ({
           }}
         />
         {/* Subtle static border layer */}
-        <div className="absolute inset-0 rounded-[28px] border border-[#725D75]/20 group-hover:border-[#C9BEAB]/40 transition-colors" />
+        <div className="absolute inset-0 rounded-[28px] border border-[#381932]/20 group-hover:border-[#381932]/40 transition-colors" />
       </div>
 
       {/* 2. Main Card Body Container */}
-      <div className="relative z-10 flex h-full w-full flex-col justify-between rounded-[27px] bg-gradient-to-b from-[#26142D] via-[#725D75] to-[#25132B] p-5 sm:p-6 overflow-hidden backdrop-blur-xl text-[#F9F6F2]">
+      <div className="relative z-10 flex h-full w-full flex-col justify-between rounded-[27px] bg-gradient-to-b from-[#381932] via-[#381932] to-[#381932] p-5 sm:p-6 overflow-hidden backdrop-blur-xl text-[#FFF3E6]">
         
         {/* 3. Ambient Inner Glows (Dynamic Radial Blur Blobs) */}
         {/* Top-Right Champagne Gold Ambient Blob */}
         <div
           className="pointer-events-none absolute -top-12 -right-12 h-52 w-52 rounded-full opacity-20 blur-[55px] transition-all duration-700 group-hover:scale-130 group-hover:opacity-45"
           style={{
-            background: `radial-gradient(circle, ${glowColors.gold} 0%, rgba(201,190,171,0) 70%)`,
+            background: `radial-gradient(circle, ${glowColors.gold} 0%, rgba(56,25,50,0) 70%)`,
           }}
         />
 
@@ -84,7 +84,7 @@ export const GradientBoldCard: React.FC<GradientBoldCardProps> = ({
         <div
           className="pointer-events-none absolute -bottom-16 -left-16 h-60 w-60 rounded-full opacity-25 blur-[65px] transition-all duration-700 group-hover:scale-130 group-hover:opacity-50"
           style={{
-            background: `radial-gradient(circle, ${glowColors.rose} 0%, ${glowColors.violet} 50%, rgba(52,32,60,0) 75%)`,
+            background: `radial-gradient(circle, ${glowColors.rose} 0%, ${glowColors.violet} 50%, rgba(56,25,50,0) 75%)`,
           }}
         />
 
@@ -93,7 +93,7 @@ export const GradientBoldCard: React.FC<GradientBoldCardProps> = ({
           <div
             className="pointer-events-none absolute -inset-px opacity-30 transition-opacity duration-300 mix-blend-screen"
             style={{
-              background: `radial-gradient(280px circle at ${mousePos.x}px ${mousePos.y}px, rgba(201,190,171,0.22), rgba(167,138,159,0.12), transparent 70%)`,
+              background: `radial-gradient(280px circle at ${mousePos.x}px ${mousePos.y}px, rgba(56,25,50,0.22), rgba(56,25,50,0.12), transparent 70%)`,
             }}
           />
         )}

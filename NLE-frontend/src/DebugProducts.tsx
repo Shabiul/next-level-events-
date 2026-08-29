@@ -5,7 +5,7 @@ export const DebugProducts = () => {
   console.log('Product count:', MOST_BOOKED.length);
   
   return (
-    <div style={{ padding: '20px', background: '#f0f0f0', margin: '20px' }}>
+    <div style={{ padding: '20px', background: '#FFF3E6', margin: '20px' }}>
       <h2>Debug: Products</h2>
       <p>Total products: {MOST_BOOKED.length}</p>
       <div style={{ display: 'flex', gap: '10px', overflowX: 'auto' }}>
@@ -14,7 +14,7 @@ export const DebugProducts = () => {
             minWidth: '200px', 
             background: 'white', 
             padding: '10px',
-            border: '1px solid #ccc'
+            border: '1px solid #FFF3E6'
           }}>
             <img src={p.img} alt={p.title} style={{ width: '100%', height: '150px', objectFit: 'cover' }} />
             <h4>{p.title}</h4>

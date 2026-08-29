@@ -2,14 +2,14 @@ import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Check, ArrowRight, MessageCircle, Wand2, Crown, Sparkles } from 'lucide-react';
-import { CATEGORY_META, type EventPackage } from './eventPackages.data';
+import { CATEGORY_META, PACKAGE_IMAGES, type EventPackage } from './eventPackages.data';
 
 const SUPPORT_PHONE = '917022058460';
 
 const BADGE_META = {
-  'Most Popular': { icon: Sparkles, className: 'bg-[#725D75] text-white' },
-  Luxury: { icon: Crown, className: 'bg-gradient-to-r from-[#C9BEAB] to-[#A69882] text-white' },
-  Custom: { icon: Wand2, className: 'bg-[#725D75] text-white' },
+  'Most Popular': { icon: Sparkles, label: 'Popular', className: 'bg-[#381932] text-[#FFF3E6]' },
+  Luxury: { icon: Crown, label: 'Luxury', className: 'bg-[#A78A9F] text-[#FFF3E6]' },
+  Custom: { icon: Wand2, label: 'Custom', className: 'bg-[#381932] text-[#FFF3E6]' },
 } as const;
 
 export interface EventPackageDetailModalProps {
@@ -42,131 +42,136 @@ export const EventPackageDetailModal: React.FC<EventPackageDetailModalProps> = (
     if (!pkg) return;
     const text =
       intent === 'customise'
-        ? `Hi TheDecorParty! I'd like to customise the "${pkg.name}" (${pkg.price}). Can we discuss options?`
-        : `Hi TheDecorParty! I'm interested in the "${pkg.name}" (${pkg.price}). Can you share more details?`;
+        ? `Hi The Decor Party! I'd like to customise the "${pkg.name}" (${pkg.price}). Can we discuss options?`
+        : `Hi The Decor Party! I'm interested in the "${pkg.name}" (${pkg.price}). Can you share more details?`;
     window.open(`https://wa.me/${SUPPORT_PHONE}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
   };
 
   const badgeMeta = pkg?.badge ? BADGE_META[pkg.badge] : null;
   const BadgeIcon = badgeMeta?.icon;
+  const image = pkg ? PACKAGE_IMAGES[pkg.id] : undefined;
 
   return ReactDOM.createPortal(
     <AnimatePresence>
       {pkg && (
-        <div className="fixed inset-0 z-[999] flex items-end sm:items-center justify-center">
-          {/* Backdrop */}
+        <div className="fixed inset-0 z-[999] flex items-end sm:items-center justify-center p-0 sm:p-4">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-[#381932]/55 backdrop-blur-sm"
             onClick={onClose}
           />
 
-          {/* Panel */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 40, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 40, scale: 0.98 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 flex max-h-[92vh] sm:max-h-[85vh] w-full sm:max-w-2xl flex-col overflow-hidden rounded-t-[32px] sm:rounded-[32px] bg-[#F9F6F2] shadow-2xl"
+            className="relative z-10 flex min-h-0 max-h-[92vh] sm:max-h-[88vh] w-full sm:max-w-3xl flex-col overflow-hidden rounded-t-[26px] sm:rounded-[26px] bg-[#FFF3E6] shadow-2xl lg:flex-row"
           >
-            {/* Header */}
-            <div className="relative shrink-0 bg-[#F3EFE7] border-b border-[#E4DCD2] px-6 sm:px-8 pt-6 pb-6 sm:pt-8 sm:pb-7">
-              <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-[#725D75]/15 blur-3xl pointer-events-none" />
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label="Close"
-                className="absolute top-4 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 hover:bg-white text-[#2F2930] shadow-sm transition-colors cursor-pointer"
-              >
-                <X size={16} />
-              </button>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close"
+              className="absolute top-3 right-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-[#FFF3E6]/90 hover:bg-[#E6D7C5] text-[#381932] shadow-md transition-colors cursor-pointer"
+            >
+              <X size={16} />
+            </button>
 
+            {/* Left -- image */}
+            <div className="relative shrink-0 h-52 lg:h-auto lg:w-[42%] overflow-hidden bg-[#A78A9F]/15">
+              {image && (
+                <img src={image} alt={pkg.name} className="h-full w-full object-cover" />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#381932]/45 via-transparent to-transparent pointer-events-none" />
               {badgeMeta && BadgeIcon && (
-                <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider shadow-md mb-3 ${badgeMeta.className}`}>
-                  <BadgeIcon size={11} />
-                  {pkg.badge}
+                <span className={`absolute top-3 left-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-serif font-bold uppercase tracking-wider shadow-sm ${badgeMeta.className}`}>
+                  <BadgeIcon size={10} />
+                  {badgeMeta.label}
                 </span>
               )}
-
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#2F2930] pr-10 mb-1.5">
-                {pkg.name}
-              </h2>
-              <p className="text-xs sm:text-sm text-[#746B72] font-light leading-relaxed max-w-lg mb-3">
-                {pkg.description}
-              </p>
-              <span className="font-serif text-3xl font-bold text-[#725D75]">{pkg.price}</span>
             </div>
 
-            {/* Scrollable body: category breakdown */}
-            <div className="flex-1 overflow-y-auto px-6 sm:px-8 py-6 space-y-6">
-              {pkg.categories.map((cat) => {
-                const meta = CATEGORY_META[cat.key];
-                const Icon = meta.icon;
-                return (
-                  <div key={cat.key} className="rounded-2xl border border-[#E4DCD2] bg-white p-4 sm:p-5">
-                    <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                      <div className="flex items-center gap-2 text-[#2F2930] font-bold text-sm">
-                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F9F6F2] text-[#725D75] shrink-0">
-                          <Icon size={15} />
-                        </span>
-                        {cat.labelOverride || meta.label}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {cat.note && (
-                          <span className="rounded-full bg-[#F9F6F2] text-[#725D75] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider">
-                            {cat.note}
+            {/* Right -- info */}
+            <div className="flex flex-1 min-h-0 flex-col">
+              <div className="flex-1 min-h-0 overflow-y-auto px-6 sm:px-8 py-6">
+                <span className="text-[10px] font-poppins font-semibold uppercase tracking-[0.16em] text-[#A78A9F]">
+                  {pkg.categories.map((c) => c.labelOverride || CATEGORY_META[c.key].label).slice(0, 2).join(' · ')}
+                </span>
+                <h2 className="font-serif text-2xl sm:text-[28px] font-bold uppercase tracking-tight text-[#381932] leading-[1.12] mt-1 mb-2">
+                  {pkg.name}
+                </h2>
+                <div className="flex items-baseline gap-1.5 mb-3">
+                  <span className="font-serif text-3xl font-bold text-[#381932]">{pkg.price}</span>
+                  <span className="text-[11px] text-[#381932]/60 font-medium">per package</span>
+                </div>
+                <p className="text-[13px] font-poppins text-[#381932]/80 leading-relaxed mb-6">
+                  {pkg.description}
+                </p>
+
+                <div className="space-y-5">
+                  {pkg.categories.map((cat) => {
+                    const meta = CATEGORY_META[cat.key];
+                    const Icon = meta.icon;
+                    return (
+                      <div key={cat.key}>
+                        <div className="flex items-center justify-between gap-2 mb-2">
+                          <span className="inline-flex items-center gap-2 text-[11px] font-serif font-bold uppercase tracking-wider text-[#381932]">
+                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#A78A9F]/20 text-[#381932]">
+                              <Icon size={12} />
+                            </span>
+                            {cat.labelOverride || meta.label}
                           </span>
-                        )}
-                        {cat.price && (
-                          <span className="font-serif text-sm font-bold text-[#2F2930]">{cat.price}</span>
+                          {cat.price && (
+                            <span className="font-serif text-xs font-bold text-[#381932]">{cat.price}</span>
+                          )}
+                        </div>
+                        {cat.items.length > 0 && (
+                          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 pl-8">
+                            {cat.items.map((item, i) => (
+                              <li key={i} className="flex items-start gap-2 text-[12px] font-poppins text-[#381932]/80 leading-relaxed">
+                                <Check size={12} className="text-[#A78A9F] shrink-0 mt-0.5" />
+                                <span>{item.label}</span>
+                              </li>
+                            ))}
+                          </ul>
                         )}
                       </div>
-                    </div>
-                    {cat.items.length > 0 && (
-                      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
-                        {cat.items.map((item, i) => (
-                          <li key={i} className="flex items-start gap-2 text-xs text-[#746B72] leading-relaxed">
-                            <Check size={13} className="text-[#725D75] shrink-0 mt-0.5" />
-                            <span>{item.label}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+                    );
+                  })}
+                </div>
+              </div>
 
-            {/* Sticky CTA footer */}
-            <div className="shrink-0 border-t border-[#E4DCD2] bg-white/95 backdrop-blur-md px-4 sm:px-8 py-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-4">
-              <div className="flex flex-col sm:flex-row gap-2.5">
-                <button
-                  type="button"
-                  onClick={() => openWhatsApp('customise')}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#A78A9F] text-[#725D75] hover:bg-[#725D75]/08 py-3 text-xs font-medium tracking-wide transition-colors cursor-pointer"
-                >
-                  <Wand2 size={13} />
-                  Customise Package
-                </button>
-                <button
-                  type="button"
-                  onClick={() => openWhatsApp('enquire')}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-emerald-600/40 bg-emerald-50/60 text-emerald-700 hover:bg-emerald-100/70 py-3 text-xs font-medium tracking-wide transition-colors cursor-pointer"
-                >
-                  <MessageCircle size={13} />
-                  Enquire Now
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onBook(pkg)}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#725D75] hover:bg-[#A78A9F] text-white py-3 text-xs font-medium tracking-wide shadow-sm transition-colors cursor-pointer"
-                >
-                  Book Now
-                  <ArrowRight size={13} />
-                </button>
+              {/* Actions */}
+              <div className="shrink-0 border-t border-[#E6D7C5] bg-[#FFF3E6] px-4 sm:px-8 py-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:pb-4">
+                <div className="flex flex-col sm:flex-row gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => openWhatsApp('customise')}
+                    className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#381932] text-[#381932] hover:bg-[#A78A9F]/15 py-3 text-[11px] font-serif font-semibold uppercase tracking-wide transition-colors cursor-pointer"
+                  >
+                    <Wand2 size={12} />
+                    Customise
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => openWhatsApp('enquire')}
+                    className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-[#A78A9F] bg-[#A78A9F]/12 text-[#381932] hover:bg-[#A78A9F]/20 py-3 text-[11px] font-serif font-semibold uppercase tracking-wide transition-colors cursor-pointer"
+                  >
+                    <MessageCircle size={12} />
+                    Enquire
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onBook(pkg)}
+                    className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#381932] hover:bg-[#483250] text-[#FFF3E6] py-3 text-[11px] font-serif font-semibold uppercase tracking-wide shadow-sm transition-colors cursor-pointer group/btn"
+                  >
+                    Book Now
+                    <ArrowRight size={12} className="transition-transform group-hover/btn:translate-x-0.5" />
+                  </button>
+                </div>
               </div>
             </div>
           </motion.div>

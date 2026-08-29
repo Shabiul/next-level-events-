@@ -95,7 +95,7 @@ export default function ResetPassword() {
       authModalOpen={auth.isOpen}
       authModalTab={auth.tab}
     >
-      <div className="sticky top-0 z-20 bg-white border-b">
+      <div className="sticky top-0 z-20 bg-[#FFF3E6] border-b">
         <div className="max-w-md mx-auto px-4">
           <div className="flex items-center h-12">
             <BackButton
@@ -114,7 +114,7 @@ export default function ResetPassword() {
         <h2 className="sr-only">Set a new password</h2>
         <p className="mb-4 text-sm text-ink-muted">Choose a secure password for your account.</p>
         {success ? (
-          <div className="rounded-lg bg-green-50 p-3 text-sm text-green-700">{success}</div>
+          <div className="rounded-lg bg-[#FFF3E6] p-3 text-sm text-[#381932]">{success}</div>
         ) : (
           <form onSubmit={submit} className="flex flex-col gap-3">
             <label className="text-sm font-medium">New password</label>
@@ -122,8 +122,8 @@ export default function ResetPassword() {
             <div className="text-xs text-ink-muted">Strength: {['Very weak','Weak','Okay','Good','Strong'][strength] || 'Very weak'}</div>
             <label className="text-sm font-medium">Confirm password</label>
             <input type="password" value={confirm} onChange={e => setConfirm(e.target.value)} className="w-full rounded-lg border px-3 py-2" />
-            {error && <div className="text-sm text-red-600">{error}</div>}
-            <button type="submit" disabled={loading} className="rounded-lg bg-brand-purple py-2 text-white">{loading ? 'Saving...' : 'Set new password'}</button>
+            {error && <div className="text-sm text-[#381932]">{error}</div>}
+            <button type="submit" disabled={loading} className="rounded-lg bg-[#381932] py-2 text-[#FFF3E6]">{loading ? 'Saving...' : 'Set new password'}</button>
           </form>
         )}
       </div>

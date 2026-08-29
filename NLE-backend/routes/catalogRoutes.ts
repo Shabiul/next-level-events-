@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import GlobalCatalog from "../models/GlobalCatalog";
 import Addon from "../models/Addon";
 import Activity from "../models/Activity";
+import { requireAdmin } from "../utils/auth";
 
 const router = express.Router();
 
@@ -82,7 +83,7 @@ router.get("/", async (_req: Request, res: Response) => {
   }
 });
 
-router.post("/seed", async (_req: Request, res: Response) => {
+router.post("/seed", requireAdmin, async (_req: Request, res: Response) => {
   try {
     const existing = await GlobalCatalog.findOne({});
     if (existing) {

@@ -72,7 +72,7 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
     <>
       <div
         className={cn(
-          'fixed inset-0 z-[1000000] bg-black/40 backdrop-blur-xs transition-opacity duration-200',
+          'fixed inset-0 z-[1000000] bg-[#381932]/40 backdrop-blur-xs transition-opacity duration-200',
           open ? 'opacity-100' : 'pointer-events-none opacity-0'
         )}
         onClick={onClose}
@@ -80,7 +80,7 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
 
       <aside
         className={cn(
-          'fixed inset-y-0 right-0 z-[1000001] flex w-[min(440px,100vw)] flex-col bg-white dark:bg-[#1A1A1A] border-l border-[#E8E7E3] dark:border-[#2E2E2E] shadow-2xl transition-transform duration-300',
+          'fixed inset-y-0 right-0 z-[1000001] flex w-[min(440px,100vw)] flex-col bg-[#FFF3E6] dark:bg-[#381932] border-l border-[#381932]/30 dark:border-[#381932] shadow-2xl transition-transform duration-300',
           open ? 'translate-x-0' : 'translate-x-full'
         )}
         role="dialog"
@@ -90,16 +90,16 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
         onWheel={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#E8E7E3] px-5 py-4 dark:border-[#2E2E2E]">
+        <div className="flex items-center justify-between border-b border-[#381932]/30 px-5 py-4 dark:border-[#381932]">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F4F3F0] dark:bg-[#262626] text-[#1C1C1C] dark:text-white">
-              <Sparkles size={16} className="text-amber-600" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FFF3E6] dark:bg-[#381932] text-[#381932] dark:text-[#FFF3E6]">
+              <Sparkles size={16} className="text-[#A78A9F]" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-[#1C1C1C] dark:text-white">
+              <h3 className="text-sm font-bold text-[#381932] dark:text-[#FFF3E6]">
                 AI Event Concierge
               </h3>
-              <p className="text-[11px] text-[#6F6F6B] dark:text-[#A0A09C]">
+              <p className="text-[11px] text-[#381932] dark:text-[#381932]">
                 Ask for themes, budgets, or custom setup ideas
               </p>
             </div>
@@ -107,7 +107,7 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
 
           <button
             type="button"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-[#6F6F6B] hover:bg-[#F4F3F0] dark:hover:bg-[#262626] cursor-pointer"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-[#381932] hover:bg-[#FFF3E6] dark:hover:bg-[#381932] cursor-pointer"
             onClick={onClose}
             aria-label="Close assistant"
           >
@@ -126,13 +126,13 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
                 className={cn(
                   'max-w-[85%] rounded-2xl px-4 py-2.5 text-xs sm:text-sm leading-relaxed',
                   message.sender === 'bot'
-                    ? 'bg-[#F4F3F0] text-[#1C1C1C] dark:bg-[#262626] dark:text-neutral-100 rounded-tl-xs'
-                    : 'bg-[#1C1C1C] text-white dark:bg-white dark:text-black rounded-tr-xs shadow-xs'
+                    ? 'bg-[#FFF3E6] text-[#381932] dark:bg-[#381932] dark:text-[#381932] rounded-tl-xs'
+                    : 'bg-[#381932] text-[#FFF3E6] dark:bg-[#FFF3E6] dark:text-[#381932] rounded-tr-xs shadow-xs'
                 )}
               >
                 {message.loading ? (
                   <div className="flex items-center gap-2 text-xs">
-                    <Sparkles size={13} className="text-amber-600 animate-spin" />
+                    <Sparkles size={13} className="text-[#A78A9F] animate-spin" />
                     <span>Styling your celebration...</span>
                   </div>
                 ) : (
@@ -142,9 +142,9 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
 
               {/* Product cards */}
               {message.products && message.products.length > 0 && (
-                <div className="w-full rounded-xl bg-[#FAFAF8] p-3 border border-[#E8E7E3] dark:bg-[#1E1E1E] dark:border-[#2E2E2E]">
-                  <div className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold text-[#1C1C1C] dark:text-white uppercase tracking-wider">
-                    <Sparkles size={11} className="text-amber-600" />
+                <div className="w-full rounded-xl bg-[#FFF3E6] p-3 border border-[#381932]/30 dark:bg-[#381932] dark:border-[#381932]">
+                  <div className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold text-[#381932] dark:text-[#FFF3E6] uppercase tracking-wider">
+                    <Sparkles size={11} className="text-[#A78A9F]" />
                     Curated Packages
                   </div>
 
@@ -200,7 +200,7 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
         </div>
 
         {/* Input form */}
-        <form onSubmit={onSubmit} className="flex items-center gap-2 border-t border-[#E8E7E3] bg-white p-3 dark:bg-[#1A1A1A] dark:border-[#2E2E2E]">
+        <form onSubmit={onSubmit} className="flex items-center gap-2 border-t border-[#381932]/30 bg-[#FFF3E6] p-3 dark:bg-[#381932] dark:border-[#381932]">
           <input
             ref={inputRef}
             type="text"
@@ -208,12 +208,12 @@ export const AssistantPanel: React.FC<AssistantPanelProps> = ({
             onChange={e => onInputChange(e.target.value)}
             placeholder={t?.ask_assistant || 'Ask for birthday decor under ₹4,000...'}
             autoComplete="off"
-            className="flex-1 rounded-full border border-[#E8E7E3] bg-[#FAFAF8] px-4 py-2 text-xs text-[#1C1C1C] outline-none placeholder:text-[#6F6F6B]/60 focus:border-[#1C1C1C] dark:bg-[#262626] dark:border-[#333] dark:text-white"
+            className="flex-1 rounded-full border border-[#381932]/30 bg-[#FFF3E6] px-4 py-2 text-xs text-[#381932] outline-none placeholder:text-[#381932]/60 focus:border-[#381932] dark:bg-[#381932] dark:border-[#381932] dark:text-[#FFF3E6]"
           />
           <button
             type="submit"
             aria-label="Send message"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1C1C1C] text-white hover:bg-black transition-colors cursor-pointer dark:bg-white dark:text-black"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#381932] text-[#FFF3E6] hover:opacity-90 transition-colors cursor-pointer dark:bg-[#FFF3E6] dark:text-[#381932]"
           >
             <Send size={14} />
           </button>

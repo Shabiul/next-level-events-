@@ -2,12 +2,13 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  Sparkles,
   ArrowRight,
-  CheckCircle2,
+  Heart,
+  ImageIcon,
   Clock,
-  Shield,
-  HeartHandshake,
+  ShieldCheck,
+  Sparkles,
+  Wand2,
   ChevronDown,
   ChevronUp,
 } from 'lucide-react';
@@ -25,6 +26,7 @@ import { EventPackageCard } from '../../components/packages/EventPackageCard';
 import { EventPackageDetailModal } from '../../components/packages/EventPackageDetailModal';
 
 const SUPPORT_PHONE = '917022058460';
+const CTA_IMAGE = '/kkkk.jpeg';
 
 type CategoryFilterOption = 'ALL' | PackageCategoryKey;
 
@@ -32,6 +34,31 @@ interface PackagesPageProps {
   onViewProduct?: (product: AdminProduct) => void;
   onBookProduct?: (product: AdminProduct) => void;
 }
+
+const BENEFITS = [
+  { icon: ImageIcon, title: '100% Picture Match', sub: 'What you see is what you get' },
+  { icon: Clock, title: 'On-Time Delivery', sub: 'We value your time' },
+  { icon: ShieldCheck, title: 'Zero Hidden Cost', sub: 'Transparent pricing always' },
+  { icon: Sparkles, title: 'Expert Stylists', sub: 'Designed by celebration experts' },
+  { icon: Wand2, title: 'Customisable', sub: 'Tailored to your taste & budget' },
+];
+
+/* Thin botanical sprig */
+const Sprig: React.FC<{ className?: string }> = ({ className = '' }) => (
+  <svg viewBox="0 0 120 80" className={className} fill="none" aria-hidden="true">
+    <path d="M10 70 C 40 60, 60 40, 110 10" stroke="#A78A9F" strokeWidth="1.25" strokeLinecap="round" opacity="0.5" />
+    {[22, 40, 58, 76, 94].map((x, i) => (
+      <path
+        key={x}
+        d={`M${x} ${62 - i * 12} q 10 -6 16 -16 q -12 2 -16 16`}
+        stroke="#A78A9F"
+        strokeWidth="1.1"
+        strokeLinecap="round"
+        opacity="0.4"
+      />
+    ))}
+  </svg>
+);
 
 export const PackagesPage: React.FC<PackagesPageProps> = ({
   onViewProduct: _onViewProduct,
@@ -42,6 +69,12 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
   const [activeFilter, setActiveFilter] = useState<CategoryFilterOption>('ALL');
   const [viewingPackage, setViewingPackage] = useState<EventPackage | null>(null);
   const [showMore, setShowMore] = useState(false);
+  const [wishlistIds, setWishlistIds] = useState<string[]>([]);
+
+  const toggleWishlist = (pkg: EventPackage) =>
+    setWishlistIds((prev) =>
+      prev.includes(pkg.id) ? prev.filter((x) => x !== pkg.id) : [...prev, pkg.id]
+    );
 
   const filteredPackages = useMemo(() => {
     if (activeFilter === 'ALL') return EVENT_PACKAGES;
@@ -54,24 +87,25 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
   const handleBookPackage = (pkg: EventPackage) => {
     setViewingPackage(null);
 
-    const matched = products.find(
-      (p) =>
-        p.name.toLowerCase().includes(pkg.name.toLowerCase()) ||
-        pkg.name.toLowerCase().includes(p.name.toLowerCase())
-    ) || {
-      _id: pkg.id,
-      name: pkg.name,
-      price: pkg.numericPrice,
-      categoryName: 'Event Packages',
-      description: pkg.description,
-      image: '/exploreee.jpeg',
-      inclusions: pkg.categories.flatMap((c) => c.items.map((i) => i.label)),
-      addOns: [],
-      active: true,
-      featured: true,
-      createdAt: '2026-01-01',
-      updatedAt: '2026-01-01',
-    };
+    const matched =
+      products.find(
+        (p) =>
+          p.name.toLowerCase().includes(pkg.name.toLowerCase()) ||
+          pkg.name.toLowerCase().includes(p.name.toLowerCase())
+      ) || {
+        _id: pkg.id,
+        name: pkg.name,
+        price: pkg.numericPrice,
+        categoryName: 'Event Packages',
+        description: pkg.description,
+        image: '/exploreee.jpeg',
+        inclusions: pkg.categories.flatMap((c) => c.items.map((i) => i.label)),
+        addOns: [],
+        active: true,
+        featured: true,
+        createdAt: '2026-01-01',
+        updatedAt: '2026-01-01',
+      };
 
     if (onBookProduct) {
       onBookProduct(matched as AdminProduct);
@@ -83,83 +117,51 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
   };
 
   const openWhatsAppEnquiry = () => {
-    const text = "Hi TheDecorParty! I'd like to know more about your Event Packages.";
+    const text = "Hi The Decor Party! I'd like to plan a celebration. Can you help me customise a package?";
     window.open(`https://wa.me/${SUPPORT_PHONE}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
-  };
-
-  const scrollToCatalog = () => {
-    const el = document.getElementById('package-tiers-list');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
   };
 
   return (
     <>
       <SeoHead
-        title="Event Packages — TheDecorParty"
+        title="Event Packages — The Decor Party"
         description="Explore thoughtfully curated event packages with transparent pricing, decor, activities, live eateries, and complimentary extras across Bengaluru."
       />
 
-      <div className="flex flex-col w-full bg-[#F9F6F2] text-[#2F2930] font-sans antialiased min-h-screen">
+      <div className="flex flex-col w-full bg-[#FFF3E6] text-[#381932] font-poppins antialiased min-h-screen overflow-x-hidden">
 
-        {/* ========================================================================= */}
-        {/* 01 — EDITORIAL HERO HEADER                                               */}
-        {/* ========================================================================= */}
-        <section
-          data-nav-theme="light"
-          className="relative w-full pt-12 sm:pt-16 md:pt-20 pb-8 sm:pb-12 px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1720px] mx-auto text-center"
-        >
-          {/* Ambient Lighting Orbs */}
-          <div className="absolute top-10 left-1/4 w-96 h-96 rounded-full bg-[#725D75]/10 blur-3xl pointer-events-none -z-10" />
-          <div className="absolute top-28 right-1/4 w-96 h-96 rounded-full bg-[#C9BEAB]/08 blur-3xl pointer-events-none -z-10" />
+        {/* ================================================================= */}
+        {/* 1. HERO                                                           */}
+        {/* ================================================================= */}
+        <section className="relative w-full max-w-[1500px] mx-auto pt-14 sm:pt-20 pb-8 px-5 sm:px-8 text-center">
+          <div className="pointer-events-none absolute -top-6 -left-16 h-72 w-72 rounded-[46%_54%_58%_42%] bg-[#A78A9F]/18 blur-3xl" />
+          <Sprig className="pointer-events-none absolute top-10 right-4 hidden lg:block w-40 h-28 opacity-70" />
 
-          <div className="max-w-4xl mx-auto flex flex-col items-center">
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#725D75]/06 border border-[#725D75]/15 text-xs font-bold uppercase tracking-[0.22em] text-[#746B72] mb-4 sm:mb-5"
-            >
-              <Sparkles size={13} className="text-[#725D75]" />
-              <span>CURATED CELEBRATION PACKAGES</span>
-            </motion.div>
+          <div className="relative flex flex-col items-center">
+            <span className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#A78A9F] mb-3">
+              <Heart size={11} className="fill-[#A78A9F] text-[#A78A9F]" />
+              Curated Celebration Packages
+            </span>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-normal tracking-tight text-[#2F2930] leading-[1.08] mb-4"
-            >
-              Event <span className="font-serif italic text-[#725D75]">Packages</span>
-            </motion.h1>
+            <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-[64px] font-bold uppercase tracking-tight text-[#381932] leading-[1.04] max-w-3xl">
+              Celebrations, Curated to{' '}
+              <span className="text-[#A78A9F]">Perfection</span>
+            </h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-sm sm:text-base font-light leading-relaxed text-[#746B72] max-w-xl mb-8"
-            >
-              Celebrate beautifully with our thoughtfully curated packages.
-            </motion.p>
+            <p className="font-script text-xl sm:text-2xl text-[#A78A9F] mt-4">
+              Thoughtfully designed packages for unforgettable moments.
+            </p>
           </div>
 
-          {/* ========================================================================= */}
-          {/* 02 — CATEGORY FILTER NAVIGATION                                           */}
-          {/* ========================================================================= */}
+          {/* Category filter */}
           <div
             id="package-tiers-list"
-            className="mt-2 flex items-center justify-start sm:justify-center overflow-x-auto pb-3 scrollbar-none gap-2 px-2 max-w-full"
+            className="mt-9 flex items-center justify-start sm:justify-center gap-2.5 overflow-x-auto pb-2 scrollbar-none px-1"
           >
             {(['ALL', ...CATEGORY_FILTERS] as CategoryFilterOption[]).map((filterKey) => {
               const isActive = activeFilter === filterKey;
               const label = filterKey === 'ALL' ? 'All Packages' : CATEGORY_META[filterKey].label;
               const Icon = filterKey === 'ALL' ? Sparkles : CATEGORY_META[filterKey].icon;
-              const count =
-                filterKey === 'ALL'
-                  ? EVENT_PACKAGES.length
-                  : EVENT_PACKAGES.filter((p) => p.categories.some((c) => c.key === filterKey)).length;
-
               return (
                 <button
                   key={filterKey}
@@ -168,31 +170,24 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
                     setActiveFilter(filterKey);
                     setShowMore(false);
                   }}
-                  className={`relative shrink-0 rounded-full px-4 sm:px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer flex items-center gap-1.5 ${
+                  className={`shrink-0 inline-flex items-center gap-2 rounded-full border px-4 sm:px-5 py-2.5 text-[11px] font-serif font-semibold uppercase tracking-wide transition-all duration-300 cursor-pointer ${
                     isActive
-                      ? 'bg-[#725D75] text-white shadow-md scale-102'
-                      : 'bg-[#725D75]/06 text-[#746B72] hover:bg-[#725D75]/12 hover:text-[#2F2930]'
+                      ? 'border-[#381932] bg-[#381932] text-[#FFF3E6] shadow-sm'
+                      : 'border-[#E6D7C5] bg-[#FFF3E6] text-[#381932] hover:border-[#A78A9F]'
                   }`}
                 >
-                  <Icon size={13} className={isActive ? 'text-white' : 'text-[#725D75]'} />
-                  <span>{label}</span>
-                  <span
-                    className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
-                      isActive ? 'bg-white/20 text-white' : 'bg-[#725D75]/10 text-[#746B72]'
-                    }`}
-                  >
-                    {count}
-                  </span>
+                  <Icon size={12} />
+                  {label}
                 </button>
               );
             })}
           </div>
         </section>
 
-        {/* ========================================================================= */}
-        {/* 03 — PACKAGE GRID + VIEW MORE CAROUSEL                                    */}
-        {/* ========================================================================= */}
-        <section className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 pb-10">
+        {/* ================================================================= */}
+        {/* 2. PACKAGE GRID                                                   */}
+        {/* ================================================================= */}
+        <section className="w-full max-w-[1500px] mx-auto px-5 sm:px-8 pt-4 pb-16 sm:pb-24">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7">
             {primaryPackages.map((pkg, idx) => (
               <EventPackageCard
@@ -201,24 +196,26 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
                 index={idx}
                 onView={setViewingPackage}
                 onBook={handleBookPackage}
+                wished={wishlistIds.includes(pkg.id)}
+                onToggleWishlist={toggleWishlist}
               />
             ))}
           </div>
 
           {primaryPackages.length === 0 && (
-            <div className="py-16 text-center text-sm text-[#746B72]">
+            <div className="py-16 text-center text-sm text-[#381932]/70">
               No packages found in this category yet.
             </div>
           )}
 
           {extraPackages.length > 0 && (
-            <div className="mt-8 flex justify-center">
+            <div className="mt-9 flex justify-center">
               <button
                 type="button"
                 onClick={() => setShowMore((v) => !v)}
-                className="inline-flex items-center gap-2 rounded-full border border-[#725D75]/30 bg-white px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#725D75] hover:bg-[#725D75]/06 shadow-sm transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 rounded-full border border-[#E6D7C5] bg-[#FFF3E6] px-6 py-3 text-[11px] font-serif font-semibold uppercase tracking-wider text-[#381932] hover:border-[#A78A9F] transition-colors cursor-pointer"
               >
-                <span>{showMore ? 'Hide Packages' : `View More Packages (${extraPackages.length})`}</span>
+                {showMore ? 'Hide Packages' : `View More Packages (${extraPackages.length})`}
                 {showMore ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
               </button>
             </div>
@@ -231,100 +228,83 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
               transition={{ duration: 0.4 }}
               className="mt-8 overflow-hidden"
             >
-              <div className="flex gap-5 overflow-x-auto pb-4 smooth-horizontal-rail hide-scrollbar snap-x">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7">
                 {extraPackages.map((pkg, idx) => (
-                  <div key={pkg.id} className="flex-none w-[280px] sm:w-[320px] snap-start">
-                    <EventPackageCard
-                      pkg={pkg}
-                      index={idx}
-                      onView={setViewingPackage}
-                      onBook={handleBookPackage}
-                      className="h-full"
-                    />
-                  </div>
+                  <EventPackageCard
+                    key={pkg.id}
+                    pkg={pkg}
+                    index={idx}
+                    onView={setViewingPackage}
+                    onBook={handleBookPackage}
+                    wished={wishlistIds.includes(pkg.id)}
+                    onToggleWishlist={toggleWishlist}
+                  />
                 ))}
               </div>
             </motion.div>
           )}
         </section>
 
-        {/* ========================================================================= */}
-        {/* 04 — GENERAL ENQUIRY STRIP                                                */}
-        {/* ========================================================================= */}
-        <section className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 pb-16 sm:pb-24">
-          <div className="rounded-[28px] border border-[#E4DCD2] bg-white p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
-            <div>
-              <h3 className="font-serif text-lg sm:text-xl font-bold text-[#2F2930] mb-1">
-                Don't see the exact fit?
-              </h3>
-              <p className="text-xs sm:text-sm text-[#746B72] font-light">
-                Every package can be customised — mix decor, activities, and eateries to your taste and budget.
+        {/* ================================================================= */}
+        {/* 3. TRUST / BENEFITS STRIP                                         */}
+        {/* ================================================================= */}
+        <section className="w-full bg-[#A78A9F]/10 border-y border-[#E6D7C5]">
+          <div className="max-w-[1500px] mx-auto px-5 sm:px-8 py-10 sm:py-12 grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4">
+            {BENEFITS.map((b) => (
+              <div
+                key={b.title}
+                className="flex flex-col items-center text-center gap-2.5 rounded-[18px] border border-[#E6D7C5] bg-[#FFF3E6] px-4 py-6 shadow-[0_10px_30px_-22px_rgba(56,25,50,0.4)] transition-transform duration-300 hover:-translate-y-1"
+              >
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#A78A9F] text-[#FFF3E6] shadow-[0_8px_18px_-8px_rgba(167,138,159,0.9)]">
+                  <b.icon size={18} />
+                </span>
+                <h4 className="font-serif text-[13px] font-bold uppercase tracking-tight text-[#381932] leading-tight">
+                  {b.title}
+                </h4>
+                <p className="text-[11px] text-[#381932]/60 leading-snug">{b.sub}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ================================================================= */}
+        {/* 4. CUSTOM PACKAGE CTA                                             */}
+        {/* ================================================================= */}
+        <section className="w-full max-w-[1500px] mx-auto px-5 sm:px-8 py-12 sm:py-16">
+          <div className="relative grid grid-cols-1 lg:grid-cols-2 overflow-hidden rounded-[24px] border border-[#E6D7C5] bg-[#A78A9F]/12 shadow-[0_28px_60px_-34px_rgba(56,25,50,0.3)]">
+            <Sprig className="pointer-events-none absolute bottom-4 right-6 hidden lg:block w-40 h-28 rotate-180 opacity-55" />
+
+            <div className="relative min-h-[220px] lg:min-h-[320px]">
+              <img
+                src={CTA_IMAGE}
+                alt="The Decor Party candlelight celebration setup"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#A78A9F]/25" />
+            </div>
+
+            <div className="relative flex flex-col justify-center gap-4 p-8 sm:p-12">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#A78A9F]">
+                Bespoke by design
+              </span>
+              <h2 className="font-serif text-2xl sm:text-3xl lg:text-[38px] font-bold uppercase leading-[1.08] tracking-tight text-[#381932]">
+                Can&apos;t Find the Perfect Fit?
+              </h2>
+              <p className="text-sm font-poppins leading-relaxed text-[#381932]/80 max-w-md">
+                Every celebration is different. We can customise a package around your
+                taste, theme and budget.
               </p>
-            </div>
-            <button
-              type="button"
-              onClick={openWhatsAppEnquiry}
-              className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-[#725D75] hover:bg-[#A78A9F] text-white px-6 py-3 text-xs font-bold uppercase tracking-wider shadow-md transition-colors cursor-pointer"
-            >
-              Enquire Now
-              <ArrowRight size={13} />
-            </button>
-          </div>
-        </section>
-
-        {/* ========================================================================= */}
-        {/* 05 — THE DECOR PARTY PROMISE & GUARANTEE                                  */}
-        {/* ========================================================================= */}
-        <section
-          data-nav-theme="dark"
-          className="relative w-full py-16 sm:py-20 lg:py-24 px-4 sm:px-6 md:px-8 lg:px-12 text-[#F9F6F2] text-center border-t border-white/10"
-          style={{
-            background: 'linear-gradient(145deg, #26112A 0%, #371A3F 55%, #46224F 100%)',
-          }}
-        >
-          <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center gap-5 sm:gap-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs font-bold uppercase tracking-[0.22em] text-[#A78A9F]">
-              <HeartHandshake size={13} className="text-[#A78A9F]" />
-              <span>THE DECOR PARTY PROMISE</span>
-            </div>
-
-            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-normal tracking-tight leading-[1.12] text-[#F9F6F2] uppercase">
-              YOUR CELEBRATION.{' '}
-              <span className="font-serif italic text-[#A78A9F] block sm:inline lowercase">
-                Your style. Your moment.
-              </span>
-            </h2>
-
-            <p className="text-xs sm:text-sm md:text-base font-light text-[#F9F6F2]/85 max-w-xl leading-relaxed">
-              Transparent fixed pricing with guaranteed punctual arrival anywhere in Bengaluru.
-            </p>
-
-            <button
-              type="button"
-              onClick={scrollToCatalog}
-              className="mt-3 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#725D75] to-[#A78A9F] hover:from-[#C9BEAB] hover:to-[#725D75] px-8 sm:px-10 py-3.5 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#F9F6F2] hover:text-[#25172C] shadow-xl hover:scale-103 active:scale-95 transition-all cursor-pointer"
-            >
-              <span>EXPLORE ALL PACKAGES</span>
-              <ArrowRight size={15} />
-            </button>
-
-            <div className="mt-4 pt-6 border-t border-white/10 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-[11px] sm:text-xs text-[#F9F6F2]/75 font-medium tracking-wide">
-              <span className="flex items-center gap-1.5">
-                <Clock size={13} className="text-[#A78A9F]" />
-                <span>Express 3-Hour Setup</span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Shield size={13} className="text-[#A78A9F]" />
-                <span>100% Picture-Match Guarantee</span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 size={13} className="text-[#A78A9F]" />
-                <span>No Hidden Fees</span>
-              </span>
+              <button
+                type="button"
+                onClick={openWhatsAppEnquiry}
+                className="mt-1 inline-flex w-fit items-center gap-2 rounded-xl bg-[#381932] hover:bg-[#483250] text-[#FFF3E6] px-6 py-3.5 text-[11px] font-serif font-semibold uppercase tracking-wide shadow-[0_16px_34px_-16px_rgba(56,25,50,0.6)] transition-colors group/btn"
+              >
+                Let&apos;s Plan Together
+                <ArrowRight size={13} className="transition-transform group-hover/btn:translate-x-0.5" />
+              </button>
             </div>
           </div>
         </section>
-
       </div>
 
       <EventPackageDetailModal

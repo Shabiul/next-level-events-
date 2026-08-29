@@ -7,8 +7,17 @@ import sendEmail from "../utils/sendEmail";
 import User from "../models/User";
 import { login } from "../controllers/authController";
 import authMiddleware from "../middleware/authMiddleware";
+import { signAuthToken } from "../utils/auth";
+import { rateLimit } from "../middleware/rateLimit";
 
 const router = express.Router();
+
+// Brute-force / abuse protection on credential + account endpoints.
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: "Too many attempts. Please wait a few minutes and try again.",
+});
 
 const profileFields = [
   "firstName", "lastName", "phone", "gender", "dateOfBirth",
@@ -65,7 +74,7 @@ function publicUser(user: PublicUserShape) {
   };
 }
 
-router.post("/login", login);
+router.post("/login", authLimiter, login);
 
 router.get("/profile", authMiddleware, async (req: Request, res: Response) => {
   try {
@@ -104,7 +113,7 @@ router.put("/profile", authMiddleware, async (req: Request, res: Response) => {
   }
 });
 
-router.post("/register", async (req: Request, res: Response) => {
+router.post("/register", authLimiter, async (req: Request, res: Response) => {
   try {
     const { email, password, role: requestedRole, adminSecret } = req.body;
 
@@ -116,9 +125,13 @@ router.post("/register", async (req: Request, res: Response) => {
 
     let role = "user";
     if (requestedRole === "admin" || isKnownAdminEmail(email)) {
-      const validAdminKeys = ["TDP_ADMIN_2026", "admin123", "admin", process.env.ADMIN_SECRET].filter(Boolean);
-      const isKeyMatch = validAdminKeys.includes(adminSecret) || isKnownAdminEmail(email);
-      if (!isKeyMatch) {
+      // Admin registration requires the server-side ADMIN_SECRET. No hardcoded
+      // passphrases, and no auto-admin purely from a "known" email address.
+      const adminSecretEnv = process.env.ADMIN_SECRET;
+      if (!adminSecretEnv || adminSecretEnv.length < 8) {
+        return res.status(403).json({ msg: "Admin registration is disabled on this server." });
+      }
+      if (adminSecret !== adminSecretEnv) {
         return res.status(403).json({ msg: "Invalid Admin Security Passcode. Access denied." });
       }
       role = "admin";
@@ -162,7 +175,7 @@ router.post("/register", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/google", async (req: Request, res: Response) => {
+router.post("/google", authLimiter, async (req: Request, res: Response) => {
   try {
     const { uid, email, firstName, lastName, photoURL } = req.body;
     if (!email || !uid) return res.status(400).json({ msg: "Invalid Google data" });
@@ -207,7 +220,7 @@ router.post("/google", async (req: Request, res: Response) => {
       await user.save();
     }
 
-    const token = jwt.sign({ id: user._id, role }, process.env.JWT_SECRET || "secret", { expiresIn: "7d" });
+    const token = signAuthToken({ id: String(user._id), role });
 
     res.json({
       token,
@@ -237,62 +250,20 @@ router.post("/google", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/phone", async (req: Request, res: Response) => {
-  try {
-    const { uid, phone, firstName, lastName } = req.body;
-    if (!uid || !phone) return res.status(400).json({ msg: "Invalid phone verification data" });
-
-    const normalizedPhone = String(phone).trim();
-
-    let user = await User.findOne({ phone: normalizedPhone });
-    let isNewUser = false;
-
-    if (!user) {
-      user = new User({
-        firstName: firstName || "",
-        lastName: lastName || "",
-        phone: normalizedPhone,
-        googleId: uid, // reuses the same "external auth uid" column for the Firebase phone uid
-        password: "",
-        role: "user",
-      });
-      await user.save();
-      isNewUser = true;
-    }
-
-    const role = user.role === "admin" ? "admin" : "user";
-    const token = jwt.sign({ id: user._id, role }, process.env.JWT_SECRET || "secret", { expiresIn: "7d" });
-
-    res.json({
-      token,
-      isNewUser,
-      user: {
-        id: String(user._id),
-        wishlist: Array.isArray(user.wishlist) ? user.wishlist.map((item) => String(item)) : [],
-        name: [user.firstName, user.lastName].filter(Boolean).join(' ') || normalizedPhone,
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
-        email: user.email || "",
-        role,
-        phone: user.phone || "",
-        gender: user.gender || "",
-        dateOfBirth: user.dateOfBirth || "",
-        address: user.address || "",
-        city: user.city || "",
-        state: user.state || "",
-        country: user.country || "",
-        pincode: user.pincode || "",
-        photoURL: user.photoURL || "",
-        avatar: user.photoURL || "",
-      },
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ msg: "Server error" });
-  }
+/**
+ * DEPRECATED & DISABLED. This route previously minted a JWT from a client-
+ * supplied `uid` with NO verification -- anyone could forge a phone identity.
+ * Phone login now goes through the server-enforced OTP flow at
+ * POST /api/auth/otp/request  +  POST /api/auth/otp/verify.
+ */
+router.post("/phone", authLimiter, (_req: Request, res: Response) => {
+  return res.status(410).json({
+    success: false,
+    message: "This endpoint is disabled. Use /api/auth/otp/request and /api/auth/otp/verify.",
+  });
 });
 
-router.post("/forgot-password", async (req: Request, res: Response) => {
+router.post("/forgot-password", authLimiter, async (req: Request, res: Response) => {
   try {
     const { email } = req.body || {};
     if (!email) {
@@ -331,7 +302,7 @@ router.post("/forgot-password", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/reset-password/:token", async (req: Request, res: Response) => {
+router.post("/reset-password/:token", authLimiter, async (req: Request, res: Response) => {
   try {
     const { token } = req.params;
     const { password } = req.body || {};

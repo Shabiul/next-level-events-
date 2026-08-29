@@ -1,6 +1,6 @@
 import type { AuthUser } from '../types';
 
-const avatarColors = ['bg-slate-900', 'bg-zinc-800', 'bg-stone-800', 'bg-neutral-800'] as const;
+const avatarColors = ['bg-[#381932]', 'bg-[#381932]', 'bg-[#381932]', 'bg-[#381932]'] as const;
 
 export function getAvatarColor(identifier: string) {
   const normalized = identifier?.trim().toLowerCase() || '';

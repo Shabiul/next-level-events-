@@ -3,8 +3,13 @@ import User from "../models/User";
 import Product from "../models/Product";
 import Category from "../models/Category";
 import Slider from "../models/Slider";
+import { requireAdmin } from "../utils/auth";
 
 const router = express.Router();
+
+// The entire admin dashboard is admin-only. Previously every route here was
+// public -- anyone could list users or PATCH themselves to role:"admin".
+router.use(requireAdmin);
 
 router.get("/stats", async (_req: Request, res: Response) => {
   try {

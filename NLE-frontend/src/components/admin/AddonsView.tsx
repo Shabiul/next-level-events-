@@ -4,7 +4,7 @@ import { Eye, EyeOff, Pencil, Search, Trash2, Upload, Link as LinkIcon } from 'l
 import { Modal } from './Modal';
 import { ConfirmModal } from './ConfirmModal';
 import { cn } from '../../lib/utils';
-import { getApiUrl } from '../../lib/api';
+import { getApiUrl, authFetch } from '../../lib/api';
 import { CLOUDINARY_UPLOAD_URL, CLOUDINARY_UPLOAD_PRESET } from '../../lib/cloudinary';
 import type { AdminAddon } from '../../types';
 
@@ -33,7 +33,7 @@ export const AddonsView = () => {
 
   const fetchAddons = async () => {
     try {
-      const res = await fetch(API);
+      const res = await authFetch(API);
       const data = await res.json();
       setAddons(Array.isArray(data) ? data : []);
     } catch {
@@ -104,7 +104,7 @@ export const AddonsView = () => {
     formData.append('folder', 'ems/addons');
 
     try {
-      const response = await fetch(CLOUDINARY_UPLOAD_URL, {
+      const response = await authFetch(CLOUDINARY_UPLOAD_URL, {
         method: 'POST',
         body: formData,
       });
@@ -199,7 +199,7 @@ export const AddonsView = () => {
       };
 
       if (editing) {
-        const res = await fetch(`${API}/${editing._id}`, {
+        const res = await authFetch(`${API}/${editing._id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -208,7 +208,7 @@ export const AddonsView = () => {
         setAddons((prev) => prev.map((item) => item._id === updated._id ? updated : item));
         toast.success('Add-on updated');
       } else {
-        const res = await fetch(API, {
+        const res = await authFetch(API, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
@@ -227,7 +227,7 @@ export const AddonsView = () => {
 
   const del = async (id: string) => {
     try {
-      await fetch(`${API}/${id}`, { method: 'DELETE' });
+      await authFetch(`${API}/${id}`, { method: 'DELETE' });
       setAddons((prev) => prev.filter((item) => item._id !== id));
       setDeleteConfirm(null);
       toast.success('Add-on deleted');
@@ -238,7 +238,7 @@ export const AddonsView = () => {
 
   const toggle = async (id: string, active: boolean) => {
     try {
-      await fetch(`${API}/${id}`, {
+      await authFetch(`${API}/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ active }),
@@ -254,14 +254,14 @@ export const AddonsView = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-5 shadow-xs">
         <div>
-          <h2 className="text-xl font-black text-slate-900 dark:text-white">Product Add-ons</h2>
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">Manage extra decor elements (balloons, lights, props) for event packages.</p>
+          <h2 className="text-xl font-black text-[#381932] dark:text-[#FFF3E6]">Product Add-ons</h2>
+          <p className="text-xs font-semibold text-[#381932] dark:text-[#381932] mt-0.5">Manage extra decor elements (balloons, lights, props) for event packages.</p>
         </div>
         <button 
           type="button"
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-purple hover:bg-brand-purple-dark text-white px-4 py-2.5 text-xs font-bold shadow-md shadow-purple-600/20 active:scale-95 transition-all cursor-pointer" 
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#381932] hover:opacity-90 text-[#FFF3E6] px-4 py-2.5 text-xs font-bold shadow-md shadow-[#381932]/20 active:scale-95 transition-all cursor-pointer" 
           onClick={openAdd}
         >
           + Add Add-on
@@ -271,16 +271,16 @@ export const AddonsView = () => {
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:max-w-xl">
           <div className="relative w-full">
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#381932]" />
             <input
-              className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 pl-10 pr-4 py-2.5 text-xs font-semibold text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
+              className="w-full rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] pl-10 pr-4 py-2.5 text-xs font-semibold text-[#381932] dark:text-[#FFF3E6] outline-none placeholder:text-[#381932]"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search add-on title or category..."
             />
           </div>
           <select 
-            className="w-full sm:w-40 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2.5 text-xs font-bold text-slate-900 dark:text-white outline-none" 
+            className="w-full sm:w-40 rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3 py-2.5 text-xs font-bold text-[#381932] dark:text-[#FFF3E6] outline-none" 
             value={statusFilter} 
             onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
           >
@@ -290,52 +290,52 @@ export const AddonsView = () => {
           </select>
         </div>
 
-        <div className="text-xs font-bold text-slate-400 dark:text-slate-500 self-end sm:self-center">
+        <div className="text-xs font-bold text-[#381932] dark:text-[#381932] self-end sm:self-center">
           {filtered.length} total add-ons
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {paged.map((addon) => (
-          <div key={addon._id} className={cn('overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between transition-all', !addon.active && 'opacity-60')}>
+          <div key={addon._id} className={cn('overflow-hidden rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] shadow-xs flex flex-col justify-between transition-all', !addon.active && 'opacity-60')}>
             <div>
-              <div className="relative aspect-video w-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+              <div className="relative aspect-video w-full bg-[#FFF3E6] dark:bg-[#381932] overflow-hidden">
                 {addon.image ? (
                   <img src={addon.image} alt={addon.name} className="h-full w-full object-cover" />
                 ) : (
-                  <div className="flex h-full items-center justify-center text-xs font-semibold text-slate-400">No Image</div>
+                  <div className="flex h-full items-center justify-center text-xs font-semibold text-[#381932]">No Image</div>
                 )}
                 <span className={`absolute top-2.5 right-2.5 rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase border ${
-                  addon.active ? 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 border-slate-200 dark:border-slate-700'
+                  addon.active ? 'bg-[#FFF3E6] dark:bg-[#381932]/80 text-[#381932] dark:text-[#381932] border-[#381932] dark:border-[#381932]' : 'bg-[#FFF3E6] dark:bg-[#381932] text-[#381932] border-[#381932] dark:border-[#381932]'
                 }`}>
                   {addon.active ? 'Active' : 'Hidden'}
                 </span>
               </div>
               <div className="p-4 space-y-1.5">
-                <h3 className="truncate text-sm font-bold text-slate-900 dark:text-white">{addon.name}</h3>
-                <div className="text-xs font-black text-brand-purple dark:text-purple-400">₹{Number(addon.price || 0).toLocaleString('en-IN')}</div>
-                <p className="line-clamp-2 text-xs font-medium text-slate-500 dark:text-slate-400">{addon.description || 'No description provided.'}</p>
+                <h3 className="truncate text-sm font-bold text-[#381932] dark:text-[#FFF3E6]">{addon.name}</h3>
+                <div className="text-xs font-black text-[#381932] dark:text-[#381932]">₹{Number(addon.price || 0).toLocaleString('en-IN')}</div>
+                <p className="line-clamp-2 text-xs font-medium text-[#381932] dark:text-[#381932]">{addon.description || 'No description provided.'}</p>
               </div>
             </div>
 
             <div className="p-4 pt-0 flex items-center gap-1.5">
               <button 
                 type="button"
-                className="flex-1 inline-flex items-center justify-center gap-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer" 
+                className="flex-1 inline-flex items-center justify-center gap-1 rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3 py-2 text-xs font-bold text-[#381932] dark:text-[#381932] hover:bg-[#FFF3E6] dark:hover:bg-[#381932] transition-colors cursor-pointer" 
                 onClick={() => openEdit(addon)}
               >
                 <Pencil size={12} /> Edit
               </button>
               <button 
                 type="button"
-                className="inline-flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-2 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer" 
+                className="inline-flex items-center justify-center rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] p-2 text-xs font-bold text-[#381932] dark:text-[#381932] hover:bg-[#FFF3E6] dark:hover:bg-[#381932] transition-colors cursor-pointer" 
                 onClick={() => toggle(addon._id, !addon.active)}
               >
                 {addon.active ? <EyeOff size={14} /> : <Eye size={14} />}
               </button>
               <button 
                 type="button"
-                className="inline-flex items-center justify-center rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50 dark:bg-rose-950/40 p-2 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors cursor-pointer" 
+                className="inline-flex items-center justify-center rounded-xl border border-[#381932] dark:border-[#381932]/50 bg-[#FFF3E6] dark:bg-[#381932]/40 p-2 text-xs font-bold text-[#381932] dark:text-[#381932] hover:bg-[#FFF3E6] dark:hover:bg-[#381932]/60 transition-colors cursor-pointer" 
                 onClick={() => setDeleteConfirm({ id: addon._id, name: addon.name })}
               >
                 <Trash2 size={14} />
@@ -346,19 +346,19 @@ export const AddonsView = () => {
       </div>
 
       {filtered.length > PAGE_SIZE && (
-        <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-4">
+        <div className="flex items-center justify-between border-t border-[#381932] dark:border-[#381932] pt-4">
           <button 
             type="button"
-            className="rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 disabled:opacity-50 cursor-pointer" 
+            className="rounded-xl border border-[#381932] dark:border-[#381932] px-4 py-2 text-xs font-bold text-[#381932] dark:text-[#381932] disabled:opacity-50 cursor-pointer" 
             disabled={safePage === 1} 
             onClick={() => setPage((prev) => Math.max(1, prev - 1))}
           >
             Previous
           </button>
-          <span className="text-xs font-bold text-slate-900 dark:text-white">Page {safePage} of {pageCount}</span>
+          <span className="text-xs font-bold text-[#381932] dark:text-[#FFF3E6]">Page {safePage} of {pageCount}</span>
           <button 
             type="button"
-            className="rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 disabled:opacity-50 cursor-pointer" 
+            className="rounded-xl border border-[#381932] dark:border-[#381932] px-4 py-2 text-xs font-bold text-[#381932] dark:text-[#381932] disabled:opacity-50 cursor-pointer" 
             disabled={safePage === pageCount} 
             onClick={() => setPage((prev) => Math.min(pageCount, prev + 1))}
           >
@@ -372,31 +372,31 @@ export const AddonsView = () => {
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-extrabold uppercase text-slate-400">Name *</label>
-                <input className="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2.5 text-xs font-semibold text-slate-900 dark:text-white outline-none" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="e.g. Rose Petal Garland" />
+                <label className="text-xs font-extrabold uppercase text-[#381932]">Name *</label>
+                <input className="mt-1 w-full rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3.5 py-2.5 text-xs font-semibold text-[#381932] dark:text-[#FFF3E6] outline-none" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="e.g. Rose Petal Garland" />
               </div>
               <div>
-                <label className="text-xs font-extrabold uppercase text-slate-400">Price (₹) *</label>
-                <input type="number" min="0" className="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2.5 text-xs font-semibold text-slate-900 dark:text-white outline-none" value={form.price} onChange={(e) => setForm((f) => ({ ...f, price: Number(e.target.value) }))} />
+                <label className="text-xs font-extrabold uppercase text-[#381932]">Price (₹) *</label>
+                <input type="number" min="0" className="mt-1 w-full rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3.5 py-2.5 text-xs font-semibold text-[#381932] dark:text-[#FFF3E6] outline-none" value={form.price} onChange={(e) => setForm((f) => ({ ...f, price: Number(e.target.value) }))} />
               </div>
             </div>
 
             <div>
-              <label className="text-xs font-extrabold uppercase text-slate-400">Description / Details</label>
-              <textarea className="mt-1 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2.5 text-xs font-medium text-slate-900 dark:text-white outline-none" value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} rows={3} placeholder="Describe the add-on package" />
+              <label className="text-xs font-extrabold uppercase text-[#381932]">Description / Details</label>
+              <textarea className="mt-1 w-full rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3.5 py-2.5 text-xs font-medium text-[#381932] dark:text-[#FFF3E6] outline-none" value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} rows={3} placeholder="Describe the add-on package" />
             </div>
 
-            <div className="flex gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+            <div className="flex gap-2 border-b border-[#381932] dark:border-[#381932] pb-2">
               <button
                 type="button"
-                className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${imageMode === 'upload' ? 'bg-brand-purple text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'}`}
+                className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${imageMode === 'upload' ? 'bg-[#381932] text-[#FFF3E6]' : 'bg-[#FFF3E6] dark:bg-[#381932] text-[#381932] dark:text-[#381932]'}`}
                 onClick={() => setImageMode('upload')}
               >
                 <Upload size={13} className="mr-1 inline" /> Upload File
               </button>
               <button
                 type="button"
-                className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${imageMode === 'url' ? 'bg-brand-purple text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'}`}
+                className={`rounded-xl px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${imageMode === 'url' ? 'bg-[#381932] text-[#FFF3E6]' : 'bg-[#FFF3E6] dark:bg-[#381932] text-[#381932] dark:text-[#381932]'}`}
                 onClick={() => setImageMode('url')}
               >
                 <LinkIcon size={13} className="mr-1 inline" /> Image URL
@@ -405,7 +405,7 @@ export const AddonsView = () => {
 
             {imageMode === 'upload' ? (
               <div
-                className="rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 p-6 text-center bg-slate-50/50 dark:bg-slate-800/40"
+                className="rounded-2xl border-2 border-dashed border-[#381932] dark:border-[#381932] p-6 text-center bg-[#FFF3E6]/50 dark:bg-[#381932]/40"
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={handleDropUpload}
               >
@@ -419,19 +419,19 @@ export const AddonsView = () => {
                 />
                 <label htmlFor="addon-image-upload" className="cursor-pointer space-y-1 block">
                   {uploading ? (
-                    <div className="text-xs font-bold text-brand-purple">Uploading image to cloud...</div>
+                    <div className="text-xs font-bold text-[#381932]">Uploading image to cloud...</div>
                   ) : (
                     <>
-                      <div className="flex justify-center text-slate-400 mb-2"><Upload size={24} /></div>
-                      <div className="text-xs font-bold text-slate-900 dark:text-white">{form.image ? 'Change Image' : 'Choose Image File'}</div>
-                      <div className="text-[10px] text-slate-400 font-semibold">Drag &amp; drop or click to browse · Max 5MB</div>
+                      <div className="flex justify-center text-[#381932] mb-2"><Upload size={24} /></div>
+                      <div className="text-xs font-bold text-[#381932] dark:text-[#FFF3E6]">{form.image ? 'Change Image' : 'Choose Image File'}</div>
+                      <div className="text-[10px] text-[#381932] font-semibold">Drag &amp; drop or click to browse · Max 5MB</div>
                     </>
                   )}
                 </label>
               </div>
             ) : (
               <input
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2.5 text-xs font-semibold text-slate-900 dark:text-white outline-none"
+                className="w-full rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3.5 py-2.5 text-xs font-semibold text-[#381932] dark:text-[#FFF3E6] outline-none"
                 value={imageUrlInput}
                 onChange={(e) => setImageUrlInput(e.target.value)}
                 placeholder="https://example.com/addon.jpg"
@@ -440,11 +440,11 @@ export const AddonsView = () => {
 
             {previewUrl && (
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs font-extrabold text-slate-400 uppercase">
+                <div className="flex items-center justify-between text-xs font-extrabold text-[#381932] uppercase">
                   <span>Image Preview</span>
                   <button
                     type="button"
-                    className="text-rose-600 hover:underline cursor-pointer"
+                    className="text-[#381932] hover:underline cursor-pointer"
                     onClick={() => {
                       setUploadedImage('');
                       setImageUrlInput('');
@@ -455,16 +455,16 @@ export const AddonsView = () => {
                   </button>
                 </div>
                 {previewIsValid ? (
-                  <img src={previewUrl} alt="Add-on preview" className="h-44 w-full rounded-xl object-cover border border-slate-200 dark:border-slate-800" onError={() => toast.error('Preview image failed to load.')} />
+                  <img src={previewUrl} alt="Add-on preview" className="h-44 w-full rounded-xl object-cover border border-[#381932] dark:border-[#381932]" onError={() => toast.error('Preview image failed to load.')} />
                 ) : (
-                  <div className="flex h-44 items-center justify-center rounded-xl border border-dashed border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-400">Image preview unavailable</div>
+                  <div className="flex h-44 items-center justify-center rounded-xl border border-dashed border-[#381932] dark:border-[#381932] text-xs font-semibold text-[#381932]">Image preview unavailable</div>
                 )}
               </div>
             )}
 
-            <div className="flex items-center justify-end gap-3 border-t border-slate-100 dark:border-slate-800 pt-4">
-              <button type="button" className="rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer" onClick={() => setShowModal(false)}>Cancel</button>
-              <button type="button" className="rounded-xl bg-brand-purple text-white px-4 py-2.5 text-xs font-bold shadow-md shadow-purple-600/20 cursor-pointer" onClick={save}>{editing ? 'Save Changes' : 'Add Add-on'}</button>
+            <div className="flex items-center justify-end gap-3 border-t border-[#381932] dark:border-[#381932] pt-4">
+              <button type="button" className="rounded-xl border border-[#381932] dark:border-[#381932] px-4 py-2.5 text-xs font-bold text-[#381932] dark:text-[#381932] cursor-pointer" onClick={() => setShowModal(false)}>Cancel</button>
+              <button type="button" className="rounded-xl bg-[#381932] text-[#FFF3E6] px-4 py-2.5 text-xs font-bold shadow-md shadow-[#381932]/20 cursor-pointer" onClick={save}>{editing ? 'Save Changes' : 'Add Add-on'}</button>
             </div>
           </div>
         </Modal>

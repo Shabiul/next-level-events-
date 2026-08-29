@@ -219,57 +219,63 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
     }));
   };
 
+  /**
+   * The single booking payload sent to the backend. The server ignores every
+   * money field here and recomputes the price + payable amount from the
+   * database -- these values are only for display / snapshots.
+   */
+  const buildOrderPayload = (
+    paymentStatus: 'pending' | 'paid' | 'failed' | 'cancelled',
+    paymentMeta?: { razorpayOrderId?: string; razorpayPaymentId?: string; razorpaySignature?: string }
+  ) => ({
+    productId: product._id,
+    productName: product.name,
+    productImage: product.image,
+    product: {
+      id: product._id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      categoryName: product.categoryName,
+      subcategory: product.subcategory,
+    },
+    categoryName: product.categoryName,
+    subcategory: product.subcategory,
+    packagePrice: product.price,
+    amount: totalPrice,
+    paymentMethod,
+    paymentStatus,
+    customer: {
+      name: user?.name || nameTrimmed,
+      email: user?.email || emailTrimmed,
+      phone: user?.phone || cleanPhone,
+    },
+    addons: form.addOns.filter((item) => item.kind !== 'activity'),
+    activities: form.addOns.filter((item) => item.kind === 'activity'),
+    bookingDetails: [{ ...bookingPayload, email: user?.email || emailTrimmed || '', addOns: form.addOns }],
+    razorpayOrderId: paymentMeta?.razorpayOrderId,
+    razorpayPaymentId: paymentMeta?.razorpayPaymentId,
+    razorpaySignature: paymentMeta?.razorpaySignature,
+  });
+
   const createBookingOrder = async (
     paymentStatus: 'pending' | 'paid' | 'failed' | 'cancelled',
     paymentMeta?: { razorpayOrderId?: string; razorpayPaymentId?: string; razorpaySignature?: string; }
   ) => {
     const token = getAuthToken();
-    const payload = {
-      userId: user?.id,
-      customerId: user?.id,
-      productId: product._id,
-      productName: product.name,
-      productImage: product.image,
-      product: {
-        id: product._id,
-        name: product.name,
-        image: product.image,
-        price: product.price,
-        categoryName: product.categoryName,
-        subcategory: product.subcategory,
-      },
-      categoryName: product.categoryName,
-      subcategory: product.subcategory,
-      packagePrice: product.price,
-      amount: totalPrice,
-      paymentMethod,
-      paymentStatus,
-      customer: {
-        name: user?.name || nameTrimmed,
-        email: user?.email || emailTrimmed,
-        phone: user?.phone || cleanPhone,
-      },
-      addons: form.addOns.filter((item) => item.kind !== 'activity'),
-      activities: form.addOns.filter((item) => item.kind === 'activity'),
-      bookingDetails: [{ ...bookingPayload }],
-      razorpayOrderId: paymentMeta?.razorpayOrderId,
-      razorpayPaymentId: paymentMeta?.razorpayPaymentId,
-      razorpaySignature: paymentMeta?.razorpaySignature,
-    };
-
     const response = await fetch(getApiUrl('/api/orders'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(buildOrderPayload(paymentStatus, paymentMeta)),
     });
 
     const responseBody = await response.json().catch(() => null);
 
     if (!response.ok) {
-      throw new Error(responseBody?.error || 'Unable to save booking.');
+      throw new Error(responseBody?.error || responseBody?.message || 'Unable to save booking.');
     }
 
     return responseBody;
@@ -285,7 +291,7 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
       ? ['*Selected Add-ons / Activities:*', ...form.addOns.map(addon => `- ${addon.name} (+₹${addon.price.toLocaleString('en-IN')})`)]
       : [];
     const message = [
-      '*New Booking Request — TheDecorParty*',
+      '*New Booking Request — The Decor Party*',
       '',
       `*Package:* ${product.name}`,
       `*Category:* ${product.categoryName}${product.subcategory ? ` > ${product.subcategory}` : ''}`,
@@ -341,11 +347,14 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
     };
 
     try {
+      const createToken = getAuthToken();
       const response = await fetch(getApiUrl('/api/payment/create-order'), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(createToken ? { Authorization: `Bearer ${createToken}` } : {}),
+        },
         body: JSON.stringify({
-          amount: totalPrice,
           receipt: `booking-${product._id}-${Date.now()}`,
           notes: {
             productId: product._id,
@@ -353,6 +362,8 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
             customerName: nameTrimmed,
             contact: cleanPhone,
           },
+          // Server recomputes the amount from this payload against the DB.
+          orderPayload: buildOrderPayload('pending'),
         }),
       });
 
@@ -376,41 +387,7 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
             razorpay_order_id: order.id,
             razorpay_payment_id: `pay_sim_${Date.now()}`,
             razorpay_signature: 'simulated_signature',
-            orderPayload: {
-              userId: user?.id,
-              customerId: user?.id,
-              productId: product._id,
-              productName: product.name,
-              productImage: product.image,
-              product: {
-                id: product._id,
-                name: product.name,
-                image: product.image,
-                price: product.price,
-                categoryName: product.categoryName,
-                subcategory: product.subcategory,
-              },
-              customer: {
-                name: user?.name || nameTrimmed,
-                email: user?.email || emailTrimmed,
-                phone: user?.phone || cleanPhone,
-              },
-              categoryName: product.categoryName,
-              subcategory: product.subcategory,
-              packagePrice: product.price,
-              amount: totalPrice,
-              paymentMethod: 'razorpay',
-              paymentStatus: 'paid',
-              addons: form.addOns.filter(a => a.kind !== 'activity'),
-              activities: form.addOns.filter(a => a.kind === 'activity'),
-              bookingDetails: [
-                {
-                  ...bookingPayload,
-                  email: user?.email || emailTrimmed || '',
-                  addOns: form.addOns,
-                },
-              ],
-            },
+            orderPayload: buildOrderPayload('paid', { razorpayOrderId: order.id }),
           }),
         });
 
@@ -448,7 +425,7 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
         amount: order.amount,
         currency: order.currency,
         order_id: order.id,
-        name: 'TheDecorParty',
+        name: 'The Decor Party',
         description: `Booking: ${product.name}`,
         image: 'https://www.thedecorparty.com/final_logo.jpeg',
         prefill: {
@@ -463,7 +440,7 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
           mobile: cleanPhone,
         },
         theme: {
-          color: '#725D75',
+          color: '#381932',
         },
         modal: {
           ondismiss: async () => {
@@ -489,41 +466,11 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
                 razorpay_order_id: paymentResponse.razorpay_order_id,
                 razorpay_payment_id: paymentResponse.razorpay_payment_id,
                 razorpay_signature: paymentResponse.razorpay_signature,
-                orderPayload: {
-                  userId: user?.id,
-                  customerId: user?.id,
-                  productId: product._id,
-                  productName: product.name,
-                  productImage: product.image,
-                  product: {
-                    id: product._id,
-                    name: product.name,
-                    image: product.image,
-                    price: product.price,
-                    categoryName: product.categoryName,
-                    subcategory: product.subcategory,
-                  },
-                  customer: {
-                    name: user?.name || nameTrimmed,
-                    email: user?.email || emailTrimmed,
-                    phone: user?.phone || cleanPhone,
-                  },
-                  categoryName: product.categoryName,
-                  subcategory: product.subcategory,
-                  packagePrice: product.price,
-                  amount: totalPrice,
-                  paymentMethod: 'razorpay',
-                  paymentStatus: 'paid',
-                  addons: form.addOns.filter(a => a.kind !== 'activity'),
-                  activities: form.addOns.filter(a => a.kind === 'activity'),
-                  bookingDetails: [
-                    {
-                      ...bookingPayload,
-                      email: user?.email || emailTrimmed || '',
-                      addOns: form.addOns,
-                    },
-                  ],
-                },
+                orderPayload: buildOrderPayload('paid', {
+                  razorpayOrderId: paymentResponse.razorpay_order_id,
+                  razorpayPaymentId: paymentResponse.razorpay_payment_id,
+                  razorpaySignature: paymentResponse.razorpay_signature,
+                }),
               }),
             });
 
@@ -619,7 +566,7 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
   };
 
   return (
-    <div className="relative min-h-screen bg-transparent text-[#2F2930] dark:text-white font-sans antialiased transition-colors pb-24 overflow-x-hidden">
+    <div className="relative min-h-screen bg-transparent text-[#381932] dark:text-[#FFF3E6] font-sans antialiased transition-colors pb-24 overflow-x-hidden">
       
       {/* FIXED ENTIRE PAGE BALLOON WALLPAPER BACKGROUND */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
@@ -628,44 +575,44 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
           alt="Fixed Lavender Floral Balloon Wallpaper" 
           className="w-full h-full object-cover opacity-100 scale-100"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-100/75 via-slate-100/80 to-slate-100/90 dark:from-[#140A17]/85 dark:via-[#140A17]/90 dark:to-[#140A17] backdrop-blur-[1px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#FFF3E6]/75 via-[#FFF3E6]/80 to-[#FFF3E6]/90 dark:from-[#381932]/85 dark:via-[#381932]/90 dark:to-[#381932] backdrop-blur-[1px]" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-[1400px] px-4 py-8 sm:px-6 md:px-8 animate-fade-in pt-24">
         {/* Top Breadcrumb */}
         <div className="mb-6 flex flex-col gap-4">
-          <div className="flex items-center gap-2 text-xs font-medium text-[#746B72] dark:text-[#A0A09C]">
-            <BackButton onClick={onBack} className="hover:text-[#2F2930] dark:hover:text-white">
+          <div className="flex items-center gap-2 text-xs font-medium text-[#381932] dark:text-[#381932]">
+            <BackButton onClick={onBack} className="hover:text-[#381932] dark:hover:text-[#FFF3E6]">
               Back to Package
             </BackButton>
             <span>/</span>
-            <span className="font-semibold text-[#2F2930] dark:text-white">Checkout</span>
+            <span className="font-semibold text-[#381932] dark:text-[#FFF3E6]">Checkout</span>
           </div>
 
           {/* 3-Step Progress */}
-          <div className="rounded-xl border border-white/40 bg-white/90 dark:bg-[#1E1E1E]/90 dark:border-[#2E2E2E] p-4 shadow-xl backdrop-blur-xl">
+          <div className="rounded-xl border border-[#381932]/40 bg-[#FFF3E6]/90 dark:bg-[#381932]/90 dark:border-[#381932] p-4 shadow-xl backdrop-blur-xl">
             <div className="flex items-center justify-between max-w-xl mx-auto relative">
               <div className="flex items-center gap-2 z-10">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#725D75] text-white text-xs font-bold dark:bg-white dark:text-black">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#381932] text-[#FFF3E6] text-xs font-bold dark:bg-[#FFF3E6] dark:text-[#381932]">
                   1
                 </div>
-                <span className="text-xs sm:text-sm font-semibold text-[#2F2930] dark:text-white">Event Details</span>
+                <span className="text-xs sm:text-sm font-semibold text-[#381932] dark:text-[#FFF3E6]">Event Details</span>
               </div>
 
-              <div className="absolute left-[20%] right-[20%] top-1/2 -translate-y-1/2 h-px bg-[#E4DCD2] dark:bg-[#2E2E2E]" />
+              <div className="absolute left-[20%] right-[20%] top-1/2 -translate-y-1/2 h-px bg-[#FFF3E6] dark:bg-[#381932]" />
 
               <div className="flex items-center gap-2 z-10">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#F3EFE7] text-[#746B72] text-xs font-semibold dark:bg-[#262626] dark:text-[#A0A09C]">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#FFF3E6] text-[#381932] text-xs font-semibold dark:bg-[#381932] dark:text-[#381932]">
                   2
                 </div>
-                <span className="text-xs sm:text-sm font-medium text-[#746B72] dark:text-[#A0A09C] hidden sm:inline">Review</span>
+                <span className="text-xs sm:text-sm font-medium text-[#381932] dark:text-[#381932] hidden sm:inline">Review</span>
               </div>
 
               <div className="flex items-center gap-2 z-10">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#F3EFE7] text-[#746B72] text-xs font-semibold dark:bg-[#262626] dark:text-[#A0A09C]">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#FFF3E6] text-[#381932] text-xs font-semibold dark:bg-[#381932] dark:text-[#381932]">
                   3
                 </div>
-                <span className="text-xs sm:text-sm font-medium text-[#746B72] dark:text-[#A0A09C] hidden sm:inline">Confirmation</span>
+                <span className="text-xs sm:text-sm font-medium text-[#381932] dark:text-[#381932] hidden sm:inline">Confirmation</span>
               </div>
             </div>
           </div>
@@ -677,10 +624,10 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
             <form className="flex flex-col gap-6" onSubmit={handleSubmit} noValidate>
 
               {/* 1. Contact Info */}
-              <div className="rounded-xl border border-white/40 bg-white/90 dark:bg-[#1E1E1E]/90 dark:border-[#2E2E2E] p-5 sm:p-6 shadow-xl backdrop-blur-xl">
-                <div className="mb-4 flex items-center gap-2 border-b border-[#E4DCD2] dark:border-[#2E2E2E] pb-3">
-                  <User size={16} className="text-[#2F2930] dark:text-white" />
-                  <h2 className="font-editorial text-base font-bold text-[#2F2930] dark:text-white">1. Contact Information</h2>
+              <div className="rounded-xl border border-[#381932]/40 bg-[#FFF3E6]/90 dark:bg-[#381932]/90 dark:border-[#381932] p-5 sm:p-6 shadow-xl backdrop-blur-xl">
+                <div className="mb-4 flex items-center gap-2 border-b border-[#381932]/30 dark:border-[#381932] pb-3">
+                  <User size={16} className="text-[#381932] dark:text-[#FFF3E6]" />
+                  <h2 className="font-editorial text-base font-bold text-[#381932] dark:text-[#FFF3E6]">1. Contact Information</h2>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -697,11 +644,11 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
                   />
 
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="mobile" className="text-xs font-semibold tracking-wide uppercase text-[#2F2930] dark:text-neutral-300">
-                      Mobile Number <span className="text-red-500 ml-0.5">*</span>
+                    <label htmlFor="mobile" className="text-xs font-semibold tracking-wide uppercase text-[#381932] dark:text-[#381932]">
+                      Mobile Number <span className="text-[#381932] ml-0.5">*</span>
                     </label>
                     <div className="relative flex items-center">
-                      <span className="absolute left-3.5 text-xs font-semibold text-[#746B72] border-r border-[#E4DCD2] dark:border-[#2E2E2E] pr-2">
+                      <span className="absolute left-3.5 text-xs font-semibold text-[#381932] border-r border-[#381932]/30 dark:border-[#381932] pr-2">
                         +91
                       </span>
                       <input
@@ -714,14 +661,14 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
                         onBlur={() => handleBlur('mobile')}
                         required
                         className={cn(
-                          'w-full h-10 rounded-lg border bg-white dark:bg-[#1E1E1E] pl-16 pr-3.5 text-sm text-[#2F2930] dark:text-white placeholder:text-[#746B72]/60 outline-none transition-all',
+                          'w-full h-10 rounded-lg border bg-[#FFF3E6] dark:bg-[#381932] pl-16 pr-3.5 text-sm text-[#381932] dark:text-[#FFF3E6] placeholder:text-[#381932]/60 outline-none transition-all',
                           phoneError
-                            ? 'border-red-500'
-                            : 'border-[#E4DCD2] dark:border-[#2E2E2E] focus:border-[#2F2930] focus:ring-1 focus:ring-[#2F2930]'
+                            ? 'border-[#381932]'
+                            : 'border-[#381932]/30 dark:border-[#381932] focus:border-[#381932] focus:ring-1 focus:ring-[#381932]'
                         )}
                       />
                     </div>
-                    {phoneError && <p className="text-xs text-red-500 font-medium">{phoneError}</p>}
+                    {phoneError && <p className="text-xs text-[#381932] font-medium">{phoneError}</p>}
                   </div>
                 </div>
 
@@ -740,10 +687,10 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
               </div>
 
               {/* 2. Setup Details */}
-              <div className="rounded-xl border border-white/40 bg-white/90 dark:bg-[#1E1E1E]/90 dark:border-[#2E2E2E] p-5 sm:p-6 shadow-xl backdrop-blur-xl">
-                <div className="mb-4 flex items-center gap-2 border-b border-[#E4DCD2] dark:border-[#2E2E2E] pb-3">
-                  <Calendar size={16} className="text-[#2F2930] dark:text-white" />
-                  <h2 className="font-editorial text-base font-bold text-[#2F2930] dark:text-white">2. Event Schedule &amp; Venue</h2>
+              <div className="rounded-xl border border-[#381932]/40 bg-[#FFF3E6]/90 dark:bg-[#381932]/90 dark:border-[#381932] p-5 sm:p-6 shadow-xl backdrop-blur-xl">
+                <div className="mb-4 flex items-center gap-2 border-b border-[#381932]/30 dark:border-[#381932] pb-3">
+                  <Calendar size={16} className="text-[#381932] dark:text-[#FFF3E6]" />
+                  <h2 className="font-editorial text-base font-bold text-[#381932] dark:text-[#FFF3E6]">2. Event Schedule &amp; Venue</h2>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -788,13 +735,13 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
               </div>
 
               {/* 3. Add-ons & Experience Upgrades */}
-              <div className="rounded-xl border border-white/40 bg-white/90 dark:bg-[#1E1E1E]/90 dark:border-[#2E2E2E] p-5 sm:p-6 shadow-xl backdrop-blur-xl">
-                <div className="mb-4 flex items-center justify-between border-b border-[#E4DCD2] dark:border-[#2E2E2E] pb-3">
+              <div className="rounded-xl border border-[#381932]/40 bg-[#FFF3E6]/90 dark:bg-[#381932]/90 dark:border-[#381932] p-5 sm:p-6 shadow-xl backdrop-blur-xl">
+                <div className="mb-4 flex items-center justify-between border-b border-[#381932]/30 dark:border-[#381932] pb-3">
                   <div className="flex items-center gap-2">
-                    <Sparkles size={16} className="text-amber-500" />
-                    <h2 className="font-editorial text-base font-bold text-[#2F2930] dark:text-white">3. Selected Add-ons &amp; Upgrades</h2>
+                    <Sparkles size={16} className="text-[#A78A9F]" />
+                    <h2 className="font-editorial text-base font-bold text-[#381932] dark:text-[#FFF3E6]">3. Selected Add-ons &amp; Upgrades</h2>
                   </div>
-                  <span className="text-xs font-semibold text-[#746B72] dark:text-[#A0A09C]">
+                  <span className="text-xs font-semibold text-[#381932] dark:text-[#381932]">
                     {form.addOns.length} selected
                   </span>
                 </div>
@@ -805,14 +752,14 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
                     {form.addOns.map((addon) => (
                       <div
                         key={addon.id || addon.name}
-                        className="flex items-center justify-between gap-3 rounded-lg border border-[#725D75] bg-[#725D75]/06 p-2.5 dark:bg-[#2D1C34] dark:border-[#A78A9F]/50 shadow-xs"
+                        className="flex items-center justify-between gap-3 rounded-lg border border-[#381932] bg-[#A78A9F]/12 p-2.5 dark:bg-[#381932] dark:border-[#381932]/50 shadow-xs"
                       >
                         <div className="min-w-0">
-                          <div className="truncate text-xs font-semibold text-[#2F2930] dark:text-white flex items-center gap-1">
-                            <Sparkles size={11} className="text-[#725D75] dark:text-[#C9BEAB]" />
+                          <div className="truncate text-xs font-semibold text-[#381932] dark:text-[#FFF3E6] flex items-center gap-1">
+                            <Sparkles size={11} className="text-[#A78A9F] dark:text-[#381932]" />
                             {addon.name}
                           </div>
-                          <div className="text-[11px] font-bold text-[#725D75] dark:text-[#C9BEAB]">
+                          <div className="text-[11px] font-bold text-[#381932] dark:text-[#381932]">
                             +₹{addon.price.toLocaleString('en-IN')}
                           </div>
                         </div>
@@ -820,7 +767,7 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
                         <button
                           type="button"
                           onClick={() => removeAddon(addon.id || addon.name)}
-                          className="flex h-6 w-6 items-center justify-center rounded-full text-[#746B72] hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors cursor-pointer"
+                          className="flex h-6 w-6 items-center justify-center rounded-full text-[#381932] hover:text-[#381932] hover:bg-[#FFF3E6] dark:hover:bg-[#381932]/40 transition-colors cursor-pointer"
                           title="Remove Add-on"
                         >
                           <X size={13} />
@@ -833,7 +780,7 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
                 {/* Popular Add-ons Quick Picker -- compact catalogue-style cards,
                     4 cols desktop -> 2 cols tablet/mobile */}
                 <div className="mt-2">
-                  <p className="text-xs font-bold text-[#2F2930] dark:text-neutral-300 mb-2.5 uppercase tracking-wider">
+                  <p className="text-xs font-bold text-[#381932] dark:text-[#381932] mb-2.5 uppercase tracking-wider">
                     Popular Celebration Enhancements:
                   </p>
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -864,9 +811,9 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
               </div>
 
               {/* 4. Special Requests */}
-              <div className="rounded-xl border border-white/40 bg-white/90 dark:bg-[#1E1E1E]/90 dark:border-[#2E2E2E] p-5 sm:p-6 shadow-xl backdrop-blur-xl">
-                <label htmlFor="requests" className="block text-xs font-semibold uppercase tracking-wide text-[#2F2930] dark:text-white mb-2">
-                  4. Special Notes or Customization Requests (Optional)
+              <div className="rounded-xl border border-[#381932]/40 bg-[#FFF3E6]/90 dark:bg-[#381932]/90 dark:border-[#381932] p-5 sm:p-6 shadow-xl backdrop-blur-xl">
+                <label htmlFor="requests" className="block text-xs font-semibold uppercase tracking-wide text-[#381932] dark:text-[#FFF3E6] mb-2">
+                  4. Special Notes or Customisation Requests (Optional)
                 </label>
                 <textarea
                   id="requests"
@@ -874,13 +821,13 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
                   onChange={e => updateField('requests', e.target.value)}
                   placeholder="Mention theme color changes, surprise timings, names to display on board..."
                   rows={3}
-                  className="w-full rounded-lg border border-[#E4DCD2] bg-white p-3 text-xs text-[#2F2930] outline-none placeholder:text-[#746B72]/60 focus:border-[#2F2930] focus:ring-1 focus:ring-[#2F2930] dark:bg-[#1E1E1E] dark:border-[#2E2E2E] dark:text-white"
+                  className="w-full rounded-lg border border-[#381932]/30 bg-[#FFF3E6] p-3 text-xs text-[#381932] outline-none placeholder:text-[#381932]/60 focus:border-[#381932] focus:ring-1 focus:ring-[#381932] dark:bg-[#381932] dark:border-[#381932] dark:text-[#FFF3E6]"
                 />
               </div>
 
               {/* 5. Payment Selection */}
-              <div className="rounded-xl border border-white/40 bg-white/90 dark:bg-[#1E1E1E]/90 dark:border-[#2E2E2E] p-5 sm:p-6 shadow-xl backdrop-blur-xl">
-                <h2 className="font-editorial text-base font-bold text-[#2F2930] dark:text-white mb-3">5. Payment Method</h2>
+              <div className="rounded-xl border border-[#381932]/40 bg-[#FFF3E6]/90 dark:bg-[#381932]/90 dark:border-[#381932] p-5 sm:p-6 shadow-xl backdrop-blur-xl">
+                <h2 className="font-editorial text-base font-bold text-[#381932] dark:text-[#FFF3E6] mb-3">5. Payment Method</h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div
@@ -888,8 +835,8 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
                     className={cn(
                       'flex items-start gap-3 rounded-xl border p-3.5 cursor-pointer transition-all',
                       paymentMethod === 'razorpay'
-                        ? 'border-[#2F2930] bg-[#F3EFE7] dark:bg-[#262626] dark:border-white'
-                        : 'border-[#E4DCD2] bg-white dark:bg-[#1E1E1E] dark:border-[#2E2E2E]'
+                        ? 'border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] dark:border-[#FFF3E6]'
+                        : 'border-[#381932]/30 bg-[#FFF3E6] dark:bg-[#381932] dark:border-[#381932]'
                     )}
                   >
                     <input
@@ -898,13 +845,13 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
                       value="razorpay"
                       checked={paymentMethod === 'razorpay'}
                       onChange={() => setPaymentMethod('razorpay')}
-                      className="mt-0.5 accent-[#2F2930]"
+                      className="mt-0.5 accent-[#381932]"
                     />
                     <div>
-                      <div className="flex items-center gap-1.5 font-bold text-xs text-[#2F2930] dark:text-white">
+                      <div className="flex items-center gap-1.5 font-bold text-xs text-[#381932] dark:text-[#FFF3E6]">
                         <CreditCard size={14} /> Pay via Razorpay
                       </div>
-                      <p className="mt-0.5 text-[11px] text-[#746B72] dark:text-[#A0A09C]">
+                      <p className="mt-0.5 text-[11px] text-[#381932] dark:text-[#381932]">
                         Instant confirmation via UPI, Cards, Netbanking.
                       </p>
                     </div>
@@ -915,8 +862,8 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
                     className={cn(
                       'flex items-start gap-3 rounded-xl border p-3.5 cursor-pointer transition-all',
                       paymentMethod === 'whatsapp'
-                        ? 'border-emerald-600 bg-emerald-50/50 dark:bg-emerald-950/20'
-                        : 'border-[#E4DCD2] bg-white dark:bg-[#1E1E1E] dark:border-[#2E2E2E]'
+                        ? 'border-[#381932] bg-[#FFF3E6]/50 dark:bg-[#381932]/20'
+                        : 'border-[#381932]/30 bg-[#FFF3E6] dark:bg-[#381932] dark:border-[#381932]'
                     )}
                   >
                     <input
@@ -925,13 +872,13 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
                       value="whatsapp"
                       checked={paymentMethod === 'whatsapp'}
                       onChange={() => setPaymentMethod('whatsapp')}
-                      className="mt-0.5 accent-emerald-600"
+                      className="mt-0.5 accent-[#381932]"
                     />
                     <div>
-                      <div className="flex items-center gap-1.5 font-bold text-xs text-emerald-700 dark:text-emerald-400">
+                      <div className="flex items-center gap-1.5 font-bold text-xs text-[#381932] dark:text-[#381932]">
                         {WA_SVG} Confirm via WhatsApp
                       </div>
-                      <p className="mt-0.5 text-[11px] text-[#746B72] dark:text-[#A0A09C]">
+                      <p className="mt-0.5 text-[11px] text-[#381932] dark:text-[#381932]">
                         Send details to decor manager for manual invoicing.
                       </p>
                     </div>
@@ -940,7 +887,7 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
               </div>
 
               {error && (
-                <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600 dark:bg-red-950/40 dark:text-red-300">
+                <div className="rounded-lg border border-[#381932] bg-[#FFF3E6] p-3 text-xs font-semibold text-[#381932] dark:bg-[#381932]/40 dark:text-[#381932]">
                   {error}
                 </div>
               )}
@@ -963,38 +910,38 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
 
           {/* Right Column: Order Summary Sidebar */}
           <aside className="lg:col-span-5 xl:col-span-4 sticky top-24">
-            <div className="rounded-xl border border-white/40 bg-white/90 dark:bg-[#1E1E1E]/90 dark:border-[#2E2E2E] p-5 shadow-xl backdrop-blur-xl flex flex-col gap-4">
-              <div className="border-b border-[#E4DCD2] dark:border-[#2E2E2E] pb-3">
-                <h2 className="font-editorial text-sm font-bold uppercase tracking-wider text-[#2F2930] dark:text-white">
+            <div className="rounded-xl border border-[#381932]/40 bg-[#FFF3E6]/90 dark:bg-[#381932]/90 dark:border-[#381932] p-5 shadow-xl backdrop-blur-xl flex flex-col gap-4">
+              <div className="border-b border-[#381932]/30 dark:border-[#381932] pb-3">
+                <h2 className="font-editorial text-sm font-bold uppercase tracking-wider text-[#381932] dark:text-[#FFF3E6]">
                   Booking Summary
                 </h2>
               </div>
 
               <div className="flex gap-3 items-center">
-                <img src={product.image} alt={product.name} className="h-14 w-14 rounded-lg object-cover bg-[#F3EFE7] dark:bg-[#141414] border border-[#E4DCD2] dark:border-[#2E2E2E] flex-shrink-0" />
+                <img src={product.image} alt={product.name} className="h-14 w-14 rounded-lg object-cover bg-[#FFF3E6] dark:bg-[#381932] border border-[#381932]/30 dark:border-[#381932] flex-shrink-0" />
                 <div className="min-w-0">
-                  <h3 className="text-xs font-bold text-[#2F2930] dark:text-white truncate">{product.name}</h3>
-                  <p className="text-[11px] text-[#746B72] dark:text-[#A0A09C]">{product.categoryName}</p>
+                  <h3 className="text-xs font-bold text-[#381932] dark:text-[#FFF3E6] truncate">{product.name}</h3>
+                  <p className="text-[11px] text-[#381932] dark:text-[#381932]">{product.categoryName}</p>
                 </div>
               </div>
 
               {(form.eventDate || form.eventTime || locationTrimmed) && (
-                <div className="rounded-lg border border-[#E4DCD2] bg-[#F9F6F2] p-2.5 flex flex-col gap-1.5 text-xs text-[#2F2930] dark:bg-[#141414] dark:border-[#2E2E2E] dark:text-white">
+                <div className="rounded-lg border border-[#381932]/30 bg-[#FFF3E6] p-2.5 flex flex-col gap-1.5 text-xs text-[#381932] dark:bg-[#381932] dark:border-[#381932] dark:text-[#FFF3E6]">
                   {form.eventDate && (
                     <div className="flex items-center gap-1.5 text-[11px]">
-                      <Calendar size={13} className="text-[#746B72]" />
+                      <Calendar size={13} className="text-[#381932]" />
                       <span>{form.eventDate}</span>
                     </div>
                   )}
                   {form.eventTime && (
                     <div className="flex items-center gap-1.5 text-[11px]">
-                      <Clock size={13} className="text-[#746B72]" />
+                      <Clock size={13} className="text-[#381932]" />
                       <span>{form.eventTime}</span>
                     </div>
                   )}
                   {locationTrimmed && (
                     <div className="flex items-start gap-1.5 text-[11px]">
-                      <MapPin size={13} className="text-[#746B72] flex-shrink-0 mt-0.5" />
+                      <MapPin size={13} className="text-[#381932] flex-shrink-0 mt-0.5" />
                       <span className="truncate">{locationTrimmed}</span>
                     </div>
                   )}
@@ -1002,16 +949,16 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
               )}
 
               {/* Price lines */}
-              <div className="flex flex-col gap-2 border-t border-[#E4DCD2] dark:border-[#2E2E2E] pt-3 text-xs">
-                <div className="flex items-center justify-between text-[#746B72] dark:text-[#A0A09C]">
+              <div className="flex flex-col gap-2 border-t border-[#381932]/30 dark:border-[#381932] pt-3 text-xs">
+                <div className="flex items-center justify-between text-[#381932] dark:text-[#381932]">
                   <span>Base Package</span>
-                  <span className="font-semibold text-[#2F2930] dark:text-white">₹{product.price?.toLocaleString('en-IN')}</span>
+                  <span className="font-semibold text-[#381932] dark:text-[#FFF3E6]">₹{product.price?.toLocaleString('en-IN')}</span>
                 </div>
 
                 {form.addOns.map((addon) => (
-                  <div key={addon.id || addon.name} className="flex items-center justify-between text-[#746B72] dark:text-[#A0A09C]">
+                  <div key={addon.id || addon.name} className="flex items-center justify-between text-[#381932] dark:text-[#381932]">
                     <span className="truncate pr-2">{addon.name}</span>
-                    <span className="font-semibold text-[#2F2930] dark:text-white flex-shrink-0">
+                    <span className="font-semibold text-[#381932] dark:text-[#FFF3E6] flex-shrink-0">
                       +₹{addon.price?.toLocaleString('en-IN')}
                     </span>
                   </div>
@@ -1019,12 +966,12 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
               </div>
 
               {/* Total */}
-              <div className="border-t border-[#E4DCD2] dark:border-[#2E2E2E] pt-3 flex items-baseline justify-between">
+              <div className="border-t border-[#381932]/30 dark:border-[#381932] pt-3 flex items-baseline justify-between">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-[#746B72] block">Total Payable</span>
-                  <span className="text-xl font-bold text-[#2F2930] dark:text-white">₹{totalPrice.toLocaleString('en-IN')}</span>
+                  <span className="text-[10px] uppercase font-bold text-[#381932] block">Total Payable</span>
+                  <span className="text-xl font-bold text-[#381932] dark:text-[#FFF3E6]">₹{totalPrice.toLocaleString('en-IN')}</span>
                 </div>
-                <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full">
+                <span className="text-[10px] font-semibold text-[#381932] bg-[#FFF3E6] dark:bg-[#381932]/60 px-2 py-0.5 rounded-full">
                   GST Included
                 </span>
               </div>
@@ -1044,10 +991,10 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
                 <ChevronRight size={14} />
               </Button>
 
-              <div className="border-t border-[#E4DCD2] dark:border-[#2E2E2E] pt-3 flex flex-col gap-1.5 text-[11px] text-[#746B72] dark:text-[#A0A09C]">
-                <span className="flex items-center gap-1.5"><Lock size={12} className="text-[#2F2930] dark:text-white" /> Secure 256-bit encrypted checkout</span>
-                <span className="flex items-center gap-1.5"><Zap size={12} className="text-[#2F2930] dark:text-white" /> Instant slot confirmation</span>
-                <span className="flex items-center gap-1.5"><ShieldCheck size={12} className="text-[#2F2930] dark:text-white" /> Free rescheduling 48 hrs before event</span>
+              <div className="border-t border-[#381932]/30 dark:border-[#381932] pt-3 flex flex-col gap-1.5 text-[11px] text-[#381932] dark:text-[#381932]">
+                <span className="flex items-center gap-1.5"><Lock size={12} className="text-[#381932] dark:text-[#FFF3E6]" /> Secure 256-bit encrypted checkout</span>
+                <span className="flex items-center gap-1.5"><Zap size={12} className="text-[#381932] dark:text-[#FFF3E6]" /> Instant slot confirmation</span>
+                <span className="flex items-center gap-1.5"><ShieldCheck size={12} className="text-[#381932] dark:text-[#FFF3E6]" /> Free rescheduling 48 hrs before event</span>
               </div>
             </div>
           </aside>
@@ -1055,12 +1002,12 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
 
         {/* Dialog Modal */}
         {paymentDialog && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs px-4 py-6 animate-fade-in">
-            <div className="w-full max-w-md rounded-2xl border border-[#E4DCD2] bg-white p-6 shadow-modal dark:bg-[#1E1E1E] dark:border-[#2E2E2E]" role="dialog">
-              <h3 className="text-base font-bold text-[#2F2930] dark:text-white">{paymentDialog.title}</h3>
-              <p className="mt-1 text-xs text-[#746B72] dark:text-[#A0A09C]">{paymentDialog.message}</p>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#381932]/40 backdrop-blur-xs px-4 py-6 animate-fade-in">
+            <div className="w-full max-w-md rounded-2xl border border-[#381932]/30 bg-[#FFF3E6] p-6 shadow-modal dark:bg-[#381932] dark:border-[#381932]" role="dialog">
+              <h3 className="text-base font-bold text-[#381932] dark:text-[#FFF3E6]">{paymentDialog.title}</h3>
+              <p className="mt-1 text-xs text-[#381932] dark:text-[#381932]">{paymentDialog.message}</p>
               {paymentDialog.details && (
-                <p className="mt-2 text-xs font-medium text-[#2F2930] dark:text-white">{paymentDialog.details}</p>
+                <p className="mt-2 text-xs font-medium text-[#381932] dark:text-[#FFF3E6]">{paymentDialog.details}</p>
               )}
               <div className="mt-5 flex gap-2 justify-end">
                 <Button type="button" variant="primary" size="sm" onClick={() => setPaymentDialog(null)}>
@@ -1072,10 +1019,10 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
         )}
 
         {/* Sticky Mobile Bar */}
-        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-[#E4DCD2] bg-white/95 backdrop-blur-xs p-3 shadow-modal sm:hidden flex items-center justify-between gap-3 dark:bg-[#121212]/95 dark:border-[#2E2E2E]">
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-[#381932]/30 bg-[#FFF3E6]/95 backdrop-blur-xs p-3 shadow-modal sm:hidden flex items-center justify-between gap-3 dark:bg-[#381932]/95 dark:border-[#381932]">
           <div>
-            <div className="text-[10px] uppercase font-bold text-[#746B72]">Total</div>
-            <div className="text-base font-bold text-[#2F2930] dark:text-white">₹{totalPrice.toLocaleString('en-IN')}</div>
+            <div className="text-[10px] uppercase font-bold text-[#381932]">Total</div>
+            <div className="text-base font-bold text-[#381932] dark:text-[#FFF3E6]">₹{totalPrice.toLocaleString('en-IN')}</div>
           </div>
           <Button
             type="button"

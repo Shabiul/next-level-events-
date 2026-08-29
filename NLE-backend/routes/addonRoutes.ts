@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import Addon from "../models/Addon";
+import { requireAdmin } from "../utils/auth";
 
 const router = express.Router();
 
@@ -30,7 +31,7 @@ router.get("/active", async (_req: Request, res: Response) => {
   }
 });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", requireAdmin, async (req: Request, res: Response) => {
   try {
     const addon = new Addon(req.body);
     await addon.save();
@@ -40,7 +41,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.put("/:id", async (req: Request, res: Response) => {
+router.put("/:id", requireAdmin, async (req: Request, res: Response) => {
   try {
     const addon = await Addon.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!addon) {
@@ -52,7 +53,7 @@ router.put("/:id", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", requireAdmin, async (req: Request, res: Response) => {
   try {
     const addon = await Addon.findByIdAndDelete(req.params.id);
     if (!addon) {

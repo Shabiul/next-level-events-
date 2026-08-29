@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import SiteContent from "../models/SiteContent";
+import { requireAdmin } from "../utils/auth";
 
 const router = express.Router();
 
@@ -71,7 +72,7 @@ router.get("/:key", async (req: Request, res: Response) => {
   }
 });
 
-router.put("/:key", async (req: Request, res: Response) => {
+router.put("/:key", requireAdmin, async (req: Request, res: Response) => {
   try {
     const { title, content } = req.body;
     const doc = await SiteContent.findOneAndUpdate(

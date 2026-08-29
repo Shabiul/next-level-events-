@@ -1,30 +1,92 @@
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
-import jwt from "jsonwebtoken";
 import Order from "../models/Order";
+import Product from "../models/Product";
+import Addon from "../models/Addon";
 import sendEmail from "../utils/sendEmail";
-import authMiddleware from "../middleware/authMiddleware";
+import { requireAuth, requireAdmin, optionalUserId, type AuthedRequest } from "../utils/auth";
 import { postOrderToN8n } from "../services/n8n.service";
 
 const router = express.Router();
 
 function getAuthenticatedUserId(req: Request) {
-  const authorization = req.headers.authorization;
-  if (typeof authorization !== "string" || !authorization.startsWith("Bearer ")) {
-    return undefined;
-  }
-
-  try {
-    const decoded = jwt.verify(authorization.slice(7).trim(), process.env.JWT_SECRET || "secret") as { id?: string };
-    return decoded.id;
-  } catch {
-    return undefined;
-  }
+  return optionalUserId(req);
 }
 
 function toNumber(value: unknown) {
   const parsed = typeof value === "number" ? value : Number(value);
   return Number.isFinite(parsed) ? parsed : 0;
+}
+
+/**
+ * Recompute the payable amount from the DATABASE -- never trust prices sent by
+ * the client. Returns the authoritative totals plus a normalised add-on /
+ * activity list priced from Product + Addon documents.
+ */
+export async function computeAuthoritativePricing(body: any) {
+  const product = await Product.findById(body.productId).lean<any>();
+  if (!product || product.active === false) {
+    throw Object.assign(new Error("Selected package is unavailable."), { statusCode: 400 });
+  }
+
+  const packagePrice = toNumber(product.price);
+
+  // Build a price book of everything legitimately attached to this product.
+  const priceBook = new Map<string, { name: string; price: number }>();
+  const inlineAddOns: any[] = Array.isArray(product.addOns) ? product.addOns : [];
+  for (const a of inlineAddOns) {
+    if (a?.name) priceBook.set(String(a.name).toLowerCase(), { name: a.name, price: toNumber(a.price) });
+  }
+  const refIds: string[] = (Array.isArray(product.addons) ? product.addons : [])
+    .map((x: any) => String(x))
+    .filter((x: string) => mongoose.Types.ObjectId.isValid(x));
+  if (refIds.length) {
+    const addonDocs = await Addon.find({ _id: { $in: refIds }, active: { $ne: false } }).lean<any[]>();
+    for (const a of addonDocs) {
+      priceBook.set(String(a._id), { name: a.name, price: toNumber(a.price) });
+      if (a?.name) priceBook.set(String(a.name).toLowerCase(), { name: a.name, price: toNumber(a.price) });
+    }
+  }
+  const activityPrices: any[] = Array.isArray(product.activities) ? product.activities : [];
+  for (const a of activityPrices) {
+    if (a?.name) priceBook.set(String(a.name).toLowerCase(), { name: a.name, price: toNumber(a.price) });
+  }
+
+  const priceItem = (item: any, kind: "addon" | "activity") => {
+    const byId = item?.id && priceBook.get(String(item.id));
+    const byName = item?.name && priceBook.get(String(item.name).toLowerCase());
+    const match = byId || byName;
+    if (!match) {
+      throw Object.assign(
+        new Error(`"${item?.name || item?.id || "item"}" is not available for this package.`),
+        { statusCode: 400 }
+      );
+    }
+    const qty = Math.max(1, Math.min(99, Math.round(toNumber(item.qty || 1))));
+    return { id: String(item.id || ""), name: match.name, price: match.price, qty, kind };
+  };
+
+  const rawAddons = Array.isArray(body.addons) ? body.addons : [];
+  const rawActivities = Array.isArray(body.activities) ? body.activities : [];
+  const addons = rawAddons.map((i: any) => priceItem(i, "addon"));
+  const activities = rawActivities.map((i: any) => priceItem(i, "activity"));
+
+  const addonTotal = addons.reduce((s: number, i: any) => s + i.price * i.qty, 0);
+  const activityTotal = activities.reduce((s: number, i: any) => s + i.price * i.qty, 0);
+  const subtotal = packagePrice;
+  const grandTotal = subtotal + addonTotal + activityTotal;
+
+  return {
+    product,
+    packagePrice,
+    subtotal,
+    addonTotal,
+    activityTotal,
+    grandTotal,
+    amount: grandTotal,
+    addons,
+    activities,
+  };
 }
 
 function buildCustomerSnapshot(body: any, firstBooking: any) {
@@ -201,11 +263,7 @@ function buildEmailHtml(order: any) {
 }
 
 async function notifyOrderChannels(order: any) {
-  console.log("======================================");
-console.log("INSIDE notifyOrderChannels()");
-console.log("Order Number:", order.orderNumber);
-console.log("Customer:", order.customer?.name);
-console.log("======================================");
+  console.log(`[orders] notifying channels for ${order.orderNumber}`);
   const customerEmail = order.customer?.email;
 
   if (customerEmail) {
@@ -248,180 +306,135 @@ console.log("======================================");
   });
 }
 
-router.post("/", async (req: Request, res: Response) => {
-  try {
-    const {
-      productId,
-      productName,
-      categoryName,
-      subcategory,
-      packagePrice,
-      amount,
-      paymentMethod,
-      paymentStatus,
-      bookingDetails,
-      razorpayOrderId,
-      razorpayPaymentId,
-      razorpaySignature,
-    } = req.body;
+/**
+ * Build (but do not save) an Order document from a booking payload. Prices are
+ * always recomputed from the DB via computeAuthoritativePricing -- client money
+ * fields are ignored. Shared by POST /api/orders and the payment-verify flow.
+ */
+export async function buildOrderForBooking(
+  body: any,
+  opts: {
+    userId?: string;
+    paymentStatus: "pending" | "paid" | "failed" | "cancelled";
+    paymentMethod: "razorpay" | "whatsapp";
+    razorpay?: { orderId?: string; paymentId?: string; signature?: string };
+  }
+) {
+  const { productId, productName, categoryName, subcategory, bookingDetails } = body;
 
-    console.log("[orders] CREATE ORDER START", {
-      hasAuthToken: Boolean(req.headers.authorization),
-      userId: getAuthenticatedUserId(req),
-      productId,
-      productName,
-      paymentStatus,
-      paymentMethod,
-      hasBookingDetails: Boolean(bookingDetails?.length),
-      razorpayPaymentId,
-    });
+  if (!productId || !productName || !categoryName || !bookingDetails?.length) {
+    throw Object.assign(new Error("Missing required booking information."), { statusCode: 400 });
+  }
+  if (!mongoose.Types.ObjectId.isValid(String(productId))) {
+    throw Object.assign(new Error("Invalid package reference."), { statusCode: 400 });
+  }
 
-    if (!productId || !productName || !categoryName || !packagePrice || !amount || !bookingDetails?.length) {
-      return res.status(400).json({ error: "Missing required booking information." });
-    }
+  const pricing = await computeAuthoritativePricing(body);
+  const firstBooking = Array.isArray(bookingDetails) ? bookingDetails[0] : {};
 
-    if (razorpayPaymentId) {
-      const existingOrder = await Order.findOne({ razorpayPaymentId });
-      if (existingOrder) {
-        console.log("[orders] duplicate order avoided", { orderId: existingOrder._id, orderNumber: existingOrder.orderNumber, razorpayPaymentId });
-        return res.status(200).json(existingOrder);
-      }
-    }
-
-    console.log("========== ORDER REQUEST ==========");
-    console.log(req.body.addons);
-    console.log(req.body.bookingDetails?.[0]?.addOns);
-    console.log("[orders] ORDER DATA", req.body);
-
-    const firstBooking = Array.isArray(bookingDetails) ? bookingDetails[0] : {};
-    const customerSnapshot = buildCustomerSnapshot(req.body, firstBooking);
-    const productSnapshot = buildProductSnapshot(req.body);
-    const bookingSnapshot = buildBookingSnapshot(req.body, firstBooking);
-    const addonsSnapshot = buildAddonsSnapshot(req.body);
-    const activitiesSnapshot = buildActivitiesSnapshot(req.body);
-
-    const subtotal = toNumber(req.body.subtotal || packagePrice || amount || 0);
-    const addonTotal = toNumber(req.body.addonTotal || addonsSnapshot.reduce((sum: number, item: any) => sum + toNumber(item.price) * toNumber(item.qty || 1), 0));
-    const activityTotal = toNumber(req.body.activityTotal || activitiesSnapshot.reduce((sum: number, item: any) => sum + toNumber(item.price) * toNumber(item.qty || 1), 0));
-    const grandTotal = toNumber(req.body.grandTotal || amount || subtotal + addonTotal + activityTotal);
-
-    const initialOrderStatus = normalizeOrderStatus(req.body.orderStatus || "Pending");
-
-    const rawUserId = getAuthenticatedUserId(req) || req.body.userId || req.body.customer?.id;
-    const validUserId = (rawUserId && mongoose.Types.ObjectId.isValid(String(rawUserId))) ? String(rawUserId) : undefined;
-
-    const order = new Order({
-      userId: validUserId,
-      customerId: req.body.customerId || req.body.customer?.id || (validUserId ? String(validUserId) : undefined),
-      productId,
-      productName,
-      categoryName,
-      subcategory,
-      packagePrice: toNumber(packagePrice),
-      subtotal,
-      addonTotal,
-      activityTotal,
-      amount: toNumber(amount),
-      grandTotal,
-      paymentMethod,
-      paymentStatus,
-      customer: customerSnapshot,
-      product: productSnapshot,
-      booking: bookingSnapshot,
-      addons: addonsSnapshot,
-      activities: activitiesSnapshot,
-      bookingDetails: buildBookingDetails(req.body),
-      razorpayOrderId,
-      razorpayPaymentId,
-      razorpaySignature,
-    });
-
-    console.log("========== ORDER BEFORE SAVE ==========");
-    console.log(order.addons);
-    console.log(order.bookingDetails);
-    console.log(order.addonTotal);
-
-    await order.save();
-
-console.log("[orders] ORDER SAVE SUCCESS", {
-  orderId: order._id,
-  orderNumber: order.orderNumber,
-  userId: order.userId,
-  customerId: order.customerId,
-  paymentStatus: order.paymentStatus,
-});
-
-console.log("[orders] ORDER ID", order._id);
-
-console.log("======================================");
-console.log("Calling notifyOrderChannels()");
-console.log("======================================");
-
-try {
-  await notifyOrderChannels(order);
-  console.log("notifyOrderChannels() SUCCESS");
-} catch (err) {
-  console.error("notifyOrderChannels() FAILED");
-  console.error(err);
+  return new Order({
+    userId: opts.userId,
+    customerId: opts.userId,
+    productId,
+    productName,
+    categoryName,
+    subcategory,
+    packagePrice: pricing.packagePrice,
+    subtotal: pricing.subtotal,
+    addonTotal: pricing.addonTotal,
+    activityTotal: pricing.activityTotal,
+    amount: pricing.amount,
+    grandTotal: pricing.grandTotal,
+    paymentMethod: opts.paymentMethod,
+    paymentStatus: opts.paymentStatus,
+    customer: buildCustomerSnapshot(body, firstBooking),
+    product: buildProductSnapshot({ ...body, product: { ...(body.product || {}), price: pricing.packagePrice } }),
+    booking: buildBookingSnapshot(body, firstBooking),
+    addons: pricing.addons,
+    activities: pricing.activities,
+    bookingDetails: buildBookingDetails(body),
+    razorpayOrderId: opts.razorpay?.orderId,
+    razorpayPaymentId: opts.razorpay?.paymentId,
+    razorpaySignature: opts.razorpay?.signature,
+  });
 }
 
-res.status(201).json(order);
+export { notifyOrderChannels };
 
+/**
+ * Create a booking. Requires an authenticated customer. paymentStatus is ALWAYS
+ * "pending" here; it is only promoted to "paid" by the server-verified
+ * /api/payment/verify flow.
+ */
+router.post("/", requireAuth, async (req: Request, res: Response) => {
+  try {
+    const userId = (req as AuthedRequest).user!.id;
+    const paymentMethod = req.body.paymentMethod === "razorpay" ? "razorpay" : "whatsapp";
+
+    let order;
+    try {
+      order = await buildOrderForBooking(req.body, { userId, paymentStatus: "pending", paymentMethod });
+    } catch (e: any) {
+      return res.status(e?.statusCode || 400).json({ success: false, message: e?.message || "Invalid booking." });
+    }
+
+    await order.save();
+    console.log("[orders] created", { orderId: order._id, orderNumber: order.orderNumber, userId, amount: order.amount });
+
+    try {
+      await notifyOrderChannels(order);
+    } catch (err) {
+      console.error("[orders] notifyOrderChannels failed", err);
+    }
+
+    return res.status(201).json(order);
   } catch (err: unknown) {
-    console.error("[orders] ORDER SAVE FAILED", err);
+    console.error("[orders] create failed", err);
     const message = err instanceof Error ? err.message : "Unable to create the booking order.";
-    res.status(500).json({ error: message });
+    return res.status(500).json({ success: false, message });
   }
 });
 
-router.get("/my", authMiddleware, async (req: Request, res: Response) => {
+router.get("/my", requireAuth, async (req: Request, res: Response) => {
   try {
-    const user = (req as Request & { user?: { id?: string; email?: string } }).user;
-    const userId = user?.id;
-    const userEmail = user?.email?.toLowerCase().trim();
-
-    const queryConditions: any[] = [];
-    if (userId) {
-      queryConditions.push({ userId }, { customerId: userId });
-    }
-    if (userEmail) {
-      const emailRegex = new RegExp(`^${userEmail.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')}$`, 'i');
-      queryConditions.push(
-        { "customer.email": emailRegex },
-        { "booking.email": emailRegex },
-        { "bookingDetails.0.email": emailRegex },
-        { "bookingDetails.email": emailRegex }
-      );
-    }
-
-    const orders = await Order.find(queryConditions.length > 0 ? { $or: queryConditions } : {}).sort({ createdAt: -1 });
+    const userId = (req as AuthedRequest).user!.id;
+    const orders = await Order.find({ $or: [{ userId }, { customerId: userId }] }).sort({ createdAt: -1 });
     res.json(orders);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unable to fetch your orders.";
-    res.status(500).json({ error: message });
+    res.status(500).json({ success: false, message });
   }
 });
 
-router.get("/", async (_req: Request, res: Response) => {
+router.get("/", requireAdmin, async (_req: Request, res: Response) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 });
     res.json(orders);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unable to fetch orders.";
-    res.status(500).json({ error: message });
+    res.status(500).json({ success: false, message });
   }
 });
 
-router.get("/:id", async (req: Request, res: Response) => {
+router.get("/:id", requireAuth, async (req: Request, res: Response) => {
   try {
-    const order = await Order.findById(req.params.id);
+    const { user } = req as AuthedRequest;
+    const id = String(req.params.id);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+    const order = await Order.findById(id);
     if (!order) {
-      return res.status(404).json({ error: "Order not found" });
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+    const owns = String(order.userId) === user!.id || String(order.customerId) === user!.id;
+    if (!owns && user!.role !== "admin") {
+      return res.status(403).json({ success: false, message: "You do not have access to this order." });
     }
     return res.json(order);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unable to fetch the order.";
-    return res.status(500).json({ error: message });
+    return res.status(500).json({ success: false, message });
   }
 });
 

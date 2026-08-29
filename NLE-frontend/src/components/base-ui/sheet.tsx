@@ -102,13 +102,13 @@ export function SheetContent({
     <div className="fixed inset-0 z-50 flex">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300"
+        className="fixed inset-0 bg-[#381932]/60 backdrop-blur-xs transition-opacity duration-300"
         onClick={() => ctx.setOpen(false)}
       />
       {/* Sheet Panel */}
       <div
         className={cn(
-          'fixed z-50 bg-white shadow-xl transition-transform duration-300 ease-in-out dark:bg-neutral-950',
+          'fixed z-50 bg-[#FFF3E6] shadow-xl transition-transform duration-300 ease-in-out dark:bg-[#381932]',
           sideClasses[side],
           className
         )}
@@ -119,7 +119,7 @@ export function SheetContent({
           onClick={() => ctx.setOpen(false)}
           className="absolute top-4 right-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none"
         >
-          <X className="h-5 w-5 text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white" />
+          <X className="h-5 w-5 text-[#381932] hover:text-[#381932] dark:text-[#381932] dark:hover:text-[#FFF3E6]" />
           <span className="sr-only">Close</span>
         </button>
         {children}

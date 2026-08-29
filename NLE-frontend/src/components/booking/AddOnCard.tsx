@@ -43,14 +43,14 @@ export const AddOnCard: React.FC<AddOnCardProps> = ({
       className={cn(
         'relative flex flex-col gap-3 rounded-xl border p-4 shadow-xs hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200 cursor-pointer dark:hover:shadow-none',
         selected
-          ? 'border-[#725D75] bg-[#725D75]/05 dark:border-amber-400'
-          : 'border-[#E4DCD2] bg-white hover:border-[#A78A9F] dark:bg-[#1E1E1E] dark:border-[#2E2E2E]',
+          ? 'border-[#381932] bg-[#381932]/05 dark:border-[#FFF3E6]'
+          : 'border-[#381932]/30 bg-[#FFF3E6] hover:border-[#381932] dark:bg-[#381932] dark:border-[#381932]',
         className
       )}
       onClick={onToggle}
     >
       {badge && (
-        <span className="absolute -top-2 right-3 rounded-full bg-[#725D75] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-xs">
+        <span className="absolute -top-2 right-3 rounded-full bg-[#381932] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#FFF3E6] shadow-xs">
           {badge}
         </span>
       )}
@@ -59,22 +59,22 @@ export const AddOnCard: React.FC<AddOnCardProps> = ({
         <span
           className={cn(
             'flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors duration-200',
-            selected ? 'bg-[#725D75] text-white' : 'bg-[#F3EFE7] text-[#725D75] dark:bg-[#2A2A2A]'
+            selected ? 'bg-[#381932] text-[#FFF3E6]' : 'bg-[#FFF3E6] text-[#381932] dark:bg-[#381932]'
           )}
         >
           <Icon size={20} strokeWidth={1.75} />
         </span>
-        <span className="text-sm font-bold text-[#725D75] dark:text-[#C9BEAB] whitespace-nowrap">
+        <span className="text-sm font-bold text-[#381932] dark:text-[#381932] whitespace-nowrap">
           {priceLabel ?? `+₹${price.toLocaleString('en-IN')}`}
         </span>
       </div>
 
       <div className="flex-1 min-w-0">
-        <h4 className="line-clamp-1 font-serif text-sm font-semibold text-[#2F2930] dark:text-white">
+        <h4 className="line-clamp-1 font-serif text-sm font-semibold text-[#381932] dark:text-[#FFF3E6]">
           {title}
         </h4>
         {description && (
-          <p className="mt-0.5 line-clamp-2 text-xs leading-snug text-[#746B72] dark:text-[#C8B5C3]">
+          <p className="mt-0.5 line-clamp-2 text-xs leading-snug text-[#381932] dark:text-[#FFF3E6]">
             {description}
           </p>
         )}
@@ -89,8 +89,8 @@ export const AddOnCard: React.FC<AddOnCardProps> = ({
         className={cn(
           'flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium transition-colors duration-200 cursor-pointer',
           selected
-            ? 'bg-[#725D75] text-white hover:bg-[#A78A9F]'
-            : 'border border-[#E4DCD2] bg-[#F9F6F2] text-[#2F2930] hover:border-[#725D75] hover:text-[#725D75] dark:bg-[#262626] dark:border-[#483250] dark:text-white'
+            ? 'bg-[#381932] text-[#FFF3E6] hover:opacity-90'
+            : 'border border-[#381932]/30 bg-[#FFF3E6] text-[#381932] hover:border-[#381932] hover:text-[#381932] dark:bg-[#381932] dark:border-[#381932] dark:text-[#FFF3E6]'
         )}
         aria-pressed={selected}
       >

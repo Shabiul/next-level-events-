@@ -15,6 +15,8 @@ interface AIContextType {
   inputRef: React.RefObject<HTMLInputElement>;
   setInput: (value: string) => void;
   sendMessage: (e?: React.FormEvent | string) => Promise<void>;
+  retryLast: () => void;
+  canRetry: boolean;
   loading: boolean;
 }
 
@@ -31,6 +33,7 @@ export const AIProvider = ({ children }: { children: ReactNode }) => {
 
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [lastFailedQuestion, setLastFailedQuestion] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const sessionId = useRef(
@@ -52,7 +55,7 @@ export const AIProvider = ({ children }: { children: ReactNode }) => {
       questionText = input.trim();
     }
 
-    if (!questionText) return;
+    if (!questionText || loading) return;
 
     const userMessage: AssistantMessage = {
       id: Date.now(),
@@ -63,6 +66,7 @@ export const AIProvider = ({ children }: { children: ReactNode }) => {
     setMessages((prev) => [...prev, userMessage]);
     trackAssistantQuestion(questionText);
     setInput("");
+    setLastFailedQuestion(null);
     setLoading(true);
 
     const loadingId = Date.now() + 1;
@@ -90,17 +94,21 @@ export const AIProvider = ({ children }: { children: ReactNode }) => {
       };
 
       setMessages((prev) => prev.map((m) => (m.id === loadingId ? botMessage : m)));
-    } catch {
+    } catch (err) {
+      const text = err instanceof Error ? err.message : "I couldn't process that request right now. Please try again.";
+      setLastFailedQuestion(questionText);
       setMessages((prev) =>
         prev.map((m) =>
-          m.id === loadingId
-            ? { id: Date.now(), sender: "bot", text: "I couldn't process that request right now. Please try again." }
-            : m
+          m.id === loadingId ? { id: Date.now(), sender: "bot", text } : m
         )
       );
     } finally {
       setLoading(false);
     }
+  };
+
+  const retryLast = () => {
+    if (lastFailedQuestion && !loading) void sendMessage(lastFailedQuestion);
   };
 
   return (
@@ -111,6 +119,8 @@ export const AIProvider = ({ children }: { children: ReactNode }) => {
         inputRef,
         setInput,
         sendMessage,
+        retryLast,
+        canRetry: !!lastFailedQuestion && !loading,
         loading,
       }}
     >

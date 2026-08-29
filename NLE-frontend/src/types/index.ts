@@ -323,7 +323,7 @@ export interface AdminUser {
   active: boolean;
 }
 
-export type AdminView = 'dashboard' | 'categories' | 'products' | 'addons' | 'activities' | 'sliders' | 'orders' | 'users' | 'terms';
+export type AdminView = 'dashboard' | 'categories' | 'products' | 'addons' | 'activities' | 'sliders' | 'orders' | 'enquiries' | 'users' | 'terms';
 
 export interface DashboardStats {
   totalRevenue: number;
