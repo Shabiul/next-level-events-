@@ -63,8 +63,9 @@ export const Footer: React.FC<FooterProps> = ({
   const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
     "Hi The Decor Party! I'd like to plan an event. Can you help me with the details?"
   )}`;
-  const studioMapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(settings.address)}`;
-  const studioMapsEmbed = `https://www.google.com/maps?q=${encodeURIComponent(settings.address)}&z=15&hl=en&output=embed`;
+  // The Decor Party's actual pinned studio location on Google Maps.
+  const studioMapsLink = 'https://maps.app.goo.gl/EQWJas47qdE8jrUn6';
+  const studioMapsEmbed = 'https://www.google.com/maps?q=12.9143902,77.5739856&z=17&hl=en&output=embed';
 
   return (
     <footer id="footer" data-nav-theme="dark" className="relative bg-[#381932] text-[#FFF3E6] border-t border-[#FFF3E6]/10 overflow-hidden scroll-mt-24 sm:scroll-mt-28">
@@ -93,7 +94,7 @@ export const Footer: React.FC<FooterProps> = ({
 
           <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
             <Link
-              to="/explore"
+              to="/contact"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-[#FFF3E6] px-6 sm:px-7 py-2.5 sm:py-3 text-xs sm:text-sm font-bold tracking-wide text-[#381932] hover:opacity-90 shadow-lg transition-all cursor-pointer"
             >
               <span>Get a Free Quote</span>

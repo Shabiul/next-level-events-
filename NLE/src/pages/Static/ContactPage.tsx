@@ -29,8 +29,9 @@ const WHATSAPP_DEFAULT_MSG =
   "Hi The Decor Party! I'd like to plan an event. Can you help me with the details?";
 const STUDIO_ADDRESS =
   'Kanakapura Main Rd, near Banashankari Metro Station, Shakambari Nagar, 1st Phase, J. P. Nagar, Bengaluru, Karnataka 560070';
-const MAPS_LINK = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(STUDIO_ADDRESS)}`;
-const MAPS_EMBED = `https://www.google.com/maps?q=${encodeURIComponent(STUDIO_ADDRESS)}&z=15&hl=en&output=embed`;
+// The Decor Party's actual pinned studio location on Google Maps.
+const MAPS_LINK = 'https://maps.app.goo.gl/EQWJas47qdE8jrUn6';
+const MAPS_EMBED = 'https://www.google.com/maps?q=12.9143902,77.5739856&z=17&hl=en&output=embed';
 const CTA_IMAGE = '/kkkk.jpg';
 
 const OCCASION_TYPES = [
