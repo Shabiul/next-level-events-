@@ -9,7 +9,7 @@ import sys, os, glob, hashlib
 from PIL import Image, ImageOps, ImageDraw, ImageFont
 
 SRC = sys.argv[1] if len(sys.argv) > 1 else "_drive_dl3"
-OUT = os.path.join("NLE-frontend", "public", "drive")
+OUT = os.path.join("NLE", "public", "drive")
 SHEETS = os.path.join("_tools", "sheets")
 MAX_EDGE = 1600
 QUALITY = 82

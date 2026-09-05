@@ -6,42 +6,41 @@ console.log('🚀 Starting The Decor Party Development Servers...\n');
 const isWin = process.platform === 'win32';
 const npmCmd = isWin ? 'npm.cmd' : 'npm';
 
-const backend = spawn(npmCmd, ['run', 'dev'], {
-  cwd: path.join(__dirname, 'NLE-backend'),
+const nle = spawn(npmCmd, ['run', 'dev'], {
+  cwd: path.join(__dirname, 'NLE'),
   shell: true,
 });
 
-const frontend = spawn(npmCmd, ['run', 'dev'], {
-  cwd: path.join(__dirname, 'NLE-frontend'),
+const crm = spawn(npmCmd, ['run', 'dev'], {
+  cwd: path.join(__dirname, 'CRM'),
   shell: true,
 });
 
-backend.stdout?.on('data', (data) => {
-  process.stdout.write(`[Backend] ${data}`);
+nle.stdout?.on('data', (data) => {
+  process.stdout.write(`[NLE] ${data}`);
 });
-backend.stderr?.on('data', (data) => {
-  process.stderr.write(`[Backend ERR] ${data}`);
-});
-
-frontend.stdout?.on('data', (data) => {
-  process.stdout.write(`[Frontend] ${data}`);
-});
-frontend.stderr?.on('data', (data) => {
-  process.stderr.write(`[Frontend ERR] ${data}`);
+nle.stderr?.on('data', (data) => {
+  process.stderr.write(`[NLE ERR] ${data}`);
 });
 
-backend.on('error', (err) => console.error('[Backend Process Error]:', err));
-frontend.on('error', (err) => console.error('[Frontend Process Error]:', err));
+crm.stdout?.on('data', (data) => {
+  process.stdout.write(`[CRM] ${data}`);
+});
+crm.stderr?.on('data', (data) => {
+  process.stderr.write(`[CRM ERR] ${data}`);
+});
+
+nle.on('error', (err) => console.error('[NLE Process Error]:', err));
+crm.on('error', (err) => console.error('[CRM Process Error]:', err));
 
 process.on('SIGINT', () => {
-  backend.kill();
-  frontend.kill();
+  nle.kill();
+  crm.kill();
   process.exit();
 });
 
 process.on('SIGTERM', () => {
-  backend.kill();
-  frontend.kill();
+  nle.kill();
+  crm.kill();
   process.exit();
 });
-

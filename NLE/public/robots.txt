@@ -1,0 +1,92 @@
+# robots.txt for The Decor Party (https://www.thedecorparty.com)
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /checkout
+Disallow: /checkout/*
+Disallow: /booking/*
+Disallow: /orders/*
+Disallow: /bookings
+Disallow: /profile
+Disallow: /wishlist
+Disallow: /api/
+Disallow: /reset-password/*
+
+# Generative AI & Answer Engine Crawlers (AIEO / GEO Allowlist)
+User-agent: GPTBot
+Allow: /
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /orders/
+Disallow: /api/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /orders/
+Disallow: /api/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /orders/
+Disallow: /api/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /orders/
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /orders/
+Disallow: /api/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /orders/
+Disallow: /api/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /orders/
+Disallow: /api/
+
+User-agent: Amazonbot
+Allow: /
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /orders/
+Disallow: /api/
+
+User-agent: Bytespider
+Allow: /
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /orders/
+Disallow: /api/
+
+User-agent: cohere-ai
+Allow: /
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /orders/
+Disallow: /api/
+
+# Sitemap & LLM Knowledge Specification
+Sitemap: https://www.thedecorparty.com/sitemap.xml
+# LLMs specification file for AI engines:
+# https://www.thedecorparty.com/llms.txt
+# https://www.thedecorparty.com/llms-full.txt

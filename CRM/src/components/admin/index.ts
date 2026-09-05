@@ -1,0 +1,13 @@
+export { DashboardView } from './DashboardView';
+export { CategoriesView } from './CategoriesView';
+export { ProductsView } from './ProductsView';
+export { AddonsView } from './AddonsView';
+export { ActivitiesView } from './ActivitiesView';
+export { UsersView } from './UsersView';
+export { EnquiriesView } from './EnquiriesView';
+export { SiteSettingsView } from './SiteSettingsView';
+export { PaymentsView } from './PaymentsView';
+export { StaffView } from './StaffView';
+export { Modal } from './Modal';
+export { ConfirmModal } from './ConfirmModal';
+export { Sidebar } from './Sidebar';

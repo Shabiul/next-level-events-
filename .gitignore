@@ -44,3 +44,10 @@ Thumbs.db
 #   and its vendored playwright-core) -- force-added past the node_modules rule.
 _drive_dl*/
 _drive_all/
+
+# Binary archives & scratch
+*.zip
+.qodo/
+mongo_backup/
+__pycache__/
+*.pyc
