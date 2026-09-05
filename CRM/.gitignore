@@ -7,3 +7,4 @@ dist-ssr
 .env.production.local
 vite.config.ts.timestamp*
 .DS_Store
+.vercel
