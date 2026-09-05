@@ -59,15 +59,6 @@ export const Footer: React.FC<FooterProps> = ({
     { label: 'Cancellation & Refund', to: '/refund' },
   ];
 
-  const packagesList = [
-    'Express Delivery',
-    'Pastel Balloon Arches',
-    'Terrace Candlelight Cabana',
-    'Milestone Neon Ring Backdrops',
-    'Grand 1st Birthday Themes',
-    'Kids Activities & Live Eateries',
-  ];
-
   const settings = useSiteSettings();
   const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
     "Hi The Decor Party! I'd like to plan an event. Can you help me with the details?"
@@ -188,8 +179,8 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
           </div>
 
-          {/* Col 2 — COMPANY (Image 2 style, 2 cols) */}
-          <div className="lg:col-span-2">
+          {/* Col 2 — COMPANY */}
+          <div className="lg:col-span-3">
             <h4 className={colTitleClass}>COMPANY</h4>
             <ul className="flex flex-col gap-2">
               {quickLinks.map((link) => (
@@ -202,8 +193,8 @@ export const Footer: React.FC<FooterProps> = ({
             </ul>
           </div>
 
-          {/* Col 3 — SERVICES / OCCASIONS (Image 2 style, 2 cols) */}
-          <div className="lg:col-span-2">
+          {/* Col 3 — SERVICES / OCCASIONS */}
+          <div className="lg:col-span-3">
             <h4 className={colTitleClass}>SERVICES</h4>
             <ul className="flex flex-col gap-2">
               {(categories.length > 0
@@ -229,24 +220,7 @@ export const Footer: React.FC<FooterProps> = ({
             </ul>
           </div>
 
-          {/* Col 4 — PACKAGES (Image 2 style, 2 cols) */}
-          <div className="lg:col-span-2">
-            <h4 className={colTitleClass}>PACKAGES</h4>
-            <ul className="flex flex-col gap-2">
-              {packagesList.map((pkg) => (
-                <li key={pkg}>
-                  <a
-                    href="/explore"
-                    className={linkClass}
-                  >
-                    <span>{pkg}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Col 5 — CONTACT (Image 2 style, 3 cols) */}
+          {/* Col 4 — CONTACT */}
           <div className="lg:col-span-3">
             <h4 className={colTitleClass}>CONTACT</h4>
             
