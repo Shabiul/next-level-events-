@@ -100,6 +100,24 @@ const normalizeCatalogItem = (item: RawCatalogItem) => ({
   inclusions: getItemInclusions(item),
 });
 
+// These 8 are the generic "Popular Celebration Enhancements" also offered at
+// checkout (a shared stock photo, not a real product photo) -- on the
+// product page's own add-ons carousel they should trail behind every
+// product-specific addon (e.g. "Welcome board"), not lead the list just
+// because they happen to have the most recent created_at.
+const CURATED_ADDON_NAMES = new Set([
+  'photography', 'videography', 'live catering', 'flower decoration',
+  'led numbers', 'custom cake', 'return gifts', 'premium balloon upgrade',
+]);
+function sortCuratedLast<T extends { name?: string }>(items: T[]): T[] {
+  const real: T[] = [];
+  const curated: T[] = [];
+  for (const item of items) {
+    (CURATED_ADDON_NAMES.has(String(item.name || '').toLowerCase()) ? curated : real).push(item);
+  }
+  return [...real, ...curated];
+}
+
 const TABS = [
   { key: 'addons', label: 'Add-ons' },
   { key: 'activities', label: 'Activities & Entertainment' },
@@ -167,7 +185,8 @@ export const AddonsModule: React.FC<Props> = ({
         if (!res.ok) throw new Error('Failed to load catalog');
         const data = await res.json();
         if (isMounted) {
-          setAddons(Array.isArray(data.addons) ? data.addons.map(normalizeCatalogItem) : []);
+          const addonList = Array.isArray(data.addons) ? data.addons.map(normalizeCatalogItem) : [];
+          setAddons(sortCuratedLast(addonList));
           setActivities(Array.isArray(data.activities) ? data.activities.map(normalizeCatalogItem) : []);
         }
       })
