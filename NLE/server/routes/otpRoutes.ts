@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { OtpRepository, UserRepository, WishlistRepository } from "../src/db/repositories";
-import { signAuthToken } from "../utils/auth";
-import { sendSms } from "../services/sms.service";
-import { rateLimit } from "../middleware/rateLimit";
+import { OtpRepository, UserRepository, WishlistRepository } from "../src/db/repositories.js";
+import { signAuthToken } from "../utils/auth.js";
+import { sendSms } from "../services/sms.service.js";
+import { rateLimit } from "../middleware/rateLimit.js";
 
 const router = express.Router();
 

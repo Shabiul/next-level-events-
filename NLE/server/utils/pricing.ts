@@ -1,5 +1,5 @@
-import { AddonRepository, ProductRepository } from "../src/db/repositories";
-import { supabase } from "../src/db/supabase";
+import { AddonRepository, ProductRepository } from "../src/db/repositories.js";
+import { supabase } from "../src/db/supabase.js";
 
 export interface PricedSelection {
   id: string;

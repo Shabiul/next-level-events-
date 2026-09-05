@@ -1,6 +1,6 @@
 // src/ai/constants/intents.ts
 
-import { IntentType } from "../types/intent.types";
+import { IntentType } from "../types/intent.types.js";
 
 export const INTENT_KEYWORDS: Record<IntentType, string[]> = {
   GREETING: [

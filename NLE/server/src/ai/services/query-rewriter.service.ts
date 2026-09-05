@@ -1,5 +1,5 @@
-import { llm } from "../providers/llm.provider";
-import { rewritePrompt } from "../prompts/rewrite.prompt";
+import { llm } from "../providers/llm.provider.js";
+import { rewritePrompt } from "../prompts/rewrite.prompt.js";
 
 class QueryRewriterService {
   async rewrite(history: string, question: string): Promise<string> {

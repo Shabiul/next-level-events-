@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
-import { OrderRepository, ProductRepository } from "../src/db/repositories";
-import sendEmail from "../utils/sendEmail";
-import { requireAuth, requireAdmin, type AuthedRequest } from "../utils/auth";
-import { postOrderToN8n } from "../services/n8n.service";
-import { priceSelections } from "../utils/pricing";
+import { OrderRepository, ProductRepository } from "../src/db/repositories.js";
+import sendEmail from "../utils/sendEmail.js";
+import { requireAuth, requireAdmin, type AuthedRequest } from "../utils/auth.js";
+import { postOrderToN8n } from "../services/n8n.service.js";
+import { priceSelections } from "../utils/pricing.js";
 
 const router = express.Router();
 

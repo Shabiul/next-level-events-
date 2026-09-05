@@ -1,7 +1,7 @@
 import "dotenv/config";
 import bcrypt from "bcryptjs";
-import { supabase } from "../db/supabase";
-import { UserRepository } from "../db/repositories";
+import { supabase } from "../db/supabase.js";
+import { UserRepository } from "../db/repositories.js";
 
 async function main() {
   const args = process.argv.slice(2);

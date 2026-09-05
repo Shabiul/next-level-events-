@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
-import authMiddleware from "../middleware/authMiddleware";
-import { WishlistRepository, ProductRepository } from "../src/db/repositories";
+import authMiddleware from "../middleware/authMiddleware.js";
+import { WishlistRepository, ProductRepository } from "../src/db/repositories.js";
 
 const router = express.Router();
 

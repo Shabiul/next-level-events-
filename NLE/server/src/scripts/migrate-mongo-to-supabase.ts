@@ -8,18 +8,18 @@ import mongoose from "mongoose";
 import { createClient } from "@supabase/supabase-js";
 
 // Models (for live MongoDB extraction)
-import Category from "../../models/Category";
-import Addon from "../../models/Addon";
-import Product from "../../models/Product";
-import Activity from "../../models/Activity";
-import User from "../../models/User";
-import Order from "../../models/Order";
-import Cart from "../../models/Cart";
-import Slider from "../../models/Slider";
-import SiteContent from "../../models/SiteContent";
-import Enquiry from "../../models/Enquiry";
-import OtpToken from "../../models/OtpToken";
-import Chat from "../models/chat.model";
+import Category from "../../models/Category.js";
+import Addon from "../../models/Addon.js";
+import Product from "../../models/Product.js";
+import Activity from "../../models/Activity.js";
+import User from "../../models/User.js";
+import Order from "../../models/Order.js";
+import Cart from "../../models/Cart.js";
+import Slider from "../../models/Slider.js";
+import SiteContent from "../../models/SiteContent.js";
+import Enquiry from "../../models/Enquiry.js";
+import OtpToken from "../../models/OtpToken.js";
+import Chat from "../models/chat.model.js";
 
 const isDryRun = process.argv.includes("--dry-run");
 const forceBackup = process.argv.includes("--from-backup");

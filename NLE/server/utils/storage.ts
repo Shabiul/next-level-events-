@@ -1,4 +1,4 @@
-import { supabase } from "../src/db/supabase";
+import { supabase } from "../src/db/supabase.js";
 
 /**
  * Single public bucket for every admin-uploaded asset (product/category/

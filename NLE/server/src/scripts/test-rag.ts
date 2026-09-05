@@ -1,6 +1,6 @@
-import { vectorStoreService } from "../ai/vectorstore/faiss.store";
-import { retrieverService } from "../ai/retriever/retriever.service";
-import { ragService } from "../ai/services/rag.service";
+import { vectorStoreService } from "../ai/vectorstore/faiss.store.js";
+import { retrieverService } from "../ai/retriever/retriever.service.js";
+import { ragService } from "../ai/services/rag.service.js";
 
 async function main() {
   // Load the saved FAISS index

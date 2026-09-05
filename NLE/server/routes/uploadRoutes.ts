@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import multer from "multer";
-import { requireAuth, type AuthedRequest } from "../utils/auth";
-import { uploadAsset } from "../utils/storage";
+import { requireAuth, type AuthedRequest } from "../utils/auth.js";
+import { uploadAsset } from "../utils/storage.js";
 
 const router = express.Router();
 

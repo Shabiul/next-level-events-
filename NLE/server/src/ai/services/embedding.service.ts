@@ -1,5 +1,5 @@
 import { Document } from "@langchain/core/documents";
-import { embeddingProvider } from "../providers/embedding.provider";
+import { embeddingProvider } from "../providers/embedding.provider.js";
 
 export class EmbeddingService {
   async embedDocuments(documents: Document[]) {

@@ -3,7 +3,7 @@ let initError: any = null;
 
 try {
   // Dynamically import server so any module load error is captured safely
-  const mod = await import("../server/server");
+  const mod = await import("../server/server.js");
   app = mod.default || mod;
 } catch (err: any) {
   initError = err;

@@ -1,5 +1,5 @@
 import { Document } from "@langchain/core/documents";
-import { ExtractedEntities } from "./entity-extractor.service";
+import { ExtractedEntities } from "./entity-extractor.service.js";
 
 class BusinessFilterService {
   filter(

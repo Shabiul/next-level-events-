@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
-import { SliderRepository } from "../src/db/repositories";
-import { requirePermission } from "../utils/auth";
+import { SliderRepository } from "../src/db/repositories.js";
+import { requirePermission } from "../utils/auth.js";
 
 const router = express.Router();
 

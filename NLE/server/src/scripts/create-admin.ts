@@ -1,7 +1,7 @@
 import "dotenv/config";
 import bcrypt from "bcryptjs";
-import { supabase } from "../db/supabase";
-import { UserRepository } from "../db/repositories";
+import { supabase } from "../db/supabase.js";
+import { UserRepository } from "../db/repositories.js";
 
 async function createAdminUser() {
   const email = "tdp@admin.com".toLowerCase().trim();

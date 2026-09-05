@@ -1,8 +1,8 @@
-import { entityExtractorService } from "../services/entity-extractor.service";
-import { businessFilterService } from "../services/business-filter.service";
-import { recommendationService } from "../services/recommendation.service";
-import { retrieverService } from "../retriever/retriever.service";
-import { chatService } from "../services/chat.service";
+import { entityExtractorService } from "../services/entity-extractor.service.js";
+import { businessFilterService } from "../services/business-filter.service.js";
+import { recommendationService } from "../services/recommendation.service.js";
+import { retrieverService } from "../retriever/retriever.service.js";
+import { chatService } from "../services/chat.service.js";
 import { Document } from "@langchain/core/documents";
 
 export class RecommendationHandler {

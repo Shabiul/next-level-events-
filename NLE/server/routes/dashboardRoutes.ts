@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
-import { UserRepository } from "../src/db/repositories";
-import { requireAdmin, requirePermission } from "../utils/auth";
-import { supabase } from "../src/db/supabase";
-import { updateSupabaseAuthMetadata, deleteUserFromSupabaseAuth } from "../src/db/supabaseAuth";
+import { UserRepository } from "../src/db/repositories.js";
+import { requireAdmin, requirePermission } from "../utils/auth.js";
+import { supabase } from "../src/db/supabase.js";
+import { updateSupabaseAuthMetadata, deleteUserFromSupabaseAuth } from "../src/db/supabaseAuth.js";
 
 const router = express.Router();
 

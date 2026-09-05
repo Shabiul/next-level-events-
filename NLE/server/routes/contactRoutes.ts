@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
-import { EnquiryRepository } from "../src/db/repositories";
-import sendEmail from "../utils/sendEmail";
-import { optionalUserId, requirePermission } from "../utils/auth";
+import { EnquiryRepository } from "../src/db/repositories.js";
+import sendEmail from "../utils/sendEmail.js";
+import { optionalUserId, requirePermission } from "../utils/auth.js";
 
 const router = express.Router();
 

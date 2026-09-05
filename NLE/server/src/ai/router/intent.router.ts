@@ -1,13 +1,13 @@
-import { IntentType } from "../types/intent.types";
+import { IntentType } from "../types/intent.types.js";
 
-import { greetingHandler } from "../handlers/greeting.handler";
-import { faqHandler } from "../handlers/faq.handler";
-import { bookingHandler } from "../handlers/booking.handler";
-import { retrieveHandler } from "../handlers/retrieve.handler";
-import { recommendationHandler } from "../handlers/recommendation.handler";
-import { generalInformationHandler } from "../handlers/general-information.handler";
-import { categoryListHandler } from "../handlers/category-list.handler";
-import { queryAnalyzerService } from "../services/query-analyzer.service";
+import { greetingHandler } from "../handlers/greeting.handler.js";
+import { faqHandler } from "../handlers/faq.handler.js";
+import { bookingHandler } from "../handlers/booking.handler.js";
+import { retrieveHandler } from "../handlers/retrieve.handler.js";
+import { recommendationHandler } from "../handlers/recommendation.handler.js";
+import { generalInformationHandler } from "../handlers/general-information.handler.js";
+import { categoryListHandler } from "../handlers/category-list.handler.js";
+import { queryAnalyzerService } from "../services/query-analyzer.service.js";
 
 export class IntentRouter {
   async route(

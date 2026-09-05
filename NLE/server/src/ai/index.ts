@@ -1,5 +1,5 @@
-import { aiService } from "./services/ai.service";
-import { categoryService } from "./services/category.service";
+import { aiService } from "./services/ai.service.js";
+import { categoryService } from "./services/category.service.js";
 
 export async function initializeAI() {
   try {

@@ -4,7 +4,7 @@ import {
   findSupabaseAuthUserByEmail,
   deleteUserFromSupabaseAuth,
   updateSupabaseAuthMetadata,
-} from "../db/supabaseAuth";
+} from "../db/supabaseAuth.js";
 
 async function runTest() {
   const testEmail = `test_staff_${Date.now()}@example.com`;

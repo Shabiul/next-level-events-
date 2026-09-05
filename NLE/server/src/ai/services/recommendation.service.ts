@@ -1,6 +1,6 @@
 import { Document } from "@langchain/core/documents";
-import { llm } from "../providers/llm.provider";
-import { recommendationPrompt } from "../prompts/recommendation.prompt";
+import { llm } from "../providers/llm.provider.js";
+import { recommendationPrompt } from "../prompts/recommendation.prompt.js";
 
 interface RecommendationInput {
   category: string | null;

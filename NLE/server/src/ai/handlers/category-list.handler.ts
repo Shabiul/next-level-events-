@@ -1,6 +1,6 @@
 import { Document } from "@langchain/core/documents";
-import { ProductRepository } from "../../db/repositories";
-import { sessionMemoryService } from "../services/session-memory.service";
+import { ProductRepository } from "../../db/repositories.js";
+import { sessionMemoryService } from "../services/session-memory.service.js";
 
 export class CategoryListHandler {
   async handle(_message: string, sessionId: string, category: string, categoryId: string | null) {

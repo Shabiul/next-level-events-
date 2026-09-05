@@ -1,10 +1,10 @@
-import { llm } from "../providers/llm.provider";
-import { categoryService } from "./category.service";
-import { conversationAnalysisPrompt } from "../prompts/conversation-analysis.prompt";
+import { llm } from "../providers/llm.provider.js";
+import { categoryService } from "./category.service.js";
+import { conversationAnalysisPrompt } from "../prompts/conversation-analysis.prompt.js";
 import {
   ConversationAnalysis,
   ConversationAnalysisSchema,
-} from "../models/conversation-analysis.schema";
+} from "../models/conversation-analysis.schema.js";
 
 class ConversationAnalyzerService {
   private structuredModel =

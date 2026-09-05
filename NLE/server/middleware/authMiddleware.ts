@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyAuthToken, type AuthedRequest } from "../utils/auth";
+import { verifyAuthToken, type AuthedRequest } from "../utils/auth.js";
 
 /**
  * Legacy default export kept for backwards compatibility with existing route

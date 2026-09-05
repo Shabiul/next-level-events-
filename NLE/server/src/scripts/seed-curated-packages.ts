@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { supabase } from "../db/supabase";
+import { supabase } from "../db/supabase.js";
 
 export const CURATED_PACKAGES_DATA = [
   {

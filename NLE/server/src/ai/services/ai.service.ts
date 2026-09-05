@@ -1,7 +1,7 @@
-import { retrieverService } from "../retriever/retriever.service";
-import { chatService } from "./chat.service";
-import { intentClassifier } from "../classifier/intent.classifier";
-import { intentRouter } from "../router/intent.router";
+import { retrieverService } from "../retriever/retriever.service.js";
+import { chatService } from "./chat.service.js";
+import { intentClassifier } from "../classifier/intent.classifier.js";
+import { intentRouter } from "../router/intent.router.js";
 
 export class AIService {
   private initialized = false;

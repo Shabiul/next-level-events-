@@ -1,5 +1,5 @@
-import { supabase } from "./supabase";
-import { initializeAI } from "../ai";
+import { supabase } from "./supabase.js";
+import { initializeAI } from "../ai/index.js";
 
 export async function connectDatabase(): Promise<void> {
   console.log("🔌 Checking Supabase connection...");

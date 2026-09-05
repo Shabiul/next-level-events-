@@ -1,8 +1,8 @@
-import Category from "../../models/Category";
-import Product from "../../models/Product";
-import Slider from "../../models/Slider";
-import SiteContent from "../../models/SiteContent";
-import GlobalCatalog from "../../models/GlobalCatalog";
+import Category from "../../models/Category.js";
+import Product from "../../models/Product.js";
+import Slider from "../../models/Slider.js";
+import SiteContent from "../../models/SiteContent.js";
+import GlobalCatalog from "../../models/GlobalCatalog.js";
 
 export async function seedDatabaseIfEmpty() {
   try {

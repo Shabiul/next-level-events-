@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { aiController } from "../controllers/ai.controller";
-import { rateLimit } from "../middleware/rateLimit";
+import { aiController } from "../controllers/ai.controller.js";
+import { rateLimit } from "../middleware/rateLimit.js";
 
 const router = Router();
 

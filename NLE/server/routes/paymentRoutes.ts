@@ -1,14 +1,14 @@
 import express, { Request, Response } from "express";
 import crypto from "crypto";
 import "dotenv/config";
-import { OrderRepository, ProductRepository } from "../src/db/repositories";
-import { requireAuth, type AuthedRequest } from "../utils/auth";
-import { getRazorpayInstance, hasRazorpayKeys } from "../utils/razorpay";
+import { OrderRepository, ProductRepository } from "../src/db/repositories.js";
+import { requireAuth, type AuthedRequest } from "../utils/auth.js";
+import { getRazorpayInstance, hasRazorpayKeys } from "../utils/razorpay.js";
 import {
   buildOrderForBooking,
   computeAuthoritativePricing,
   notifyOrderChannels,
-} from "./orderRoutes";
+} from "./orderRoutes.js";
 
 const router = express.Router();
 

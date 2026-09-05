@@ -1,4 +1,4 @@
-import { intentDetectorService } from "../ai/services/intent-detector.service";
+import { intentDetectorService } from "../ai/services/intent-detector.service.js";
 
 const tests = [
   "Hi",

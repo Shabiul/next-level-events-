@@ -1,5 +1,5 @@
 import { Document } from "@langchain/core/documents";
-import { ProductRepository } from "../../db/repositories";
+import { ProductRepository } from "../../db/repositories.js";
 
 export class RetrieverService {
   initialize(_k: number = 4) {

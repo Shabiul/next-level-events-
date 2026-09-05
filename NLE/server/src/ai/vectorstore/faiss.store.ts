@@ -1,6 +1,6 @@
 import { FaissStore } from "@langchain/community/vectorstores/faiss";
 import { Document } from "@langchain/core/documents";
-import { embeddingProvider } from "../providers/embedding.provider";
+import { embeddingProvider } from "../providers/embedding.provider.js";
 
 export class VectorStoreService {
   private vectorStore: FaissStore | null = null;

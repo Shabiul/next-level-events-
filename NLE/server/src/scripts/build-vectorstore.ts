@@ -1,8 +1,8 @@
 import "dotenv/config";
 import mongoose from "mongoose";
 
-import { mongoLoader } from "../ai/loaders/mongo.loader";
-import { vectorStoreService } from "../ai/vectorstore/faiss.store";
+import { mongoLoader } from "../ai/loaders/mongo.loader.js";
+import { vectorStoreService } from "../ai/vectorstore/faiss.store.js";
 
 async function main() {
   try {

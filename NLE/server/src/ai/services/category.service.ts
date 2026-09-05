@@ -1,4 +1,4 @@
-import { CategoryRepository } from "../../db/repositories";
+import { CategoryRepository } from "../../db/repositories.js";
 
 class CategoryService {
   private categories: string[] = [];

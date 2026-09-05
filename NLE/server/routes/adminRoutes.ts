@@ -1,15 +1,15 @@
 import express, { Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import authMiddleware from "../middleware/authMiddleware";
-import { requireAdmin, requirePermission } from "../utils/auth";
-import { getRazorpayInstance, hasRazorpayKeys } from "../utils/razorpay";
-import { OrderRepository, UserRepository, DbUser } from "../src/db/repositories";
-import { supabase } from "../src/db/supabase";
+import authMiddleware from "../middleware/authMiddleware.js";
+import { requireAdmin, requirePermission } from "../utils/auth.js";
+import { getRazorpayInstance, hasRazorpayKeys } from "../utils/razorpay.js";
+import { OrderRepository, UserRepository, DbUser } from "../src/db/repositories.js";
+import { supabase } from "../src/db/supabase.js";
 import {
   syncUserToSupabaseAuth,
   updateSupabaseAuthMetadata,
   deleteUserFromSupabaseAuth,
-} from "../src/db/supabaseAuth";
+} from "../src/db/supabaseAuth.js";
 
 const router = express.Router();
 

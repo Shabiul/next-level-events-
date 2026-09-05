@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
-import { CartRepository, ProductRepository } from "../src/db/repositories";
-import { requireAuth, type AuthedRequest } from "../utils/auth";
-import { priceSelections } from "../utils/pricing";
+import { CartRepository, ProductRepository } from "../src/db/repositories.js";
+import { requireAuth, type AuthedRequest } from "../utils/auth.js";
+import { priceSelections } from "../utils/pricing.js";
 
 const router = express.Router();
 router.use(requireAuth);

@@ -1,6 +1,6 @@
 import "dotenv/config";
-import { connectDatabase, disconnectDatabase } from "../db/connection";
-import { CategoryRepository, ProductRepository, UserRepository, ChatRepository } from "../db/repositories";
+import { connectDatabase, disconnectDatabase } from "../db/connection.js";
+import { CategoryRepository, ProductRepository, UserRepository, ChatRepository } from "../db/repositories.js";
 
 async function verifyBackendLive() {
   console.log("==================================================================");

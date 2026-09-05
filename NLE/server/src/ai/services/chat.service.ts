@@ -1,4 +1,4 @@
-import { ChatRepository } from "../../db/repositories";
+import { ChatRepository } from "../../db/repositories.js";
 
 export interface IMessage {
   role: "user" | "assistant";

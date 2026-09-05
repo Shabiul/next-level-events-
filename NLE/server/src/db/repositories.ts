@@ -1,5 +1,5 @@
-import { supabase } from "./supabase";
-import { getCuratedPackageByIdOrName } from "../../utils/curatedPackages";
+import { supabase } from "./supabase.js";
+import { getCuratedPackageByIdOrName } from "../../utils/curatedPackages.js";
 
 // ---------------------------------------------------------------------------
 // TYPES

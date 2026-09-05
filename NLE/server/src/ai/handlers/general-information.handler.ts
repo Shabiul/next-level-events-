@@ -1,5 +1,5 @@
-import { SiteContentRepository } from "../../db/repositories";
-import { llm } from "../providers/llm.provider";
+import { SiteContentRepository } from "../../db/repositories.js";
+import { llm } from "../providers/llm.provider.js";
 
 export class GeneralInformationHandler {
   async handle(message: string) {

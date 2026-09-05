@@ -1,5 +1,5 @@
 import { ChatGroq } from "@langchain/groq";
-import { AI_CONFIG } from "../config";
+import { AI_CONFIG } from "../config/index.js";
 
 const fallbackLlm = {
   async invoke(prompt: unknown) {

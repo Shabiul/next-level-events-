@@ -16,7 +16,7 @@ import "dotenv/config";
 import fs from "fs";
 import path from "path";
 import mongoose from "mongoose";
-import Product from "../../models/Product";
+import Product from "../../models/Product.js";
 
 const APPLY = process.argv.includes("--apply");
 const PUBLIC_DIR = path.resolve(process.cwd(), "public");

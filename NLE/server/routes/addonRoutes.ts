@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
-import { AddonRepository } from "../src/db/repositories";
-import { requirePermission } from "../utils/auth";
+import { AddonRepository } from "../src/db/repositories.js";
+import { requirePermission } from "../utils/auth.js";
 
 const router = express.Router();
 

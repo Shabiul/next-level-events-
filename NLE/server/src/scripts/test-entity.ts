@@ -1,4 +1,4 @@
-import { entityExtractorService } from "../ai/services/entity-extractor.service";
+import { entityExtractorService } from "../ai/services/entity-extractor.service.js";
 
 const query =
   "Show me premium birthday decorations under 5000 with blue theme";

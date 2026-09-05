@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { aiService } from "../src/ai/services/ai.service";
+import { aiService } from "../src/ai/services/ai.service.js";
 
 export class AIController {
   async chat(req: Request, res: Response) {

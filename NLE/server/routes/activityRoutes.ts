@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
-import { supabase } from "../src/db/supabase";
-import { ProductRepository } from "../src/db/repositories";
-import { requirePermission } from "../utils/auth";
+import { supabase } from "../src/db/supabase.js";
+import { ProductRepository } from "../src/db/repositories.js";
+import { requirePermission } from "../utils/auth.js";
 
 const router = express.Router();
 

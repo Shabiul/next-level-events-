@@ -1,9 +1,9 @@
 import { Document } from "@langchain/core/documents";
 
-import { entityExtractorService } from "./entity-extractor.service";
-import { businessFilterService } from "./business-filter.service";
-import { recommendationService } from "./recommendation.service";
-import { retrieverService } from "../retriever/retriever.service";
+import { entityExtractorService } from "./entity-extractor.service.js";
+import { businessFilterService } from "./business-filter.service.js";
+import { recommendationService } from "./recommendation.service.js";
+import { retrieverService } from "../retriever/retriever.service.js";
 
 class RagService {
   async recommend(query: string): Promise<string> {

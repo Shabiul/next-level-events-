@@ -1,4 +1,4 @@
-import { retrieverService } from "../retriever/retriever.service";
+import { retrieverService } from "../retriever/retriever.service.js";
 
 export class RetrieveHandler {
 

@@ -1,6 +1,6 @@
 import { Embeddings } from "@langchain/core/embeddings";
 import { InferenceClient } from "@huggingface/inference";
-import { AI_CONFIG } from "../config";
+import { AI_CONFIG } from "../config/index.js";
 
 const client = new InferenceClient(AI_CONFIG.embedding.apiKey);
 

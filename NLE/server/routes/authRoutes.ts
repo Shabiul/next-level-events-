@@ -2,15 +2,15 @@ import express, { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
-import sendEmail from "../utils/sendEmail";
-import { login } from "../controllers/authController";
-import authMiddleware from "../middleware/authMiddleware";
-import { signAuthToken } from "../utils/auth";
-import { rateLimit } from "../middleware/rateLimit";
-import { verifyGoogleIdToken } from "../utils/firebaseAdmin";
-import { UserRepository, WishlistRepository, DbUser } from "../src/db/repositories";
-import { supabase } from "../src/db/supabase";
-import { syncUserToSupabaseAuth } from "../src/db/supabaseAuth";
+import sendEmail from "../utils/sendEmail.js";
+import { login } from "../controllers/authController.js";
+import authMiddleware from "../middleware/authMiddleware.js";
+import { signAuthToken } from "../utils/auth.js";
+import { rateLimit } from "../middleware/rateLimit.js";
+import { verifyGoogleIdToken } from "../utils/firebaseAdmin.js";
+import { UserRepository, WishlistRepository, DbUser } from "../src/db/repositories.js";
+import { supabase } from "../src/db/supabase.js";
+import { syncUserToSupabaseAuth } from "../src/db/supabaseAuth.js";
 
 const router = express.Router();
 

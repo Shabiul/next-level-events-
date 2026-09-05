@@ -1,4 +1,4 @@
-import { IntentResult, IntentType } from "../types/intent.types";
+import { IntentResult, IntentType } from "../types/intent.types.js";
 
 export class IntentClassifier {
   classify(message: string): IntentResult {

@@ -1,8 +1,8 @@
-import { mongoLoader } from "../loaders/mongo.loader";
-import { retrieverService } from "../retriever/retriever.service";
-import { textSplitterService } from "./text-splitter.service";
-import { vectorStoreService } from "../vectorstore/faiss.store";
-import { queryAnalyzerService } from "./query-analyzer.service";
+import { mongoLoader } from "../loaders/mongo.loader.js";
+import { retrieverService } from "../retriever/retriever.service.js";
+import { textSplitterService } from "./text-splitter.service.js";
+import { vectorStoreService } from "../vectorstore/faiss.store.js";
+import { queryAnalyzerService } from "./query-analyzer.service.js";
 
 const REINDEX_DEBOUNCE_MS = 10_000;
 

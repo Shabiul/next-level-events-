@@ -1,7 +1,7 @@
 // src/ai/services/intent-detector.service.ts
 
-import { INTENT_KEYWORDS } from "../constants/intents";
-import { IntentType, IntentResult } from "../types/intent.types";
+import { INTENT_KEYWORDS } from "../constants/intents.js";
+import { IntentType, IntentResult } from "../types/intent.types.js";
 
 
 

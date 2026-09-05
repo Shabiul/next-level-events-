@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
-import { ProductRepository } from "../src/db/repositories";
-import { aiReindexService } from "../src/ai/services/ai-reindex.service";
-import { requirePermission, attachUser, type AuthedRequest } from "../utils/auth";
+import { ProductRepository } from "../src/db/repositories.js";
+import { aiReindexService } from "../src/ai/services/ai-reindex.service.js";
+import { requirePermission, attachUser, type AuthedRequest } from "../utils/auth.js";
 
 const router = express.Router();
 

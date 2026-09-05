@@ -1,4 +1,4 @@
-import { eventExtractorService } from "../ai/services/event-extractor.service";
+import { eventExtractorService } from "../ai/services/event-extractor.service.js";
 
 async function main() {
   const event = await eventExtractorService.extract(

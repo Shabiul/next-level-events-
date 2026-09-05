@@ -1,6 +1,6 @@
-import { llm } from "../providers/llm.provider";
-import { eventPrompt } from "../prompts/event.prompt";
-import { categoryService } from "./category.service";
+import { llm } from "../providers/llm.provider.js";
+import { eventPrompt } from "../prompts/event.prompt.js";
+import { categoryService } from "./category.service.js";
 
 export interface ExtractedIntent {
   intent: "GREETING" | "FAQ" | "RECOMMENDATION";

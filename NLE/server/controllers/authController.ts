@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
-import { UserRepository, WishlistRepository } from "../src/db/repositories";
-import { signAuthToken } from "../utils/auth";
+import { UserRepository, WishlistRepository } from "../src/db/repositories.js";
+import { signAuthToken } from "../utils/auth.js";
 
 export const login = async (req: Request, res: Response) => {
   try {

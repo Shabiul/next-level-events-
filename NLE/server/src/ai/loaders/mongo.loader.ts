@@ -1,6 +1,6 @@
 import { Document } from "@langchain/core/documents";
-import { ProductRepository, CategoryRepository } from "../../db/repositories";
-import { supabase } from "../../db/supabase";
+import { ProductRepository, CategoryRepository } from "../../db/repositories.js";
+import { supabase } from "../../db/supabase.js";
 
 export class MongoLoader {
   async loadKnowledge(): Promise<Document[]> {

@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
-import { SiteContentRepository } from "../src/db/repositories";
-import { requirePermission } from "../utils/auth";
+import { SiteContentRepository } from "../src/db/repositories.js";
+import { requirePermission } from "../utils/auth.js";
 
 function requireContentScope(req: Request, res: Response, next: NextFunction) {
   const scope = req.params.key === "site-settings" ? "settings" : "terms";

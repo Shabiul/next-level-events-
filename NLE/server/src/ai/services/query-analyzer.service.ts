@@ -1,4 +1,4 @@
-import { CategoryRepository } from "../../db/repositories";
+import { CategoryRepository } from "../../db/repositories.js";
 
 export type QueryType = "SEMANTIC_SEARCH" | "CATEGORY_LIST";
 
