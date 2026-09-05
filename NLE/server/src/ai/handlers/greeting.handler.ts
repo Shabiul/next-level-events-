@@ -1,6 +1,6 @@
 export class GreetingHandler {
 
-    async handle(message: string) {
+    async handle(_message: string) {
 
         return {
 

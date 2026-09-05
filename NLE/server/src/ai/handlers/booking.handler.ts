@@ -1,6 +1,6 @@
 export class BookingHandler {
 
-    async handle(message: string, sessionId: string) {
+    async handle(_message: string, _sessionId: string) {
 
         return {
 

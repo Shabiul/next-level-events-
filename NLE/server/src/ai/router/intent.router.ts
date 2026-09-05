@@ -67,11 +67,6 @@ export class IntentRouter {
     console.log("[AI] Retriever Results:", response.products.length);
     return response;
   }
-
-  private toCategoryRegex(category: string): string {
-    const escapedCategory = category.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return `^${escapedCategory.replace(/\s+/g, "\\s+")}$`;
-  }
 }
 
 export const intentRouter = new IntentRouter();

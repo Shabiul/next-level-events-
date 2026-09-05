@@ -57,7 +57,7 @@ class QueryAnalyzerService {
     }
 
     const hasRecommendationIntent = this.isRecommendationQuery(normalizedQuery);
-    const hasBrowsingIntent = category
+    const _hasBrowsingIntent = category
       ? this.isBrowsingQuery(normalizedQuery, category.normalizedName)
       : false;
 

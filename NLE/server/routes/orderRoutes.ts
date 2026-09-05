@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { OrderRepository, ProductRepository } from "../src/db/repositories";
 import sendEmail from "../utils/sendEmail";
-import { requireAuth, requireAdmin, optionalUserId, type AuthedRequest } from "../utils/auth";
+import { requireAuth, requireAdmin, type AuthedRequest } from "../utils/auth";
 import { postOrderToN8n } from "../services/n8n.service";
 import { priceSelections } from "../utils/pricing";
 

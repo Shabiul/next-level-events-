@@ -1,4 +1,4 @@
-import { ChatRepository, DbChatMessage } from "../../db/repositories";
+import { ChatRepository } from "../../db/repositories";
 
 export interface IMessage {
   role: "user" | "assistant";
