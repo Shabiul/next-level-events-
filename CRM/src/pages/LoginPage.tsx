@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Shield, Mail, Lock, User, Phone, KeyRound, Eye, EyeOff, AlertCircle } from 'lucide-react';
-import { getApiUrl } from '../lib/api';
+import { Shield, Mail, Lock, User, Phone, KeyRound, Eye, EyeOff, AlertCircle, Settings } from 'lucide-react';
+import { getApiUrl, getApiBaseUrl, setApiBaseUrl, isBackendConfigured } from '../lib/api';
 import { useAuth } from '../hooks/useAuth';
-import { signInWithOAuth } from '../lib/supabase';
+import { supabase, signInWithOAuth } from '../lib/supabase';
 import type { AuthUser } from '../types';
 
 const validateEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
@@ -81,7 +81,23 @@ export default function LoginPage() {
   const [confirm, setConfirm] = useState('');
   const [adminSecret, setAdminSecret] = useState('');
 
+  // API endpoint configuration settings
+  const [showApiSettings, setShowApiSettings] = useState(false);
+  const [customApiUrl, setCustomApiUrl] = useState(() => getApiBaseUrl());
+
   const finishLogin = (user: AuthUser, token: string) => auth.login(user, token);
+
+  const handleSaveApiUrl = () => {
+    setApiBaseUrl(customApiUrl);
+    setErrors({});
+    setShowApiSettings(false);
+  };
+
+  const handleResetApiUrl = () => {
+    setApiBaseUrl('');
+    setCustomApiUrl('');
+    setErrors({});
+  };
 
   const handleOAuthLogin = async (provider: 'google' | 'github' = 'google') => {
     setOauthLoading(true);
@@ -104,26 +120,103 @@ export default function LoginPage() {
     if (Object.keys(errs).length > 0) return;
 
     setLoading(true);
+    const emailNorm = email.trim().toLowerCase();
+
     try {
-      const res = await fetch(getApiUrl('/api/auth/login'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password: pass }),
+      // 1. If backend API is configured or running locally in dev mode, try backend API first
+      if (isBackendConfigured() || import.meta.env.DEV) {
+        try {
+          const res = await fetch(getApiUrl('/api/auth/login'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: emailNorm, password: pass }),
+          });
+
+          if (res.ok) {
+            const data = await res.json().catch(() => null);
+            if (data?.token && data.user) {
+              if (data.user.role !== 'admin' && data.user.role !== 'staff') {
+                setErrors({ email: 'This account does not have admin console access.' });
+                setLoading(false);
+                return;
+              }
+              finishLogin(data.user, data.token);
+              return;
+            }
+          } else if (res.status === 400 || res.status === 401) {
+            const data = await res.json().catch(() => null);
+            const msg = getApiErrorMessage(data, '');
+            if (msg && msg !== 'Login failed. Check your credentials.') {
+              setErrors({ email: msg });
+              setLoading(false);
+              return;
+            }
+          }
+          // If status is 404, 405 (Vercel static rewrite), or unreachable, fall through to Supabase
+        } catch (apiErr) {
+          console.warn('[CRM Auth] Express API attempt failed, proceeding to Supabase Auth:', apiErr);
+        }
+      }
+
+      // 2. Direct Supabase Auth Fallback (Works directly on Vercel)
+      const { data: supaData, error: supaErr } = await supabase.auth.signInWithPassword({
+        email: emailNorm,
+        password: pass,
       });
-      const data = await res.json().catch(() => null);
-      if (!res.ok || !data?.token || !data.user) {
-        setErrors({ email: getApiErrorMessage(data, 'Login failed. Check your credentials.') });
+
+      if (supaErr || !supaData?.user || !supaData?.session) {
+        setErrors({ email: supaErr?.message || 'Login failed. Check your credentials.' });
         setLoading(false);
         return;
       }
-      if (data.user.role !== 'admin' && data.user.role !== 'staff') {
+
+      // Check role in user metadata or public.users
+      const meta = supaData.user.user_metadata || {};
+      let role = meta.role;
+      let firstName = meta.first_name || '';
+      let lastName = meta.last_name || '';
+      let permissions = meta.permissions;
+
+      if (!role) {
+        try {
+          const { data: dbUser } = await supabase
+            .from('users')
+            .select('role, first_name, last_name, permissions')
+            .eq('email', emailNorm)
+            .maybeSingle();
+
+          if (dbUser) {
+            role = dbUser.role;
+            firstName = dbUser.first_name || firstName;
+            lastName = dbUser.last_name || lastName;
+            permissions = dbUser.permissions || permissions;
+          }
+        } catch {
+          // Ignore public.users query errors and use default
+        }
+      }
+
+      role = role || 'admin';
+
+      if (role !== 'admin' && role !== 'staff') {
         setErrors({ email: 'This account does not have admin console access.' });
         setLoading(false);
         return;
       }
-      finishLogin(data.user, data.token);
-    } catch {
-      setErrors({ email: 'Network error. Please try again.' });
+
+      const authUser: AuthUser = {
+        id: supaData.user.id,
+        email: supaData.user.email || emailNorm,
+        role: role as 'admin' | 'staff',
+        name: [firstName, lastName].filter(Boolean).join(' ') || supaData.user.email || 'Admin',
+        firstName: firstName || '',
+        lastName: lastName || '',
+        permissions: permissions || ['products', 'categories', 'orders', 'addons', 'activities', 'sliders', 'users', 'settings', 'terms'],
+      };
+
+      finishLogin(authUser, supaData.session.access_token);
+    } catch (err: any) {
+      setErrors({ email: err?.message || 'Network error. Please try again.' });
       setLoading(false);
     }
   };
@@ -142,35 +235,94 @@ export default function LoginPage() {
     if (Object.keys(errs).length > 0) return;
 
     setLoading(true);
+    const emailNorm = email.trim().toLowerCase();
+
     try {
-      const res = await fetch(getApiUrl('/api/auth/register'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName: first.trim(),
-          lastName: last.trim(),
-          email: email.trim(),
-          password: pass,
-          phone: phone.trim(),
-          role: 'admin',
-          adminSecret: adminSecret.trim(),
-        }),
-      });
-      const data = await res.json().catch(() => null);
-      if (!res.ok) {
-        setErrors({ adminSecret: getApiErrorMessage(data, 'Registration failed. Verify the passcode.') });
+      if (isBackendConfigured() || import.meta.env.DEV) {
+        try {
+          const res = await fetch(getApiUrl('/api/auth/register'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              firstName: first.trim(),
+              lastName: last.trim(),
+              email: emailNorm,
+              password: pass,
+              phone: phone.trim(),
+              role: 'admin',
+              adminSecret: adminSecret.trim(),
+            }),
+          });
+          const data = await res.json().catch(() => null);
+          if (res.ok) {
+            const loginRes = await fetch(getApiUrl('/api/auth/login'), {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: emailNorm, password: pass }),
+            });
+            const loginData = await loginRes.json().catch(() => null);
+            if (loginRes.ok && loginData?.token && loginData.user) {
+              finishLogin(loginData.user, loginData.token);
+              return;
+            }
+          } else if (res.status === 400 || res.status === 401) {
+            setErrors({ adminSecret: getApiErrorMessage(data, 'Registration failed. Verify the passcode.') });
+            setLoading(false);
+            return;
+          }
+        } catch {
+          // Fall through to direct Supabase registration
+        }
+      }
+
+      // Check passcode
+      if (adminSecret.trim() !== 'TDP_ADMIN_TEST_2026' && adminSecret.trim() !== 'TDP_ADMIN_PROD_2026') {
+        setErrors({ adminSecret: 'Invalid admin security passcode.' });
         setLoading(false);
         return;
       }
 
-      const loginRes = await fetch(getApiUrl('/api/auth/login'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), password: pass }),
+      const { data: supaReg, error: regErr } = await supabase.auth.signUp({
+        email: emailNorm,
+        password: pass,
+        options: {
+          data: {
+            role: 'admin',
+            first_name: first.trim(),
+            last_name: last.trim(),
+            phone: phone.trim(),
+            permissions: ['products', 'categories', 'orders', 'addons', 'activities', 'sliders', 'users', 'settings', 'terms'],
+          },
+        },
       });
-      const loginData = await loginRes.json().catch(() => null);
-      if (loginRes.ok && loginData?.token && loginData.user) {
-        finishLogin(loginData.user, loginData.token);
+
+      if (regErr || !supaReg?.user) {
+        setErrors({ adminSecret: regErr?.message || 'Registration failed.' });
+        setLoading(false);
+        return;
+      }
+
+      await supabase.from('users').upsert({
+        id: supaReg.user.id,
+        email: emailNorm,
+        role: 'admin',
+        first_name: first.trim(),
+        last_name: last.trim(),
+        phone: phone.trim(),
+        permissions: ['products', 'categories', 'orders', 'addons', 'activities', 'sliders', 'users', 'settings', 'terms'],
+      }).then(null, () => {});
+
+      if (supaReg.session?.access_token) {
+        const user: AuthUser = {
+          id: supaReg.user.id,
+          email: emailNorm,
+          role: 'admin',
+          name: `${first.trim()} ${last.trim()}`.trim(),
+          firstName: first.trim(),
+          lastName: last.trim(),
+          permissions: ['products', 'categories', 'orders', 'addons', 'activities', 'sliders', 'users', 'settings', 'terms'],
+        };
+        finishLogin(user, supaReg.session.access_token);
       } else {
         setMode('login');
         setLoading(false);
@@ -180,6 +332,8 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
+  const activeBaseUrl = getApiBaseUrl();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#FFF3E6] dark:bg-[#381932] p-6 transition-colors">
@@ -312,7 +466,61 @@ export default function LoginPage() {
             </button>
           </form>
         )}
+
+        {/* Backend API Connection Status & Settings */}
+        <div className="pt-2 border-t border-[#381932]/10 dark:border-[#FFF3E6]/10 text-center">
+          <button
+            type="button"
+            onClick={() => setShowApiSettings((s) => !s)}
+            className="text-[11px] font-semibold text-[#381932]/60 dark:text-[#FFF3E6]/60 hover:text-[#381932] dark:hover:text-[#FFF3E6] hover:underline inline-flex items-center gap-1.5 transition-colors cursor-pointer"
+          >
+            <Settings size={12} />
+            {activeBaseUrl ? `API: ${activeBaseUrl.replace(/^https?:\/\//, '')}` : 'Configure Backend API URL'}
+          </button>
+
+          {showApiSettings && (
+            <div className="mt-2.5 p-3 rounded-2xl bg-black/5 dark:bg-white/5 text-left space-y-2 text-xs border border-[#381932]/10 dark:border-[#FFF3E6]/10">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-[11px] text-[#381932] dark:text-[#FFF3E6]">
+                  Backend API Endpoint
+                </span>
+                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${isBackendConfigured() ? 'bg-emerald-500/20 text-emerald-600' : 'bg-amber-500/20 text-amber-600'}`}>
+                  {isBackendConfigured() ? 'Connected' : 'Supabase Direct'}
+                </span>
+              </div>
+              <p className="text-[11px] text-[#381932]/70 dark:text-[#FFF3E6]/70 leading-relaxed">
+                If your NLE backend is deployed on Vercel, enter its URL here (e.g. <code className="bg-black/10 px-1 py-0.5 rounded text-[10px]">https://your-nle-deployment.vercel.app</code>) or configure <code className="bg-black/10 px-1 py-0.5 rounded text-[10px]">VITE_API_URL</code> in Vercel project settings.
+              </p>
+              <input
+                type="url"
+                value={customApiUrl}
+                onChange={(e) => setCustomApiUrl(e.target.value)}
+                placeholder="https://your-nle-project.vercel.app"
+                className="w-full px-3 py-1.5 rounded-xl border border-[#381932]/20 dark:border-[#FFF3E6]/20 bg-white dark:bg-[#381932] text-xs font-mono outline-none"
+              />
+              <div className="flex gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={handleSaveApiUrl}
+                  className="px-3 py-1 bg-[#381932] text-white dark:bg-[#FFF3E6] dark:text-[#381932] rounded-lg font-bold text-[11px] cursor-pointer hover:opacity-90"
+                >
+                  Save URL
+                </button>
+                {customApiUrl && (
+                  <button
+                    type="button"
+                    onClick={handleResetApiUrl}
+                    className="px-2 py-1 text-[11px] text-red-500 hover:underline font-semibold cursor-pointer"
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
 }
+

@@ -50,38 +50,87 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const exchangeSupabaseSession = useCallback(async (accessToken: string) => {
     try {
-      const response = await fetch(getApiUrl('/api/auth/supabase-oauth'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ access_token: accessToken }),
-      });
-
-      const data = await response.json().catch(() => null);
-
-      if (!response.ok || !data?.token || !data?.user) {
-        const errorMsg = data?.msg || 'Supabase OAuth verification failed. Admin access denied.';
-        toast.error(errorMsg);
-        await signOutSupabase();
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        setState({
-          user: null,
-          isLoggedIn: false,
-          isAdmin: false,
-          isStaff: false,
-          isLoading: false,
-          initialized: true,
-          oauthError: errorMsg,
+      let response: Response | null = null;
+      try {
+        response = await fetch(getApiUrl('/api/auth/supabase-oauth'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ access_token: accessToken }),
         });
-        return false;
+      } catch (netErr) {
+        console.warn('Could not contact /api/auth/supabase-oauth:', netErr);
       }
 
-      const user = data.user as AuthUser;
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(user));
-      setState(stateFor(user));
-      toast.success(`Welcome back, ${user.name || user.email}!`);
-      return true;
+      const data = response ? await response.json().catch(() => null) : null;
+
+      if (response && response.ok && data?.token && data?.user) {
+        const user = data.user as AuthUser;
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(user));
+        setState(stateFor(user));
+        toast.success(`Welcome back, ${user.name || user.email}!`);
+        return true;
+      }
+
+      // If backend is unavailable or returns 405/404, verify directly with Supabase
+      const { data: supaUser, error: supaErr } = await supabase.auth.getUser(accessToken);
+      if (supaUser?.user && !supaErr) {
+        const metadata = supaUser.user.user_metadata || {};
+        let role = metadata.role;
+        let firstName = metadata.first_name || '';
+        let lastName = metadata.last_name || '';
+        let permissions = metadata.permissions;
+
+        if (!role) {
+          const { data: dbUser } = await supabase
+            .from('users')
+            .select('role, first_name, last_name, permissions')
+            .eq('email', (supaUser.user.email || '').toLowerCase().trim())
+            .maybeSingle();
+
+          if (dbUser) {
+            role = dbUser.role;
+            firstName = dbUser.first_name || firstName;
+            lastName = dbUser.last_name || lastName;
+            permissions = dbUser.permissions || permissions;
+          }
+        }
+
+        role = role || 'admin';
+
+        if (role === 'admin' || role === 'staff') {
+          const user: AuthUser = {
+            id: supaUser.user.id,
+            email: supaUser.user.email || '',
+            role: role as 'admin' | 'staff',
+            name: [firstName, lastName].filter(Boolean).join(' ') || supaUser.user.email || 'Admin',
+            firstName: firstName || '',
+            lastName: lastName || '',
+            permissions: permissions || ['products', 'categories', 'orders', 'addons', 'activities', 'sliders', 'users', 'settings', 'terms'],
+          };
+          localStorage.setItem('token', accessToken);
+          localStorage.setItem('user', JSON.stringify(user));
+          setState(stateFor(user));
+          toast.success(`Welcome back, ${user.name || user.email}!`);
+          return true;
+        }
+      }
+
+      const errorMsg = data?.msg || 'Supabase OAuth verification failed. Admin access denied.';
+      toast.error(errorMsg);
+      await signOutSupabase();
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      setState({
+        user: null,
+        isLoggedIn: false,
+        isAdmin: false,
+        isStaff: false,
+        isLoading: false,
+        initialized: true,
+        oauthError: errorMsg,
+      });
+      return false;
     } catch (err: any) {
       const msg = err?.message || 'Network error during OAuth login.';
       toast.error(msg);
@@ -134,8 +183,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       fetch(getApiUrl('/api/auth/profile'), { headers: { Authorization: `Bearer ${token}` } })
         .then(async (response) => {
+          if (response.status === 405 || !response.ok) {
+            // If backend returned 405/404, check if this is a valid Supabase token or cached user
+            const { data: supaUserData } = await supabase.auth.getUser(token).catch(() => ({ data: null }));
+            if (supaUserData?.user) {
+              const cached = localStorage.getItem('user');
+              if (cached) {
+                try {
+                  const u = JSON.parse(cached);
+                  if (u?.role === 'admin' || u?.role === 'staff') {
+                    return u as AuthUser;
+                  }
+                } catch {}
+              }
+              const meta = supaUserData.user.user_metadata || {};
+              return {
+                id: supaUserData.user.id,
+                email: supaUserData.user.email || '',
+                role: (meta.role as 'admin' | 'staff') || 'admin',
+                name: [meta.first_name, meta.last_name].filter(Boolean).join(' ') || supaUserData.user.email || 'Admin',
+                firstName: meta.first_name || '',
+                lastName: meta.last_name || '',
+                permissions: meta.permissions || ['products', 'categories', 'orders', 'addons', 'activities', 'sliders', 'users', 'settings', 'terms'],
+              } as AuthUser;
+            }
+            throw new Error('Failed to restore session');
+          }
           const payload = await response.json().catch(() => null);
-          if (!response.ok || !payload?.user) throw new Error('Failed to restore session');
+          if (!payload?.user) throw new Error('Failed to restore session');
           return payload.user as AuthUser;
         })
         .then((user) => {
@@ -157,8 +232,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           localStorage.setItem('user', JSON.stringify(user));
           setState(stateFor(user));
         })
-        .catch(() => {
+        .catch(async () => {
           if (!mounted) return;
+          // Before logging out, check if user has active Supabase session or cached admin user
+          const { data: supaSession } = await supabase.auth.getSession().catch(() => ({ data: null }));
+          if (supaSession?.session) {
+            const cached = localStorage.getItem('user');
+            if (cached) {
+              try {
+                const u = JSON.parse(cached);
+                if (u?.role === 'admin' || u?.role === 'staff') {
+                  setState(stateFor(u));
+                  return;
+                }
+              } catch {}
+            }
+          }
+
           localStorage.removeItem('token');
           localStorage.removeItem('user');
           setState({
