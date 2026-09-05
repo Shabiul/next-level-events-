@@ -52,7 +52,7 @@ const escapeHtml = (value: string) =>
     .replace(/\"/g, "&quot;")
     .replace(/'/g, "&#39;");
 
-const buildProductSharePage = (req: Request, product: ProductShareData | null) => {
+const buildProductSharePage = (_req: Request, product: ProductShareData | null) => {
   const baseUrl = process.env.FRONTEND_URL || process.env.PUBLIC_URL || "https://www.thedecorparty.com";
   const normalizedBaseUrl = baseUrl.replace(/\/$/, "");
   const productId = product?._id ? String(product._id) : "";
@@ -109,7 +109,7 @@ const buildProductSharePage = (req: Request, product: ProductShareData | null) =
 // attempt to read or serve frontend files (Vite/React) from the backend.
 // The dedicated share route below generates full HTML directly for crawlers.
 
-app.use((req, res, next) => {
+app.use((req, _res, next) => {
   console.log("➡️", req.method, req.originalUrl);
   next();
 });

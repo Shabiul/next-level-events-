@@ -1,12 +1,12 @@
 import express, { Request, Response } from "express";
-import { UserRepository, ProductRepository, CategoryRepository, SliderRepository } from "../src/db/repositories";
-import { requireAuth, requireAdmin, requirePermission, type AuthedRequest } from "../utils/auth";
+import { UserRepository } from "../src/db/repositories";
+import { requireAdmin, requirePermission } from "../utils/auth";
 import { supabase } from "../src/db/supabase";
 import { updateSupabaseAuthMetadata, deleteUserFromSupabaseAuth } from "../src/db/supabaseAuth";
 
 const router = express.Router();
 
-router.get("/stats", requirePermission("users"), async (req: Request, res: Response) => {
+router.get("/stats", requirePermission("users"), async (_req: Request, res: Response) => {
   try {
 
     const [
