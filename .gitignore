@@ -51,3 +51,4 @@ _drive_all/
 mongo_backup/
 __pycache__/
 *.pyc
+.vercel

@@ -62,7 +62,7 @@ export default function LoginPage() {
         throw new Error(data.message || data.msg || 'Login failed. Please check your credentials.');
       }
 
-      auth.login(data.user, data.token);
+      (auth as any).login(data.user, data.token);
       trackLogin('email', data.user.id || data.user._id);
       navigate(data.user.role === 'admin' ? '/admin' : '/profile');
     } catch (err: any) {
@@ -89,7 +89,7 @@ export default function LoginPage() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Google sign in failed');
 
-      auth.login(data.user, data.token);
+      (auth as any).login(data.user, data.token);
       trackLogin('google', data.user.id || data.user._id);
       navigate(data.user.role === 'admin' ? '/admin' : '/profile');
     } catch (err: any) {

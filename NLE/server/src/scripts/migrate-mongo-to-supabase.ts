@@ -19,7 +19,7 @@ import Slider from "../../models/Slider";
 import SiteContent from "../../models/SiteContent";
 import Enquiry from "../../models/Enquiry";
 import OtpToken from "../../models/OtpToken";
-import Chat from "../../src/models/chat.model";
+import Chat from "../models/chat.model";
 
 const isDryRun = process.argv.includes("--dry-run");
 const forceBackup = process.argv.includes("--from-backup");

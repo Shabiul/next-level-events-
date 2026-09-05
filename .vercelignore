@@ -1,0 +1,17 @@
+node_modules/
+**/node_modules/**
+CRM/
+CRM/**
+mongo_backup/
+mongo_backup/**
+_tools/
+_tools/**
+.git/
+.claude/
+.qodo/
+*.log
+scratch/
+scratch/**
+NLE/node_modules/
+NLE/dist/
+NLE/dist-server/

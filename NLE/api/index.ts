@@ -1,5 +1,5 @@
-// Vercel serverless entry point. The Express app itself is a valid
-// (req, res) => void handler; server/server.ts already guards app.listen() behind
-// `!process.env.VERCEL`, so importing it here just wires up routes/middleware
-// without starting a real server.
-export { default } from "../server/server";
+import app from "../server/server";
+
+export default function handler(req: any, res: any) {
+  return app(req, res);
+}

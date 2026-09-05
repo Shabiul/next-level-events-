@@ -3,31 +3,26 @@
     "target": "ES2020",
     "module": "CommonJS",
     "moduleResolution": "node",
-    "rootDir": ".",
-    "outDir": "dist-server",
+    "jsx": "react-jsx",
     "strict": false,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "jsx": "react-jsx",
-    "forceConsistentCasingInFileNames": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noEmit": false,
-    "types": ["node"],
-    "lib": ["ES2020"]
+    "noEmit": false
   },
   "include": [
-    "server/**/*.ts",
-    "server/**/*.js",
-    "server/**/*.d.ts",
-    "api/**/*.ts"
+    "NLE/server/**/*.ts",
+    "NLE/api/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    "dist",
-    "dist-server",
-    "src",
-    "public"
+    "CRM",
+    "NLE/src",
+    "NLE/dist",
+    "NLE/dist-server",
+    "_tools",
+    "mongo_backup"
   ]
 }
