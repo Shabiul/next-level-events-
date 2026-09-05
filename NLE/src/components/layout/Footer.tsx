@@ -208,16 +208,25 @@ export const Footer: React.FC<FooterProps> = ({
                     { name: 'Anniversary Cabana' },
                     { name: 'Pre & Post Wedding' },
                   ]
-              ).map((cat) => (
-                <li key={cat.name}>
-                  <button
-                    className={linkClass}
-                    onClick={() => onSelectCategory?.(cat.name)}
-                  >
-                    <span>{cat.name}</span>
-                  </button>
-                </li>
-              ))}
+              ).map((cat) => {
+                const targetPath = `/category/${encodeURIComponent(cat.name)}`;
+                return (
+                  <li key={cat.name}>
+                    <Link
+                      to={targetPath}
+                      className={linkClass}
+                      onClick={(e) => {
+                        if (onSelectCategory) {
+                          e.preventDefault();
+                          onSelectCategory(cat.name);
+                        }
+                      }}
+                    >
+                      <span>{cat.name}</span>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 

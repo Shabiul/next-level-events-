@@ -41,7 +41,7 @@ export interface SeoHeadProps {
 const DEFAULT_TITLE = 'The Decor Party | Luxury Surprise & Event Decoration Bangalore';
 const DEFAULT_DESCRIPTION = "Bangalore's #1 surprise & event decoration platform. Balloon setups, romantic candlelight dinners, room decors, milestone birthdays & proposal setups across Bengaluru with 3-hour same-day slots.";
 const DEFAULT_SITE_NAME = 'The Decor Party';
-const BASE_URL = 'https://www.thedecorparty.com';
+const BASE_URL = 'https://thedecorparty.com';
 const DEFAULT_IMAGE = `${BASE_URL}/final_logo.jpg`;
 
 /**
@@ -160,8 +160,8 @@ export const SeoHead: React.FC<SeoHeadProps> = ({
     // 6. Set Geo Tags for Bengaluru local search optimization
     setMetaTag('name', 'geo.region', 'IN-KA');
     setMetaTag('name', 'geo.placename', 'Bengaluru');
-    setMetaTag('name', 'geo.position', '12.9716;77.5946');
-    setMetaTag('name', 'ICBM', '12.9716, 77.5946');
+    setMetaTag('name', 'geo.position', '12.91439;77.57399');
+    setMetaTag('name', 'ICBM', '12.91439, 77.57399');
 
     // 7. Canonical link
     setLinkTag('canonical', canonicalUrl);

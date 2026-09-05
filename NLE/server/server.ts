@@ -53,7 +53,7 @@ const escapeHtml = (value: string) =>
     .replace(/'/g, "&#39;");
 
 const buildProductSharePage = (_req: Request, product: ProductShareData | null) => {
-  const baseUrl = process.env.FRONTEND_URL || process.env.PUBLIC_URL || "https://www.thedecorparty.com";
+  const baseUrl = process.env.FRONTEND_URL || process.env.PUBLIC_URL || "https://thedecorparty.com";
   const normalizedBaseUrl = baseUrl.replace(/\/$/, "");
   const productId = product?._id ? String(product._id) : "";
   const productUrl = productId ? `${normalizedBaseUrl}/product/${productId}` : `${normalizedBaseUrl}/products`;
@@ -220,7 +220,7 @@ app.use("/api/auth/otp", otpRoutes);
 app.use("/api/uploads", uploadRoutes);
 
 app.get("/product/:productId", (req: Request, res: Response) => {
-  const frontend = (process.env.FRONTEND_URL || "https://www.thedecorparty.com").replace(/\/$/, "");
+  const frontend = (process.env.FRONTEND_URL || "https://thedecorparty.com").replace(/\/$/, "");
   const url = `${frontend}/product/${encodeURIComponent(String(req.params.productId))}`;
   console.log("[SHARE] Redirecting user to frontend product page", url);
   return res.redirect(302, url);

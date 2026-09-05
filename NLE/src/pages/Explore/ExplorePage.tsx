@@ -243,12 +243,13 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
     <>
       <SeoHead
         title="Explore Celebration Setups & Packages — The Decor Party Bangalore"
-        description="Discover signature balloon arches, terrace cabanas, candlelight dinners, and bespoke birthday themes across Bengaluru."
+        description="Discover signature balloon arches, terrace cabanas, candlelight dinners, and bespoke birthday themes across Bengaluru with express 3-hour setup."
         keywords={[
           'explore event setups bangalore',
           'balloon decoration catalog bengaluru',
           'party setups bangalore',
         ]}
+        url="https://thedecorparty.com/explore"
         breadcrumbs={[
           { name: 'Home', item: '/' },
           { name: 'Explore', item: '/explore' },

@@ -132,6 +132,22 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
           'surprise party packages bangalore',
           'balloon arch packages bangalore',
         ]}
+        url="https://thedecorparty.com/packages"
+        schema={[
+          {
+            '@type': 'ItemList',
+            name: 'Curated Celebration Packages Bangalore',
+            description: 'Thoughtfully curated celebration and decoration packages by The Decor Party in Bangalore.',
+            numberOfItems: EVENT_PACKAGES.length,
+            itemListElement: EVENT_PACKAGES.map((pkg, idx) => ({
+              '@type': 'ListItem',
+              position: idx + 1,
+              name: pkg.name,
+              description: pkg.tagline,
+              url: 'https://thedecorparty.com/packages',
+            })),
+          },
+        ]}
         breadcrumbs={[
           { name: 'Home', item: '/' },
           { name: 'Packages', item: '/packages' },

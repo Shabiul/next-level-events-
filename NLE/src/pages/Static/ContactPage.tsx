@@ -166,8 +166,36 @@ export const ContactPage: React.FC = () => {
   return (
     <>
       <SeoHead
-        title="Contact Us — The Decor Party | Bespoke Celebration & Event Styling"
-        description="Talk to The Decor Party's master stylists in Bengaluru. Instant WhatsApp quotes, studio location, and enquiries for weddings, birthdays, proposals and bespoke celebrations."
+        title="Contact Us — The Decor Party Bangalore | Book Decorators & Studio Location"
+        description="Talk to The Decor Party's master stylists in Bengaluru. Instant WhatsApp quotes, studio location near Banashankari, and bookings for birthdays, proposals, and surprise events."
+        keywords={[
+          'contact decor party bangalore',
+          'event decorators bangalore phone number',
+          'balloon decoration bangalore contact',
+          'the decor party studio bangalore',
+        ]}
+        url="https://thedecorparty.com/contact"
+        schema={[
+          {
+            '@type': 'ContactPage',
+            name: 'Contact The Decor Party Bangalore',
+            url: 'https://thedecorparty.com/contact',
+            mainEntity: {
+              '@type': 'LocalBusiness',
+              name: 'The Decor Party',
+              telephone: '+91-70220-58460',
+              email: 'info@thedecorparty.com',
+              address: {
+                '@type': 'PostalAddress',
+                streetAddress: 'Kanakapura Main Rd, near Banashankari Metro Station, Shakambari Nagar, 1st Phase, J. P. Nagar',
+                addressLocality: 'Bengaluru',
+                addressRegion: 'Karnataka',
+                postalCode: '560070',
+                addressCountry: 'IN',
+              },
+            },
+          },
+        ]}
         breadcrumbs={[
           { name: 'Home', item: '/' },
           { name: 'Contact Us', item: '/contact' },

@@ -403,7 +403,7 @@ export default function OrderDetailsPage() {
               <div>
                 <h1 className="text-2xl font-black text-[#381932] tracking-tight">The Decor Party</h1>
                 <p className="text-xs font-semibold text-[#381932]">Premium Event &amp; Party Decoration Services</p>
-                <p className="text-[11px] text-[#381932] mt-0.5">Website: www.thedecorparty.com | Phone: +91 7975581697</p>
+                <p className="text-[11px] text-[#381932] mt-0.5">Website: thedecorparty.com | Phone: +91 70220 58460</p>
               </div>
               <div className="text-right">
                 <h2 className="text-xl font-black text-[#381932] uppercase">TAX INVOICE</h2>

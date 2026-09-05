@@ -514,7 +514,7 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
         order_id: order.id,
         name: 'The Decor Party',
         description: `Booking: ${product.name}`,
-        image: 'https://www.thedecorparty.com/final_logo.jpg',
+        image: 'https://thedecorparty.com/final_logo.jpg',
         prefill: {
           name: user?.name || nameTrimmed,
           email: user?.email || emailTrimmed || '',

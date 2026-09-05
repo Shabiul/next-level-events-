@@ -46,7 +46,7 @@ export const AIPlannerPage: React.FC = () => {
           'balloon decoration planner',
           'bangalore surprise planning ai',
         ]}
-        url="https://www.thedecorparty.com/ai-planner"
+        url="https://thedecorparty.com/ai-planner"
         breadcrumbs={[
           { name: 'Home', item: '/' },
           { name: 'AI Event Planner', item: '/ai-planner' },

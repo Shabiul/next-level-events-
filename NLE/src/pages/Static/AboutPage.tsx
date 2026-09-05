@@ -70,8 +70,34 @@ export const AboutPage: React.FC = () => {
   return (
     <>
       <SeoHead
-        title="About Us — The Decor Party | Bespoke Celebration & Event Styling"
-        description="Providing Bengaluru's finest bespoke styling and surprise experiences. Discover our story, standards, and founder commitment at The Decor Party."
+        title="About Us — The Decor Party Bangalore | Luxury Celebration Styling & Story"
+        description="Providing Bengaluru's finest bespoke styling and surprise experiences. Discover our story, craft standards, and 100% picture-match guarantee at The Decor Party."
+        keywords={[
+          'about the decor party bangalore',
+          'event decorators bangalore story',
+          'balloon styling company bengaluru',
+          'luxury event styling bangalore',
+        ]}
+        image="https://thedecorparty.com/about-purple-decor.jpg"
+        url="https://thedecorparty.com/about"
+        schema={[
+          {
+            '@type': 'AboutPage',
+            name: 'About The Decor Party Bangalore',
+            url: 'https://thedecorparty.com/about',
+            mainEntity: {
+              '@type': 'Organization',
+              name: 'The Decor Party',
+              url: 'https://thedecorparty.com',
+              logo: 'https://thedecorparty.com/final_logo.jpg',
+              description: 'Bangalore premier celebration styling, balloon art, and surprise planning agency.',
+              foundingLocation: {
+                '@type': 'City',
+                name: 'Bengaluru',
+              },
+            },
+          },
+        ]}
         breadcrumbs={[
           { name: 'Home', item: '/' },
           { name: 'About Us', item: '/about' },

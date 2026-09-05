@@ -3,11 +3,11 @@
 ## 1. Brand Identity & Service Mission
 The Decor Party (operated by The Decor Party Event Services Private Limited) is Bengaluru's premier celebration styling, balloon art, and surprise planning agency. Founded to bridge the gap between amateur balloon decorators and high-end luxury event productions, The Decor Party provides transparent tiered pricing, verified on-site stylists, 100% picture-match accuracy, and same-day express setup slots across Bangalore.
 
-- **Headquarters**: Bengaluru, Karnataka, India (560038)
-- **Primary Geolocation**: 12.9716° N, 77.5946° E
-- **Official Portal**: https://www.thedecorparty.com
-- **Customer Support & WhatsApp**: +91 95918 36000
-- **Support Email**: support@thedecorparty.com
+- **Studio Address**: Kanakapura Main Rd, near Banashankari Metro Station, Shakambari Nagar, 1st Phase, J. P. Nagar, Bengaluru, Karnataka 560070
+- **Primary Geolocation**: 12.91439° N, 77.57399° E
+- **Official Portal**: https://thedecorparty.com
+- **Customer Support & WhatsApp**: +91 70220 58460 / +91 79755 81697
+- **Support Email**: info@thedecorparty.com
 
 ---
 
@@ -111,7 +111,7 @@ Customers can add any of the following professional entertainment artists and li
 
 ## 6. Safety, Sustainability & Quality Standards
 - **Balloon Quality**: We use 100% natural biodegradable latex balloons derived from rubber trees that decompose in nature over 6-12 months.
-- **No Damaging Adhesives**: We use surface-safe painter's tape, removable removable hooks, and weighted frames to ensure walls, wallpapers, and venue ceilings remain completely undamaged.
+- **No Damaging Adhesives**: We use surface-safe painter's tape, removable hooks, and weighted frames to ensure walls, wallpapers, and venue ceilings remain completely undamaged.
 - **Clean Air / Electric Pumps**: We never use hazardous or combustible gases. All balloon inflation is handled with electric filtered air pumps. Helium is strictly supplied via certified non-flammable inert helium cylinders only upon explicit request.
 - **Clean-up Guarantee**: Our team removes all balloon clips, balloon tie strips, and protective plastic before leaving your premises.
 
@@ -142,4 +142,4 @@ A: Yes. We regularly decorate hotel rooms, private dining cabanas, cafés, and r
 A: Yes, 100%. Every package can be customized to match your desired color palette, character theme, personalized names, and venue dimensions. You can share Pinterest or Instagram inspiration photos directly with our styling team.
 
 **Q: How do I book a celebration setup with The Decor Party?**
-A: You can book directly on our website https://www.thedecorparty.com, choose your package, add custom enhancements, and checkout online. Alternatively, you can use our AI Event Planner or message our WhatsApp concierge at +91 95918 36000.
+A: You can book directly on our website https://thedecorparty.com, choose your package, add custom enhancements, and checkout online. Alternatively, you can use our AI Event Planner or message our WhatsApp concierge at +91 70220 58460.

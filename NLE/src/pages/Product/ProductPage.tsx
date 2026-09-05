@@ -94,7 +94,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({ onBookProduct }) => {
         title={`${product.name} — Luxury Event Decoration Bangalore`}
         description={product.description ? `${product.description.slice(0, 150)}... Book with 3-hour same day setup in Bangalore.` : undefined}
         image={product.image}
-        url={`https://www.thedecorparty.com/product/${product._id}`}
+        url={`https://thedecorparty.com/product/${product._id}`}
         type="product"
         breadcrumbs={[
           { name: 'Home', item: '/' },

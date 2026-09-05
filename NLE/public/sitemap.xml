@@ -6,140 +6,182 @@
 
   <!-- Core Pages -->
   <url>
-    <loc>https://www.thedecorparty.com/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.thedecorparty.com/packages</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/packages</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://thedecorparty.com/explore</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.thedecorparty.com/explore</loc>
-    <lastmod>2026-09-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.thedecorparty.com/ai-planner</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/ai-planner</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <!-- Occasion & Service Categories -->
   <url>
-    <loc>https://www.thedecorparty.com/services/birthday</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/services/birthday</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.thedecorparty.com/services/anniversary</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/services/1st-birthday</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://thedecorparty.com/services/anniversary</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.thedecorparty.com/services/proposal</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/services/proposal</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.thedecorparty.com/services/baby-shower</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/services/baby-shower</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://www.thedecorparty.com/services/welcome-baby</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/services/welcome-baby</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://www.thedecorparty.com/services/naming-ceremony</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/services/naming-ceremony</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.thedecorparty.com/services/pre-wedding</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/services/pre-wedding</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.thedecorparty.com/services/cabana</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/services/cabana</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://www.thedecorparty.com/services/candlelight-dinner</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/services/candlelight-dinner</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://www.thedecorparty.com/services/corporate</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/services/car-boot-surprises</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.thedecorparty.com/services/kids-activities</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/services/simple-wall-decors</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thedecorparty.com/services/room-decorations</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thedecorparty.com/services/corporate</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thedecorparty.com/services/opening-decors</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thedecorparty.com/services/graduation</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://thedecorparty.com/services/kids-activities</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://www.thedecorparty.com/activities</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/services/live-eateries</loc>
+    <lastmod>2026-09-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thedecorparty.com/activities</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <!-- Editorial & Gallery -->
   <url>
-    <loc>https://www.thedecorparty.com/gallery</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/gallery</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://www.thedecorparty.com/about</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/about</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.thedecorparty.com/contact</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/contact</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
 
   <!-- Legal & Trust Policies -->
   <url>
-    <loc>https://www.thedecorparty.com/terms</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/terms</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://www.thedecorparty.com/privacy</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/privacy</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://www.thedecorparty.com/refund</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://thedecorparty.com/refund</loc>
+    <lastmod>2026-09-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>

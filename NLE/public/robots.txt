@@ -1,4 +1,4 @@
-# robots.txt for The Decor Party (https://www.thedecorparty.com)
+# robots.txt for The Decor Party (https://thedecorparty.com)
 
 User-agent: *
 Allow: /
@@ -86,7 +86,7 @@ Disallow: /orders/
 Disallow: /api/
 
 # Sitemap & LLM Knowledge Specification
-Sitemap: https://www.thedecorparty.com/sitemap.xml
+Sitemap: https://thedecorparty.com/sitemap.xml
 # LLMs specification file for AI engines:
-# https://www.thedecorparty.com/llms.txt
-# https://www.thedecorparty.com/llms-full.txt
+# https://thedecorparty.com/llms.txt
+# https://thedecorparty.com/llms-full.txt

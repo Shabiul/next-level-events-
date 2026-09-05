@@ -304,8 +304,24 @@ export const GalleryPage: React.FC = () => {
   return (
     <>
       <SeoHead
-        title="Celebration Gallery — The Decor Party | Real Events & Package Inspirations"
-        description="A curated board of real celebrations, balloon decor installations, milestone birthdays, and romantic setups styled across Bengaluru."
+        title="Celebration Gallery — The Decor Party Bangalore | Real Decor Photos & Setups"
+        description="A curated board of real celebrations, balloon decor installations, milestone birthdays, and romantic setups styled across Bengaluru with 100% picture-match guarantee."
+        keywords={[
+          'party decoration photos bangalore',
+          'balloon decoration gallery bengaluru',
+          'event decor portfolio bangalore',
+          'birthday decoration real photos',
+        ]}
+        image="https://thedecorparty.com/about-purple-decor.jpg"
+        url="https://thedecorparty.com/gallery"
+        schema={[
+          {
+            '@type': 'ImageGallery',
+            name: 'The Decor Party Bangalore Celebration Gallery',
+            description: 'Curated real celebration decor photos and balloon installations across Bangalore.',
+            url: 'https://thedecorparty.com/gallery',
+          },
+        ]}
         breadcrumbs={[
           { name: 'Home', item: '/' },
           { name: 'Gallery', item: '/gallery' },

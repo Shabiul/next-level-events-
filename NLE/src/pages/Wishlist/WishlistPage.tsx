@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useWishlist } from '../../hooks/useWishlist';
+import { SeoHead } from '../../components/layout/SeoHead';
 import { ProductCard } from '../../components/product/ProductCard';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { Button } from '../../components/ui/Button';
@@ -11,7 +12,12 @@ export const WishlistPage: React.FC = () => {
   const { wishlist, count } = useWishlist();
 
   return (
-    <div className="mx-auto max-w-[1920px] px-4 py-6 sm:px-6 md:px-8 lg:px-12 animate-fade-in pb-20">
+    <>
+      <SeoHead
+        title="Saved Experiences — The Decor Party"
+        noindex={true}
+      />
+      <div className="mx-auto max-w-[1920px] px-4 py-6 sm:px-6 md:px-8 lg:px-12 animate-fade-in pb-20">
       <div className="mb-6 flex items-baseline justify-between border-b border-[#381932]/30 pb-4 dark:border-[#381932]">
         <div>
           <h1 className="font-editorial text-2xl sm:text-3xl font-bold tracking-tight text-[#381932] dark:text-[#FFF3E6]">
@@ -57,5 +63,6 @@ export const WishlistPage: React.FC = () => {
         </div>
       )}
     </div>
+    </>
   );
 };

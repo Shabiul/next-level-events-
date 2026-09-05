@@ -31,6 +31,7 @@ export default function TermsPage() {
       <SeoHead
         title={TITLES[pageKey] || 'Legal & Policies — The Decor Party'}
         description={`Read The Decor Party's ${pageKey} policies for transparent booking, payment terms, and party styling services in Bengaluru.`}
+        url={`https://thedecorparty.com${location.pathname}`}
         breadcrumbs={[
           { name: 'Home', item: '/' },
           { name: TITLES[pageKey] || 'Policies', item: location.pathname },

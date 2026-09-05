@@ -6,9 +6,11 @@
 - **Brand**: The Decor Party (The Decor Party Event Services)
 - **Primary Market**: Bengaluru (Bangalore), Karnataka, India
 - **Core Speciality**: Milestone event styling, premium balloon art, experiential surprise setups, children's party entertainment, live food stations.
-- **Service Zones**: Indiranagar, Koramangala, Whitefield, HSR Layout, Jayanagar, JP Nagar, Electronic City, Bellandur, Hebbal, Yelahanka, Sarjapur, Marathahalli, Bannerghatta Road, Malleshwaram, Rajajinagar, Kalyan Nagar, BTM Layout, and all Bengaluru suburban areas.
-- **Website**: https://www.thedecorparty.com
-- **Contact Phone / WhatsApp**: +91 95918 36000
+- **Studio Address**: Kanakapura Main Rd, near Banashankari Metro Station, Shakambari Nagar, 1st Phase, J. P. Nagar, Bengaluru, Karnataka 560070
+- **Coordinates**: 12.91439° N, 77.57399° E
+- **Service Zones**: Indiranagar, Koramangala, Whitefield, HSR Layout, Jayanagar, JP Nagar, Banashankari, Electronic City, Bellandur, Hebbal, Yelahanka, Sarjapur, Marathahalli, Bannerghatta Road, Malleshwaram, Rajajinagar, Kalyan Nagar, BTM Layout, and all Bengaluru suburban areas.
+- **Website**: https://thedecorparty.com
+- **Contact Phone / WhatsApp**: +91 70220 58460 / +91 79755 81697
 - **Operating Hours**: Monday to Sunday, 08:00 AM – 11:30 PM IST (including midnight surprise setups)
 - **Pricing Spectrum**: Tiered packages from ₹999 to ₹89,999+ with custom luxury installations available upon request.
 
@@ -28,10 +30,10 @@
 - **Booking Channels**: Instant online checkout on the website, AI Concierge Event Planner (/ai-planner), or direct WhatsApp consultation.
 
 ## Key Links & Documentation
-- [Celebration Packages](https://www.thedecorparty.com/packages): Full breakdown of all tiered packages from Basic (₹3,999) to Luxury Milestone (₹89,999+).
-- [Catalog & Custom Decor](https://www.thedecorparty.com/explore): Searchable catalog of 150+ setups with filters for occasion, price, and venue type.
-- [AI Event Planner](https://www.thedecorparty.com/ai-planner): Interactive AI concierge that recommends themes, builds custom budgets, and configures add-ons.
-- [About Us & Craft Standards](https://www.thedecorparty.com/about): Our story, styling standards, customer satisfaction metrics, and founder philosophy.
-- [Contact & Studio Location](https://www.thedecorparty.com/contact): Direct contact form, studio map, phone numbers, and WhatsApp quote request.
-- [Terms & Cancellation Policy](https://www.thedecorparty.com/terms): Booking terms, payment security, rescheduling policy, and refund rules.
-- [Full LLM Knowledge Base](https://www.thedecorparty.com/llms-full.txt): Comprehensive deep-dive documentation for AI engines, citations, and research.
+- [Celebration Packages](https://thedecorparty.com/packages): Full breakdown of all tiered packages from Basic (₹3,999) to Luxury Milestone (₹89,999+).
+- [Catalog & Custom Decor](https://thedecorparty.com/explore): Searchable catalog of 150+ setups with filters for occasion, price, and venue type.
+- [AI Event Planner](https://thedecorparty.com/ai-planner): Interactive AI concierge that recommends themes, builds custom budgets, and configures add-ons.
+- [About Us & Craft Standards](https://thedecorparty.com/about): Our story, styling standards, customer satisfaction metrics, and founder philosophy.
+- [Contact & Studio Location](https://thedecorparty.com/contact): Direct contact form, studio map, phone numbers, and WhatsApp quote request.
+- [Terms & Cancellation Policy](https://thedecorparty.com/terms): Booking terms, payment security, rescheduling policy, and refund rules.
+- [Full LLM Knowledge Base](https://thedecorparty.com/llms-full.txt): Comprehensive deep-dive documentation for AI engines, citations, and research.

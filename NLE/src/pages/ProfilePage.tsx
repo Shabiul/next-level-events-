@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useLanguage } from '../hooks/useLanguage';
 import { useProducts } from '../hooks/useProducts';
 import { BackButton } from '../components/BackButton';
+import { SeoHead } from '../components/layout/SeoHead';
 import Avatar from '../components/Avatar';
 import { cn } from '../lib/utils';
 import { getApiUrl } from '../lib/api';
@@ -154,6 +155,10 @@ export default function ProfilePage() {
 
   return (
     <>
+      <SeoHead
+        title="My Account — The Decor Party"
+        noindex={true}
+      />
       <main className="mx-auto max-w-7xl px-4 py-6 md:px-6 min-h-[85vh]">
         <div className="mb-5 flex items-center gap-3">
           <BackButton onClick={() => navigate('/')} />

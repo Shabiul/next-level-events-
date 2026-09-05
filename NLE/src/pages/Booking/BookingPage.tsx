@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useProducts } from '../../hooks/useProducts';
+import { SeoHead } from '../../components/layout/SeoHead';
 import { BookingWizard } from '../../components/booking/BookingWizard';
 import { LoadingState, EmptyState } from '../../components/ui/EmptyState';
 import type { AdminProduct, BookingAddonSnapshot, BookingDetails, CartItem } from '../../types';
@@ -125,13 +126,19 @@ export const BookingPage: React.FC<BookingPageRouteProps> = ({ onConfirmBooking 
   };
 
   return (
-    <BookingWizard
-      product={product}
-      cartItems={cartItems}
-      preferredMethod={preferredMethod}
-      selectedAddOns={selectedAddOns}
-      onBack={() => navigate(-1)}
-      onConfirm={handleConfirm}
-    />
+    <>
+      <SeoHead
+        title="Complete Your Booking — The Decor Party"
+        noindex={true}
+      />
+      <BookingWizard
+        product={product}
+        cartItems={cartItems}
+        preferredMethod={preferredMethod}
+        selectedAddOns={selectedAddOns}
+        onBack={() => navigate(-1)}
+        onConfirm={handleConfirm}
+      />
+    </>
   );
 };

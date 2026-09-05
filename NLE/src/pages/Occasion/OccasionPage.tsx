@@ -1112,8 +1112,8 @@ export const OccasionPage: React.FC<{
           identical content under three different indexable URLs. Always
           canonicalize to the /services/... form used in sitemap.xml. */}
       <SeoHead
-        title={`${decodedSubcategory ? `${decodedSubcategory} — ` : ''}${decodedCategory} Theme Setups | The Decor Party`}
-        description={`Explore handcrafted ${decodedCategory} theme setups, backdrops, and balloon styling in Bengaluru with 3-hour same day slots.`}
+        title={`${decodedSubcategory ? `${decodedSubcategory} — ` : ''}${decodedCategory} Theme Setups Bangalore | The Decor Party`}
+        description={`Explore handcrafted ${decodedCategory}${decodedSubcategory ? ` (${decodedSubcategory})` : ''} theme setups, backdrops, and balloon styling in Bengaluru with 3-hour same day slots.`}
         keywords={[
           `${decodedCategory.toLowerCase()} decoration bangalore`,
           `${decodedCategory.toLowerCase()} setups bengaluru`,
@@ -1121,9 +1121,51 @@ export const OccasionPage: React.FC<{
         ]}
         url={
           categoryName
-            ? `https://www.thedecorparty.com/services/${encodeURIComponent(decodedCategory)}${decodedSubcategory ? `/${encodeURIComponent(decodedSubcategory)}` : ''}`
-            : `https://www.thedecorparty.com/activities${decodedSubcategory ? `/${encodeURIComponent(decodedSubcategory)}` : ''}`
+            ? `https://thedecorparty.com/services/${encodeURIComponent(decodedCategory)}${decodedSubcategory ? `/${encodeURIComponent(decodedSubcategory)}` : ''}`
+            : `https://thedecorparty.com/activities${decodedSubcategory ? `/${encodeURIComponent(decodedSubcategory)}` : ''}`
         }
+        faqData={currentThemeFaqs}
+        schema={[
+          {
+            '@type': 'Service',
+            name: `${decodedSubcategory ? `${decodedSubcategory} ` : ''}${decodedCategory} Decoration Services in Bangalore`,
+            serviceType: `${decodedCategory} Decoration`,
+            provider: {
+              '@type': 'LocalBusiness',
+              name: 'The Decor Party',
+              url: 'https://thedecorparty.com',
+              telephone: '+91-70220-58460',
+              address: {
+                '@type': 'PostalAddress',
+                streetAddress: 'Kanakapura Main Rd, near Banashankari Metro Station, Shakambari Nagar, 1st Phase, J. P. Nagar',
+                addressLocality: 'Bengaluru',
+                addressRegion: 'Karnataka',
+                postalCode: '560070',
+                addressCountry: 'IN',
+              },
+            },
+            areaServed: {
+              '@type': 'City',
+              name: 'Bengaluru',
+            },
+            description: `Bespoke ${decodedCategory} decoration setups, balloon styling, and event services across Bangalore with 3-hour same day slots.`,
+          },
+          ...(displayProducts && displayProducts.length > 0
+            ? [
+                {
+                  '@type': 'ItemList',
+                  name: `${decodedSubcategory ? `${decodedSubcategory} ` : ''}${decodedCategory} Packages`,
+                  numberOfItems: Math.min(displayProducts.length, 12),
+                  itemListElement: displayProducts.slice(0, 12).map((p, idx) => ({
+                    '@type': 'ListItem',
+                    position: idx + 1,
+                    name: p.name,
+                    url: `https://thedecorparty.com/product/${p._id}`,
+                  })),
+                },
+              ]
+            : []),
+        ]}
         breadcrumbs={[
           { name: 'Home', item: '/' },
           { name: 'Services', item: '/explore' },
