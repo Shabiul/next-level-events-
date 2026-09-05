@@ -6,11 +6,13 @@ import { toast } from "react-toastify";
 import { Pencil, Eye, EyeOff, Trash2, Layers, Plus, Upload, Link as LinkIcon, X, Copy, ArrowUp, ArrowDown } from "lucide-react";
 import { EmptyState } from "../EmptyState";
 import { cn } from "../../lib/utils";
-import { getApiUrl, authFetch } from '../../lib/api';
+import { getApiUrl, authFetch, parseJsonSafe } from '../../lib/api';
+import { supabase } from '../../lib/supabase';
 import { UPLOAD_URL } from '../../lib/uploads';
 import { trackAdminAction } from '../../lib/analytics';
 
-const API = getApiUrl('/api/categories');
+const getCategoriesApi = () => getApiUrl('/api/categories');
+const API = { toString: getCategoriesApi, valueOf: getCategoriesApi, [Symbol.toPrimitive]: getCategoriesApi } as unknown as string;
 
 export const CategoriesView = () => {
   const [cats, setCats] = useState<AdminCategory[]>([]);
@@ -145,9 +147,31 @@ export const CategoriesView = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await authFetch(API);
-      const data = await res.json();
-      setCats(data);
+      const res = await authFetch(getCategoriesApi());
+      const parsed = await parseJsonSafe<AdminCategory[]>(res);
+      if (parsed.ok && Array.isArray(parsed.data)) {
+        setCats(parsed.data);
+        return;
+      }
+    } catch {
+      // Continue to Supabase direct fallback
+    }
+
+    try {
+      const { data, error } = await supabase.from('categories').select('*').order('order_index', { ascending: true });
+      if (!error && Array.isArray(data)) {
+        const mapped: AdminCategory[] = data.map((c: any) => ({
+          _id: c.id || c._id,
+          name: c.name,
+          icon: c.icon || '',
+          image: c.image || '',
+          slug: c.slug || '',
+          active: c.active ?? true,
+          subcategories: Array.isArray(c.subcategories) ? c.subcategories : [],
+        }));
+        setCats(mapped);
+        return;
+      }
     } catch {
       toast.error("Failed to load categories");
     }

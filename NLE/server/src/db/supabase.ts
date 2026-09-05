@@ -4,23 +4,15 @@ import "dotenv/config";
 let cachedClient: SupabaseClient | null = null;
 let cachedKey: string | null = null;
 
+const DEFAULT_SUPABASE_URL = "https://igpngrpdvwzryavczwhw.supabase.co";
+const DEFAULT_SUPABASE_ANON_KEY = "sb_publishable_V3yK30376tK26ibPkkQCxw_EYHALMM2";
+
 export function getSupabase(): SupabaseClient {
-  const url = process.env.SUPABASE_URL?.trim();
-  const key = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY)?.trim();
+  const url = process.env.SUPABASE_URL?.trim() || DEFAULT_SUPABASE_URL;
+  const key = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY)?.trim() || DEFAULT_SUPABASE_ANON_KEY;
   const currentKey = `${url}:${key}`;
 
   if (cachedClient && cachedKey === currentKey) {
-    return cachedClient;
-  }
-
-  if (!url || !key || url.includes("placeholder")) {
-    // Dev fallback client so app boots and typechecks
-    cachedClient = createClient(
-      url || "https://placeholder-project.supabase.co",
-      key || "placeholder-key",
-      { auth: { persistSession: false } }
-    );
-    cachedKey = currentKey;
     return cachedClient;
   }
 

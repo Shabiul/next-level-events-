@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Menu, Crown, Search, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Menu, Crown, Search, ChevronLeft, ChevronRight, X, Settings, Database, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { AdminView, AuthUser } from '../types';
 import { Sidebar, DashboardView, CategoriesView, ProductsView, AddonsView, ActivitiesView, UsersView, EnquiriesView, SiteSettingsView, PaymentsView, StaffView } from './admin';
-import { getApiUrl } from '../lib/api';
+import { getApiUrl, getApiBaseUrl, setApiBaseUrl, DEFAULT_API_BASE_URL } from '../lib/api';
 import { cn } from '../lib/utils';
+import { toast } from 'react-toastify';
 
 interface AdminPanelProps {
   user: AuthUser;
@@ -28,6 +29,65 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, onLogout }) => {
   const [selectedStatuses, setSelectedStatuses] = useState<Record<string, string>>({});
   const [orderDetail, setOrderDetail] = useState<any | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
+
+  // API Config modal state
+  const [showApiSettings, setShowApiSettings] = useState(false);
+  const [currentApiUrl, setCurrentApiUrl] = useState(() => getApiBaseUrl());
+  const [testStatus, setTestStatus] = useState<'idle' | 'testing' | 'success' | 'failed'>('idle');
+  const [testMessage, setTestMessage] = useState('');
+  const [isTesting, setIsTesting] = useState(false);
+
+  const handleTestApi = async (urlToTest: string) => {
+    setIsTesting(true);
+    setTestStatus('testing');
+    setTestMessage('Pinging server...');
+    const clean = urlToTest.trim().replace(/\/$/, '');
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000);
+      const pingUrl = clean ? `${clean}/api/health` : getApiUrl('/api/health');
+      const res = await fetch(pingUrl, { signal: controller.signal }).catch(async () => {
+        return await fetch(clean ? `${clean}/api/dashboard/stats` : getApiUrl('/api/dashboard/stats'), { signal: controller.signal });
+      });
+      clearTimeout(timeoutId);
+
+      const contentType = res.headers.get('content-type') || '';
+      if (res.status === 200 && !contentType.includes('text/html')) {
+        setTestStatus('success');
+        setTestMessage('Connected successfully! Backend is active.');
+      } else if (res.status === 405) {
+        setTestStatus('failed');
+        setTestMessage('Received HTTP 405 (Method Not Allowed). Check backend routing.');
+      } else if (contentType.includes('text/html')) {
+        setTestStatus('failed');
+        setTestMessage('Host returned HTML document. Ensure this URL points to the backend server.');
+      } else {
+        setTestStatus('success');
+        setTestMessage(`Server responded with HTTP ${res.status}. Route reachable.`);
+      }
+    } catch (err: any) {
+      setTestStatus('failed');
+      setTestMessage(err?.name === 'AbortError' ? 'Connection timed out after 6 seconds.' : 'Could not reach server. Verify the URL.');
+    } finally {
+      setIsTesting(false);
+    }
+  };
+
+  const handleSaveApiUrl = () => {
+    setApiBaseUrl(currentApiUrl);
+    setShowApiSettings(false);
+    toast.success('API URL saved! Reloading view...');
+    setTimeout(() => {
+      window.location.reload();
+    }, 400);
+  };
+
+  const handleResetApiUrl = () => {
+    setCurrentApiUrl(DEFAULT_API_BASE_URL);
+    setApiBaseUrl(DEFAULT_API_BASE_URL);
+    setTestStatus('idle');
+    setTestMessage('Reset to default production endpoint.');
+  };
 
   // "Details" on an order navigates to /orders/:id, but the view router below
   // only ever resolves the top-level segment to 'orders' -- it silently
@@ -285,7 +345,22 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, onLogout }) => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                setCurrentApiUrl(getApiBaseUrl());
+                setTestStatus('idle');
+                setTestMessage('');
+                setShowApiSettings(true);
+              }}
+              title="API Backend Settings"
+              className="flex items-center gap-1.5 rounded-full bg-[#FFF3E6] dark:bg-[#381932]/60 px-2.5 py-1 text-[11px] font-bold text-[#381932] dark:text-[#FFF3E6] border border-[#381932]/20 hover:border-[#381932]/50 transition-all cursor-pointer"
+            >
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="hidden sm:inline">API Config</span>
+              <Settings size={12} />
+            </button>
             <span className="hidden text-xs font-semibold text-[#381932] dark:text-[#381932] sm:inline truncate max-w-[180px]">{user.email}</span>
             <span className="flex items-center gap-1 rounded-full bg-[#FFF3E6] dark:bg-[#381932]/60 px-2.5 py-1 text-xs font-extrabold text-[#381932] dark:text-[#381932] border border-[#381932] dark:border-[#381932]">
               <Crown size={12} /> {user.role === 'admin' ? 'ADMIN' : 'STAFF'}
@@ -598,6 +673,128 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, onLogout }) => {
                 )}
               </div>
             )}
+          </div>
+        </div>
+      )}
+      {/* API Connection & Backend Settings Modal */}
+      {showApiSettings && (
+        <div className="fixed inset-0 z-[250] flex items-center justify-center p-4 bg-[#381932]/60 backdrop-blur-xs">
+          <div className="relative w-full max-w-lg rounded-3xl border border-[#381932]/20 bg-[#FFF3E6] dark:bg-[#381932] p-6 sm:p-7 shadow-2xl text-[#381932] dark:text-[#FFF3E6] space-y-5 animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between border-b border-[#381932]/10 pb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#381932] text-[#FFF3E6] dark:bg-[#FFF3E6] dark:text-[#381932]">
+                  <Database size={18} />
+                </div>
+                <div>
+                  <h3 className="text-base font-black">CRM Backend Connection</h3>
+                  <p className="text-xs opacity-70">Configure your API server endpoint</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowApiSettings(false)}
+                className="rounded-xl p-1.5 opacity-70 hover:opacity-100 hover:bg-[#381932]/5 transition-colors cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="text-xs font-black uppercase tracking-wider block mb-1.5 opacity-80">
+                  Backend API Base URL
+                </label>
+                <input
+                  type="text"
+                  value={currentApiUrl}
+                  onChange={(e) => {
+                    setCurrentApiUrl(e.target.value);
+                    setTestStatus('idle');
+                    setTestMessage('');
+                  }}
+                  placeholder="e.g. https://the-decor-party.vercel.app"
+                  className="w-full rounded-2xl border border-[#381932]/30 dark:border-[#FFF3E6]/20 bg-[#FFF3E6] dark:bg-[#381932]/80 px-4 py-3 text-xs font-semibold outline-none focus:border-[#381932] dark:focus:border-[#FFF3E6]"
+                />
+              </div>
+
+              {/* Quick Presets */}
+              <div>
+                <span className="text-[11px] font-bold opacity-70 block mb-1.5">Quick Presets:</span>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCurrentApiUrl(DEFAULT_API_BASE_URL);
+                      setTestStatus('idle');
+                      setTestMessage('');
+                    }}
+                    className="px-2.5 py-1 rounded-xl text-[11px] font-bold border border-[#381932]/20 hover:bg-[#381932]/5 transition-all cursor-pointer"
+                  >
+                    Vercel Production
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCurrentApiUrl('http://localhost:5000');
+                      setTestStatus('idle');
+                      setTestMessage('');
+                    }}
+                    className="px-2.5 py-1 rounded-xl text-[11px] font-bold border border-[#381932]/20 hover:bg-[#381932]/5 transition-all cursor-pointer"
+                  >
+                    Local Port 5000
+                  </button>
+                </div>
+              </div>
+
+              {/* Test status banner */}
+              {testStatus !== 'idle' && (
+                <div
+                  className={cn(
+                    'rounded-2xl p-3.5 text-xs font-bold flex items-center gap-2',
+                    testStatus === 'testing' && 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30',
+                    testStatus === 'success' && 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30',
+                    testStatus === 'failed' && 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-500/30'
+                  )}
+                >
+                  {testStatus === 'testing' && <RefreshCw size={14} className="animate-spin shrink-0" />}
+                  {testStatus === 'success' && <CheckCircle2 size={14} className="shrink-0" />}
+                  {testStatus === 'failed' && <AlertCircle size={14} className="shrink-0" />}
+                  <span className="flex-1">{testMessage}</span>
+                </div>
+              )}
+
+              <div className="rounded-2xl bg-[#381932]/5 p-3.5 text-[11px] font-medium opacity-80 leading-relaxed">
+                💡 <strong>Direct Supabase Fallback:</strong> Even if your Express backend server is cold or restarting, this CRM automatically queries your Supabase database directly for live stats and catalog views.
+              </div>
+            </div>
+
+            <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-2.5 pt-2 border-t border-[#381932]/10">
+              <button
+                type="button"
+                onClick={handleResetApiUrl}
+                className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[#381932]/20 text-xs font-bold hover:bg-[#381932]/5 transition-all cursor-pointer"
+              >
+                Reset Default
+              </button>
+
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <button
+                  type="button"
+                  disabled={isTesting}
+                  onClick={() => handleTestApi(currentApiUrl)}
+                  className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl border border-[#381932] dark:border-[#FFF3E6] text-xs font-bold hover:bg-[#381932]/5 transition-all cursor-pointer disabled:opacity-50"
+                >
+                  {isTesting ? 'Testing...' : 'Test Connection'}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSaveApiUrl}
+                  className="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl bg-[#381932] text-[#FFF3E6] dark:bg-[#FFF3E6] dark:text-[#381932] text-xs font-black shadow-md cursor-pointer hover:opacity-90 transition-all"
+                >
+                  Save &amp; Apply
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

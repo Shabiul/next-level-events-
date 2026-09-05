@@ -13,14 +13,6 @@ import {
   X,
   CreditCard,
   ChevronRight,
-  Camera,
-  Video,
-  Utensils,
-  Flower2,
-  Cake,
-  PartyPopper,
-  Lightbulb,
-  Gift,
   type LucideIcon,
 } from 'lucide-react';
 import { BackButton } from '../ui/BackButton';
@@ -93,17 +85,6 @@ interface AddonPreset extends BookingAddonSnapshot {
   priceLabel?: string;
 }
 
-const AVAILABLE_ADDONS_PRESETS: AddonPreset[] = [
-  { id: 'preset-photography', name: 'Photography', price: 5000, kind: 'addon', description: 'Candid + posed shots of the celebration', icon: Camera },
-  { id: 'preset-videography', name: 'Videography', price: 7500, kind: 'addon', description: 'Cinematic highlight reel of your event', icon: Video },
-  { id: 'preset-live-catering', name: 'Live Catering', price: 3500, kind: 'activity', description: 'Curated snack or dessert counter with live service', icon: Utensils, badge: 'POPULAR' },
-  { id: 'preset-flower-decoration', name: 'Flower Decoration', price: 3000, kind: 'addon', description: 'Fresh floral accents across the backdrop & table', icon: Flower2 },
-  { id: 'preset-led-numbers', name: 'LED Numbers', price: 1500, kind: 'addon', description: 'Warm-glow numeral lights for the backdrop', icon: Lightbulb },
-  { id: 'preset-custom-cake', name: 'Custom Cake', price: 2500, kind: 'addon', description: 'Themed cake styled to match your celebration', icon: Cake },
-  { id: 'preset-return-gifts', name: 'Return Gifts', price: 1500, kind: 'addon', description: 'Curated take-home favours for your guests', icon: Gift, priceLabel: 'From ₹1,500' },
-  { id: 'preset-premium-balloon-upgrade', name: 'Premium Balloon Upgrade', price: 2500, kind: 'addon', description: 'Premium foil & organic balloon styling upgrade', icon: PartyPopper },
-];
-
 const toBookingSnapshot = (preset: AddonPreset): BookingAddonSnapshot => ({
   id: preset.id,
   name: preset.name,
@@ -139,6 +120,36 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [paymentDialog, setPaymentDialog] = useState<PaymentDialogState>(null);
+
+  // Real, backend-priced catalog for the "Popular Celebration Enhancements"
+  // quick picker -- this used to be a hardcoded local preset list with fake
+  // ids ("preset-led-numbers" etc.) that don't exist in the addons/activities
+  // tables, so the server's authoritative pricing always rejected them with
+  // "Selected package is unavailable" the moment one was selected. Fetching
+  // the same /api/catalog the product page's AddonsModule uses keeps this
+  // picker in sync with whatever admins actually manage.
+  const [catalogPicks, setCatalogPicks] = useState<AddonPreset[]>([]);
+  useEffect(() => {
+    let cancelled = false;
+    fetch(getApiUrl('/api/catalog'))
+      .then((res) => (res.ok ? res.json() : { addons: [], activities: [] }))
+      .then((data) => {
+        if (cancelled) return;
+        const toPreset = (item: any, kind: 'addon' | 'activity'): AddonPreset => ({
+          id: String(item._id || item.id),
+          name: item.name,
+          price: Number(item.price) || 0,
+          kind,
+          description: item.description || '',
+          icon: Sparkles,
+        });
+        const addons = (Array.isArray(data.addons) ? data.addons : []).map((a: any) => toPreset(a, 'addon'));
+        const activities = (Array.isArray(data.activities) ? data.activities : []).map((a: any) => toPreset(a, 'activity'));
+        setCatalogPicks([...addons, ...activities].slice(0, 8));
+      })
+      .catch(() => { if (!cancelled) setCatalogPicks([]); });
+    return () => { cancelled = true; };
+  }, []);
 
   const minDateString = useMemo(() => {
     const tomorrow = new Date();
@@ -851,7 +862,7 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
                     Popular Celebration Enhancements:
                   </p>
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                    {AVAILABLE_ADDONS_PRESETS.map((preset) => {
+                    {catalogPicks.map((preset) => {
                       const isSelected = form.addOns.some(a => a.name === preset.name || (preset.id && a.id === preset.id));
                       return (
                         <AddOnCard

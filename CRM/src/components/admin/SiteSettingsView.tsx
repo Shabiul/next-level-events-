@@ -4,7 +4,8 @@ import { Save, RotateCcw, Phone, Mail, MapPin, Link2, Sparkles } from 'lucide-re
 import { getApiUrl, authFetch } from '../../lib/api';
 import { DEFAULT_SITE_SETTINGS, type SiteSettings } from '../../hooks/useSiteSettings';
 
-const API = getApiUrl('/api/site-content/site-settings');
+const getSiteSettingsApi = () => getApiUrl('/api/site-content/site-settings');
+const API = { toString: getSiteSettingsApi, valueOf: getSiteSettingsApi, [Symbol.toPrimitive]: getSiteSettingsApi } as unknown as string;
 
 const FIELDS: { key: keyof SiteSettings; label: string; icon: React.ElementType; group: 'Contact & Socials' | 'Homepage Hero' }[] = [
   { key: 'phone1', label: 'Primary Phone', icon: Phone, group: 'Contact & Socials' },

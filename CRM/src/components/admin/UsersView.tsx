@@ -3,7 +3,8 @@ import { Crown, User as UserIcon, Trash2 } from 'lucide-react';
 import { LoadingState, EmptyState } from '../EmptyState';
 import { ConfirmModal } from './ConfirmModal';
 import { cn } from '../../lib/utils';
-import { getApiUrl, authFetch } from '../../lib/api';
+import { getApiUrl, authFetch, parseJsonSafe } from '../../lib/api';
+import { supabase } from '../../lib/supabase';
 import { trackAdminAction } from '../../lib/analytics';
 import { toast } from 'react-toastify';
 
@@ -27,9 +28,31 @@ export const UsersView = () => {
   const fetchUsers = async () => {
     try {
       const res = await authFetch(getApiUrl('/api/dashboard/users'));
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || 'Failed to load registered users');
-      setUsers(Array.isArray(data) ? data : []);
+      const parsed = await parseJsonSafe<User[]>(res);
+      if (parsed.ok && Array.isArray(parsed.data)) {
+        setUsers(parsed.data);
+        setLoading(false);
+        return;
+      }
+    } catch {
+      // Continue to Supabase direct fallback
+    }
+
+    try {
+      const { data, error } = await supabase.from('users').select('*').order('created_at', { ascending: false });
+      if (!error && Array.isArray(data)) {
+        const mapped: User[] = data.map((u: any) => ({
+          _id: u.id || u._id,
+          firstName: u.first_name || u.firstName || '',
+          lastName: u.last_name || u.lastName || '',
+          email: u.email || '',
+          role: u.role || 'user',
+          createdAt: u.created_at || u.createdAt || new Date().toISOString(),
+        }));
+        setUsers(mapped);
+        return;
+      }
+      throw new Error(error?.message || 'Failed to load registered users');
     } catch (err: any) {
       toast.error(err.message || 'Failed to load registered users');
     } finally {

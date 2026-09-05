@@ -1,3 +1,5 @@
+export const DEFAULT_API_BASE_URL = 'https://the-decor-party.vercel.app';
+
 export function getApiBaseUrl(): string {
   try {
     if (typeof window !== 'undefined') {
@@ -19,7 +21,9 @@ export function getApiBaseUrl(): string {
     return '';
   }
 
-  return '';
+  // When deployed to Vercel or any live host without an explicit VITE_API_URL:
+  // Default to the production backend server so requests don't hit the SPA index.html
+  return DEFAULT_API_BASE_URL;
 }
 
 export function setApiBaseUrl(url: string): void {
@@ -106,3 +110,74 @@ export async function authFetch(input: RequestInfo | URL, init: RequestInit = {}
   return response;
 }
 
+export interface SafeJsonResponse<T> {
+  data: T | null;
+  error: string | null;
+  isHtml: boolean;
+  ok: boolean;
+  status: number;
+}
+
+/**
+ * Safely extracts JSON from a Response without crashing on HTML doctypes
+ * or non-JSON payloads.
+ */
+export async function parseJsonSafe<T = any>(response: Response): Promise<SafeJsonResponse<T>> {
+  const status = response.status;
+  const ok = response.ok;
+  const contentType = response.headers.get('content-type') || '';
+
+  if (contentType.includes('text/html')) {
+    return {
+      data: null,
+      error: 'Server returned HTML instead of API data. The backend endpoint may not be responding.',
+      isHtml: true,
+      ok: false,
+      status,
+    };
+  }
+
+  try {
+    const raw = await response.text();
+    if (!raw || !raw.trim()) {
+      return {
+        data: null,
+        error: ok ? null : `Server returned status ${status}`,
+        isHtml: false,
+        ok,
+        status,
+      };
+    }
+
+    if (raw.trim().startsWith('<')) {
+      return {
+        data: null,
+        error: 'Server returned HTML document instead of JSON.',
+        isHtml: true,
+        ok: false,
+        status,
+      };
+    }
+
+    const data = JSON.parse(raw) as T;
+    const err = !ok
+      ? (data as any)?.message || (data as any)?.error || (data as any)?.msg || `Server returned status ${status}`
+      : null;
+
+    return {
+      data,
+      error: err,
+      isHtml: false,
+      ok,
+      status,
+    };
+  } catch (parseErr: any) {
+    return {
+      data: null,
+      error: parseErr?.message || 'Invalid JSON response from server',
+      isHtml: false,
+      ok: false,
+      status,
+    };
+  }
+}

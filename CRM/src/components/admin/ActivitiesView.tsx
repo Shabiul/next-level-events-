@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { Plus, Eye, EyeOff, Pencil, Trash2, Search } from 'lucide-react';
 import { Modal } from './Modal';
 import { ConfirmModal } from './ConfirmModal';
-import { getApiUrl, authFetch } from '../../lib/api';
+import { getApiUrl, authFetch, parseJsonSafe } from '../../lib/api';
+import { supabase } from '../../lib/supabase';
 import type { AdminProduct } from '../../types';
 import { ProductSearchSelector } from './ProductSearchSelector';
 import { toast } from 'react-toastify';
 
-const API = getApiUrl('/api/activities');
-const PRODUCT_API = getApiUrl('/api/products');
+const getActivitiesApi = () => getApiUrl('/api/activities');
+const API = { toString: getActivitiesApi, valueOf: getActivitiesApi, [Symbol.toPrimitive]: getActivitiesApi } as unknown as string;
 
 interface ActivityItem {
   _id: string;
@@ -30,9 +31,43 @@ export const ActivitiesView = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await authFetch(PRODUCT_API);
-      const data = await res.json();
-      setProducts(Array.isArray(data) ? data : []);
+      const res = await authFetch(getApiUrl('/api/products'));
+      const parsed = await parseJsonSafe<AdminProduct[]>(res);
+      if (parsed.ok && Array.isArray(parsed.data)) {
+        setProducts(parsed.data);
+        return;
+      }
+    } catch {
+      // Continue to Supabase direct fallback
+    }
+
+    try {
+      const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+      if (!error && Array.isArray(data)) {
+        setProducts(data.map((p: any) => ({
+          _id: p.id || p._id,
+          name: p.name,
+          categoryId: p.category_id || p.categoryId,
+          categoryName: p.category_name || p.categoryName || '',
+          subcategory: p.subcategory || '',
+          price: Number(p.price || 0),
+          originalPrice: Number(p.original_price || p.originalPrice || 0),
+          description: p.description || '',
+          inclusions: Array.isArray(p.inclusions) ? p.inclusions : [],
+          addOns: Array.isArray(p.add_ons) ? p.add_ons : (p.addOns || []),
+          image: p.image || '',
+          moreImages: Array.isArray(p.more_images) ? p.more_images : (p.moreImages || []),
+          badge: p.badge || '',
+          badgeColor: p.badge_color || p.badgeColor || 'purple',
+          active: p.active ?? true,
+          featured: p.featured ?? false,
+          rating: Number(p.rating || 5),
+          reviewCount: Number(p.review_count || p.reviewCount || 0),
+          createdAt: p.created_at || new Date().toISOString(),
+          updatedAt: p.updated_at || new Date().toISOString(),
+        })));
+        return;
+      }
     } catch {
       toast.error('Failed to load products');
     }

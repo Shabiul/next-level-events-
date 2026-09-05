@@ -25,7 +25,8 @@ interface Payment {
   createdAt: string;
 }
 
-const PAYMENTS_API = getApiUrl('/api/admin/payments');
+const getPaymentsApi = () => getApiUrl('/api/admin/payments');
+const PAYMENTS_API = { toString: getPaymentsApi, valueOf: getPaymentsApi };
 
 interface PaymentsViewProps {
   isAdmin?: boolean;

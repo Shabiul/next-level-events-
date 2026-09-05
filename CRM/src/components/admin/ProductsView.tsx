@@ -5,13 +5,16 @@ import { ConfirmModal } from "./ConfirmModal";
 import { toast } from "react-toastify";
 import { Pencil, Eye, EyeOff, Trash2, Upload, Link as LinkIcon, X, Star, Lightbulb, Copy } from "lucide-react";
 import { cn } from "../../lib/utils";
-import { getApiUrl, authFetch } from '../../lib/api';
+import { getApiUrl, authFetch, parseJsonSafe } from '../../lib/api';
+import { supabase } from '../../lib/supabase';
 import { UPLOAD_URL } from '../../lib/uploads';
 import { BADGE_COLORS, getAdminBadgeColorClass } from '../../lib/badges';
 import { trackAdminAction } from '../../lib/analytics';
 
-const API = getApiUrl('/api/products');
-const CAT_API = getApiUrl('/api/categories');
+const getProductsApi = () => getApiUrl('/api/products');
+const getCategoriesApi = () => getApiUrl('/api/categories');
+const API = { toString: getProductsApi, valueOf: getProductsApi, [Symbol.toPrimitive]: getProductsApi } as unknown as string;
+const CAT_API = { toString: getCategoriesApi, valueOf: getCategoriesApi, [Symbol.toPrimitive]: getCategoriesApi } as unknown as string;
 
 const labelClass = "text-xs font-extrabold uppercase text-[#381932] dark:text-[#381932]";
 const inputClass = "mt-1 w-full rounded-xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] px-3.5 py-2.5 text-xs font-semibold text-[#381932] dark:text-[#FFF3E6] outline-none";
@@ -79,9 +82,44 @@ export const ProductsView = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await authFetch(API);
-      const data = await res.json();
-      setProducts(data);
+      const res = await authFetch(getProductsApi());
+      const parsed = await parseJsonSafe<AdminProduct[]>(res);
+      if (parsed.ok && Array.isArray(parsed.data)) {
+        setProducts(parsed.data);
+        return;
+      }
+    } catch {
+      // Continue to Supabase direct fallback
+    }
+
+    try {
+      const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+      if (!error && Array.isArray(data)) {
+        const mapped: AdminProduct[] = data.map((p: any) => ({
+          _id: p.id || p._id,
+          name: p.name,
+          categoryId: p.category_id || p.categoryId,
+          categoryName: p.category_name || p.categoryName || '',
+          subcategory: p.subcategory || '',
+          price: Number(p.price || 0),
+          originalPrice: Number(p.original_price || p.originalPrice || 0),
+          description: p.description || '',
+          inclusions: Array.isArray(p.inclusions) ? p.inclusions : [],
+          addOns: Array.isArray(p.add_ons) ? p.add_ons : (p.addOns || []),
+          image: p.image || '',
+          moreImages: Array.isArray(p.more_images) ? p.more_images : (p.moreImages || []),
+          badge: p.badge || '',
+          badgeColor: p.badge_color || p.badgeColor || 'purple',
+          active: p.active ?? true,
+          featured: p.featured ?? false,
+          rating: Number(p.rating || 5),
+          reviewCount: Number(p.review_count || p.reviewCount || 0),
+          createdAt: p.created_at || new Date().toISOString(),
+          updatedAt: p.updated_at || new Date().toISOString(),
+        }));
+        setProducts(mapped);
+        return;
+      }
     } catch {
       toast.error("Failed to load products");
     }
@@ -89,9 +127,31 @@ export const ProductsView = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await authFetch(CAT_API);
-      const data = await res.json();
-      setCategories(data);
+      const res = await authFetch(getCategoriesApi());
+      const parsed = await parseJsonSafe<AdminCategory[]>(res);
+      if (parsed.ok && Array.isArray(parsed.data)) {
+        setCategories(parsed.data);
+        return;
+      }
+    } catch {
+      // Continue to Supabase direct fallback
+    }
+
+    try {
+      const { data, error } = await supabase.from('categories').select('*').order('order_index', { ascending: true });
+      if (!error && Array.isArray(data)) {
+        const mapped: AdminCategory[] = data.map((c: any) => ({
+          _id: c.id || c._id,
+          name: c.name,
+          icon: c.icon || '',
+          image: c.image || '',
+          slug: c.slug || '',
+          active: c.active ?? true,
+          subcategories: Array.isArray(c.subcategories) ? c.subcategories : [],
+        }));
+        setCategories(mapped);
+        return;
+      }
     } catch {
       toast.error("Failed to load categories");
     }
@@ -100,8 +160,29 @@ export const ProductsView = () => {
   const fetchAddons = async () => {
     try {
       const res = await authFetch(getApiUrl('/api/addons/active'));
-      const data = await res.json();
-      setAvailableAddons(Array.isArray(data) ? data : []);
+      const parsed = await parseJsonSafe<AdminAddon[]>(res);
+      if (parsed.ok && Array.isArray(parsed.data)) {
+        setAvailableAddons(parsed.data);
+        return;
+      }
+    } catch {
+      // Continue to Supabase direct fallback
+    }
+
+    try {
+      const { data, error } = await supabase.from('addons').select('*').eq('active', true);
+      if (!error && Array.isArray(data)) {
+        setAvailableAddons(data.map((a: any) => ({
+          _id: a.id || a._id,
+          name: a.name,
+          price: Number(a.price || 0),
+          description: a.description || '',
+          image: a.image || '',
+          active: a.active ?? true,
+          createdAt: a.created_at || new Date().toISOString(),
+          updatedAt: a.updated_at || new Date().toISOString(),
+        })));
+      }
     } catch {
       toast.error("Failed to load add-ons");
     }

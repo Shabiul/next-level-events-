@@ -4,11 +4,13 @@ import { Eye, EyeOff, Pencil, Search, Trash2, Upload, Link as LinkIcon } from 'l
 import { Modal } from './Modal';
 import { ConfirmModal } from './ConfirmModal';
 import { cn } from '../../lib/utils';
-import { getApiUrl, authFetch } from '../../lib/api';
+import { getApiUrl, authFetch, parseJsonSafe } from '../../lib/api';
+import { supabase } from '../../lib/supabase';
 import { UPLOAD_URL } from '../../lib/uploads';
 import type { AdminAddon } from '../../types';
 
-const API = getApiUrl('/api/addons');
+const getAddonsApi = () => getApiUrl('/api/addons');
+const API = { toString: getAddonsApi, valueOf: getAddonsApi, [Symbol.toPrimitive]: getAddonsApi } as unknown as string;
 const PAGE_SIZE = 8;
 
 export const AddonsView = () => {
@@ -33,9 +35,32 @@ export const AddonsView = () => {
 
   const fetchAddons = async () => {
     try {
-      const res = await authFetch(API);
-      const data = await res.json();
-      setAddons(Array.isArray(data) ? data : []);
+      const res = await authFetch(getAddonsApi());
+      const parsed = await parseJsonSafe<AdminAddon[]>(res);
+      if (parsed.ok && Array.isArray(parsed.data)) {
+        setAddons(parsed.data);
+        return;
+      }
+    } catch {
+      // Continue to Supabase direct fallback
+    }
+
+    try {
+      const { data, error } = await supabase.from('addons').select('*').order('created_at', { ascending: false });
+      if (!error && Array.isArray(data)) {
+        setAddons(data.map((a: any) => ({
+          _id: a.id || a._id,
+          name: a.name,
+          price: Number(a.price || 0),
+          description: a.description || '',
+          image: a.image || '',
+          active: a.active ?? true,
+          createdAt: a.created_at || new Date().toISOString(),
+          updatedAt: a.updated_at || new Date().toISOString(),
+        })));
+        return;
+      }
+      throw new Error(error?.message || 'Failed to load add-ons');
     } catch {
       toast.error('Failed to load add-ons');
     }

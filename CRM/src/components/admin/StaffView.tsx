@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import { UserPlus, Trash2, Clock, X } from 'lucide-react';
-import { getApiUrl, authFetch } from '../../lib/api';
+import { getApiUrl, authFetch, parseJsonSafe } from '../../lib/api';
+import { supabase } from '../../lib/supabase';
 import { cn } from '../../lib/utils';
 import { STAFF_SCOPES, type AdminView } from '../../types';
 import { ConfirmModal } from './ConfirmModal';
 
-const API = getApiUrl('/api/admin/staff');
+const getStaffApi = () => getApiUrl('/api/admin/staff');
+const API = { toString: getStaffApi, valueOf: getStaffApi, [Symbol.toPrimitive]: getStaffApi } as unknown as string;
 
 const SCOPE_LABELS: Record<Exclude<AdminView, 'dashboard' | 'staff'>, string> = {
   categories: 'Categories',
@@ -69,10 +71,35 @@ export const StaffView = () => {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await authFetch(API);
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || 'Failed to load staff accounts');
-      setStaff(Array.isArray(data.staff) ? data.staff : []);
+      const res = await authFetch(getStaffApi());
+      const parsed = await parseJsonSafe<{ staff: Staff[] }>(res);
+      if (parsed.ok && parsed.data && Array.isArray(parsed.data.staff)) {
+        setStaff(parsed.data.staff);
+        setLoading(false);
+        return;
+      }
+    } catch {
+      // Continue to Supabase direct fallback
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('role', 'staff')
+        .order('created_at', { ascending: false });
+      if (!error && Array.isArray(data)) {
+        setStaff(data.map((s: any) => ({
+          id: s.id || s._id,
+          firstName: s.first_name || s.firstName || '',
+          lastName: s.last_name || s.lastName || '',
+          email: s.email || '',
+          permissions: Array.isArray(s.permissions) ? s.permissions : [],
+          createdAt: s.created_at || s.createdAt || new Date().toISOString(),
+        })));
+        return;
+      }
+      throw new Error(error?.message || 'Failed to load staff accounts');
     } catch (err: any) {
       toast.error(err.message || 'Failed to load staff accounts');
     } finally {
