@@ -57,9 +57,6 @@ class QueryAnalyzerService {
     }
 
     const hasRecommendationIntent = this.isRecommendationQuery(normalizedQuery);
-    const _hasBrowsingIntent = category
-      ? this.isBrowsingQuery(normalizedQuery, category.normalizedName)
-      : false;
 
     const detectedIntent = category
       ? hasRecommendationIntent
@@ -81,27 +78,6 @@ class QueryAnalyzerService {
       category: category?.name ?? null,
       categoryId: category?.id ?? null,
     };
-  }
-
-  private isBrowsingQuery(normalizedQuery: string, normalizedCategory: string): boolean {
-    if (normalizedQuery === normalizedCategory) {
-      return true;
-    }
-
-    const browsingKeywords = [
-      "show",
-      "showme",
-      "list",
-      "display",
-      "browse",
-      "open",
-      "all",
-      "every",
-      "completelist",
-      "entire",
-    ].map((keyword) => this.normalizeCategoryName(keyword));
-
-    return browsingKeywords.some((keyword) => normalizedQuery.includes(keyword));
   }
 
   private isRecommendationQuery(normalizedQuery: string): boolean {

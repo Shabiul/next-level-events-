@@ -2,9 +2,6 @@ import { supabase } from "./supabase";
 import { initializeAI } from "../ai";
 
 export async function connectDatabase(): Promise<void> {
-  const url = process.env.SUPABASE_URL?.trim() || "https://igpngrpdvwzryavczwhw.supabase.co";
-  const key = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY)?.trim() || "sb_publishable_V3yK30376tK26ibPkkQCxw_EYHALMM2";
-
   console.log("🔌 Checking Supabase connection...");
 
   try {
