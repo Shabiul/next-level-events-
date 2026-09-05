@@ -8,6 +8,7 @@ import { EmptyState } from "../EmptyState";
 import { cn } from "../../lib/utils";
 import { getApiUrl, authFetch, parseJsonSafe } from '../../lib/api';
 import { supabase } from '../../lib/supabase';
+import { resolveImageUrl } from '../../lib/imageUrl';
 import { UPLOAD_URL } from '../../lib/uploads';
 import { trackAdminAction } from '../../lib/analytics';
 
@@ -413,7 +414,7 @@ export const CategoriesView = () => {
             <div>
               <div className="relative aspect-video w-full bg-[#FFF3E6] dark:bg-[#381932] overflow-hidden">
                 {cat.image ? (
-                  <img src={cat.image} alt={cat.name} className="h-full w-full object-cover" />
+                  <img src={resolveImageUrl(cat.image)} alt={cat.name} className="h-full w-full object-cover" />
                 ) : (
                   <div className="h-full w-full flex items-center justify-center text-xs font-semibold text-[#381932]">No Image</div>
                 )}
@@ -626,7 +627,7 @@ export const CategoriesView = () => {
                       <span className="w-5 flex-shrink-0 text-xs text-[#381932] dark:text-[#381932]">{idx + 1}.</span>
                       {subImg && (
                         <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-md bg-[#FFF3E6] dark:bg-[#381932]">
-                          <img src={subImg} alt={subName} className="h-full w-full object-cover" />
+                          <img src={resolveImageUrl(subImg)} alt={subName} className="h-full w-full object-cover" />
                         </div>
                       )}
                       <span className="flex-1 truncate text-sm font-medium text-[#381932] dark:text-[#FFF3E6]">{subName}</span>
@@ -678,7 +679,7 @@ export const CategoriesView = () => {
               <span className="text-xs font-medium text-[#381932] dark:text-[#381932]">Adding to:</span>
               <div className="flex items-center gap-1.5">
                 {selectedCategory.image ? (
-                  <img src={selectedCategory.image} alt={selectedCategory.name} className="h-6 w-6 rounded-md object-cover" />
+                  <img src={resolveImageUrl(selectedCategory.image)} alt={selectedCategory.name} className="h-6 w-6 rounded-md object-cover" />
                 ) : (
                   <span>{selectedCategory.icon}</span>
                 )}
@@ -740,7 +741,7 @@ export const CategoriesView = () => {
 
               {subImage && !subUploading && (
                 <div className="relative">
-                  <img src={subImage} alt="Preview" className="h-44 w-full rounded-xl object-cover border border-[#381932] dark:border-[#381932]" />
+                  <img src={resolveImageUrl(subImage)} alt="Preview" className="h-44 w-full rounded-xl object-cover border border-[#381932] dark:border-[#381932]" />
                   <button
                     type="button"
                     className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#381932] text-[#FFF3E6] cursor-pointer"
@@ -792,7 +793,7 @@ export const CategoriesView = () => {
               <span className="text-xs font-medium text-[#381932] dark:text-[#381932]">Category:</span>
               <div className="flex items-center gap-1.5">
                 {selectedCategory.image ? (
-                  <img src={selectedCategory.image} alt={selectedCategory.name} className="h-6 w-6 rounded-md object-cover" />
+                  <img src={resolveImageUrl(selectedCategory.image)} alt={selectedCategory.name} className="h-6 w-6 rounded-md object-cover" />
                 ) : (
                   <span>{selectedCategory.icon}</span>
                 )}
@@ -850,7 +851,7 @@ export const CategoriesView = () => {
 
               {subImage && !subUploading && (
                 <div className="relative">
-                  <img src={subImage} alt="Preview" className="h-44 w-full rounded-xl object-cover border border-[#381932] dark:border-[#381932]" />
+                  <img src={resolveImageUrl(subImage)} alt="Preview" className="h-44 w-full rounded-xl object-cover border border-[#381932] dark:border-[#381932]" />
                   <button
                     type="button"
                     className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#381932] text-[#FFF3E6] cursor-pointer"

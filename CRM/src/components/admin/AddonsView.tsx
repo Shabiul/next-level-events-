@@ -7,6 +7,7 @@ import { cn } from '../../lib/utils';
 import { getApiUrl, authFetch, parseJsonSafe } from '../../lib/api';
 import { supabase } from '../../lib/supabase';
 import { UPLOAD_URL } from '../../lib/uploads';
+import { resolveImageUrl } from '../../lib/imageUrl';
 import type { AdminAddon } from '../../types';
 
 const getAddonsApi = () => getApiUrl('/api/addons');
@@ -325,7 +326,7 @@ export const AddonsView = () => {
             <div>
               <div className="relative aspect-video w-full bg-[#FFF3E6] dark:bg-[#381932] overflow-hidden">
                 {addon.image ? (
-                  <img src={addon.image} alt={addon.name} className="h-full w-full object-cover" />
+                  <img src={resolveImageUrl(addon.image)} alt={addon.name} className="h-full w-full object-cover" />
                 ) : (
                   <div className="flex h-full items-center justify-center text-xs font-semibold text-[#381932]">No Image</div>
                 )}

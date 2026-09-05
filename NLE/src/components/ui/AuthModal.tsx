@@ -7,7 +7,6 @@ import type { AuthTab, AuthUser } from '../../types';
 import { cn } from '../../utils/utils';
 import { getApiUrl } from '../../services/api.service';
 import { trackLogin, trackSignup } from '../../utils/analytics';
-import { CRM_URL } from '../../config/crm';
 
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" className="shrink-0">
@@ -471,18 +470,6 @@ const PhoneAuthForm: React.FC<{
           <SubmitButton loading={loading} loadingLabel="Sending OTP...">
             Send OTP →
           </SubmitButton>
-
-          <div className="pt-2 border-t border-[#381932]/30 text-center">
-            <a
-              href={CRM_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1.5 text-[11.5px] font-medium text-[#381932] hover:text-[#381932] transition-colors cursor-pointer"
-            >
-              <Shield size={13} className="text-[#381932]" />
-              <span>Authorized Staff? Open Admin Console</span>
-            </a>
-          </div>
         </form>
       )}
 
