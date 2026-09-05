@@ -1,7 +1,13 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Mail, Lock, User, Phone, Eye, EyeOff, Sparkles, Shield } from 'lucide-react';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { X, Mail, Lock, User, Eye, EyeOff, Sparkles, Shield } from 'lucide-react';
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile,
+} from 'firebase/auth';
 import { auth as firebaseAuth } from '../../firebase';
 import type { AuthTab, AuthUser } from '../../types';
 import { cn } from '../../utils/utils';
@@ -45,7 +51,20 @@ interface AuthModalProps {
 }
 
 function validateEmail(v: string) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
-function validatePhone(v: string) { return /^[6-9]\d{9}$/.test(v); }
+
+const FIREBASE_ERROR_MESSAGES: Record<string, string> = {
+  'auth/email-already-in-use': 'An account already exists with this email. Try signing in instead.',
+  'auth/invalid-email': 'Enter a valid email address.',
+  'auth/weak-password': 'Password must be at least 6 characters.',
+  'auth/wrong-password': 'Incorrect password. Please try again.',
+  'auth/invalid-credential': 'Incorrect email or password.',
+  'auth/user-not-found': 'No account found with this email. Try creating one instead.',
+  'auth/too-many-requests': 'Too many attempts. Please wait a moment and try again.',
+};
+function mapFirebaseAuthError(err: unknown, fallback: string): string {
+  const code = (err as { code?: string })?.code;
+  return (code && FIREBASE_ERROR_MESSAGES[code]) || fallback;
+}
 
 interface InputFieldProps {
   id: string;
@@ -131,211 +150,42 @@ const SubmitButton: React.FC<{ loading: boolean; loadingLabel: string; children:
 );
 
 /* ========================================================================= */
-/* 1. CUSTOMER LOGIN FORM                                                    */
+/* 1. CUSTOMER LOGIN FORM -- Google or email/password, both via Firebase Auth */
 /* ========================================================================= */
-/* ========================================================================= */
-/* 1. CUSTOMER PHONE + OTP LOGIN (the only customer auth method)             */
-/* ========================================================================= */
-const RESEND_SECONDS = 30;
-
-const PhoneAuthForm: React.FC<{
+const EmailAuthForm: React.FC<{
   onSuccess: (user: AuthUser, token?: string) => void;
 }> = ({ onSuccess }) => {
-  const [step, setStep] = useState<'phone' | 'otp' | 'name'>('phone');
-  const [method, setMethod] = useState<'phone' | 'email'>('phone');
-  const [phone, setPhone] = useState('');
-  const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
+  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [first, setFirst] = useState('');
   const [last, setLast] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [resendIn, setResendIn] = useState(0);
-  const [devCode, setDevCode] = useState<string | null>(null);
-  const [email, setEmail] = useState('');
-  const [emailPassword, setEmailPassword] = useState('');
-  const [showEmailPassword, setShowEmailPassword] = useState(false);
 
-  const pendingTokenRef = useRef<string | undefined>(undefined);
-  const otpRefs = useRef<Array<HTMLInputElement | null>>([]);
-
-  useEffect(() => {
-    if (resendIn <= 0) return;
-    const t = setInterval(() => setResendIn((s) => Math.max(0, s - 1)), 1000);
-    return () => clearInterval(t);
-  }, [resendIn]);
-
-  const sendOtp = async () => {
-    if (!validatePhone(phone)) {
-      setError('Enter a valid 10-digit mobile number');
-      return;
-    }
-    setError('');
-    setLoading(true);
-    try {
-      const res = await fetch(getApiUrl('/api/auth/otp/request'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: `+91${phone}` }),
-      });
-      const data = await parseJsonResponse<{ success?: boolean; message?: string; resendIn?: number; devCode?: string }>(res);
-      if (!res.ok || !data?.success) {
-        setError(getApiErrorMessage(data, 'Could not send the OTP. Please try again.'));
-        setLoading(false);
-        return;
-      }
-      setStep('otp');
-      setOtp(['', '', '', '', '', '']);
-      setResendIn(data.resendIn ?? RESEND_SECONDS);
-      setDevCode(data.devCode ?? null);
-      setTimeout(() => otpRefs.current[0]?.focus(), 50);
-    } catch {
-      setError('Network error. Please check your connection and try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleOtpChange = (idx: number, val: string) => {
-    const digit = val.replace(/\D/g, '').slice(-1);
-    setOtp((prev) => {
-      const next = [...prev];
-      next[idx] = digit;
-      return next;
+  // Both Google and email/password land here: exchange the Firebase ID
+  // token for our own app session (the backend verifies it and finds/creates
+  // the matching user by email).
+  const exchangeFirebaseToken = async (idToken: string, provider: 'google' | 'email') => {
+    const res = await fetch(getApiUrl('/api/auth/google'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: idToken }),
     });
-    if (digit && idx < 5) otpRefs.current[idx + 1]?.focus();
-  };
-
-  const handleOtpKeyDown = (idx: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Backspace' && !otp[idx] && idx > 0) {
-      otpRefs.current[idx - 1]?.focus();
+    const data = await parseJsonResponse<{ user?: { id: string; firstName: string; lastName: string; email: string; phone: string; role: AuthUser['role'] }; token?: string }>(res);
+    if (!res.ok || !data?.user || !data.token) {
+      throw new Error(getApiErrorMessage(data, 'Sign-in failed. Please try again.'));
     }
-  };
-
-  const handleOtpPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
-    if (!pasted) return;
-    e.preventDefault();
-    setOtp((prev) => {
-      const next = [...prev];
-      for (let i = 0; i < 6; i++) next[i] = pasted[i] || next[i] || '';
-      return next;
-    });
-    otpRefs.current[Math.min(pasted.length, 5)]?.focus();
-  };
-
-  const verifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const code = otp.join('');
-    if (code.length !== 6) {
-      setError('Enter the full 6-digit OTP');
-      return;
-    }
-    setError('');
-    setLoading(true);
-    try {
-      const res = await fetch(getApiUrl('/api/auth/otp/verify'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: `+91${phone}`, code }),
-      });
-      const data = await parseJsonResponse<{ success?: boolean; token?: string; isNewUser?: boolean; user?: { id: string; firstName: string; lastName: string; email: string; role: AuthUser['role']; phone: string }; message?: string }>(res);
-      if (!res.ok || !data?.success || !data.token || !data.user) {
-        setError(getApiErrorMessage(data, 'Could not complete sign-in. Please try again.'));
-        setLoading(false);
-        return;
-      }
-
-      trackLogin('phone', data.user.id);
-
-      if (data.isNewUser) {
-        pendingTokenRef.current = data.token;
-        setLoading(false);
-        setStep('name');
-        return;
-      }
-
-      onSuccess({
-        id: data.user.id,
-        firstName: data.user.firstName,
-        lastName: data.user.lastName,
-        email: data.user.email,
-        phone: data.user.phone,
-        role: data.user.role,
-      }, data.token);
-    } catch {
-      setError('Network error while verifying. Please try again.');
-      setLoading(false);
-    }
-  };
-
-  const finishProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!first.trim()) {
-      setError('Please tell us your name');
-      return;
-    }
-    setError('');
-    setLoading(true);
-    try {
-      const token = pendingTokenRef.current;
-      const res = await fetch(getApiUrl('/api/auth/profile'), {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ firstName: first.trim(), lastName: last.trim() }),
-      });
-      const data = await parseJsonResponse<{ user?: { id: string; firstName: string; lastName: string; email: string; phone: string; role: AuthUser['role'] } }>(res);
-      trackSignup('phone');
-      onSuccess({
-        id: data?.user?.id || '',
-        firstName: data?.user?.firstName || first.trim(),
-        lastName: data?.user?.lastName || last.trim(),
-        email: data?.user?.email || '',
-        phone: data?.user?.phone || `+91${phone}`,
-        role: data?.user?.role || 'user',
-      }, token);
-    } catch {
-      setError('Could not save your name, but you are signed in. You can add it later from your profile.');
-      setLoading(false);
-    }
-  };
-
-  const handleEmailLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateEmail(email.trim())) {
-      setError('Please enter a valid email address');
-      return;
-    }
-    if (!emailPassword) {
-      setError('Password is required');
-      return;
-    }
-    setError('');
-    setLoading(true);
-    try {
-      const res = await fetch(getApiUrl('/api/auth/login'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), password: emailPassword }),
-      });
-      const data = await parseJsonResponse<{ user?: { id: string; firstName: string; lastName: string; email: string; phone: string; role: AuthUser['role'] }; token?: string; msg?: string }>(res);
-      if (!res.ok || !data?.user || !data.token) {
-        setError(getApiErrorMessage(data, 'Login failed. Please check your credentials.'));
-        setLoading(false);
-        return;
-      }
-      trackLogin('email', data.user.id);
-      onSuccess({
-        id: data.user.id,
-        firstName: data.user.firstName,
-        lastName: data.user.lastName,
-        email: data.user.email,
-        phone: data.user.phone,
-        role: data.user.role,
-      }, data.token);
-    } catch {
-      setError('Network error. Please check your connection and try again.');
-      setLoading(false);
-    }
+    trackLogin(provider, data.user.id);
+    onSuccess({
+      id: data.user.id,
+      firstName: data.user.firstName,
+      lastName: data.user.lastName,
+      email: data.user.email,
+      phone: data.user.phone,
+      role: data.user.role,
+    }, data.token);
   };
 
   const handleGoogleLogin = async () => {
@@ -344,217 +194,92 @@ const PhoneAuthForm: React.FC<{
     try {
       const result = await signInWithPopup(firebaseAuth, new GoogleAuthProvider());
       const idToken = await result.user.getIdToken();
-      const res = await fetch(getApiUrl('/api/auth/google'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: idToken }),
-      });
-      const data = await parseJsonResponse<{ user?: { id: string; firstName: string; lastName: string; email: string; phone: string; role: AuthUser['role'] }; token?: string }>(res);
-      if (!res.ok || !data?.user || !data.token) {
-        setError(getApiErrorMessage(data, 'Google sign-in failed.'));
-        setLoading(false);
-        return;
+      await exchangeFirebaseToken(idToken, 'google');
+    } catch (err) {
+      setError(mapFirebaseAuthError(err, 'Google authentication failed. Please try again.'));
+      setLoading(false);
+    }
+  };
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateEmail(email.trim())) {
+      setError('Please enter a valid email address');
+      return;
+    }
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+    if (mode === 'signup' && !first.trim()) {
+      setError('Please tell us your name');
+      return;
+    }
+    setError('');
+    setLoading(true);
+    try {
+      let idToken: string;
+      if (mode === 'signup') {
+        const cred = await createUserWithEmailAndPassword(firebaseAuth, email.trim(), password);
+        const displayName = `${first.trim()} ${last.trim()}`.trim();
+        if (displayName) {
+          await updateProfile(cred.user, { displayName });
+          idToken = await cred.user.getIdToken(true); // refresh so the token carries the name we just set
+        } else {
+          idToken = await cred.user.getIdToken();
+        }
+      } else {
+        const cred = await signInWithEmailAndPassword(firebaseAuth, email.trim(), password);
+        idToken = await cred.user.getIdToken();
       }
-      trackLogin('google', data.user.id);
-      onSuccess({
-        id: data.user.id,
-        firstName: data.user.firstName,
-        lastName: data.user.lastName,
-        email: data.user.email,
-        phone: data.user.phone,
-        role: data.user.role,
-      }, data.token);
-    } catch {
-      setError('Google authentication failed. Please try again.');
+      await exchangeFirebaseToken(idToken, 'email');
+      if (mode === 'signup') trackSignup('email');
+    } catch (err) {
+      setError(mapFirebaseAuthError(err, mode === 'signup' ? 'Could not create your account. Please try again.' : 'Login failed. Please check your credentials.'));
       setLoading(false);
     }
   };
 
   return (
-    <div className="animate-fade-in">
-      {step === 'phone' && (
-        <div className="flex flex-col gap-4">
-          <button
-            type="button"
-            onClick={handleGoogleLogin}
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-3 rounded-2xl border border-[#381932] bg-[#FFF3E6] px-4 py-3 text-xs font-bold text-[#381932] hover:bg-[#FFF3E6]/70 transition-colors shadow-2xs cursor-pointer disabled:opacity-60"
-          >
-            <GoogleIcon /> Continue with Google
-          </button>
+    <div className="animate-fade-in flex flex-col gap-4">
+      <button
+        type="button"
+        onClick={handleGoogleLogin}
+        disabled={loading}
+        className="w-full flex items-center justify-center gap-3 rounded-2xl border border-[#381932] bg-[#FFF3E6] px-4 py-3 text-xs font-bold text-[#381932] hover:bg-[#FFF3E6]/70 transition-colors shadow-2xs cursor-pointer disabled:opacity-60"
+      >
+        <GoogleIcon /> Continue with Google
+      </button>
 
-          <div className="flex items-center gap-3 text-[11px] font-bold text-[#381932]">
-            <div className="flex-1 border-t border-[#381932]/30" />
-            <span>OR</span>
-            <div className="flex-1 border-t border-[#381932]/30" />
-          </div>
+      <div className="flex items-center gap-3 text-[11px] font-bold text-[#381932]">
+        <div className="flex-1 border-t border-[#381932]/30" />
+        <span>OR</span>
+        <div className="flex-1 border-t border-[#381932]/30" />
+      </div>
 
-          <div className="flex items-center gap-1 rounded-xl border border-[#381932]/30 p-1 text-[11.5px] font-bold">
-            <button
-              type="button"
-              onClick={() => { setMethod('phone'); setError(''); }}
-              className={cn('flex-1 rounded-lg py-1.5 transition-colors cursor-pointer', method === 'phone' ? 'bg-[#381932] text-[#FFF3E6]' : 'text-[#381932]')}
-            >
-              Phone
-            </button>
-            <button
-              type="button"
-              onClick={() => { setMethod('email'); setError(''); }}
-              className={cn('flex-1 rounded-lg py-1.5 transition-colors cursor-pointer', method === 'email' ? 'bg-[#381932] text-[#FFF3E6]' : 'text-[#381932]')}
-            >
-              Email
-            </button>
-          </div>
-        </div>
-      )}
+      <div>
+        <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#381932] font-serif">
+          {mode === 'signup' ? 'Create your account' : 'Welcome back'}
+        </h2>
+        <p className="mt-1 text-xs sm:text-[13px] text-[#381932] font-normal">
+          {mode === 'signup' ? 'Set up your celebration account with your email.' : 'Sign in with your email to continue.'}
+        </p>
+      </div>
 
-      {step === 'phone' && method === 'email' && (
-        <form className="mt-4 flex flex-col gap-4" onSubmit={handleEmailLogin} noValidate>
-          <InputField
-            id="loginEmail"
-            label="Email Address"
-            type="email"
-            value={email}
-            onChange={setEmail}
-            icon={<Mail size={15} />}
-            autoComplete="email"
-            placeholder="name@example.com"
-          />
-          <InputField
-            id="loginPassword"
-            label="Password"
-            type={showEmailPassword ? 'text' : 'password'}
-            value={emailPassword}
-            onChange={setEmailPassword}
-            icon={<Lock size={15} />}
-            error={error}
-            autoComplete="current-password"
-            placeholder="••••••••"
-            endAdornment={
-              <button type="button" onClick={() => setShowEmailPassword((s) => !s)} className="text-[#381932] cursor-pointer">
-                {showEmailPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-              </button>
-            }
-          />
-          <SubmitButton loading={loading} loadingLabel="Signing in...">
-            Sign In →
-          </SubmitButton>
-        </form>
-      )}
-
-      {step === 'phone' && method === 'phone' && (
-        <form className="flex flex-col gap-4" onSubmit={(e) => { e.preventDefault(); sendOtp(); }} noValidate>
-          <div>
-            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#381932] font-serif">
-              Welcome to The Decor Party
-            </h2>
-            <p className="mt-1 text-xs sm:text-[13px] text-[#381932] font-normal">
-              Enter your mobile number to log in or create an account.
-            </p>
-          </div>
-
-          <InputField
-            id="phoneNumber"
-            label="Mobile Number"
-            type="tel"
-            value={phone}
-            onChange={(v) => setPhone(v.replace(/\D/g, '').slice(0, 10))}
-            icon={<Phone size={15} />}
-            prefix="+91"
-            error={error}
-            autoComplete="tel"
-            maxLength={10}
-            placeholder="Enter your 10-digit mobile number"
-          />
-
-          <SubmitButton loading={loading} loadingLabel="Sending OTP...">
-            Send OTP →
-          </SubmitButton>
-        </form>
-      )}
-
-      {step === 'otp' && (
-        <form className="flex flex-col gap-4" onSubmit={verifyOtp} noValidate>
-          <div>
-            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#381932] font-serif">
-              Verify Your Number
-            </h2>
-            <p className="mt-1 text-xs sm:text-[13px] text-[#381932] font-normal">
-              Enter the 6-digit OTP sent to +91 {phone}
-            </p>
-            {devCode && (
-              <p className="mt-1.5 rounded-md bg-[#A78A9F]/15 px-2 py-1 text-[11px] font-semibold text-[#381932]">
-                Dev mode (no SMS provider): your code is <span className="tracking-widest">{devCode}</span>
-              </p>
-            )}
-          </div>
-
-          <div className="flex items-center justify-between gap-2">
-            {otp.map((digit, idx) => (
-              <input
-                key={idx}
-                ref={(el) => { otpRefs.current[idx] = el; }}
-                type="text"
-                inputMode="numeric"
-                maxLength={1}
-                value={digit}
-                onChange={(e) => handleOtpChange(idx, e.target.value)}
-                onKeyDown={(e) => handleOtpKeyDown(idx, e)}
-                onPaste={handleOtpPaste}
-                className="h-12 w-11 sm:h-14 sm:w-12 rounded-lg border border-[#381932]/30 bg-[#FFF3E6] text-center text-lg font-semibold text-[#381932] outline-none focus:border-[#381932] focus:ring-1 focus:ring-[#381932]/30 transition-colors duration-200"
-              />
-            ))}
-          </div>
-          {error && <span className="text-[11.5px] font-medium text-[#381932] animate-fade-in">{error}</span>}
-
-          <SubmitButton loading={loading} loadingLabel="Verifying...">
-            Verify &amp; Continue →
-          </SubmitButton>
-
-          <div className="flex items-center justify-between text-xs">
-            <button
-              type="button"
-              onClick={() => setStep('phone')}
-              className="font-medium text-[#381932] hover:text-[#381932] transition-colors cursor-pointer"
-            >
-              ← Change number
-            </button>
-            <button
-              type="button"
-              disabled={resendIn > 0}
-              onClick={sendOtp}
-              className="font-semibold text-[#381932] hover:text-[#381932] disabled:text-[#381932]/50 disabled:cursor-not-allowed transition-colors cursor-pointer"
-            >
-              {resendIn > 0 ? `Resend OTP in ${resendIn}s` : 'Resend OTP'}
-            </button>
-          </div>
-        </form>
-      )}
-
-      {step === 'name' && (
-        <form className="flex flex-col gap-4" onSubmit={finishProfile} noValidate>
-          <div>
-            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#381932] font-serif">
-              What should we call you?
-            </h2>
-            <p className="mt-1 text-xs sm:text-[13px] text-[#381932] font-normal">
-              One last step to set up your celebration account.
-            </p>
-          </div>
-
+      <form className="flex flex-col gap-4" onSubmit={handleEmailSubmit} noValidate>
+        {mode === 'signup' && (
           <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
             <InputField
-              id="nameFirst"
+              id="signupFirst"
               label="First Name"
               value={first}
               onChange={setFirst}
               icon={<User size={15} />}
-              error={error}
               autoComplete="given-name"
               placeholder="First name"
             />
             <InputField
-              id="nameLast"
+              id="signupLast"
               label="Last Name"
               value={last}
               onChange={setLast}
@@ -562,12 +287,45 @@ const PhoneAuthForm: React.FC<{
               placeholder="Last name"
             />
           </div>
+        )}
+        <InputField
+          id="authEmail"
+          label="Email Address"
+          type="email"
+          value={email}
+          onChange={setEmail}
+          icon={<Mail size={15} />}
+          autoComplete="email"
+          placeholder="name@example.com"
+        />
+        <InputField
+          id="authPassword"
+          label="Password"
+          type={showPassword ? 'text' : 'password'}
+          value={password}
+          onChange={setPassword}
+          icon={<Lock size={15} />}
+          error={error}
+          autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
+          placeholder="••••••••"
+          endAdornment={
+            <button type="button" onClick={() => setShowPassword((s) => !s)} className="text-[#381932] cursor-pointer">
+              {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+            </button>
+          }
+        />
+        <SubmitButton loading={loading} loadingLabel={mode === 'signup' ? 'Creating account...' : 'Signing in...'}>
+          {mode === 'signup' ? 'Create Account →' : 'Sign In →'}
+        </SubmitButton>
+      </form>
 
-          <SubmitButton loading={loading} loadingLabel="Saving...">
-            Continue →
-          </SubmitButton>
-        </form>
-      )}
+      <button
+        type="button"
+        onClick={() => { setMode((m) => (m === 'signin' ? 'signup' : 'signin')); setError(''); }}
+        className="text-center text-xs font-medium text-[#381932] hover:text-[#381932] transition-colors cursor-pointer"
+      >
+        {mode === 'signup' ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
+      </button>
     </div>
   );
 };
@@ -720,7 +478,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, tab, onClose, onSe
           {/* Content Area */}
           <div className="relative z-10">
             {(tab === 'login' || tab === 'register' || tab === 'phone') && (
-              <PhoneAuthForm
+              <EmailAuthForm
                 onSuccess={(u, token) => handleSuccess(u, token, 'Welcome!', 'You are now logged into your celebration account.')}
               />
             )}

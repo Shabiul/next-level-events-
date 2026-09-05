@@ -14,7 +14,7 @@ if (!admin.apps.length) {
   admin.initializeApp({ projectId: FIREBASE_PROJECT_ID });
 }
 
-export interface VerifiedGoogleIdentity {
+export interface VerifiedFirebaseIdentity {
   uid: string;
   email: string;
   emailVerified: boolean;
@@ -24,23 +24,24 @@ export interface VerifiedGoogleIdentity {
 }
 
 /**
- * Verifies a Firebase Auth ID token (minted client-side by
- * `signInWithPopup`/`signInWithRedirect` against a `GoogleAuthProvider`) and
- * returns the identity Google actually vouches for. Throws on any invalid,
- * expired, or forged token -- callers must not fall back to trusting the
+ * Verifies a Firebase Auth ID token -- minted client-side by
+ * `signInWithPopup` (Google) or `signInWithEmailAndPassword` /
+ * `createUserWithEmailAndPassword` (email) -- and returns the identity
+ * Firebase actually vouches for. Throws on any invalid, expired, forged, or
+ * unsupported-provider token; callers must not fall back to trusting the
  * request body if this rejects.
  */
-export async function verifyGoogleIdToken(idToken: string): Promise<VerifiedGoogleIdentity> {
+export async function verifyFirebaseIdToken(idToken: string): Promise<VerifiedFirebaseIdentity> {
   const decoded = await admin.auth().verifyIdToken(idToken);
 
   if (!decoded.email) {
-    throw Object.assign(new Error("Google account has no email address."), { statusCode: 400 });
+    throw Object.assign(new Error("Account has no email address."), { statusCode: 400 });
   }
 
-  // Extra guard: only accept tokens that actually came from the Google
-  // Sign-In provider, not some other Firebase Auth method.
+  // Only Google and email/password are offered client-side -- reject
+  // anything else rather than silently trusting an unexpected provider.
   const signInProvider = decoded.firebase?.sign_in_provider;
-  if (signInProvider !== "google.com") {
+  if (signInProvider !== "google.com" && signInProvider !== "password") {
     throw Object.assign(new Error("Unsupported sign-in provider."), { statusCode: 400 });
   }
 

@@ -7,7 +7,7 @@ import { login } from "../controllers/authController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 import { signAuthToken } from "../utils/auth.js";
 import { rateLimit } from "../middleware/rateLimit.js";
-import { verifyGoogleIdToken } from "../utils/firebaseAdmin.js";
+import { verifyFirebaseIdToken } from "../utils/firebaseAdmin.js";
 import { UserRepository, WishlistRepository, DbUser } from "../src/db/repositories.js";
 import { supabase } from "../src/db/supabase.js";
 import { syncUserToSupabaseAuth } from "../src/db/supabaseAuth.js";
@@ -200,18 +200,21 @@ router.post("/register", authLimiter, async (req: Request, res: Response) => {
   }
 });
 
+// Exchanges a Firebase Auth ID token (Google popup, or email/password sign
+// in/up) for our own app session -- the only two auth methods the client
+// offers. verifyFirebaseIdToken() rejects anything else.
 router.post("/google", authLimiter, async (req: Request, res: Response) => {
   try {
-    const { token: googleIdToken } = req.body || {};
-    if (!googleIdToken || typeof googleIdToken !== "string") {
-      return res.status(400).json({ msg: "Missing Google sign-in token." });
+    const { token: firebaseIdToken } = req.body || {};
+    if (!firebaseIdToken || typeof firebaseIdToken !== "string") {
+      return res.status(400).json({ msg: "Missing sign-in token." });
     }
 
     let identity;
     try {
-      identity = await verifyGoogleIdToken(googleIdToken);
+      identity = await verifyFirebaseIdToken(firebaseIdToken);
     } catch (err: any) {
-      return res.status(err?.statusCode || 401).json({ msg: err?.message || "Invalid Google sign-in token." });
+      return res.status(err?.statusCode || 401).json({ msg: err?.message || "Invalid sign-in token." });
     }
 
     const { uid, email, firstName, lastName, photoURL } = identity;
@@ -234,7 +237,7 @@ router.post("/google", authLimiter, async (req: Request, res: Response) => {
         "Welcome to TheDecorParty",
         `
 <h2>🎉 Welcome to TheDecorParty, ${firstName}!</h2>
-<p>Your account has been created successfully via Google.</p>
+<p>Your account has been created successfully.</p>
 <p><strong>Email:</strong> ${normalizedEmail}</p>
 <p>Regards,<br>TheDecorParty Team</p>
 `
