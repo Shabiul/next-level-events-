@@ -1105,6 +1105,12 @@ export const OccasionPage: React.FC<{
 
   return (
     <>
+      {/* This page is also reachable as /category/:categoryName and
+          /occasion/:categoryName (same component, kept for existing links --
+          not removing any route). Without an explicit canonical, each alias
+          would self-canonicalize to whatever URL it was loaded from, putting
+          identical content under three different indexable URLs. Always
+          canonicalize to the /services/... form used in sitemap.xml. */}
       <SeoHead
         title={`${decodedSubcategory ? `${decodedSubcategory} — ` : ''}${decodedCategory} Theme Setups | The Decor Party`}
         description={`Explore handcrafted ${decodedCategory} theme setups, backdrops, and balloon styling in Bengaluru with 3-hour same day slots.`}
@@ -1113,11 +1119,26 @@ export const OccasionPage: React.FC<{
           `${decodedCategory.toLowerCase()} setups bengaluru`,
           'event decorators bangalore',
         ]}
+        url={
+          categoryName
+            ? `https://www.thedecorparty.com/services/${encodeURIComponent(decodedCategory)}${decodedSubcategory ? `/${encodeURIComponent(decodedSubcategory)}` : ''}`
+            : `https://www.thedecorparty.com/activities${decodedSubcategory ? `/${encodeURIComponent(decodedSubcategory)}` : ''}`
+        }
         breadcrumbs={[
           { name: 'Home', item: '/' },
           { name: 'Services', item: '/explore' },
-          { name: decodedCategory, item: `/category/${encodeURIComponent(decodedCategory)}` },
-          ...(decodedSubcategory ? [{ name: decodedSubcategory, item: `/category/${encodeURIComponent(decodedCategory)}/${encodeURIComponent(decodedSubcategory)}` }] : []),
+          {
+            name: decodedCategory,
+            item: categoryName ? `/services/${encodeURIComponent(decodedCategory)}` : '/activities',
+          },
+          ...(decodedSubcategory
+            ? [{
+                name: decodedSubcategory,
+                item: categoryName
+                  ? `/services/${encodeURIComponent(decodedCategory)}/${encodeURIComponent(decodedSubcategory)}`
+                  : `/activities/${encodeURIComponent(decodedSubcategory)}`,
+              }]
+            : []),
         ]}
       />
 

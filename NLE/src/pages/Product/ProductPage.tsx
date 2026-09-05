@@ -108,8 +108,11 @@ export const ProductPage: React.FC<ProductPageProps> = ({ onBookProduct }) => {
           price: product.price,
           category: product.categoryName || 'Event Decoration Package',
           sku: product._id,
-          ratingValue: product.rating || 4.9,
-          reviewCount: product.reviewCount || 142,
+          // Real values only -- 0 reviews stays 0 reviews. A fallback like
+          // "4.9 / 142" here would be fabricated AggregateRating schema,
+          // which Google explicitly treats as a spam/manual-action risk.
+          ratingValue: product.rating || undefined,
+          reviewCount: product.reviewCount || undefined,
         }}
       />
       <ProductDetailView

@@ -44,21 +44,6 @@ const DEFAULT_SITE_NAME = 'The Decor Party';
 const BASE_URL = 'https://www.thedecorparty.com';
 const DEFAULT_IMAGE = `${BASE_URL}/final_logo.jpg`;
 
-const DEFAULT_KEYWORDS = [
-  'balloon decoration bangalore',
-  'birthday decoration bengaluru',
-  'surprise event planners bangalore',
-  'candlelight dinner setup bangalore',
-  'proposal decoration bangalore',
-  'rooftop cabana setup bengaluru',
-  'baby shower decoration bangalore',
-  'welcome baby decor bangalore',
-  'kids birthday themes bangalore',
-  'event decorators indiranagar koramangala whitefield hsr layout',
-  'same day balloon decor bangalore',
-  'the decor party bangalore',
-];
-
 /**
  * Helper to normalize relative or absolute image URLs
  */
@@ -124,19 +109,28 @@ export const SeoHead: React.FC<SeoHeadProps> = ({
     const resolvedDesc = description || DEFAULT_DESCRIPTION;
     const resolvedImage = normalizeImageUrl(image);
 
-    let resolvedKeywords = DEFAULT_KEYWORDS.join(', ');
-    if (Array.isArray(keywords)) {
-      resolvedKeywords = Array.from(new Set([...keywords, ...DEFAULT_KEYWORDS])).join(', ');
-    } else if (typeof keywords === 'string' && keywords.trim()) {
-      resolvedKeywords = `${keywords}, ${DEFAULT_KEYWORDS.join(', ')}`;
-    }
+    // Google (and every major engine) has publicly ignored the keywords meta
+    // tag for search ranking for well over a decade -- it has no SEO value,
+    // and forcing a generic site-wide term list onto every page (including
+    // ones it has nothing to do with) is exactly the keyword-stuffing this
+    // audit is meant to remove. Only emit it when a page explicitly supplies
+    // its own genuinely relevant terms; never merge in a blanket default.
+    const resolvedKeywords = Array.isArray(keywords)
+      ? keywords.join(', ')
+      : typeof keywords === 'string'
+        ? keywords.trim()
+        : '';
 
     // 2. Set document title
     document.title = resolvedTitle;
 
     // 3. Set standard search & crawling tags
     setMetaTag('name', 'description', resolvedDesc);
-    setMetaTag('name', 'keywords', resolvedKeywords);
+    if (resolvedKeywords) {
+      setMetaTag('name', 'keywords', resolvedKeywords);
+    } else {
+      document.head.querySelector('meta[name="keywords"]')?.remove();
+    }
     setMetaTag(
       'name',
       'robots',
@@ -159,7 +153,9 @@ export const SeoHead: React.FC<SeoHeadProps> = ({
     setMetaTag('name', 'twitter:title', resolvedTitle);
     setMetaTag('name', 'twitter:description', resolvedDesc);
     setMetaTag('name', 'twitter:image', resolvedImage);
-    setMetaTag('name', 'twitter:site', '@thedecorparty');
+    // No twitter:site: the business has no X/Twitter account on the site
+    // (Footer only links Facebook/Instagram/WhatsApp) -- a handle here would
+    // be a fabricated social profile.
 
     // 6. Set Geo Tags for Bengaluru local search optimization
     setMetaTag('name', 'geo.region', 'IN-KA');
@@ -193,7 +189,7 @@ export const SeoHead: React.FC<SeoHeadProps> = ({
           ? parseFloat(productData.price.replace(/[^0-9.]/g, '')) || 999
           : productData.price;
 
-      schemaGraph.push({
+      const productSchema: Record<string, any> = {
         '@type': 'Product',
         name: productData.name,
         description: productData.description || resolvedDesc,
@@ -213,21 +209,26 @@ export const SeoHead: React.FC<SeoHeadProps> = ({
             productData.availability === 'OutOfStock'
               ? 'https://schema.org/OutOfStock'
               : 'https://schema.org/InStock',
-          priceValidUntil: '2027-12-31',
           itemCondition: 'https://schema.org/NewCondition',
           seller: {
             '@type': 'Organization',
             name: 'The Decor Party',
           },
         },
-        aggregateRating: {
+      };
+      // Only emit AggregateRating when a real rating + review count exist --
+      // a fabricated fallback (e.g. "4.9 / 128" for every product) is exactly
+      // the fake-review schema Google's spam policies target.
+      if (productData.ratingValue && productData.reviewCount) {
+        productSchema.aggregateRating = {
           '@type': 'AggregateRating',
-          ratingValue: productData.ratingValue || 4.9,
-          reviewCount: productData.reviewCount || 128,
+          ratingValue: productData.ratingValue,
+          reviewCount: productData.reviewCount,
           bestRating: 5,
           worstRating: 1,
-        },
-      });
+        };
+      }
+      schemaGraph.push(productSchema);
     }
 
     // FAQPage Schema with Speakable specification for AEO
