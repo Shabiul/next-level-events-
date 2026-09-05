@@ -13,6 +13,14 @@ import {
   X,
   CreditCard,
   ChevronRight,
+  Camera,
+  Video,
+  Utensils,
+  Flower2,
+  Cake,
+  PartyPopper,
+  Lightbulb,
+  Gift,
   type LucideIcon,
 } from 'lucide-react';
 import { BackButton } from '../ui/BackButton';
@@ -85,6 +93,20 @@ interface AddonPreset extends BookingAddonSnapshot {
   priceLabel?: string;
 }
 
+// Original curated picks -- prices/descriptions here are just the display
+// fallback until the /api/catalog fetch resolves each one's real id + price
+// by name (see the catalogPicks effect below).
+const CURATED_PICKS: AddonPreset[] = [
+  { name: 'Photography', price: 5000, kind: 'addon', description: 'Candid + posed shots of the celebration', icon: Camera },
+  { name: 'Videography', price: 7500, kind: 'addon', description: 'Cinematic highlight reel of your event', icon: Video },
+  { name: 'Live Catering', price: 3500, kind: 'addon', description: 'Curated snack or dessert counter with live service', icon: Utensils, badge: 'POPULAR' },
+  { name: 'Flower Decoration', price: 3000, kind: 'addon', description: 'Fresh floral accents across the backdrop & table', icon: Flower2 },
+  { name: 'LED Numbers', price: 1500, kind: 'addon', description: 'Warm-glow numeral lights for the backdrop', icon: Lightbulb },
+  { name: 'Custom Cake', price: 2500, kind: 'addon', description: 'Themed cake styled to match your celebration', icon: Cake },
+  { name: 'Return Gifts', price: 1500, kind: 'addon', description: 'Curated take-home favours for your guests', icon: Gift, priceLabel: 'From ₹1,500' },
+  { name: 'Premium Balloon Upgrade', price: 2500, kind: 'addon', description: 'Premium foil & organic balloon styling upgrade', icon: PartyPopper },
+];
+
 const toBookingSnapshot = (preset: AddonPreset): BookingAddonSnapshot => ({
   id: preset.id,
   name: preset.name,
@@ -122,32 +144,31 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
   const [paymentDialog, setPaymentDialog] = useState<PaymentDialogState>(null);
 
   // Real, backend-priced catalog for the "Popular Celebration Enhancements"
-  // quick picker -- this used to be a hardcoded local preset list with fake
-  // ids ("preset-led-numbers" etc.) that don't exist in the addons/activities
-  // tables, so the server's authoritative pricing always rejected them with
-  // "Selected package is unavailable" the moment one was selected. Fetching
-  // the same /api/catalog the product page's AddonsModule uses keeps this
-  // picker in sync with whatever admins actually manage.
-  const [catalogPicks, setCatalogPicks] = useState<AddonPreset[]>([]);
+  // quick picker -- these 8 curated names/icons are the original design; the
+  // ids used to be fake local placeholders ("preset-led-numbers" etc.) that
+  // don't exist in the addons table, so the server's authoritative pricing
+  // always rejected them with "Selected package is unavailable" the moment
+  // one was selected. They're now real seeded addon rows -- fetch /api/catalog
+  // (same one AddonsModule uses) and match by name to pick up the real id and
+  // admin-managed price, so the picker keeps its original look but actually
+  // prices correctly.
+  const [catalogPicks, setCatalogPicks] = useState<AddonPreset[]>(CURATED_PICKS);
   useEffect(() => {
     let cancelled = false;
     fetch(getApiUrl('/api/catalog'))
       .then((res) => (res.ok ? res.json() : { addons: [], activities: [] }))
       .then((data) => {
         if (cancelled) return;
-        const toPreset = (item: any, kind: 'addon' | 'activity'): AddonPreset => ({
-          id: String(item._id || item.id),
-          name: item.name,
-          price: Number(item.price) || 0,
-          kind,
-          description: item.description || '',
-          icon: Sparkles,
-        });
-        const addons = (Array.isArray(data.addons) ? data.addons : []).map((a: any) => toPreset(a, 'addon'));
-        const activities = (Array.isArray(data.activities) ? data.activities : []).map((a: any) => toPreset(a, 'activity'));
-        setCatalogPicks([...addons, ...activities].slice(0, 8));
+        const byName = new Map<string, any>();
+        for (const item of [...(data.addons || []), ...(data.activities || [])]) {
+          if (item?.name) byName.set(String(item.name).toLowerCase(), item);
+        }
+        setCatalogPicks(CURATED_PICKS.map((preset) => {
+          const match = byName.get(preset.name.toLowerCase());
+          return match ? { ...preset, id: String(match._id || match.id), price: Number(match.price) || preset.price } : preset;
+        }));
       })
-      .catch(() => { if (!cancelled) setCatalogPicks([]); });
+      .catch(() => { if (!cancelled) setCatalogPicks(CURATED_PICKS); });
     return () => { cancelled = true; };
   }, []);
 

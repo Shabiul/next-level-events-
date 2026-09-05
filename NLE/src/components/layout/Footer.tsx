@@ -3,7 +3,6 @@ import {
   Phone,
   Mail,
   MapPin,
-  Shield,
   MessageSquare,
 } from 'lucide-react';
 import type { AdminCategory, Translations } from '../../types';
@@ -46,14 +45,18 @@ export const Footer: React.FC<FooterProps> = ({
   const colTitleClass =
     'mb-4 text-xs font-semibold uppercase tracking-wider text-[#FFF3E6] font-serif';
 
-  const quickLinks: { label: string; key: 'about' | 'privacy' | 'terms' | 'refund' }[] = [
-    { label: 'About Us', key: 'about' },
-    { label: 'How It Works', key: 'about' },
-    { label: 'Celebration Gallery', key: 'about' },
-    { label: 'Customer Reviews', key: 'about' },
-    { label: 'Terms & Conditions', key: 'terms' },
-    { label: 'Privacy Policy', key: 'privacy' },
-    { label: 'Cancellation & Refund', key: 'refund' },
+  // Each link lands on the actual section it names, not just the top of a
+  // generic page: "How It Works" and "Customer Reviews" are sections on the
+  // About/Home pages (scroll-anchored by ScrollToTop), "Celebration Gallery"
+  // is its own page.
+  const quickLinks: { label: string; to: string }[] = [
+    { label: 'About Us', to: '/about' },
+    { label: 'How It Works', to: '/about#process' },
+    { label: 'Celebration Gallery', to: '/gallery' },
+    { label: 'Customer Reviews', to: '/#testimonials' },
+    { label: 'Terms & Conditions', to: '/terms' },
+    { label: 'Privacy Policy', to: '/privacy' },
+    { label: 'Cancellation & Refund', to: '/refund' },
   ];
 
   const packagesList = [
@@ -191,23 +194,11 @@ export const Footer: React.FC<FooterProps> = ({
             <ul className="flex flex-col gap-2">
               {quickLinks.map((link) => (
                 <li key={link.label}>
-                  <button
-                    className={linkClass}
-                    onClick={() => onPageOpen?.(link.key)}
-                  >
+                  <Link to={link.to} className={linkClass}>
                     <span>{link.label}</span>
-                  </button>
+                  </Link>
                 </li>
               ))}
-              <li>
-                <Link
-                  to="/admin/login"
-                  className={`${linkClass} text-[#FFF3E6] hover:text-[#FFF3E6] font-medium`}
-                >
-                  <Shield size={12} className="text-[#FFF3E6]" />
-                  <span>Admin Portal</span>
-                </Link>
-              </li>
             </ul>
           </div>
 
