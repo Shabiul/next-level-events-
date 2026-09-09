@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { OrderRepository, ProductRepository } from "../src/db/repositories.js";
 import sendEmail from "../utils/sendEmail.js";
-import { requireAuth, requireAdmin, type AuthedRequest } from "../utils/auth.js";
+import { attachUser, requireAuth, requireAdmin, type AuthedRequest } from "../utils/auth.js";
 import { postOrderToN8n } from "../services/n8n.service.js";
 import { priceSelections } from "../utils/pricing.js";
 
@@ -428,9 +428,9 @@ export async function buildOrderForBooking(
 
 export { notifyOrderChannels };
 
-router.post("/", requireAuth, async (req: Request, res: Response) => {
+router.post("/", attachUser, async (req: Request, res: Response) => {
   try {
-    const userId = (req as AuthedRequest).user!.id;
+    const userId = (req as AuthedRequest).user?.id || null;
     const paymentMethod = req.body.paymentMethod === "razorpay" ? "razorpay" : "whatsapp";
 
     const orderPayload = await buildOrderForBooking(req.body, { userId, paymentStatus: "pending", paymentMethod });

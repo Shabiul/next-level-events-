@@ -26,33 +26,50 @@ export const ProductPage: React.FC<ProductPageProps> = ({ onBookProduct }) => {
   }, [id]);
 
   useEffect(() => {
-    if (stateProduct && stateProduct._id === id) {
+    if (!id) return;
+    let active = true;
+
+    // Optimistic instant display from router state or catalog cache
+    if (stateProduct && (stateProduct._id === id || stateProduct.id === id)) {
       setProduct(stateProduct);
       setLoading(false);
-      return;
-    }
-
-    if (!id) return;
-    const found = products.find((p: AdminProduct) => p._id === id || p.name.toLowerCase() === id.toLowerCase());
-    if (found) {
-      setProduct(found);
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
-    fetch(getApiUrl(`/api/products/${id}`))
-      .then(async (res) => {
-        if (!res.ok) throw new Error('Product not found');
-        const data = await res.json();
-        setProduct(data);
-      })
-      .catch(() => {
-        setProduct(null);
-      })
-      .finally(() => {
+    } else {
+      const found = products.find((p: AdminProduct) => p._id === id || p.id === id || p.name.toLowerCase() === id.toLowerCase());
+      if (found) {
+        setProduct(found);
         setLoading(false);
-      });
+      } else if (!product) {
+        setLoading(true);
+      }
+    }
+
+    const fetchProductDetails = () => {
+      fetch(getApiUrl(`/api/products/${id}?_t=${Date.now()}`), { cache: 'no-store' })
+        .then(async (res) => {
+          if (!res.ok) throw new Error('Product not found');
+          const data = await res.json();
+          if (active && data && (data._id || data.id)) {
+            setProduct(data);
+          }
+        })
+        .catch(() => {
+          if (active && !product && !products.some((p) => p._id === id || p.id === id)) {
+            setProduct(null);
+          }
+        })
+        .finally(() => {
+          if (active) setLoading(false);
+        });
+    };
+
+    fetchProductDetails();
+
+    window.addEventListener('tdp_catalog_invalidate', fetchProductDetails);
+
+    return () => {
+      active = false;
+      window.removeEventListener('tdp_catalog_invalidate', fetchProductDetails);
+    };
   }, [id, products, stateProduct]);
 
   if (loading || (productsLoading && !product)) {
@@ -84,7 +101,30 @@ export const ProductPage: React.FC<ProductPageProps> = ({ onBookProduct }) => {
     if (onBookProduct) {
       onBookProduct(p, method, selectedAddOns);
     } else {
-      navigate(`/booking/${p._id}`, { state: { product: p, preferredMethod: method, selectedAddOns } });
+      const prodId = p._id || p.id;
+      navigate(`/booking/${prodId}`, {
+        state: {
+          product: p,
+          cartItems: [{
+            ...p,
+            _id: prodId,
+            id: prodId,
+            qty: 1,
+            bookingDetails: [{
+              name: '',
+              mobile: '',
+              email: '',
+              location: 'Bengaluru',
+              eventDate: '',
+              eventTime: '',
+              requests: '',
+              addOns: selectedAddOns || [],
+            }],
+          }],
+          preferredMethod: method,
+          selectedAddOns: selectedAddOns || [],
+        },
+      });
     }
   };
 

@@ -255,6 +255,24 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
   };
 
   const handleBookNow = (method: 'razorpay' | 'whatsapp') => {
+    // Automatically add to cart so the cart always contains the product before checkout
+    try {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      addItem(product, {
+        name: auth.user?.firstName ? `${auth.user.firstName} ${auth.user.lastName || ''}`.trim() : (auth.user?.name || 'Guest Customer'),
+        email: auth.user?.email || '',
+        mobile: auth.user?.phone || '',
+        location: 'Bengaluru',
+        eventDate: tomorrow.toISOString().split('T')[0],
+        eventTime: '18:00',
+        requests: '',
+        addOns: bookingSelections,
+      });
+    } catch (e) {
+      console.warn('Could not auto-add to cart before booking', e);
+    }
+
     if (method === 'whatsapp') {
       trackWhatsappClick('product_detail_page', product._id, product.name);
     } else {

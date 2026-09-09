@@ -59,13 +59,13 @@ export type PackageBadge = 'Most Popular' | 'Luxury' | 'Custom';
 // keyed by EventPackage id. Shared by the Home "Popular Packages" rail and
 // the /packages catalogue cards so both use the exact same photography.
 export const PACKAGE_IMAGES: Record<string, string> = {
-  'essential-celebration': '/kkkk-landscape.jpg',
-  'fun-fiesta': '/hero-balloons.jpg',
-  'premium-carnival': '/explore2-landscape.jpg',
-  '30k-theme-decor': '/tearce-landscape.jpg',
-  'theme-decor-birthday': '/birthday-landscape.jpg',
-  'grand-celebration': '/cabana.jpg',
-  '1-lakh-custom-stage': '/romantic-dinner-landscape.jpg',
+  'essential-celebration': '/kkkk-landscape.webp',
+  'fun-fiesta': '/hero-balloons.webp',
+  'premium-carnival': '/explore2-landscape.webp',
+  '30k-theme-decor': '/tearce-landscape.webp',
+  'theme-decor-birthday': '/birthday-landscape.webp',
+  'grand-celebration': '/cabana.webp',
+  '1-lakh-custom-stage': '/romantic-dinner-landscape.webp',
 };
 
 export interface EventPackage {

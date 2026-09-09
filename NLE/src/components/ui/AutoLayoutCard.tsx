@@ -68,7 +68,7 @@ export const AutoLayoutCard: React.FC<AutoLayoutCardProps> = ({
   };
 
   const displayImage =
-    image ||
+    (image ? image.replace(/\.(jpe?g)$/i, '.webp') : '') ||
     'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800&auto=format&fit=crop&q=80';
 
   return (

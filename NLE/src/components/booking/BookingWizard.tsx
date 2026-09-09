@@ -28,7 +28,7 @@ import type { AdminProduct, BookingAddonSnapshot, BookingDetails, CartItem } fro
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { AddOnCard } from './AddOnCard';
-import { getApiUrl } from '../../services/api.service';
+import { getApiUrl, fetchWithTimeout } from '../../services/api.service';
 import { trackPaymentFailed, trackPurchase, trackWhatsappClick, type GAItem } from '../../utils/analytics';
 import AuthContext from '../../context/AuthContext';
 import { useCart } from '../../hooks/useCart';
@@ -61,20 +61,40 @@ const loadRazorpayScript = () => {
   if (typeof window === 'undefined') return Promise.resolve(false);
   if ((window as any).Razorpay) return Promise.resolve(true);
 
-  const existingScript = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
-  if (existingScript) {
-    return new Promise<boolean>((resolve) => {
-      existingScript.addEventListener('load', () => resolve(Boolean((window as any).Razorpay)), { once: true });
-      existingScript.addEventListener('error', () => resolve(false), { once: true });
-    });
-  }
-
   return new Promise<boolean>((resolve) => {
+    // 2-second timeout safeguard: if script stalls or is blocked by adblock, proceed immediately
+    const timeout = setTimeout(() => {
+      resolve(Boolean((window as any).Razorpay));
+    }, 2000);
+
+    const existingScript = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+    if (existingScript) {
+      if ((window as any).Razorpay) {
+        clearTimeout(timeout);
+        return resolve(true);
+      }
+      existingScript.addEventListener('load', () => {
+        clearTimeout(timeout);
+        resolve(Boolean((window as any).Razorpay));
+      }, { once: true });
+      existingScript.addEventListener('error', () => {
+        clearTimeout(timeout);
+        resolve(false);
+      }, { once: true });
+      return;
+    }
+
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     script.async = true;
-    script.onload = () => resolve(Boolean((window as any).Razorpay));
-    script.onerror = () => resolve(false);
+    script.onload = () => {
+      clearTimeout(timeout);
+      resolve(Boolean((window as any).Razorpay));
+    };
+    script.onerror = () => {
+      clearTimeout(timeout);
+      resolve(false);
+    };
     document.body.appendChild(script);
   });
 };
@@ -423,7 +443,7 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
 
     try {
       const createToken = getAuthToken();
-      const response = await fetch(getApiUrl('/api/payment/create-order'), {
+      const response = await fetchWithTimeout(getApiUrl('/api/payment/create-order'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -452,7 +472,7 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
 
       if (!razorpayKey || !scriptLoaded || !(window as any).Razorpay) {
         const token = getAuthToken();
-        const verifyResponse = await fetch(getApiUrl('/api/payment/verify'), {
+        const verifyResponse = await fetchWithTimeout(getApiUrl('/api/payment/verify'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -543,7 +563,7 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
           try {
             setLoading(true);
             const token = getAuthToken();
-            const verifyResponse = await fetch(getApiUrl('/api/payment/verify'), {
+            const verifyResponse = await fetchWithTimeout(getApiUrl('/api/payment/verify'), {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -628,6 +648,12 @@ export const BookingWizard: React.FC<BookingPageProps> = ({
         });
       });
       rz.open();
+      // The Razorpay modal is its own overlay from here -- don't leave our
+      // "Proceed to Payment" button stuck spinning/disabled behind it. If the
+      // modal fails to render (blocked iframe, ad-blocker) this is the only
+      // thing that re-enables the button; ondismiss/handler/payment.failed
+      // already reset it again once the user actually interacts with it.
+      setLoading(false);
     } catch (err: any) {
       trackPaymentFailed();
       setError(

@@ -8,9 +8,10 @@ import { cn } from "../../lib/utils";
 import { getApiUrl, authFetch, parseJsonSafe } from '../../lib/api';
 import { supabase } from '../../lib/supabase';
 import { UPLOAD_URL } from '../../lib/uploads';
-import { resolveImageUrl } from '../../lib/imageUrl';
+import { resolveImageUrl, handleImageError } from '../../lib/imageUrl';
 import { BADGE_COLORS, getAdminBadgeColorClass } from '../../lib/badges';
 import { trackAdminAction } from '../../lib/analytics';
+import { broadcastCrmUpdate } from '../../lib/syncChannel';
 
 const getProductsApi = () => getApiUrl('/api/products');
 const getCategoriesApi = () => getApiUrl('/api/categories');
@@ -408,6 +409,7 @@ export const ProductsView = () => {
         const updated = await res.json();
         setProducts((prev) => prev.map((p) => (p._id === updated._id ? updated : p)));
         trackAdminAction('update_product', 'product', updated._id);
+        broadcastCrmUpdate('product', updated._id);
         toast.success("Product updated successfully!");
       } catch {
         toast.error("Failed to update product");
@@ -421,6 +423,7 @@ export const ProductsView = () => {
       const newProduct = await res.json();
       setProducts((prev) => [newProduct, ...prev]);
       trackAdminAction('create_product', 'product', newProduct._id);
+      broadcastCrmUpdate('product', newProduct._id);
       toast.success("Product added successfully!");
     }
 
@@ -432,6 +435,7 @@ export const ProductsView = () => {
     setProducts((prev) => prev.filter((p) => p._id !== id));
     setDeleteConfirm(null);
     trackAdminAction('delete_product', 'product', id);
+    broadcastCrmUpdate('product', id);
     toast.success("Product deleted!");
   };
 
@@ -442,6 +446,7 @@ export const ProductsView = () => {
       body: JSON.stringify({ active }),
     });
     setProducts((prev) => prev.map((p) => (p._id === id ? { ...p, active } : p)));
+    broadcastCrmUpdate('product', id);
   };
 
   const addInclusion = () => {
@@ -515,7 +520,7 @@ export const ProductsView = () => {
           <div key={prod._id} className={cn('overflow-hidden rounded-2xl border border-[#381932] dark:border-[#381932] bg-[#FFF3E6] dark:bg-[#381932] shadow-xs flex flex-col justify-between transition-all', !prod.active && 'opacity-60')}>
             <div>
               <div className="relative aspect-video w-full bg-[#FFF3E6] dark:bg-[#381932] overflow-hidden">
-                <img src={resolveImageUrl(prod.image)} alt={prod.name} className="h-full w-full object-cover" />
+                <img src={resolveImageUrl(prod.image)} alt={prod.name} className="h-full w-full object-cover" onError={handleImageError} />
                 {prod.badge && (
                   <span className={cn('absolute left-2.5 top-2.5 rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase border', getAdminBadgeColorClass(prod.badgeColor))}>
                     {prod.badge}
@@ -719,7 +724,7 @@ export const ProductsView = () => {
 
               {form.image && !uploading && (
                 <div className="relative mt-2 h-44 w-full overflow-hidden rounded-2xl border border-[#381932] dark:border-[#381932]">
-                  <img src={resolveImageUrl(form.image)} alt="Preview" className="h-full w-full object-cover" />
+                  <img src={resolveImageUrl(form.image)} alt="Preview" className="h-full w-full object-cover" onError={handleImageError} />
                   <button
                     type="button"
                     className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#381932]/70 text-[#FFF3E6] cursor-pointer"
@@ -785,7 +790,7 @@ export const ProductsView = () => {
               <div className="mt-2 grid grid-cols-4 gap-2 sm:grid-cols-6">
                 {form.moreImages.map((img, idx) => (
                   <div key={idx} className="group relative aspect-square overflow-hidden rounded-lg border border-[#381932] dark:border-[#381932]">
-                    <img src={resolveImageUrl(img)} alt={`More ${idx + 1}`} className="h-full w-full object-cover" />
+                    <img src={resolveImageUrl(img)} alt={`More ${idx + 1}`} className="h-full w-full object-cover" onError={handleImageError} />
                     <button
                       type="button"
                       className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#381932]/60 text-[#FFF3E6] opacity-0 transition-opacity group-hover:opacity-100"

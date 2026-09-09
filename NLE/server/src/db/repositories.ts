@@ -550,6 +550,9 @@ export const ProductRepository = {
   },
 
   async update(id: string, payload: any): Promise<any | null> {
+    const existing = await this.findById(id);
+    const targetId = existing?.id || id;
+
     const updates: Partial<DbProduct> = {};
     if (payload.name !== undefined) updates.name = payload.name;
     if (payload.categoryId !== undefined) updates.category_id = payload.categoryId;
@@ -572,24 +575,69 @@ export const ProductRepository = {
     if (payload.activities !== undefined) updates.activities_inline = payload.activities;
     updates.updated_at = new Date().toISOString();
 
-    const { error } = await supabase.from("products").update(updates).eq("id", id);
-    if (error) throw error;
+    // Check if the record already exists in Supabase
+    const { data: dbRow } = await supabase
+      .from("products")
+      .select("id")
+      .or(`id.eq.${targetId},legacy_mongo_id.eq.${targetId}`)
+      .maybeSingle();
+
+    let savedId = targetId;
+
+    if (!dbRow) {
+      const merged = { ...(existing || {}), ...payload };
+      const productData: Partial<DbProduct> = {
+        name: merged.name || "Package",
+        category_id: merged.categoryId || merged.category_id || null,
+        category_name: merged.categoryName || merged.category_name || "Event Packages",
+        subcategory: merged.subcategory || "",
+        price: Number(merged.price || 0),
+        original_price: merged.originalPrice ? Number(merged.originalPrice) : null,
+        description: merged.description || "",
+        inclusions: merged.inclusions || [],
+        image: merged.image || "",
+        more_images: merged.moreImages || [],
+        badge: merged.badge || null,
+        badge_color: merged.badgeColor || "purple",
+        rating: Number(merged.rating || 0),
+        review_count: Number(merged.reviewCount || 0),
+        active: merged.active !== false,
+        featured: Boolean(merged.featured),
+        order_count: Number(merged.orderCount || 0),
+        add_ons_inline: merged.addOns || [],
+        activities_inline: merged.activities || [],
+        legacy_mongo_id: targetId,
+      };
+      const { data: inserted, error: insertErr } = await supabase
+        .from("products")
+        .insert(productData)
+        .select("*")
+        .single();
+      if (insertErr) throw insertErr;
+      savedId = inserted.id;
+    } else {
+      savedId = dbRow.id;
+      const { error } = await supabase.from("products").update(updates).eq("id", dbRow.id);
+      if (error) throw error;
+    }
 
     // Update addons relations if provided
     if (Array.isArray(payload.addons)) {
-      await supabase.from("product_addons").delete().eq("product_id", id);
+      await supabase.from("product_addons").delete().eq("product_id", savedId);
       const links = payload.addons
         .map((a: any) => (typeof a === "string" ? a : a._id || a.id))
         .filter(Boolean)
-        .map((addonId: string) => ({ product_id: id, addon_id: addonId }));
+        .map((addonId: string) => ({ product_id: savedId, addon_id: addonId }));
       if (links.length) await supabase.from("product_addons").insert(links);
     }
 
-    return this.findById(id);
+    return this.findById(savedId);
   },
 
   async delete(id: string): Promise<boolean> {
-    const { error } = await supabase.from("products").delete().eq("id", id);
+    const existing = await this.findById(id);
+    const targetId = existing?.id || id;
+    const { error } = await supabase.from("products").delete().or(`id.eq.${targetId},legacy_mongo_id.eq.${targetId}`);
     if (error) throw error;
     return true;
   },

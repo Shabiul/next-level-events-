@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import crypto from "crypto";
 import "dotenv/config";
 import { OrderRepository, ProductRepository } from "../src/db/repositories.js";
-import { requireAuth, type AuthedRequest } from "../utils/auth.js";
+import { attachUser, type AuthedRequest } from "../utils/auth.js";
 import { getRazorpayInstance, hasRazorpayKeys } from "../utils/razorpay.js";
 import {
   buildOrderForBooking,
@@ -35,7 +35,7 @@ async function authoritativeAmountPaise(orderPayload: any): Promise<number> {
   return Math.round(pricing.amount * 100);
 }
 
-router.post("/create-order", requireAuth, async (req: Request, res: Response) => {
+router.post("/create-order", attachUser, async (req: Request, res: Response) => {
   try {
     const orderPayload = req.body.orderPayload || req.body;
     let amountPaise: number;
@@ -49,7 +49,8 @@ router.post("/create-order", requireAuth, async (req: Request, res: Response) =>
     }
 
     const receipt = String(req.body.receipt || `rcpt_${Date.now()}`).slice(0, 40);
-    const notes = { ...(req.body.notes || {}), userId: (req as AuthedRequest).user!.id };
+    const userId = (req as AuthedRequest).user?.id || null;
+    const notes = { ...(req.body.notes || {}), ...(userId ? { userId } : {}) };
 
     const razorpay = getRazorpayInstance();
     if (!razorpay) {
@@ -79,9 +80,9 @@ router.post("/create-order", requireAuth, async (req: Request, res: Response) =>
   }
 });
 
-router.post("/verify", requireAuth, async (req: Request, res: Response) => {
+router.post("/verify", attachUser, async (req: Request, res: Response) => {
   try {
-    const userId = (req as AuthedRequest).user!.id;
+    const userId = (req as AuthedRequest).user?.id || null;
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderPayload } = req.body;
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {

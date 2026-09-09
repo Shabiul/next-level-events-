@@ -233,7 +233,7 @@ export const ContactPage: React.FC = () => {
                 <span className="text-[#A78A9F]">MEMORABLE</span>
               </h1>
 
-              <p className="font-script text-2xl sm:text-[28px] text-[#A78A9F] mt-5 mb-5">
+              <p className="font-sans font-medium text-base sm:text-lg text-[#A78A9F] mt-3 mb-4">
                 Every celebration starts with a conversation.
               </p>
 
@@ -260,11 +260,11 @@ export const ContactPage: React.FC = () => {
               {/* Lead stylist chip */}
               <div className="mt-8 flex items-center gap-4 rounded-2xl border border-[#E6D7C5] bg-[#FFF3E6] p-4 shadow-[0_10px_30px_-18px_rgba(56,25,50,0.25)] max-w-sm">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#381932] font-serif text-base font-semibold text-[#FFF3E6]">
-                  RP
+                  PR
                 </div>
                 <div>
                   <span className="block font-serif text-[15px] font-semibold text-[#381932]">
-                    Revanth &amp; Prashanth B S
+                    Prashanth B S &amp; Revanath LM
                   </span>
                   <span className="mt-0.5 flex items-center gap-1.5 text-xs text-[#381932]/70">
                     <Clock size={12} className="text-[#A78A9F]" />

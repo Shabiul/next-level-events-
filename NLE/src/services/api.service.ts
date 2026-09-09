@@ -52,6 +52,26 @@ export async function authFetch(input: RequestInfo | URL, init: RequestInit = {}
   return fetch(input, { ...init, headers });
 }
 
+/**
+ * fetch() that aborts after `timeoutMs` instead of hanging forever (e.g. a
+ * cold-starting serverless function or a stalled payment-gateway request).
+ * Throws a DOMException named "AbortError" on timeout -- callers already
+ * catching fetch errors don't need any special-casing.
+ */
+export async function fetchWithTimeout(
+  input: RequestInfo | URL,
+  init: RequestInit = {},
+  timeoutMs = 15000
+): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(input, { ...init, signal: init.signal ?? controller.signal });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 export async function fetchWithTracking(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
   try {
     const res = await fetch(input, init);

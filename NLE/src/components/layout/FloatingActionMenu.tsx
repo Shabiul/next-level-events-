@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MessageCircle, Phone, Sparkles, X } from 'lucide-react';
@@ -86,13 +87,13 @@ export function FloatingActionMenu({ onAssistantOpen, assistantOpen = false }: F
     if (action === 'ai-planner') onAssistantOpen?.();
   };
 
-  const isProductPage = typeof window !== 'undefined' && window.location.pathname.startsWith('/product/');
+  const location = useLocation();
+  const isBookingPage = location.pathname.startsWith('/booking') || location.pathname.startsWith('/checkout');
+  const isProductPage = location.pathname.startsWith('/product/');
 
-  // Product pages already carry their own sticky WhatsApp/Book Now bar --
-  // this global bubble was redundant there and, being fixed to the viewport
-  // regardless of scroll position, could sit directly over body copy instead
-  // of clearing it consistently.
-  if (!mounted || typeof document === 'undefined' || assistantOpen || isProductPage) return null;
+  // Product pages carry their own sticky bar, and booking/checkout pages require
+  // focus -- hide the quick access bubble completely on these views.
+  if (!mounted || typeof document === 'undefined' || assistantOpen || isProductPage || isBookingPage) return null;
 
   return ReactDOM.createPortal(
     <div

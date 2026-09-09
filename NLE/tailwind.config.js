@@ -85,7 +85,7 @@ export default {
         serif: ['"Oswald"', '"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
         oswald: ['"Oswald"', '"Helvetica Neue"', 'sans-serif'],
         poppins: ['"Poppins"', '"Inter"', 'sans-serif'],
-        script: ['"Great Vibes"', '"Segoe Script"', 'cursive'],
+        script: ['"Oswald"', '"Helvetica Neue"', 'sans-serif'],
       },
       letterSpacing: {
         hero: '-0.035em',

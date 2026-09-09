@@ -253,6 +253,7 @@ export interface AdminCategory {
 
 export interface AdminProduct {
   _id: string;
+  id?: string;
   name: string;
   categoryId: string;
   categoryName: string;

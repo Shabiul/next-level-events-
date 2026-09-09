@@ -4,7 +4,7 @@ import { Modal } from './Modal';
 import { ConfirmModal } from './ConfirmModal';
 import { getApiUrl, authFetch, parseJsonSafe } from '../../lib/api';
 import { supabase } from '../../lib/supabase';
-import { resolveImageUrl } from '../../lib/imageUrl';
+import { resolveImageUrl, handleImageError } from '../../lib/imageUrl';
 import type { AdminProduct } from '../../types';
 import { ProductSearchSelector } from './ProductSearchSelector';
 import { toast } from 'react-toastify';
@@ -225,7 +225,7 @@ export const ActivitiesView = () => {
             <div>
               <div className="relative aspect-video w-full bg-[#FFF3E6] dark:bg-[#381932] overflow-hidden">
                 {activity.product?.image ? (
-                  <img src={resolveImageUrl(activity.product.image)} alt={activity.product.name} className="h-full w-full object-cover" />
+                  <img src={resolveImageUrl(activity.product.image)} alt={activity.product.name} className="h-full w-full object-cover" onError={handleImageError} />
                 ) : (
                   <div className="flex h-full items-center justify-center text-xs font-semibold text-[#381932]">No Image</div>
                 )}

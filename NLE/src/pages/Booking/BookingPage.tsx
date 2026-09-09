@@ -42,11 +42,24 @@ export const BookingPage: React.FC<BookingPageRouteProps> = ({ onConfirmBooking 
       return;
     }
 
-    const found = products.find((p: AdminProduct) => p._id === id || p.name.toLowerCase() === id.toLowerCase());
+    let active = true;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3500);
+
+    let found = products.find((p: AdminProduct) => p._id === id || p.id === id || p.name.toLowerCase() === id.toLowerCase());
+    if (!found) {
+      try {
+        const cachedStr = localStorage.getItem('tdp_cached_products');
+        const cachedList: AdminProduct[] = cachedStr ? JSON.parse(cachedStr) : [];
+        found = cachedList.find((p: AdminProduct) => p._id === id || p.id === id || p.name.toLowerCase() === id.toLowerCase());
+      } catch {
+        // ignore cache parse errors
+      }
+    }
+
     if (found) {
       setProduct(found);
       setLoading(false);
-      return;
     }
 
     const pkgMatch = EVENT_PACKAGES.find(
@@ -74,24 +87,46 @@ export const BookingPage: React.FC<BookingPageRouteProps> = ({ onConfirmBooking 
         updatedAt: '2026-01-01',
       });
       setLoading(false);
+      clearTimeout(timeout);
       return;
     }
 
-    setLoading(true);
-    fetch(getApiUrl(`/api/products/${id}`))
-      .then(async (res) => {
-        if (!res.ok) throw new Error('Product not found');
-        const data = await res.json();
-        setProduct(data);
+    if (!found) {
+      setLoading(true);
+    }
+
+    const fetchProductDetails = () => {
+      fetch(getApiUrl(`/api/products/${id}?_t=${Date.now()}`), {
+        cache: 'no-store',
+        signal: controller.signal,
       })
-      .catch(() => {
-        // The requested product genuinely doesn't exist / isn't active --
-        // never substitute a different, unrelated catalog product here.
-        setProduct(null);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+        .then(async (res) => {
+          if (!res.ok) throw new Error('Product not found');
+          const data = await res.json();
+          if (active && data && (data._id || data.id)) {
+            setProduct(data);
+          }
+        })
+        .catch(() => {
+          if (active && !found) {
+            setProduct(null);
+          }
+        })
+        .finally(() => {
+          if (active) setLoading(false);
+        });
+    };
+
+    fetchProductDetails();
+
+    window.addEventListener('tdp_catalog_invalidate', fetchProductDetails);
+
+    return () => {
+      active = false;
+      clearTimeout(timeout);
+      controller.abort();
+      window.removeEventListener('tdp_catalog_invalidate', fetchProductDetails);
+    };
   }, [id, products, productsLoading, stateProduct]);
 
   if (loading) {

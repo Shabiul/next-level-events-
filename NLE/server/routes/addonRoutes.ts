@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { AddonRepository } from "../src/db/repositories.js";
 import { requirePermission } from "../utils/auth.js";
+import { broadcastCatalogUpdate } from "../services/catalogSyncService.js";
 
 const router = express.Router();
 
@@ -41,6 +42,7 @@ router.post("/", requirePermission("addons"), async (req: Request, res: Response
       category: req.body.category || "",
       active: req.body.active !== false,
     });
+    broadcastCatalogUpdate("addon_created", { id: addon?.id, name: addon?.name });
     res.status(201).json(addon);
   } catch (err: any) {
     res.status(400).json({ error: err.message || "Failed to create add-on" });
@@ -54,6 +56,7 @@ router.put("/:id", requirePermission("addons"), async (req: Request, res: Respon
     if (!addon) {
       return res.status(404).json({ error: "Add-on not found" });
     }
+    broadcastCatalogUpdate("addon_updated", { id, name: addon?.name });
     return res.json(addon);
   } catch (err: any) {
     return res.status(400).json({ error: err.message || "Failed to update add-on" });
@@ -67,6 +70,7 @@ router.delete("/:id", requirePermission("addons"), async (req: Request, res: Res
     if (!deleted) {
       return res.status(404).json({ error: "Add-on not found" });
     }
+    broadcastCatalogUpdate("addon_deleted", { id });
     return res.json({ message: "Add-on deleted" });
   } catch (err: any) {
     return res.status(500).json({ error: err.message || "Failed to delete add-on" });

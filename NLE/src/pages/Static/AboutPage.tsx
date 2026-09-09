@@ -315,7 +315,7 @@ export const AboutPage: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative bg-[#381932] rounded-[28px] p-8 sm:p-14 border border-[#E6D7C5]/20 text-center flex flex-col items-center gap-6 shadow-[0_30px_70px_-35px_rgba(56,25,50,0.8)] overflow-hidden"
+            className="relative bg-[#381932] rounded-[28px] p-6 sm:p-14 border border-[#E6D7C5]/20 text-center flex flex-col items-center gap-6 shadow-[0_30px_70px_-35px_rgba(56,25,50,0.8)] overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-80 h-80 bg-[#A78A9F]/20 rounded-full blur-3xl pointer-events-none" />
 
@@ -331,13 +331,30 @@ export const AboutPage: React.FC = () => {
 
               <div className="w-16 h-[1px] bg-[#A78A9F]/50 my-1" />
 
-              <div className="flex flex-col items-center gap-1">
-                <span className="font-script text-2xl sm:text-3xl text-[#A78A9F]">
-                  Revanth &amp; Prashanth B S
+              <div className="flex flex-col items-center gap-1.5">
+                <span className="font-serif text-lg sm:text-2xl md:text-3xl font-bold uppercase tracking-tight text-[#A78A9F] text-center">
+                  Prashanth B S &amp; Revanath LM
                 </span>
-                <span className="text-[11px] sm:text-xs font-poppins font-medium tracking-[0.16em] text-[#FFF3E6]/70 uppercase">
+                <span className="text-xs sm:text-sm font-poppins font-medium tracking-[0.16em] text-[#FFF3E6]/80 uppercase text-center">
                   Founders &amp; Creative Directors, The Decor Party
                 </span>
+              </div>
+
+              {/* Direct Founder Numbers */}
+              <div className="flex items-center justify-center gap-2.5 sm:gap-4 mt-2 sm:mt-3 text-sm sm:text-lg md:text-xl font-sans font-semibold tracking-wider text-[#FFF3E6]">
+                <a
+                  href="tel:+917022058460"
+                  className="hover:text-[#A78A9F] transition-colors py-0.5 whitespace-nowrap"
+                >
+                  +91 70220 58460
+                </a>
+                <span className="text-[#A78A9F]/50 text-sm sm:text-lg select-none">•</span>
+                <a
+                  href="tel:+918660924212"
+                  className="hover:text-[#A78A9F] transition-colors py-0.5 whitespace-nowrap"
+                >
+                  +91 86609 24212
+                </a>
               </div>
 
               <Link

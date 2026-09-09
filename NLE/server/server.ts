@@ -1,5 +1,6 @@
 import "dotenv/config";
 import path from "path";
+import fs from "fs";
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import crypto from "crypto";
@@ -26,6 +27,8 @@ import { connectDatabase } from "./src/db/connection.js";
 import { ProductRepository } from "./src/db/repositories.js";
 import helmet from "helmet";
 
+const CURRENT_DEPLOY_VERSION = process.env.DEPLOY_VERSION || "2026.09.09.v2.5";
+
 const app = express();
 
 app.use(
@@ -34,6 +37,18 @@ app.use(
     contentSecurityPolicy: false, // API server returning JSON & crawler HTML previews
   })
 );
+
+// Deployment versioning middleware: sets cookie & response header to synchronize client cache invalidation
+app.use((_req: Request, res: Response, next: NextFunction) => {
+  res.setHeader("X-Deploy-Version", CURRENT_DEPLOY_VERSION);
+  res.cookie("tdp_deploy_version", CURRENT_DEPLOY_VERSION, {
+    path: "/",
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    sameSite: "lax",
+    httpOnly: false, // Must be accessible by client-side scripts to coordinate cache purging
+  });
+  next();
+});
 
 interface ProductShareData {
   _id?: string;
@@ -157,6 +172,15 @@ app.use(
 
 app.use(express.json());
 
+// Serve public static assets (images, webp, icons) directly from API origin
+const publicDir = path.resolve(process.cwd(), "public");
+if (fs.existsSync(publicDir)) {
+  app.use(express.static(publicDir, {
+    maxAge: "1d",
+    etag: true,
+  }));
+}
+
 app.get("/", (_req, res) => {
   res.send("THIS IS MY NEW SERVER");
 });
@@ -165,6 +189,7 @@ app.get("/api/health", (_req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     status: "healthy",
+    deployVersion: CURRENT_DEPLOY_VERSION,
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
   });
@@ -226,10 +251,39 @@ app.get("/product/:productId", (req: Request, res: Response) => {
   return res.redirect(302, url);
 });
 
-// In standalone production (non-Vercel), serve built frontend static assets
+// In standalone production (non-Vercel), serve built frontend static assets with aggressive caching
 if (process.env.NODE_ENV === "production" && !process.env.VERCEL) {
   const distDir = path.resolve(process.cwd(), "dist");
-  app.use(express.static(distDir));
+
+  // Auto-negotiate compressed WebP (100-300KB) when client requests a legacy .jpg image
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (/\.(jpe?g)$/i.test(req.path) && req.accepts("image/webp")) {
+      const webpRelPath = req.path.replace(/\.(jpe?g)$/i, ".webp");
+      const webpDiskPath = path.join(distDir, decodeURIComponent(webpRelPath));
+      if (fs.existsSync(webpDiskPath)) {
+        req.url = req.url.replace(/\.(jpe?g)($|\?)/i, ".webp$2");
+      }
+    }
+    next();
+  });
+
+  app.use(
+    express.static(distDir, {
+      maxAge: "30d",
+      immutable: true,
+      etag: true,
+      lastModified: true,
+      setHeaders: (res, filePath) => {
+        if (filePath.endsWith(".html")) {
+          // HTML entry file must revalidate so clients immediately pick up new deployments
+          res.setHeader("Cache-Control", "no-cache");
+        } else if (/\.(jpg|jpeg|png|webp|avif|svg|gif|ico|mp4|webm|woff2|woff|ttf|css|js)$/i.test(filePath)) {
+          // Static media and hashed bundles cached for 1 year to drastically reduce server hits
+          res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+        }
+      },
+    })
+  );
   app.get("*", (req: Request, res: Response, next: NextFunction) => {
     if (req.path.startsWith("/api/") || req.path.startsWith("/share/")) return next();
     res.sendFile(path.join(distDir, "index.html"), (err) => {

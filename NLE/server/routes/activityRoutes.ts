@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import { supabase } from "../src/db/supabase.js";
 import { ProductRepository } from "../src/db/repositories.js";
 import { requirePermission } from "../utils/auth.js";
+import { broadcastCatalogUpdate } from "../services/catalogSyncService.js";
 
 const router = express.Router();
 
@@ -54,6 +55,7 @@ router.post("/", requirePermission("activities"), async (req: Request, res: Resp
       }))
     );
 
+    broadcastCatalogUpdate("activity_created");
     res.status(201).json(populated);
   } catch (err: any) {
     res.status(500).json({ error: err.message || "Failed to create activities" });
@@ -83,6 +85,7 @@ router.put("/:id", requirePermission("activities"), async (req: Request, res: Re
     }
 
     const product = updated.product_id ? await ProductRepository.findById(updated.product_id) : null;
+    broadcastCatalogUpdate("activity_updated", { id: updated.id });
     res.json({
       _id: updated.id,
       id: updated.id,
@@ -98,6 +101,7 @@ router.delete("/:id", requirePermission("activities"), async (req: Request, res:
   try {
     const { error } = await supabase.from("activities").delete().eq("id", req.params.id);
     if (error) throw error;
+    broadcastCatalogUpdate("activity_deleted", { id: req.params.id });
     res.json({ message: "Activity deleted" });
   } catch (err: any) {
     res.status(500).json({ error: err.message || "Failed to delete activity" });

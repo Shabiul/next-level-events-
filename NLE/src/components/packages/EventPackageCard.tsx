@@ -86,50 +86,50 @@ export const EventPackageCard: React.FC<EventPackageCardProps> = ({
       </div>
 
       {/* Body */}
-      <div className="flex flex-1 flex-col p-6 sm:p-7">
-        <h3 className="font-serif text-lg sm:text-xl font-bold uppercase tracking-tight text-[#381932] leading-[1.15] mb-2">
+      <div className="flex flex-1 flex-col p-3 sm:p-6">
+        <h3 className="font-serif text-xs sm:text-lg lg:text-xl font-bold uppercase tracking-tight text-[#381932] leading-tight mb-1 sm:mb-2 line-clamp-1">
           {pkg.name}
         </h3>
 
-        <div className="flex items-baseline gap-1.5 mb-3">
-          <span className="font-serif text-2xl sm:text-[26px] font-bold text-[#381932] tracking-tight">
+        <div className="flex items-baseline gap-1 sm:gap-1.5 mb-2 sm:mb-3">
+          <span className="font-serif text-sm sm:text-2xl lg:text-[26px] font-bold text-[#381932] tracking-tight">
             {pkg.price}
           </span>
-          <span className="text-[11px] text-[#381932]/60 font-medium">per package</span>
+          <span className="text-[9px] sm:text-[11px] text-[#381932]/60 font-medium">per package</span>
         </div>
 
-        <p className="text-[13px] text-[#381932]/75 leading-relaxed line-clamp-2 mb-5">
+        <p className="text-[10px] sm:text-[13px] text-[#381932]/75 leading-snug sm:leading-relaxed line-clamp-2 mb-2.5 sm:mb-5">
           {pkg.description}
         </p>
 
-        {/* Feature inclusions -- clean 2-column list */}
-        <div className="grid grid-cols-2 gap-x-3 gap-y-2 mb-5">
+        {/* Feature inclusions -- responsive 1 or 2 column list */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1 sm:gap-y-2 mb-2.5 sm:mb-5">
           {shownCategories.map((cat) => {
             const meta = CATEGORY_META[cat.key];
             return (
-              <span key={cat.key} className="flex items-center gap-1.5 text-[11px] text-[#381932]/80">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#A78A9F]/20">
-                  <Heart size={9} className="text-[#A78A9F] fill-[#A78A9F]" />
+              <span key={cat.key} className="flex items-center gap-1 sm:gap-1.5 text-[9px] sm:text-[11px] text-[#381932]/80">
+                <span className="flex h-4 w-4 sm:h-5 sm:w-5 shrink-0 items-center justify-center rounded-full bg-[#A78A9F]/20">
+                  <Heart size={8} className="text-[#A78A9F] fill-[#A78A9F]" />
                 </span>
                 <span className="truncate">{cat.labelOverride || meta.label}</span>
               </span>
             );
           })}
           {extra > 0 && (
-            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-[#A78A9F]">
+            <span className="flex items-center gap-1 sm:gap-1.5 text-[9px] sm:text-[11px] font-semibold text-[#A78A9F]">
               +{extra} more
             </span>
           )}
         </div>
 
-        <div className="mt-auto flex items-stretch gap-2.5 border-t border-[#E6D7C5] pt-4">
+        <div className="mt-auto flex flex-col sm:flex-row items-stretch gap-1.5 sm:gap-2.5 border-t border-[#E6D7C5] pt-2.5 sm:pt-4">
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
               onView(pkg);
             }}
-            className="flex-1 inline-flex items-center justify-center rounded-lg border border-[#381932] bg-[#FFF3E6] text-[#381932] hover:bg-[#A78A9F]/15 py-2.5 text-[11px] font-serif font-semibold uppercase tracking-wide transition-colors cursor-pointer"
+            className="flex-1 inline-flex items-center justify-center rounded-lg border border-[#381932] bg-[#FFF3E6] text-[#381932] hover:bg-[#A78A9F]/15 py-1.5 sm:py-2.5 text-[9px] sm:text-[11px] font-serif font-semibold uppercase tracking-wide transition-colors cursor-pointer"
           >
             View Details
           </button>
@@ -139,10 +139,10 @@ export const EventPackageCard: React.FC<EventPackageCardProps> = ({
               e.stopPropagation();
               onBook(pkg);
             }}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#381932] hover:bg-[#483250] text-[#FFF3E6] py-2.5 text-[11px] font-serif font-semibold uppercase tracking-wide shadow-sm transition-colors cursor-pointer group/btn"
+            className="flex-1 inline-flex items-center justify-center gap-1 sm:gap-1.5 rounded-lg bg-[#381932] hover:bg-[#483250] text-[#FFF3E6] py-1.5 sm:py-2.5 text-[9px] sm:text-[11px] font-serif font-semibold uppercase tracking-wide shadow-sm transition-colors cursor-pointer group/btn"
           >
             Book Now
-            <ArrowRight size={12} className="transition-transform group-hover/btn:translate-x-0.5" />
+            <ArrowRight size={11} className="transition-transform group-hover/btn:translate-x-0.5" />
           </button>
         </div>
       </div>

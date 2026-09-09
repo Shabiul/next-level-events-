@@ -7,8 +7,9 @@ import { cn } from '../../lib/utils';
 import { getApiUrl, authFetch, parseJsonSafe } from '../../lib/api';
 import { supabase } from '../../lib/supabase';
 import { UPLOAD_URL } from '../../lib/uploads';
-import { resolveImageUrl } from '../../lib/imageUrl';
+import { resolveImageUrl, handleImageError } from '../../lib/imageUrl';
 import type { AdminAddon } from '../../types';
+import { broadcastCrmUpdate } from '../../lib/syncChannel';
 
 const getAddonsApi = () => getApiUrl('/api/addons');
 const API = { toString: getAddonsApi, valueOf: getAddonsApi, [Symbol.toPrimitive]: getAddonsApi } as unknown as string;
@@ -231,6 +232,7 @@ export const AddonsView = () => {
         });
         const updated = await res.json();
         setAddons((prev) => prev.map((item) => item._id === updated._id ? updated : item));
+        broadcastCrmUpdate('addon', updated._id);
         toast.success('Add-on updated');
       } else {
         const res = await authFetch(API, {
@@ -240,6 +242,7 @@ export const AddonsView = () => {
         });
         const created = await res.json();
         setAddons((prev) => [created, ...prev]);
+        broadcastCrmUpdate('addon', created._id);
         toast.success('Add-on created');
       }
 
@@ -255,6 +258,7 @@ export const AddonsView = () => {
       await authFetch(`${API}/${id}`, { method: 'DELETE' });
       setAddons((prev) => prev.filter((item) => item._id !== id));
       setDeleteConfirm(null);
+      broadcastCrmUpdate('addon', id);
       toast.success('Add-on deleted');
     } catch {
       toast.error('Failed to delete add-on');
@@ -269,6 +273,7 @@ export const AddonsView = () => {
         body: JSON.stringify({ active }),
       });
       setAddons((prev) => prev.map((item) => item._id === id ? { ...item, active } : item));
+      broadcastCrmUpdate('addon', id);
     } catch {
       toast.error('Failed to update add-on status');
     }
@@ -326,7 +331,7 @@ export const AddonsView = () => {
             <div>
               <div className="relative aspect-video w-full bg-[#FFF3E6] dark:bg-[#381932] overflow-hidden">
                 {addon.image ? (
-                  <img src={resolveImageUrl(addon.image)} alt={addon.name} className="h-full w-full object-cover" />
+                  <img src={resolveImageUrl(addon.image)} alt={addon.name} className="h-full w-full object-cover" onError={handleImageError} />
                 ) : (
                   <div className="flex h-full items-center justify-center text-xs font-semibold text-[#381932]">No Image</div>
                 )}
@@ -480,7 +485,7 @@ export const AddonsView = () => {
                   </button>
                 </div>
                 {previewIsValid ? (
-                  <img src={previewUrl} alt="Add-on preview" className="h-44 w-full rounded-xl object-cover border border-[#381932] dark:border-[#381932]" onError={() => toast.error('Preview image failed to load.')} />
+                  <img src={resolveImageUrl(previewUrl)} alt="Add-on preview" className="h-44 w-full rounded-xl object-cover border border-[#381932] dark:border-[#381932]" onError={handleImageError} />
                 ) : (
                   <div className="flex h-44 items-center justify-center rounded-xl border border-dashed border-[#381932] dark:border-[#381932] text-xs font-semibold text-[#381932]">Image preview unavailable</div>
                 )}

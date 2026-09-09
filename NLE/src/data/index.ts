@@ -3,7 +3,7 @@ import type { HeroSlide, CatIcon, Occasion, Product } from '../types';
 export const HERO_SLIDES: HeroSlide[] = [
   {
     img: '/about-purple-banner.jpg',
-    video: '/lan.mp4',
+    video: '/landing page.mp4',
     chip: 'CELEBRATIONS, BEAUTIFULLY CURATED',
     headline: 'Celebrations,\nThoughtfully Designed.',
     sub: 'From dreamy décor to memorable experiences — we create celebrations that feel personal, beautiful, and effortlessly unforgettable.',

@@ -8,9 +8,10 @@ import { EmptyState } from "../EmptyState";
 import { cn } from "../../lib/utils";
 import { getApiUrl, authFetch, parseJsonSafe } from '../../lib/api';
 import { supabase } from '../../lib/supabase';
-import { resolveImageUrl } from '../../lib/imageUrl';
+import { resolveImageUrl, handleImageError } from '../../lib/imageUrl';
 import { UPLOAD_URL } from '../../lib/uploads';
 import { trackAdminAction } from '../../lib/analytics';
+import { broadcastCrmUpdate } from '../../lib/syncChannel';
 
 const getCategoriesApi = () => getApiUrl('/api/categories');
 const API = { toString: getCategoriesApi, valueOf: getCategoriesApi, [Symbol.toPrimitive]: getCategoriesApi } as unknown as string;
@@ -76,6 +77,7 @@ export const CategoriesView = () => {
         throw new Error(payload?.error || "Failed to reorder");
       }
       trackAdminAction('reorder_categories', 'category');
+      broadcastCrmUpdate('category');
       toast.success("Category position updated!");
     } catch (err: any) {
       console.error("Category move error:", err);
@@ -114,6 +116,7 @@ export const CategoriesView = () => {
     setNewSubName("");
     setSubImage("");
     setShowAddSubModal(false);
+    broadcastCrmUpdate('category', categoryId);
     toast.success("Subcategory added!");
   };
 
@@ -143,6 +146,7 @@ export const CategoriesView = () => {
     setEditSubModal(null);
     setEditSubName("");
     setSubImage("");
+    broadcastCrmUpdate('category', selectedCategory._id);
     toast.success("Subcategory updated!");
   };
 
@@ -330,6 +334,7 @@ export const CategoriesView = () => {
         const updated = await res.json();
         setCats((prev) => prev.map((cat) => (cat._id === updated._id ? updated : cat)));
         trackAdminAction('update_category', 'category', updated._id);
+        broadcastCrmUpdate('category', updated._id);
         toast.success("Category updated successfully!");
       } catch {
         toast.error("Failed to update category");
@@ -343,6 +348,7 @@ export const CategoriesView = () => {
       const newCategory = await res.json();
       setCats((prev) => [...prev, newCategory]);
       trackAdminAction('create_category', 'category', newCategory._id);
+      broadcastCrmUpdate('category', newCategory._id);
       toast.success("Category added successfully!");
     }
 
@@ -354,6 +360,7 @@ export const CategoriesView = () => {
     setCats((prev) => prev.filter((cat) => cat._id !== id));
     setDeleteConfirm(null);
     trackAdminAction('delete_category', 'category', id);
+    broadcastCrmUpdate('category', id);
     toast.success("Category deleted!");
   };
 
@@ -364,6 +371,7 @@ export const CategoriesView = () => {
       body: JSON.stringify({ active }),
     });
     setCats((prev) => prev.map((cat) => (cat._id === id ? { ...cat, active } : cat)));
+    broadcastCrmUpdate('category', id);
   };
 
   const imageModeTabs = (mode: "url" | "upload", setMode: (m: "url" | "upload") => void) => (
@@ -414,7 +422,7 @@ export const CategoriesView = () => {
             <div>
               <div className="relative aspect-video w-full bg-[#FFF3E6] dark:bg-[#381932] overflow-hidden">
                 {cat.image ? (
-                  <img src={resolveImageUrl(cat.image)} alt={cat.name} className="h-full w-full object-cover" />
+                  <img src={resolveImageUrl(cat.image)} alt={cat.name} className="h-full w-full object-cover" onError={handleImageError} />
                 ) : (
                   <div className="h-full w-full flex items-center justify-center text-xs font-semibold text-[#381932]">No Image</div>
                 )}
@@ -563,7 +571,7 @@ export const CategoriesView = () => {
 
               {form.image && !uploading && (
                 <div className="relative">
-                  <img src={form.image} alt="Preview" className="h-44 w-full rounded-xl object-cover border border-[#381932] dark:border-[#381932]" />
+                  <img src={resolveImageUrl(form.image)} alt="Preview" className="h-44 w-full rounded-xl object-cover border border-[#381932] dark:border-[#381932]" onError={handleImageError} />
                   <button
                     type="button"
                     className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#381932] text-[#FFF3E6] cursor-pointer"
@@ -627,7 +635,7 @@ export const CategoriesView = () => {
                       <span className="w-5 flex-shrink-0 text-xs text-[#381932] dark:text-[#381932]">{idx + 1}.</span>
                       {subImg && (
                         <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-md bg-[#FFF3E6] dark:bg-[#381932]">
-                          <img src={resolveImageUrl(subImg)} alt={subName} className="h-full w-full object-cover" />
+                          <img src={resolveImageUrl(subImg)} alt={subName} className="h-full w-full object-cover" onError={handleImageError} />
                         </div>
                       )}
                       <span className="flex-1 truncate text-sm font-medium text-[#381932] dark:text-[#FFF3E6]">{subName}</span>
@@ -679,7 +687,7 @@ export const CategoriesView = () => {
               <span className="text-xs font-medium text-[#381932] dark:text-[#381932]">Adding to:</span>
               <div className="flex items-center gap-1.5">
                 {selectedCategory.image ? (
-                  <img src={resolveImageUrl(selectedCategory.image)} alt={selectedCategory.name} className="h-6 w-6 rounded-md object-cover" />
+                  <img src={resolveImageUrl(selectedCategory.image)} alt={selectedCategory.name} className="h-6 w-6 rounded-md object-cover" onError={handleImageError} />
                 ) : (
                   <span>{selectedCategory.icon}</span>
                 )}
@@ -741,7 +749,7 @@ export const CategoriesView = () => {
 
               {subImage && !subUploading && (
                 <div className="relative">
-                  <img src={resolveImageUrl(subImage)} alt="Preview" className="h-44 w-full rounded-xl object-cover border border-[#381932] dark:border-[#381932]" />
+                  <img src={resolveImageUrl(subImage)} alt="Preview" className="h-44 w-full rounded-xl object-cover border border-[#381932] dark:border-[#381932]" onError={handleImageError} />
                   <button
                     type="button"
                     className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#381932] text-[#FFF3E6] cursor-pointer"
@@ -793,7 +801,7 @@ export const CategoriesView = () => {
               <span className="text-xs font-medium text-[#381932] dark:text-[#381932]">Category:</span>
               <div className="flex items-center gap-1.5">
                 {selectedCategory.image ? (
-                  <img src={resolveImageUrl(selectedCategory.image)} alt={selectedCategory.name} className="h-6 w-6 rounded-md object-cover" />
+                  <img src={resolveImageUrl(selectedCategory.image)} alt={selectedCategory.name} className="h-6 w-6 rounded-md object-cover" onError={handleImageError} />
                 ) : (
                   <span>{selectedCategory.icon}</span>
                 )}
@@ -851,7 +859,7 @@ export const CategoriesView = () => {
 
               {subImage && !subUploading && (
                 <div className="relative">
-                  <img src={resolveImageUrl(subImage)} alt="Preview" className="h-44 w-full rounded-xl object-cover border border-[#381932] dark:border-[#381932]" />
+                  <img src={resolveImageUrl(subImage)} alt="Preview" className="h-44 w-full rounded-xl object-cover border border-[#381932] dark:border-[#381932]" onError={handleImageError} />
                   <button
                     type="button"
                     className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#381932] text-[#FFF3E6] cursor-pointer"

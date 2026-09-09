@@ -3,7 +3,16 @@ import { ProductRepository } from "../src/db/repositories.js";
 import { aiReindexService } from "../src/ai/services/ai-reindex.service.js";
 import { requirePermission, attachUser, type AuthedRequest } from "../utils/auth.js";
 
+import {
+  broadcastCatalogUpdate,
+  bumpCatalogVersion,
+  getCatalogVersion,
+} from "../services/catalogSyncService.js";
+
 const router = express.Router();
+
+export { bumpCatalogVersion, broadcastCatalogUpdate, getCatalogVersion };
+export const catalogVersion = Date.now();
 
 const normalizeProductAddons = (product: any) => {
   const inlineAddons = Array.isArray(product.addOns) ? product.addOns : [];
@@ -55,8 +64,23 @@ router.get("/", attachUser, async (req: Request, res: Response) => {
     const role = (req as AuthedRequest).user?.role;
     const activeOnly = role !== "admin" && role !== "staff";
 
+    const version = getCatalogVersion();
+    const currentEtag = `"${version}-${activeOnly ? 'pub' : 'admin'}"`;
+    const clientEtag = req.headers["if-none-match"];
+
+    // Must revalidate with server so CRM changes appear immediately on the Web without stale 3-minute delay
+    res.setHeader("Cache-Control", "no-cache, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("ETag", currentEtag);
+    res.setHeader("X-Catalog-Version", String(version));
+
+    if (clientEtag === currentEtag && !search && !page && !req.query._t && !req.query.t) {
+      return res.status(304).end();
+    }
+
     const products = await ProductRepository.listAll({ page, limit, search, activeOnly });
     const normalized = products.map(normalizeProductAddons);
+
     res.json(normalized);
   } catch (err: any) {
     console.error("[products] list failed", err);
@@ -77,6 +101,10 @@ router.get("/:id", attachUser, async (req: Request, res: Response) => {
     if (product.active === false && role !== "admin" && role !== "staff") {
       return res.status(404).json({ error: "Product not found" });
     }
+
+    res.setHeader("Cache-Control", "no-cache, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("ETag", `"${catalogVersion}-${id}"`);
 
     return res.json(normalizeProductAddons(product));
   } catch (err: any) {
@@ -106,6 +134,7 @@ router.get("/category/:categoryId", async (req: Request, res: Response) => {
 
     const products = await ProductRepository.listAll({ categoryId, page, limit });
     const normalized = products.map(normalizeProductAddons);
+    res.setHeader("Cache-Control", "no-cache, must-revalidate");
     res.json(normalized);
   } catch (err: any) {
     console.error("[products] category list failed", err);
@@ -122,6 +151,9 @@ router.post("/", requirePermission("products"), async (req: Request, res: Respon
       activities: Array.isArray(req.body.activities) ? req.body.activities : [],
     };
     const product = await ProductRepository.create(payload);
+    broadcastCatalogUpdate("product_created", { id: product?._id, name: product?.name });
+    const version = getCatalogVersion();
+    res.cookie("tdp_catalog_v", String(version), { path: "/", maxAge: 30 * 86400 * 1000, sameSite: "lax" });
     try {
       aiReindexService.scheduleReindex();
     } catch {}
@@ -142,6 +174,9 @@ router.put("/:id", requirePermission("products"), async (req: Request, res: Resp
       activities: Array.isArray(req.body.activities) ? req.body.activities : [],
     };
     const updated = await ProductRepository.update(id, payload);
+    broadcastCatalogUpdate("product_updated", { id: updated?._id || id, name: updated?.name });
+    const version = getCatalogVersion();
+    res.cookie("tdp_catalog_v", String(version), { path: "/", maxAge: 30 * 86400 * 1000, sameSite: "lax" });
     if (updated) {
       try {
         aiReindexService.scheduleReindex();
@@ -158,6 +193,9 @@ router.delete("/:id", requirePermission("products"), async (req: Request, res: R
   try {
     const id = String(req.params.id);
     const deleted = await ProductRepository.delete(id);
+    broadcastCatalogUpdate("product_deleted", { id });
+    const version = getCatalogVersion();
+    res.cookie("tdp_catalog_v", String(version), { path: "/", maxAge: 30 * 86400 * 1000, sameSite: "lax" });
     if (deleted) {
       try {
         aiReindexService.scheduleReindex();

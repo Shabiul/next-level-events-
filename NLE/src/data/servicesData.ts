@@ -143,36 +143,63 @@ const ALL_SERVICE_LINKS: ServiceLink[] = [...CURATED_DECORS, ...ACTIVITIES_ENTER
  * "Tattoo Artist" entry). Keyed by lower-cased service name.
  */
 const SUB_SERVICE_IMAGES: Record<string, string> = {
+  // Kids Activities
+  'tattoo artist': '/TATOO FOR HOME PAGE.jpg',
+  'caricature': '/caricatore.jpg',
+  'balloon modelling': '/balloon modelling.jpg',
+  'magician': '/MAGICIAN.jpg',
+  'game host / anchor / emcee': '/game host.jpg',
+  'game host': '/game host.jpg',
+  'anchor': '/anchore.jpg',
   'face painting': '/tattoo.jpg',
-  'balloon modelling': '/hero-balloons.jpg',
-  'balloon shooting': '/hero-balloons.jpg',
+  'balloon shooting': '/balloan shooting.jpg',
+  'pottery': '/pottery.jpg',
+  'nail art': '/nail art.jpg',
+  'pebble stone painting': '/pebble stone paint.jpg',
+  'mascot': '/mascot.jpg',
+  'bouncy castle': '/bouncy castle.jpg',
+  'keychain making': '/gift hamper 1.jpg',
+  'hair braiding': '/hair braiding.jpg',
+  'trampoline': '/trampoling.jpg',
+  'mehendi': '/mehandi.jpg',
+
+  // Live Eateries / Catering
   'popcorn': '/popcorn.jpg',
   'cotton candy': '/cotton candy.jpg',
   'chocolate fountain': '/chocolate fountain.jpg',
   'ice gola': '/ice gola.jpg',
-  'ice cream flavours': '/ice cream.jpg',
   'sweet corn': '/sweet corn.jpg',
   'potato twister': '/potato twister.jpg',
+  'turkish ice cream': '/ice cream.jpg',
   'instant maggi': '/instant maggi.jpg',
   'chaat counters': '/chat counter.jpg',
   'fruit salad': '/fruit salad.jpg',
   'live pani puri': '/pani puri.jpg',
-  'bride-to-be': '/bride to be.jpg',
+  'ice cream flavours': '/ice cream.jpg',
   'food & catering': '/food.jpg',
+
+  // Other Services
+  'return gifts': '/return gift.jpg',
+  'flower bouquets': '/flower bouqets.jpg',
+  'gift hampers': '/gift hamper.jpg',
+  'customised cakes': '/customsid cakes.jpg',
+  'music systems': '/about-purple-decor.jpg',
+
+  // Curated Decors Subservices
+  'boy kids themes': '/boy theme.jpg',
+  'boy theme': '/boy theme.jpg',
+  'girl baby themes': '/bb.jpg',
+  'ring decor designs': '/simple-wall-decor.jpg',
+  'u-arch decor designs': '/birthday.jpg',
   'engagement decor': '/pre and post 2.jpg',
   'haldi ceremony': '/pre and post 5.jpg',
+  'bride-to-be': '/bride to be.jpg',
   'groom-to-be': '/groom to be.jpg',
   'ring ceremony': '/pre and post 3.jpg',
   'terrace proposals': '/terrace propsal set up.jpg',
   'marry me marquee': '/terrace-proposal.jpg',
   'heart arch setup': '/heart arch set up 1.jpg',
   'candlelight pathway': '/candelight pathway 1.jpg',
-  'boy kids themes': '/boy theme.jpg',
-  'boy theme': '/boy theme.jpg',
-  'gift hampers': '/gift hamper.jpg',
-  'return gifts': '/return gift.jpg',
-  'flower bouquets': '/flower bouqets.jpg',
-  'customised cakes': '/customsid cakes.jpg',
 };
 
 /**
@@ -893,33 +920,39 @@ export const SERVICE_THUMBNAILS: Record<string, string> = {
   'live eateries / catering': '/food.jpg',
 };
 
+const toWebp = (p?: string): string => (p ? p.replace(/\.(jpe?g)$/i, '.webp') : '');
+
 /** Thumbnail for a top-level service label, or undefined to fall back to the icon. */
 export function getServiceThumb(label: string): string | undefined {
-  return SERVICE_THUMBNAILS[label.trim().toLowerCase()];
+  const thumb = SERVICE_THUMBNAILS[label.trim().toLowerCase()];
+  return thumb ? toWebp(thumb) : undefined;
 }
 
 /**
  * Returns the themed photo gallery for a top-level service by fuzzy
  * (case-insensitive, either-direction substring) label match. Empty array
- * when the theme has no curated photos yet.
+ * when the theme has no curated photos yet. Automatically returns compressed WebP paths.
  */
 export function getServiceGalleryImages(name: string): string[] {
   const norm = name.trim().toLowerCase();
   if (!norm) return [];
-  if (SERVICE_GALLERY_IMAGES[norm]) return SERVICE_GALLERY_IMAGES[norm];
-  const key = Object.keys(SERVICE_GALLERY_IMAGES).find(
-    (k) => norm.includes(k) || k.includes(norm)
-  );
-  return key ? SERVICE_GALLERY_IMAGES[key] : [];
+  const rawList = SERVICE_GALLERY_IMAGES[norm] || (() => {
+    const key = Object.keys(SERVICE_GALLERY_IMAGES).find(
+      (k) => norm.includes(k) || k.includes(norm)
+    );
+    return key ? SERVICE_GALLERY_IMAGES[key] : [];
+  })();
+  return rawList.map(toWebp);
 }
 
 /** Generic celebration photo used when no verified photo exists for a
  * specific sub-service -- keeps every card populated with a real, on-brand
  * image rather than a blank/broken `<img>` (never a guessed/mismatched one). */
-const DEFAULT_SUB_SERVICE_IMAGE = '/hero-balloons.jpg';
+const DEFAULT_SUB_SERVICE_IMAGE = '/hero-balloons.webp';
 
 export function getSubServiceImage(name: string): string {
-  return SUB_SERVICE_IMAGES[name.trim().toLowerCase()] || DEFAULT_SUB_SERVICE_IMAGE;
+  const img = SUB_SERVICE_IMAGES[name.trim().toLowerCase()] || DEFAULT_SUB_SERVICE_IMAGE;
+  return toWebp(img);
 }
 
 /**

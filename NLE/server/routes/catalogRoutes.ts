@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { AddonRepository, ProductRepository } from "../src/db/repositories.js";
 import { supabase } from "../src/db/supabase.js";
+import { registerSseClient, getCatalogVersion } from "../services/catalogSyncService.js";
 
 const router = express.Router();
 
@@ -71,6 +72,40 @@ router.get("/", async (_req: Request, res: Response) => {
 
 router.post("/seed", async (_req: Request, res: Response) => {
   return res.json(FALLBACK_CATALOG);
+});
+
+// Real-time SSE stream for 0ms cross-tab and cross-app synchronization
+router.get("/live", (req: Request, res: Response) => {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache, no-transform",
+    "Connection": "keep-alive",
+    "Access-Control-Allow-Origin": "*",
+    "X-Accel-Buffering": "no",
+  });
+
+  const initialPayload = JSON.stringify({
+    type: "INIT",
+    version: getCatalogVersion(),
+    timestamp: Date.now(),
+  });
+  res.write(`event: init\ndata: ${initialPayload}\n\n`);
+
+  const unregister = registerSseClient(res);
+
+  req.on("close", () => {
+    unregister();
+  });
+});
+
+// Version check endpoint
+router.get("/version", (_req: Request, res: Response) => {
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+  res.setHeader("Pragma", "no-cache");
+  res.json({
+    version: getCatalogVersion(),
+    timestamp: Date.now(),
+  });
 });
 
 export default router;

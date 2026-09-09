@@ -310,12 +310,8 @@ export const Footer: React.FC<FooterProps> = ({
 
       {/* ===================================================================== */}
       {/* 4. BOTTOM COPYRIGHT & LEGAL BAR                                       */}
-      {/* Extra bottom clearance on mobile only -- the fixed WhatsApp/quick-    */}
-      {/* actions bubble and scroll-to-top button sit bottom-right of the       */}
-      {/* viewport and would otherwise sit directly over (and clip) this text   */}
-      {/* once the page is scrolled all the way down.                          */}
       {/* ===================================================================== */}
-      <div className="border-t border-[#FFF3E6]/10 bg-[#381932] px-5 sm:px-8 lg:px-12 pt-3.5 pb-32 sm:pb-3.5">
+      <div className="border-t border-[#FFF3E6]/10 bg-[#381932] px-5 sm:px-8 lg:px-12 py-3.5 sm:py-4">
         <div className="mx-auto flex max-w-[1720px] flex-col sm:flex-row items-center justify-between gap-2.5 text-center text-[11px] text-[#FFF3E6]/50">
           <p>© 2026 The Decor Party. All rights reserved. Registered celebration partner.</p>
 

@@ -1,4 +1,25 @@
+/**
+ * Resolves a compressed WebP asset path (100-300KB) for any local JPG asset.
+ */
+export function toOptimizedWebp(url?: string | null): string {
+  if (!url) return '';
+  const trimmed = url.trim();
+  if (trimmed.startsWith('/') && /\.(jpe?g)$/i.test(trimmed)) {
+    return trimmed.replace(/\.(jpe?g)$/i, '.webp');
+  }
+  return trimmed;
+}
+
 export function resolveProductCardImage(product: {
+  name?: string;
+  subcategory?: string;
+  categoryName?: string;
+  image?: string;
+}, isLanding?: boolean): string {
+  return toOptimizedWebp(resolveProductCardImageRaw(product, isLanding));
+}
+
+function resolveProductCardImageRaw(product: {
   name?: string;
   subcategory?: string;
   categoryName?: string;

@@ -1,4 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Heart,
   ShoppingCart,
@@ -18,6 +20,9 @@ import {
   MapPinned,
   LogIn,
   PartyPopper,
+  Gamepad2,
+  Utensils,
+  Camera,
   X,
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -42,7 +47,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '../base-ui/accordion';
-import { SERVICE_COLUMNS, getServiceThumb } from '../../data/servicesData';
+import { SERVICE_COLUMNS, getServiceThumb, getSubServiceImage } from '../../data/servicesData';
 import { useProducts } from '../../hooks/useProducts';
 import { useTypewriter } from '../../hooks/useTypewriter';
 import { CELEBRATION_SEARCH_SUGGESTIONS } from '../../data/celebrationSuggestions';
@@ -110,6 +115,183 @@ export const Header: React.FC<HeaderProps> = ({
   const [expandedService, setExpandedService] = useState<string | null>(null);
   const [scrollY, setScrollY] = useState(0);
   const [activeSection, setActiveSection] = useState<string>('home');
+
+  // Popup Modal for Activities & Entertainment and Sub-services
+  interface SubServiceModalItem {
+    name: string;
+    parentCategory: string;
+    image: string;
+    badge?: string;
+  }
+
+  interface SubServicesModalState {
+    isOpen: boolean;
+    title: string;
+    subtitle?: string;
+    activeGroupKey: 'all' | 'kids' | 'eateries' | 'other' | 'photography';
+    isActivitiesMode: boolean;
+    items: SubServiceModalItem[];
+  }
+
+  const [subServicesModal, setSubServicesModal] = useState<SubServicesModalState | null>(null);
+  const [modalSearchQuery, setModalSearchQuery] = useState('');
+
+  const ACTIVITIES_GROUPS = useMemo(() => {
+    const kidsItems: SubServiceModalItem[] = [
+      {
+        name: 'All Kids Activities',
+        parentCategory: 'Kids Activities',
+        image: getServiceThumb('kids activities') || '/kids-activities.jpg',
+        badge: 'All 16 Types',
+      },
+      ...[
+        'Tattoo Artist',
+        'Caricature',
+        'Balloon Modelling',
+        'Magician',
+        'Game Host / Anchor / EMCEE',
+        'Face Painting',
+        'Balloon Shooting',
+        'Pottery',
+        'Nail Art',
+        'Pebble Stone Painting',
+        'Mascot',
+        'Bouncy Castle',
+        'Keychain Making',
+        'Hair Braiding',
+        'Trampoline',
+        'Mehendi',
+      ].map((name) => ({
+        name,
+        parentCategory: 'Kids Activities',
+        image: getSubServiceImage(name),
+        badge: 'Kids Activity',
+      })),
+    ];
+
+    const eateriesItems: SubServiceModalItem[] = [
+      {
+        name: 'All Live Eateries & Counters',
+        parentCategory: 'Live Eateries / Catering',
+        image: getServiceThumb('live eateries / catering') || '/food.jpg',
+        badge: 'All 12 Counters',
+      },
+      ...[
+        'Popcorn',
+        'Cotton Candy',
+        'Chocolate Fountain',
+        'Ice Gola',
+        'Sweet Corn',
+        'Potato Twister',
+        'Turkish Ice Cream',
+        'Instant Maggi',
+        'Chaat Counters',
+        'Fruit Salad',
+        'Live Pani Puri',
+        'Ice Cream Flavours',
+      ].map((name) => ({
+        name,
+        parentCategory: 'Live Eateries / Catering',
+        image: getSubServiceImage(name),
+        badge: 'Live Food Counter',
+      })),
+    ];
+
+    const otherItems: SubServiceModalItem[] = [
+      {
+        name: 'All Other Services',
+        parentCategory: 'Other Services',
+        image: getServiceThumb('other services') || '/gift hamper.jpg',
+        badge: 'All 5 Services',
+      },
+      ...[
+        'Return Gifts',
+        'Flower Bouquets',
+        'Gift Hampers',
+        'Customised Cakes',
+        'Music Systems',
+      ].map((name) => ({
+        name,
+        parentCategory: 'Other Services',
+        image: getSubServiceImage(name),
+        badge: 'Special Add-on',
+      })),
+    ];
+
+    const photographyItems: SubServiceModalItem[] = [
+      {
+        name: 'Photography & Videography',
+        parentCategory: 'Photography & Videography',
+        image: getServiceThumb('photography & videography') || 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=200&q=80',
+        badge: 'Media & Coverage',
+      },
+    ];
+
+    return {
+      all: [...kidsItems, ...eateriesItems, ...otherItems, ...photographyItems],
+      kids: kidsItems,
+      eateries: eateriesItems,
+      other: otherItems,
+      photography: photographyItems,
+    };
+  }, []);
+
+  const openActivitiesModal = (groupKey: 'all' | 'kids' | 'eateries' | 'other' | 'photography' = 'all') => {
+    setModalSearchQuery('');
+    setSubServicesModal({
+      isOpen: true,
+      title: 'Activities & Entertainment',
+      subtitle: 'Interactive entertainment, live food stalls & celebration activities',
+      activeGroupKey: groupKey,
+      isActivitiesMode: true,
+      items: ACTIVITIES_GROUPS.all,
+    });
+  };
+
+  const openSubServicesModal = (parentCategory: string, subServicesList: string[]) => {
+    setModalSearchQuery('');
+    const parentThumb = getServiceThumb(parentCategory) || '/hero-balloons.jpg';
+    const allCard: SubServiceModalItem = {
+      name: `All ${parentCategory}`,
+      parentCategory,
+      image: parentThumb,
+      badge: 'Full Collection',
+    };
+    const items: SubServiceModalItem[] = [
+      allCard,
+      ...subServicesList.map((name) => ({
+        name,
+        parentCategory,
+        image: getSubServiceImage(name),
+        badge: 'Curated Theme',
+      })),
+    ];
+    setSubServicesModal({
+      isOpen: true,
+      title: `${parentCategory} Themes & Setups`,
+      subtitle: `Explore curated setups, themes and styles for ${parentCategory}`,
+      activeGroupKey: 'all',
+      isActivitiesMode: false,
+      items,
+    });
+  };
+
+  const displayedModalItems = useMemo(() => {
+    if (!subServicesModal) return [];
+    let baseItems = subServicesModal.items;
+    if (subServicesModal.isActivitiesMode) {
+      if (subServicesModal.activeGroupKey === 'kids') baseItems = ACTIVITIES_GROUPS.kids;
+      else if (subServicesModal.activeGroupKey === 'eateries') baseItems = ACTIVITIES_GROUPS.eateries;
+      else if (subServicesModal.activeGroupKey === 'other') baseItems = ACTIVITIES_GROUPS.other;
+      else if (subServicesModal.activeGroupKey === 'photography') baseItems = ACTIVITIES_GROUPS.photography;
+      else baseItems = ACTIVITIES_GROUPS.all;
+    }
+    if (!modalSearchQuery.trim()) return baseItems;
+    const q = modalSearchQuery.toLowerCase().trim();
+    return (subServicesModal.isActivitiesMode ? ACTIVITIES_GROUPS.all : subServicesModal.items).filter(
+      (item) => item.name.toLowerCase().includes(q) || item.parentCategory.toLowerCase().includes(q)
+    );
+  }, [subServicesModal, modalSearchQuery, ACTIVITIES_GROUPS]);
 
   // Landing overlay nav: transparent over the hero, solid Milk after a nudge of scroll.
   const navGlassy = transparentOverHero && scrollY <= 24;
@@ -567,7 +749,7 @@ export const Header: React.FC<HeaderProps> = ({
                               onClick={() =>
                                 column.key === 'curated-decors'
                                   ? handleNavAnchor('curated-decors')
-                                  : handleNavCategory(column.title)
+                                  : openActivitiesModal('all')
                               }
                               className="flex items-center gap-2 pb-2.5 border-b border-[#381932]/60 dark:border-[#381932]/60 mb-3 w-full text-left hover:opacity-80 transition-opacity cursor-pointer group"
                             >
@@ -581,19 +763,28 @@ export const Header: React.FC<HeaderProps> = ({
                               {column.items.map((item) => {
                                 const thumb = getServiceThumb(item.label);
                                 const hasSubs = Boolean(item.subServices && item.subServices.length > 0);
-                                const isExpanded = expandedService === item.label;
+                                const isActivity = column.key === 'activities-entertainment';
+
+                                const handleItemClick = (e: React.MouseEvent) => {
+                                  e.preventDefault();
+                                  if (isActivity) {
+                                    if (item.label.toLowerCase().includes('kids')) openActivitiesModal('kids');
+                                    else if (item.label.toLowerCase().includes('eateries') || item.label.toLowerCase().includes('catering')) openActivitiesModal('eateries');
+                                    else if (item.label.toLowerCase().includes('other')) openActivitiesModal('other');
+                                    else if (item.label.toLowerCase().includes('photography')) openActivitiesModal('photography');
+                                    else openActivitiesModal('all');
+                                  } else if (hasSubs) {
+                                    openSubServicesModal(item.label, item.subServices!);
+                                  } else {
+                                    handleNavCategory(item.label);
+                                  }
+                                };
+
                                 return (
                                 <div key={item.label} className="flex flex-col gap-1">
                                   <NavigationMenuLink
                                     href={`/category/${encodeURIComponent(item.label)}`}
-                                    onClick={(e: React.MouseEvent) => {
-                                      e.preventDefault();
-                                      if (hasSubs) {
-                                        setExpandedService(isExpanded ? null : item.label);
-                                      } else {
-                                        handleNavCategory(item.label);
-                                      }
-                                    }}
+                                    onClick={handleItemClick}
                                     className="group flex items-center gap-2 rounded-xl px-2 py-1.5 text-xs font-medium text-[#381932] hover:bg-[#A78A9F]/22 dark:text-[#FFF3E6] dark:hover:bg-[#381932] transition-colors duration-200 cursor-pointer"
                                   >
                                     {thumb ? (
@@ -612,39 +803,12 @@ export const Header: React.FC<HeaderProps> = ({
                                       {item.label}
                                     </span>
                                     {hasSubs && (
-                                      <ChevronDown
-                                        size={12}
-                                        className={cn('ml-auto shrink-0 transition-transform duration-200', isExpanded && 'rotate-180')}
+                                      <ArrowUpRight
+                                        size={11}
+                                        className="ml-auto shrink-0 opacity-60 group-hover:opacity-100 transition-opacity"
                                       />
                                     )}
                                   </NavigationMenuLink>
-                                  {hasSubs && isExpanded && (
-                                    <div className="flex flex-wrap gap-1 pl-2">
-                                      <NavigationMenuLink
-                                        href={`/category/${encodeURIComponent(item.label)}`}
-                                        onClick={(e: React.MouseEvent) => {
-                                          e.preventDefault();
-                                          handleNavCategory(item.label);
-                                        }}
-                                        className="rounded-full bg-[#381932]/10 px-2 py-0.5 text-[10px] font-bold text-[#381932] hover:bg-[#381932]/20 dark:bg-[#FFF3E6]/15 dark:text-[#FFF3E6] dark:hover:bg-[#FFF3E6]/25 transition-colors cursor-pointer"
-                                      >
-                                        All {item.label}
-                                      </NavigationMenuLink>
-                                      {item.subServices!.map((sub) => (
-                                        <NavigationMenuLink
-                                          key={sub}
-                                          href={`/category/${encodeURIComponent(item.label)}/${encodeURIComponent(sub)}`}
-                                          onClick={(e: React.MouseEvent) => {
-                                            e.preventDefault();
-                                            handleNavCategory(item.label, sub);
-                                          }}
-                                          className="rounded-full bg-[#A78A9F]/12 px-2 py-0.5 text-[10px] font-medium text-[#381932]/70 hover:bg-[#A78A9F]/25 hover:text-[#381932] dark:text-[#FFF3E6]/60 dark:hover:bg-[#381932] dark:hover:text-[#FFF3E6] transition-colors cursor-pointer"
-                                        >
-                                          {sub}
-                                        </NavigationMenuLink>
-                                      ))}
-                                    </div>
-                                  )}
                                 </div>
                                 );
                               })}
@@ -1083,26 +1247,45 @@ export const Header: React.FC<HeaderProps> = ({
                               <div key={column.key} className="flex flex-col gap-1">
                                 <button
                                   type="button"
-                                  onClick={() =>
-                                    column.key === 'curated-decors'
-                                      ? handleNavAnchor('curated-decors')
-                                      : handleNavCategory(column.title)
-                                  }
-                                  className="flex items-center gap-1.5 text-left py-1 font-bold uppercase tracking-wider text-[10px] text-[#381932] dark:text-[#FFF3E6]"
+                                  onClick={() => {
+                                    if (column.key === 'curated-decors') {
+                                      handleNavAnchor('curated-decors');
+                                    } else {
+                                      setMobileMenuOpen(false);
+                                      openActivitiesModal('all');
+                                    }
+                                  }}
+                                  className="flex items-center gap-1.5 text-left py-1 font-bold uppercase tracking-wider text-[10px] text-[#381932] dark:text-[#FFF3E6] cursor-pointer"
                                 >
                                   <column.icon size={12} className="text-[#381932]" />
-                                  {column.title}
+                                  <span>{column.title}</span>
                                 </button>
                                 {column.items.map((item) => {
                                   const thumb = getServiceThumb(item.label);
                                   const hasSubs = Boolean(item.subServices && item.subServices.length > 0);
-                                  const isExpanded = expandedService === item.label;
+                                  const isActivity = column.key === 'activities-entertainment';
+
+                                  const handleClick = () => {
+                                    setMobileMenuOpen(false);
+                                    if (isActivity) {
+                                      if (item.label.toLowerCase().includes('kids')) openActivitiesModal('kids');
+                                      else if (item.label.toLowerCase().includes('eateries') || item.label.toLowerCase().includes('catering')) openActivitiesModal('eateries');
+                                      else if (item.label.toLowerCase().includes('other')) openActivitiesModal('other');
+                                      else if (item.label.toLowerCase().includes('photography')) openActivitiesModal('photography');
+                                      else openActivitiesModal('all');
+                                    } else if (hasSubs) {
+                                      openSubServicesModal(item.label, item.subServices!);
+                                    } else {
+                                      handleNavCategory(item.label);
+                                    }
+                                  };
+
                                   return (
                                   <div key={item.label} className="flex flex-col gap-0.5">
                                     <button
                                       type="button"
-                                      onClick={() => hasSubs ? setExpandedService(isExpanded ? null : item.label) : handleNavCategory(item.label)}
-                                      className="group flex items-center gap-2 text-left py-1 pl-2 hover:text-[#381932] dark:hover:text-[#FFF3E6] transition-colors duration-200"
+                                      onClick={handleClick}
+                                      className="group flex items-center gap-2 text-left py-1 pl-2 hover:text-[#381932] dark:hover:text-[#FFF3E6] transition-colors duration-200 cursor-pointer"
                                     >
                                       {thumb ? (
                                         <img
@@ -1118,30 +1301,9 @@ export const Header: React.FC<HeaderProps> = ({
                                       ) : null}
                                       <span>{item.label}</span>
                                       {hasSubs && (
-                                        <ChevronDown size={11} className={cn('shrink-0 transition-transform duration-200', isExpanded && 'rotate-180')} />
+                                        <ArrowUpRight size={11} className="ml-auto shrink-0 opacity-60" />
                                       )}
                                     </button>
-                                    {hasSubs && isExpanded && (
-                                      <div className="flex flex-wrap gap-1 pl-9">
-                                        <button
-                                          type="button"
-                                          onClick={() => handleNavCategory(item.label)}
-                                          className="rounded-full bg-[#381932]/10 px-2 py-0.5 text-[10px] font-bold text-[#381932] dark:bg-[#FFF3E6]/15 dark:text-[#FFF3E6] hover:bg-[#381932]/20 dark:hover:bg-[#FFF3E6]/25 transition-colors"
-                                        >
-                                          All {item.label}
-                                        </button>
-                                        {item.subServices!.map((sub) => (
-                                          <button
-                                            key={sub}
-                                            type="button"
-                                            onClick={() => handleNavCategory(item.label, sub)}
-                                            className="rounded-full bg-[#A78A9F]/12 px-2 py-0.5 text-[10px] font-medium text-[#381932]/70 dark:text-[#FFF3E6]/60 hover:bg-[#A78A9F]/25 hover:text-[#381932] dark:hover:text-[#FFF3E6] transition-colors"
-                                          >
-                                            {sub}
-                                          </button>
-                                        ))}
-                                      </div>
-                                    )}
                                   </div>
                                   );
                                 })}
@@ -1363,18 +1525,29 @@ export const Header: React.FC<HeaderProps> = ({
                       {SERVICE_COLUMNS.map((column) => (
                         <div key={column.key} className="flex flex-col gap-2">
                           <div className="flex items-center justify-between">
-                            <span className="flex items-center gap-2 font-serif text-xs font-bold uppercase tracking-wider text-[#381932] dark:text-[#FFF3E6]">
-                              <column.icon size={15} className="text-[#381932] dark:text-[#FFF3E6]" />
-                              {column.title}
-                            </span>
                             <button
                               type="button"
                               onClick={() => {
-                                setMobileServicesOpen(false);
                                 if (column.key === 'curated-decors') {
+                                  setMobileServicesOpen(false);
                                   handleNavAnchor('curated-decors');
                                 } else {
-                                  handleNavCategory(column.title);
+                                  openActivitiesModal('all');
+                                }
+                              }}
+                              className="flex items-center gap-2 font-bold uppercase tracking-wider text-xs text-[#381932] dark:text-[#FFF3E6] hover:opacity-80 transition-opacity cursor-pointer text-left"
+                            >
+                              <column.icon size={15} className="text-[#381932] dark:text-[#FFF3E6]" />
+                              <span>{column.title}</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (column.key === 'curated-decors') {
+                                  setMobileServicesOpen(false);
+                                  handleNavAnchor('curated-decors');
+                                } else {
+                                  openActivitiesModal('all');
                                 }
                               }}
                               className="text-[11px] font-medium text-[#A78A9F] hover:text-[#381932] dark:hover:text-[#FFF3E6] transition-colors cursor-pointer"
@@ -1387,23 +1560,37 @@ export const Header: React.FC<HeaderProps> = ({
                             {column.items.map((item) => {
                               const thumb = getServiceThumb(item.label);
                               const hasSubs = Boolean(item.subServices && item.subServices.length > 0);
-                              const isExpanded = expandedService === item.label;
+                              const isActivity = column.key === 'activities-entertainment';
+
+                              const handleItemClick = () => {
+                                if (isActivity) {
+                                  if (item.label.toLowerCase().includes('kids')) {
+                                    openActivitiesModal('kids');
+                                  } else if (item.label.toLowerCase().includes('eateries') || item.label.toLowerCase().includes('catering')) {
+                                    openActivitiesModal('eateries');
+                                  } else if (item.label.toLowerCase().includes('other')) {
+                                    openActivitiesModal('other');
+                                  } else if (item.label.toLowerCase().includes('photography')) {
+                                    openActivitiesModal('photography');
+                                  } else {
+                                    openActivitiesModal('all');
+                                  }
+                                } else if (hasSubs) {
+                                  openSubServicesModal(item.label, item.subServices!);
+                                } else {
+                                  setMobileServicesOpen(false);
+                                  handleNavCategory(item.label);
+                                }
+                              };
 
                               return (
                                 <div
                                   key={item.label}
-                                  className="flex flex-col rounded-xl border border-[#381932]/12 dark:border-[#FFF3E6]/12 bg-white/60 dark:bg-black/20 p-2 transition-all hover:bg-white dark:hover:bg-black/40"
+                                  className="flex flex-col rounded-xl border border-[#381932]/12 dark:border-[#FFF3E6]/12 bg-white/60 dark:bg-black/20 p-2 transition-all hover:bg-white dark:hover:bg-black/40 shadow-xs"
                                 >
                                   <button
                                     type="button"
-                                    onClick={() => {
-                                      if (hasSubs) {
-                                        setExpandedService(isExpanded ? null : item.label);
-                                      } else {
-                                        setMobileServicesOpen(false);
-                                        handleNavCategory(item.label);
-                                      }
-                                    }}
+                                    onClick={handleItemClick}
                                     className="flex items-center gap-2 w-full text-left cursor-pointer"
                                   >
                                     {thumb ? (
@@ -1422,45 +1609,14 @@ export const Header: React.FC<HeaderProps> = ({
                                       <span className="block truncate text-xs font-semibold text-[#381932] dark:text-[#FFF3E6]">
                                         {item.label}
                                       </span>
-                                      {hasSubs && (
+                                      {hasSubs ? (
                                         <span className="flex items-center gap-0.5 text-[10px] text-[#A78A9F]">
                                           <span>{item.subServices!.length} types</span>
-                                          <ChevronDown
-                                            size={10}
-                                            className={cn('transition-transform duration-200', isExpanded && 'rotate-180')}
-                                          />
+                                          <ArrowUpRight size={10} className="shrink-0 opacity-75" />
                                         </span>
-                                      )}
+                                      ) : null}
                                     </div>
                                   </button>
-
-                                  {hasSubs && isExpanded && (
-                                    <div className="mt-2 flex flex-wrap gap-1 border-t border-[#381932]/10 dark:border-[#FFF3E6]/10 pt-2">
-                                      <button
-                                        type="button"
-                                        onClick={() => {
-                                          setMobileServicesOpen(false);
-                                          handleNavCategory(item.label);
-                                        }}
-                                        className="rounded-full bg-[#381932]/10 px-2 py-0.5 text-[10px] font-bold text-[#381932] dark:bg-[#FFF3E6]/15 dark:text-[#FFF3E6] cursor-pointer"
-                                      >
-                                        All {item.label}
-                                      </button>
-                                      {item.subServices!.map((sub) => (
-                                        <button
-                                          key={sub}
-                                          type="button"
-                                          onClick={() => {
-                                            setMobileServicesOpen(false);
-                                            handleNavCategory(item.label, sub);
-                                          }}
-                                          className="rounded-full bg-[#A78A9F]/15 px-2 py-0.5 text-[10px] font-medium text-[#381932]/80 dark:text-[#FFF3E6]/80 hover:bg-[#A78A9F]/25 cursor-pointer"
-                                        >
-                                          {sub}
-                                        </button>
-                                      ))}
-                                    </div>
-                                  )}
                                 </div>
                               );
                             })}
@@ -1564,6 +1720,241 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
       </div>
+
+      {/* ============================================================= */}
+      {/* ACTIVITIES & ENTERTAINMENT / SUB-SERVICES POPUP MODAL          */}
+      {/* Portals directly to document.body for flawless elevation      */}
+      {/* ============================================================= */}
+      {typeof document !== 'undefined' &&
+        createPortal(
+          <AnimatePresence>
+            {subServicesModal && subServicesModal.isOpen && (
+              <div className="fixed inset-0 z-[1000] flex items-end sm:items-center justify-center p-0 sm:p-4">
+                {/* Backdrop blur overlay */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="fixed inset-0 bg-[#381932]/65 backdrop-blur-sm"
+                  onClick={() => setSubServicesModal(null)}
+                />
+
+                {/* Dialog Container */}
+                <motion.div
+                  initial={{ opacity: 0, y: 35, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 35, scale: 0.96 }}
+                  transition={{ duration: 0.26, ease: [0.16, 1, 0.3, 1] }}
+                  className="relative z-10 flex flex-col w-full sm:max-w-4xl max-h-[92vh] sm:max-h-[86vh] rounded-t-[28px] sm:rounded-[28px] bg-[#FFF3E6] dark:bg-[#1a0c18] border border-[#381932]/20 dark:border-[#FFF3E6]/15 shadow-2xl overflow-hidden"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* Top Header Bar */}
+                  <div className="flex items-center justify-between border-b border-[#381932]/10 dark:border-[#FFF3E6]/10 px-5 sm:px-7 py-4 bg-[#FFF3E6]/90 dark:bg-[#1a0c18]/90 backdrop-blur-xs shrink-0">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#381932] text-[#FFF3E6] shadow-sm">
+                        {subServicesModal.isActivitiesMode ? (
+                          <Sparkles size={20} className="text-[#FFF3E6]" />
+                        ) : (
+                          <PartyPopper size={20} className="text-[#FFF3E6]" />
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-bold text-base sm:text-lg text-[#381932] dark:text-[#FFF3E6] truncate">
+                            {subServicesModal.title}
+                          </h3>
+                          <span className="rounded-full bg-[#381932]/10 dark:bg-[#FFF3E6]/15 px-2 py-0.5 text-[10px] font-bold text-[#381932] dark:text-[#FFF3E6]">
+                            {displayedModalItems.length} available
+                          </span>
+                        </div>
+                        {subServicesModal.subtitle && (
+                          <p className="text-xs text-[#A78A9F] dark:text-[#FFF3E6]/70 truncate">
+                            {subServicesModal.subtitle}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setSubServicesModal(null)}
+                      aria-label="Close popup"
+                      className="flex h-9 w-9 items-center justify-center rounded-full bg-[#381932]/8 hover:bg-[#381932]/15 text-[#381932] dark:bg-[#FFF3E6]/10 dark:hover:bg-[#FFF3E6]/20 dark:text-[#FFF3E6] transition-colors cursor-pointer shrink-0"
+                    >
+                      <X size={17} />
+                    </button>
+                  </div>
+
+                  {/* Fast Search Filter */}
+                  <div className="px-3 sm:px-6 pt-3 pb-2 shrink-0">
+                    <div className="relative">
+                      <Search
+                        size={15}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-[#381932]/40 dark:text-[#FFF3E6]/40 pointer-events-none"
+                      />
+                      <input
+                        type="text"
+                        value={modalSearchQuery}
+                        onChange={(e) => setModalSearchQuery(e.target.value)}
+                        placeholder={
+                          subServicesModal.isActivitiesMode
+                            ? "Search 34+ activities & stalls (e.g. Magician, Popcorn, Tattoo)..."
+                            : `Search ${subServicesModal.title}...`
+                        }
+                        className="w-full rounded-xl border border-[#381932]/15 dark:border-[#FFF3E6]/15 bg-white/80 dark:bg-black/25 pl-9 pr-8 py-1.5 text-xs sm:text-sm text-[#381932] dark:text-[#FFF3E6] placeholder:text-[#381932]/40 dark:placeholder:text-[#FFF3E6]/40 focus:outline-none focus:ring-2 focus:ring-[#381932]/25 dark:focus:ring-[#FFF3E6]/25 transition-all"
+                      />
+                      {modalSearchQuery && (
+                        <button
+                          type="button"
+                          onClick={() => setModalSearchQuery('')}
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#381932]/50 hover:text-[#381932] dark:text-[#FFF3E6]/50 dark:hover:text-[#FFF3E6] cursor-pointer"
+                        >
+                          <X size={13} />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Filter Tabs (when in Activities mode and not searching) */}
+                  {subServicesModal.isActivitiesMode && !modalSearchQuery && (
+                    <div className="px-3 sm:px-6 pb-2 shrink-0 overflow-x-auto no-scrollbar flex items-center gap-1.5 border-b border-[#381932]/8 dark:border-[#FFF3E6]/8">
+                      {[
+                        { key: 'all' as const, label: 'All Activities', count: 34, icon: Sparkles },
+                        { key: 'kids' as const, label: 'Kids Activities', count: 16, icon: Gamepad2 },
+                        { key: 'eateries' as const, label: 'Live Eateries', count: 12, icon: Utensils },
+                        { key: 'other' as const, label: 'Other Services', count: 5, icon: Gift },
+                        { key: 'photography' as const, label: 'Photography', count: 1, icon: Camera },
+                      ].map((tab) => {
+                        const isActive = subServicesModal.activeGroupKey === tab.key;
+                        const TabIcon = tab.icon;
+                        return (
+                          <button
+                            key={tab.key}
+                            type="button"
+                            onClick={() =>
+                              setSubServicesModal((prev) =>
+                                prev ? { ...prev, activeGroupKey: tab.key } : null
+                              )
+                            }
+                            className={cn(
+                              'flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-semibold transition-all cursor-pointer shrink-0',
+                              isActive
+                                ? 'bg-[#381932] text-[#FFF3E6] shadow-sm dark:bg-[#FFF3E6] dark:text-[#381932]'
+                                : 'bg-[#381932]/6 text-[#381932]/80 hover:bg-[#381932]/12 dark:bg-[#FFF3E6]/8 dark:text-[#FFF3E6]/80 dark:hover:bg-[#FFF3E6]/15'
+                            )}
+                          >
+                            <TabIcon size={11} className={isActive ? 'text-[#FFF3E6] dark:text-[#381932]' : 'text-[#381932]/60 dark:text-[#FFF3E6]/60'} />
+                            <span>{tab.label}</span>
+                            <span
+                              className={cn(
+                                'rounded-full px-1.5 py-0.2 text-[9px] font-bold',
+                                isActive
+                                  ? 'bg-white/20 text-[#FFF3E6] dark:bg-black/15 dark:text-[#381932]'
+                                  : 'bg-[#381932]/10 text-[#381932]/70 dark:bg-[#FFF3E6]/10 dark:text-[#FFF3E6]/70'
+                              )}
+                            >
+                              {tab.count}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Cards Grid Body (strictly 2 columns format on mobile) */}
+                  <div className="flex-1 overflow-y-auto px-3 sm:px-6 py-3">
+                    {displayedModalItems.length > 0 ? (
+                      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-2.5">
+                        {displayedModalItems.map((item) => {
+                          const isAll = item.name.startsWith('All ') && (
+                            item.name.toLowerCase().includes(item.parentCategory.toLowerCase()) ||
+                            item.name.toLowerCase().includes('activities') ||
+                            item.name.toLowerCase().includes('counters') ||
+                            item.name.toLowerCase().includes('services')
+                          );
+
+                          return (
+                            <button
+                              key={`${item.parentCategory}-${item.name}`}
+                              type="button"
+                              onClick={() => {
+                                handleNavCategory(item.parentCategory, isAll ? undefined : item.name);
+                                setSubServicesModal(null);
+                                setMobileServicesOpen(false);
+                                setMobileMenuOpen(false);
+                              }}
+                              className="group flex items-center gap-2 rounded-xl sm:rounded-2xl border border-[#381932]/12 dark:border-[#FFF3E6]/12 bg-white/80 dark:bg-[#251022] p-2 sm:p-2.5 text-left shadow-xs hover:shadow-md hover:border-[#381932]/35 dark:hover:border-[#FFF3E6]/35 hover:bg-white dark:hover:bg-[#2e152a] hover:-translate-y-0.5 transition-all duration-200 cursor-pointer min-w-0"
+                            >
+                              <img
+                                src={item.image}
+                                alt={item.name}
+                                loading="lazy"
+                                className="h-9 w-9 sm:h-11 sm:w-11 shrink-0 rounded-lg sm:rounded-xl object-cover ring-1 ring-[#381932]/10 dark:ring-[#FFF3E6]/15 shadow-xs group-hover:scale-105 transition-transform duration-200"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = '/hero-balloons.jpg';
+                                }}
+                              />
+                              <div className="min-w-0 flex-1">
+                                <span className="block text-[11px] sm:text-xs font-semibold text-[#381932] dark:text-[#FFF3E6] truncate group-hover:text-[#381932] dark:group-hover:text-[#FFF3E6] leading-tight">
+                                  {item.name}
+                                </span>
+                                <div className="mt-0.5 flex items-center justify-between text-[9px] sm:text-[10px] text-[#A78A9F] dark:text-[#FFF3E6]/60 leading-tight">
+                                  <span className="truncate">{item.parentCategory}</span>
+                                  <ArrowRight
+                                    size={10}
+                                    className="shrink-0 text-[#381932] dark:text-[#FFF3E6] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
+                                  />
+                                </div>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="py-12 text-center">
+                        <p className="text-sm font-semibold text-[#381932] dark:text-[#FFF3E6]">
+                          No activities found matching “{modalSearchQuery}”
+                        </p>
+                        <p className="mt-1 text-xs text-[#A78A9F]">
+                          Try checking your spelling or explore the categories above.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => setModalSearchQuery('')}
+                          className="mt-3 inline-flex items-center gap-1 rounded-full bg-[#381932]/10 dark:bg-[#FFF3E6]/10 px-3 py-1 text-xs font-semibold text-[#381932] dark:text-[#FFF3E6] hover:bg-[#381932]/20 cursor-pointer"
+                        >
+                          Clear search
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Footer Bar */}
+                  <div className="flex items-center justify-between border-t border-[#381932]/10 dark:border-[#FFF3E6]/10 px-5 sm:px-7 py-3 bg-[#FFF3E6]/90 dark:bg-[#1a0c18]/90 text-xs shrink-0">
+                    <span className="text-[#A78A9F] dark:text-[#FFF3E6]/60 text-[11px] truncate">
+                      Bangalore's #1 Interactive Entertainment & Event Stalls
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSubServicesModal(null);
+                        setMobileServicesOpen(false);
+                        setMobileMenuOpen(false);
+                        navigate('/packages');
+                      }}
+                      className="flex items-center gap-1 font-semibold text-[#381932] dark:text-[#FFF3E6] hover:underline cursor-pointer text-[11px] shrink-0"
+                    >
+                      <span>View Packages</span>
+                      <ArrowRight size={12} />
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>,
+          document.body
+        )}
     </header>
   );
 };

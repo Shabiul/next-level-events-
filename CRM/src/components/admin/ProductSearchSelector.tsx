@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Check, Search, X } from 'lucide-react';
 import type { AdminProduct } from '../../types';
 import { cn } from '../../lib/utils';
-import { resolveImageUrl } from '../../lib/imageUrl';
+import { resolveImageUrl, handleImageError } from '../../lib/imageUrl';
 
 interface ProductSearchSelectorProps {
   products: AdminProduct[];
@@ -134,7 +134,7 @@ export const ProductSearchSelector: React.FC<ProductSearchSelectorProps> = ({
                 )}
                 onClick={() => toggleProduct(product._id)}
               >
-                <img src={resolveImageUrl(product.image)} alt={product.name} className="h-10 w-10 shrink-0 rounded-lg object-cover border border-[#381932] dark:border-[#381932]" />
+                <img src={resolveImageUrl(product.image)} alt={product.name} className="h-10 w-10 shrink-0 rounded-lg object-cover border border-[#381932] dark:border-[#381932]" onError={handleImageError} />
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-xs font-bold text-[#381932] dark:text-[#FFF3E6]">{product.name}</div>
                   <div className="truncate text-[11px] font-semibold text-[#381932]">

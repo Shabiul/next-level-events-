@@ -287,7 +287,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({
 
               <h1 className="mt-4 font-serif text-[2.4rem] leading-[1.06] sm:text-5xl md:text-6xl lg:text-[3.9rem] font-semibold uppercase text-[#FFF3E6] tracking-tight drop-shadow-[0_4px_24px_rgba(56,25,50,0.85)]">
                 Explore{' '}
-                <span className="font-script lowercase normal-case font-normal tracking-normal text-[#A78A9F] text-[1.2em] leading-[0.95] align-baseline drop-shadow-[0_2px_20px_rgba(56,25,50,0.7)]">
+                <span className="font-serif uppercase font-semibold text-[#A78A9F] align-baseline drop-shadow-[0_2px_20px_rgba(56,25,50,0.7)]">
                   Themes
                 </span>{' '}
                 &amp; Setups

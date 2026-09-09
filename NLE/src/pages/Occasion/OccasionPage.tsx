@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -862,25 +862,25 @@ export const OccasionPage: React.FC<{
 
   const heroBgImage = useMemo(() => {
     if (isPhotographyCategory) return 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1920&q=80';
-    if (isProposalCategory) return '/tearce.jpg';
-    if (isCarDecorationCategory) return '/car dilver.jpg';
-    if (isCarBootCategory) return '/car bot.jpg';
-    if (isCabanaCategory) return '/kkkk.jpg';
-    if (isLiveEateriesCategory) return '/liveeee.jpg';
-    if (isKidsActivitiesCategory) return '/kids-activities.jpg';
-    if (isKidsThemeCategory) return '/kids theme.jpg';
-    if (isAnniversaryCategory) return '/romantic-dinner.jpg';
-    if (isWallDecorCategory) return '/simple-wall-decor.jpg';
-    if (is1stBirthdayCategory) return '/1ss.jpg';
-    if (isBabyShowerCategory) return '/baby-shower.jpg';
-    if (isWelcomeBabyCategory) return '/welcome-baby.jpg';
-    if (isBirthdayCategory) return '/birthday.jpg';
+    if (isProposalCategory) return '/tearce.webp';
+    if (isCarDecorationCategory) return '/car dilver.webp';
+    if (isCarBootCategory) return '/car bot.webp';
+    if (isCabanaCategory) return '/kkkk.webp';
+    if (isLiveEateriesCategory) return '/liveeee.webp';
+    if (isKidsActivitiesCategory) return '/kids-activities.webp';
+    if (isKidsThemeCategory) return '/kids theme.webp';
+    if (isAnniversaryCategory) return '/romantic-dinner.webp';
+    if (isWallDecorCategory) return '/simple-wall-decor.webp';
+    if (is1stBirthdayCategory) return '/1ss.webp';
+    if (isBabyShowerCategory) return '/baby-shower.webp';
+    if (isWelcomeBabyCategory) return '/welcome-baby.webp';
+    if (isBirthdayCategory) return '/birthday.webp';
     // Fall back to the theme's own curated card photo (Graduation, Opening
     // Decors, National Festivals, Naming Ceremonies, Annaprashan, ...) before
     // the generic purple backdrop.
     const themeImg = getServiceGalleryImages(decodedSubcategory || decodedCategory)[0];
     if (themeImg) return themeImg;
-    return '/about-purple-decor.jpg';
+    return '/about-purple-decor.webp';
   }, [isPhotographyCategory, isProposalCategory, isCarDecorationCategory, isCarBootCategory, isCabanaCategory, isLiveEateriesCategory, isKidsActivitiesCategory, isKidsThemeCategory, isAnniversaryCategory, isWallDecorCategory, is1stBirthdayCategory, isBabyShowerCategory, isWelcomeBabyCategory, isBirthdayCategory, decodedCategory, decodedSubcategory]);
 
 
@@ -1095,6 +1095,43 @@ export const OccasionPage: React.FC<{
   const usingGalleryFallback = categoryProducts.length === 0 && galleryFallbackProducts.length > 0;
   const displayProducts = usingGalleryFallback ? galleryFallbackProducts : categoryProducts;
 
+  // Progressive scroll-based pagination to prevent loading 100+ images simultaneously
+  const PAGE_SIZE = 16;
+  const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
+  const productsSentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [decodedCategory, decodedSubcategory]);
+
+  const visibleProducts = useMemo(() => {
+    return displayProducts.slice(0, visibleCount);
+  }, [displayProducts, visibleCount]);
+
+  const hasMoreProducts = visibleCount < displayProducts.length;
+
+  const loadMoreProducts = useCallback(() => {
+    if (visibleCount >= displayProducts.length) return;
+    setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, displayProducts.length));
+  }, [visibleCount, displayProducts.length]);
+
+  useEffect(() => {
+    const el = productsSentinelRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          loadMoreProducts();
+        }
+      },
+      { rootMargin: '350px' }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [loadMoreProducts]);
+
   const handleSubcategorySelect = (subName: string) => {
     if (subName === '__all__') {
       navigate(`/category/${encodeURIComponent(decodedCategory)}`);
@@ -1238,7 +1275,7 @@ export const OccasionPage: React.FC<{
               </div>
               <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-semibold tracking-tight text-[#FFF3E6] leading-[1.05] mb-4">
                 {decodedSubcategory || decodedCategory},{' '}
-                <span className="font-script font-normal text-[#FFF3E6]">celebrated beautifully.</span>
+                <span className="font-serif font-normal text-[#FFF3E6]">Celebrated Beautifully.</span>
               </h1>
               <p className="text-sm md:text-base text-[#FFF3E6]/85 font-normal leading-relaxed max-w-lg mb-8">
                 Select from our meticulously designed celebration theme setups, handcrafted by verified master decorators across Bengaluru.
@@ -1324,25 +1361,39 @@ export const OccasionPage: React.FC<{
                 onAction={() => navigate('/explore')}
               />
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {displayProducts.map((product: AdminProduct, idx: number) => (
-                  <motion.div
-                    key={product._id}
-                    initial={{ opacity: 0, y: 25 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: (idx % 4) * 0.08 }}
-                    className="h-full"
-                  >
-                    <ProductCard
-                      product={product}
-                      minimal
-                      onViewDetails={onViewProduct || ((p) => navigate(`/product/${p._id}`, { state: { product: p } }))}
-                      onBook={onBookProduct || ((p) => navigate(`/booking/${p._id}`, { state: { product: p, preferredMethod: 'razorpay' } }))}
-                    />
-                  </motion.div>
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  {visibleProducts.map((product: AdminProduct, idx: number) => (
+                    <motion.div
+                      key={product._id}
+                      initial={{ opacity: 0, y: 25 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: (idx % 4) * 0.08 }}
+                      className="h-full"
+                    >
+                      <ProductCard
+                        product={product}
+                        minimal
+                        onViewDetails={onViewProduct || ((p) => navigate(`/product/${p._id}`, { state: { product: p } }))}
+                        onBook={onBookProduct || ((p) => navigate(`/booking/${p._id}`, { state: { product: p, preferredMethod: 'razorpay' } }))}
+                      />
+                    </motion.div>
+                  ))}
+                </div>
+
+                {hasMoreProducts && (
+                  <div ref={productsSentinelRef} className="w-full py-10 flex flex-col items-center justify-center">
+                    <div className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#381932]/5 border border-[#381932]/10 backdrop-blur-sm text-xs font-serif font-bold uppercase tracking-wider text-[#381932]">
+                      <span className="relative flex h-2.5 w-2.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#A78A9F] opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#381932]"></span>
+                      </span>
+                      <span>Loading more setups ({visibleProducts.length} of {displayProducts.length})</span>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </motion.div>
 

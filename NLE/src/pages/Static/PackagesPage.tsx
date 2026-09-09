@@ -143,7 +143,7 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
               '@type': 'ListItem',
               position: idx + 1,
               name: pkg.name,
-              description: pkg.tagline,
+              description: pkg.description,
               url: 'https://thedecorparty.com/packages',
             })),
           },
@@ -174,7 +174,7 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
               <span className="text-[#A78A9F]">Perfection</span>
             </h1>
 
-            <p className="font-script text-xl sm:text-2xl text-[#A78A9F] mt-4">
+            <p className="font-sans font-medium text-base sm:text-lg text-[#A78A9F] mt-3">
               Thoughtfully designed packages for unforgettable moments.
             </p>
           </div>
@@ -213,8 +213,8 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
         {/* ================================================================= */}
         {/* 2. PACKAGE GRID                                                   */}
         {/* ================================================================= */}
-        <section className="w-full max-w-[1500px] mx-auto px-5 sm:px-8 pt-4 pb-16 sm:pb-24">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7">
+        <section className="w-full max-w-[1500px] mx-auto px-3 sm:px-8 pt-4 pb-16 sm:pb-24">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-6">
             {primaryPackages.map((pkg, idx) => (
               <EventPackageCard
                 key={pkg.id}
@@ -254,7 +254,7 @@ export const PackagesPage: React.FC<PackagesPageProps> = ({
               transition={{ duration: 0.4 }}
               className="mt-8 overflow-hidden"
             >
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-6">
                 {extraPackages.map((pkg, idx) => (
                   <EventPackageCard
                     key={pkg.id}

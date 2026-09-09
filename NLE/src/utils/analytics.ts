@@ -36,14 +36,16 @@ export const initGA = () => {
 };
 
 export const setGAUser = (userId: string | null, properties?: Record<string, any>) => {
-  if (!MEASUREMENT_ID && !import.meta.env.DEV) return;
-
-  if (userId) {
-    ReactGA.set({ user_id: userId });
-  }
-
-  if (properties) {
-    ReactGA.set(properties);
+  if (!isInitialized) return;
+  try {
+    if (userId) {
+      ReactGA.set({ user_id: userId });
+    }
+    if (properties) {
+      ReactGA.set(properties);
+    }
+  } catch (e) {
+    console.warn("[GA4] setGAUser error", e);
   }
 };
 
@@ -52,11 +54,16 @@ export const trackPageView = (path: string, title?: string) => {
     console.log(`[GA4] Pageview: ${path}${title ? ` (${title})` : ''}`);
   }
 
-  ReactGA.send({
-    hitType: "pageview",
-    page: path,
-    title: title || document.title,
-  });
+  if (!isInitialized) return;
+  try {
+    ReactGA.send({
+      hitType: "pageview",
+      page: path,
+      title: title || document.title,
+    });
+  } catch (e) {
+    console.warn("[GA4] trackPageView error", e);
+  }
 };
 
 export const trackEvent = (eventName: string, params?: Record<string, any>) => {
@@ -64,7 +71,12 @@ export const trackEvent = (eventName: string, params?: Record<string, any>) => {
     console.log(`[GA4 Event] ${eventName}:`, params);
   }
 
-  ReactGA.event(eventName, params);
+  if (!isInitialized) return;
+  try {
+    ReactGA.event(eventName, params);
+  } catch (e) {
+    console.warn("[GA4] trackEvent error", e);
+  }
 };
 
 export const trackViewItem = (item: GAItem) => {

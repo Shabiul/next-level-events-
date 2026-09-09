@@ -2,11 +2,14 @@ import express, { Request, Response } from "express";
 import { CategoryRepository, ProductRepository } from "../src/db/repositories.js";
 import { aiReindexService } from "../src/ai/services/ai-reindex.service.js";
 import { requirePermission } from "../utils/auth.js";
+import { broadcastCatalogUpdate, getCatalogVersion } from "../services/catalogSyncService.js";
 
 const router = express.Router();
 
 router.get("/", async (_req: Request, res: Response) => {
   try {
+    res.setHeader("Cache-Control", "no-cache, must-revalidate, max-age=0");
+    res.setHeader("Pragma", "no-cache");
     const categoriesWithCounts = await CategoryRepository.listAll();
     res.json(categoriesWithCounts);
   } catch (err: any) {
@@ -35,6 +38,9 @@ router.post("/", requirePermission("categories"), async (req: Request, res: Resp
       subcategories: req.body.subcategories || [],
     });
 
+    broadcastCatalogUpdate("category_created", { id: category?.id, name: category?.name });
+    res.cookie("tdp_catalog_v", String(getCatalogVersion()), { maxAge: 86400000, httpOnly: false, sameSite: "lax", path: "/" });
+
     try {
       aiReindexService.scheduleReindex();
     } catch {}
@@ -58,6 +64,8 @@ const handleReorder = async (req: Request, res: Response) => {
     );
 
     await CategoryRepository.reorder(validIds);
+    broadcastCatalogUpdate("category_reordered");
+    res.cookie("tdp_catalog_v", String(getCatalogVersion()), { maxAge: 86400000, httpOnly: false, sameSite: "lax", path: "/" });
 
     try {
       aiReindexService.scheduleReindex();
@@ -89,6 +97,9 @@ router.put("/:id", requirePermission("categories"), async (req: Request, res: Re
       subcategories: req.body.subcategories,
     });
 
+    broadcastCatalogUpdate("category_updated", { id, name: updated?.name });
+    res.cookie("tdp_catalog_v", String(getCatalogVersion()), { maxAge: 86400000, httpOnly: false, sameSite: "lax", path: "/" });
+
     if (updated) {
       try {
         aiReindexService.scheduleReindex();
@@ -114,6 +125,9 @@ router.delete("/:id", requirePermission("categories"), async (req: Request, res:
     }
 
     const deleted = await CategoryRepository.delete(id);
+    broadcastCatalogUpdate("category_deleted", { id });
+    res.cookie("tdp_catalog_v", String(getCatalogVersion()), { maxAge: 86400000, httpOnly: false, sameSite: "lax", path: "/" });
+
     if (deleted) {
       try {
         aiReindexService.scheduleReindex();

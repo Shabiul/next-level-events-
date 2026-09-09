@@ -10,6 +10,10 @@ import AppRoutes from './routes/AppRoutes';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
 import { initGA } from "./lib/analytics";
+import { syncDeploymentCache } from "./utils/cacheManager";
+
+// Synchronize deployment version and purge stale/partial cache on new updates
+syncDeploymentCache();
 
 initGA();
 

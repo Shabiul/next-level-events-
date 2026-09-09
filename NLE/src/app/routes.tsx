@@ -10,7 +10,7 @@ import { CRM_URL } from '../config/crm';
 const ExplorePage = lazy(() => import('../pages/Explore/ExplorePage').then(m => ({ default: m.ExplorePage })));
 const OccasionPage = lazy(() => import('../pages/Occasion/OccasionPage').then(m => ({ default: m.OccasionPage })));
 const ProductPage = lazy(() => import('../pages/Product/ProductPage').then(m => ({ default: m.ProductPage })));
-const BookingPage = lazy(() => import('../pages/Booking/BookingPage').then(m => ({ default: m.BookingPage })));
+import { BookingPage } from '../pages/Booking/BookingPage';
 const OrderDetailsPage = lazy(() => import('../pages/Bookings/OrderDetailsPage').then(m => ({ default: m.OrderDetailsPage })));
 const BookingsPage = lazy(() => import('../pages/Bookings/BookingsPage').then(m => ({ default: m.BookingsPage })));
 const WishlistPage = lazy(() => import('../pages/Wishlist/WishlistPage').then(m => ({ default: m.WishlistPage })));
@@ -125,7 +125,15 @@ export const AppRoutes: React.FC = () => {
         onCartClose={() => navigate(-1)}
         onCartLoginClick={() => auth.open('login')}
         onTermsPageOpen={(key) => navigate(`/${key}`)}
-        onCloseAuth={auth.close}
+        onCloseAuth={() => {
+          auth.close();
+          if (
+            location.pathname.startsWith('/booking') ||
+            location.pathname.startsWith('/checkout')
+          ) {
+            navigate('/services');
+          }
+        }}
         onSetAuthTab={auth.setTab}
         authModalOpen={auth.isOpen}
         authModalTab={auth.tab}
@@ -168,6 +176,15 @@ export const AppRoutes: React.FC = () => {
           />
 
           {/* Services, Activities, Occasion & Category Routes */}
+          <Route
+            path="/services"
+            element={
+              <ExplorePage
+                onViewProduct={handleViewProduct}
+                onBookProduct={handleBookProduct}
+              />
+            }
+          />
           <Route
             path="/services/:categoryName"
             element={
@@ -252,27 +269,15 @@ export const AppRoutes: React.FC = () => {
               booking (passed via router state) is never lost. */}
           <Route
             path="/booking/:id"
-            element={
-              <ProtectedRoute>
-                <BookingPage />
-              </ProtectedRoute>
-            }
+            element={<BookingPage />}
           />
           <Route
             path="/checkout"
-            element={
-              <ProtectedRoute>
-                <BookingPage />
-              </ProtectedRoute>
-            }
+            element={<BookingPage />}
           />
           <Route
             path="/checkout/:id"
-            element={
-              <ProtectedRoute>
-                <BookingPage />
-              </ProtectedRoute>
-            }
+            element={<BookingPage />}
           />
 
           {/* Order Details & Bookings */}
