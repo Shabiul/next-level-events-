@@ -333,7 +333,7 @@ export const AboutPage: React.FC = () => {
 
               <div className="flex flex-col items-center gap-1.5">
                 <span className="font-serif text-lg sm:text-2xl md:text-3xl font-bold uppercase tracking-tight text-[#A78A9F] text-center">
-                  Prashanth B S &amp; Revanath LM
+                  Prashanth B S &amp; Revanth LM
                 </span>
                 <span className="text-xs sm:text-sm font-poppins font-medium tracking-[0.16em] text-[#FFF3E6]/80 uppercase text-center">
                   Founders &amp; Creative Directors, The Decor Party

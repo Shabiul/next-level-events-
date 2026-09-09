@@ -264,7 +264,7 @@ export const ContactPage: React.FC = () => {
                 </div>
                 <div>
                   <span className="block font-serif text-[15px] font-semibold text-[#381932]">
-                    Prashanth B S &amp; Revanath LM
+                    Prashanth B S &amp; Revanth LM
                   </span>
                   <span className="mt-0.5 flex items-center gap-1.5 text-xs text-[#381932]/70">
                     <Clock size={12} className="text-[#A78A9F]" />
