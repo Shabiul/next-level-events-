@@ -235,3 +235,77 @@ CREATE TABLE IF NOT EXISTS chat_sessions (
 
 -- 15. ORDER COUNTER SEQUENCE
 CREATE SEQUENCE IF NOT EXISTS order_number_seq START WITH 1;
+
+-- =============================================================================
+-- 16. ROW LEVEL SECURITY (RLS) & ACCESS CONTROL POLICIES
+-- =============================================================================
+
+-- Enable Row Level Security on all tables
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE products ENABLE ROW LEVEL SECURITY;
+ALTER TABLE addons ENABLE ROW LEVEL SECURITY;
+ALTER TABLE product_addons ENABLE ROW LEVEL SECURITY;
+ALTER TABLE activities ENABLE ROW LEVEL SECURITY;
+ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE carts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE wishlists ENABLE ROW LEVEL SECURITY;
+ALTER TABLE otp_tokens ENABLE ROW LEVEL SECURITY;
+ALTER TABLE enquiries ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sliders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE site_content ENABLE ROW LEVEL SECURITY;
+ALTER TABLE chat_sessions ENABLE ROW LEVEL SECURITY;
+
+-- Catalog & Public Content: Public read access
+DROP POLICY IF EXISTS "Public read products" ON products;
+CREATE POLICY "Public read products" ON products FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public read categories" ON categories;
+CREATE POLICY "Public read categories" ON categories FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public read addons" ON addons;
+CREATE POLICY "Public read addons" ON addons FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public read product_addons" ON product_addons;
+CREATE POLICY "Public read product_addons" ON product_addons FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public read activities" ON activities;
+CREATE POLICY "Public read activities" ON activities FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public read sliders" ON sliders;
+CREATE POLICY "Public read sliders" ON sliders FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public read site_content" ON site_content;
+CREATE POLICY "Public read site_content" ON site_content FOR SELECT USING (true);
+
+-- Public Contact & Enquiries: Public can insert enquiries
+DROP POLICY IF EXISTS "Public insert enquiries" ON enquiries;
+CREATE POLICY "Public insert enquiries" ON enquiries FOR INSERT WITH CHECK (true);
+
+-- AI Chat Sessions: Allow session read/write
+DROP POLICY IF EXISTS "Allow chat sessions access" ON chat_sessions;
+CREATE POLICY "Allow chat sessions access" ON chat_sessions USING (true) WITH CHECK (true);
+
+-- Carts: Authenticated users manage own cart
+DROP POLICY IF EXISTS "Users manage own cart" ON carts;
+CREATE POLICY "Users manage own cart" ON carts
+  FOR ALL
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
+
+-- Wishlists: Authenticated users manage own wishlist
+DROP POLICY IF EXISTS "Users manage own wishlist" ON wishlists;
+CREATE POLICY "Users manage own wishlist" ON wishlists
+  FOR ALL
+  USING (auth.uid()::text = user_id)
+  WITH CHECK (auth.uid()::text = user_id);
+
+-- Orders: Customers can read own orders
+DROP POLICY IF EXISTS "Users view own orders" ON orders;
+CREATE POLICY "Users view own orders" ON orders
+  FOR SELECT
+  USING (auth.uid()::text = user_id OR auth.jwt() ->> 'email' = customer_snapshot ->> 'email');
+
+-- Note: The backend Express API connects using the Supabase Service Role key,
+-- which automatically bypasses RLS to perform administrative, sync, and payment operations.
+

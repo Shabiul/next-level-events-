@@ -8,6 +8,7 @@ import { resolveImageUrl, handleImageError } from '../../lib/imageUrl';
 import type { AdminProduct } from '../../types';
 import { ProductSearchSelector } from './ProductSearchSelector';
 import { toast } from 'react-toastify';
+import { broadcastCrmUpdate } from '../../lib/syncChannel';
 
 const getActivitiesApi = () => getApiUrl('/api/activities');
 const API = { toString: getActivitiesApi, valueOf: getActivitiesApi, [Symbol.toPrimitive]: getActivitiesApi } as unknown as string;
@@ -119,6 +120,7 @@ export const ActivitiesView = () => {
 
       const saved = await res.json();
       setActivities((prev) => [...(Array.isArray(saved) ? saved : [saved]), ...prev]);
+      broadcastCrmUpdate('activity');
       toast.success('Activity created');
       setShowModal(false);
     } catch (err: any) {
@@ -145,6 +147,7 @@ export const ActivitiesView = () => {
       }
       const updated = await res.json();
       setActivities((prev) => prev.map((item) => item._id === updated._id ? updated : item));
+      broadcastCrmUpdate('activity', updated._id);
       toast.success('Activity updated');
       setEditTarget(null);
       setEditProductId(null);
@@ -157,6 +160,7 @@ export const ActivitiesView = () => {
     try {
       await authFetch(`${API}/${activity._id}`, { method: 'DELETE' });
       setActivities((prev) => prev.filter((item) => item._id !== activity._id));
+      broadcastCrmUpdate('activity', activity._id);
       setDeleteConfirm(null);
       toast.success('Activity deleted');
     } catch {
@@ -177,6 +181,7 @@ export const ActivitiesView = () => {
       }
       const updated = await res.json();
       setActivities((prev) => prev.map((item) => item._id === updated._id ? updated : item));
+      broadcastCrmUpdate('activity', updated._id);
       toast.success(`Activity ${updated.active ? 'shown' : 'hidden'}`);
     } catch (err: any) {
       toast.error(err.message || 'Failed to update activity');

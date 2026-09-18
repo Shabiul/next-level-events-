@@ -369,7 +369,7 @@ export const ProductRepository = {
     if (options.activeOnly) query = query.eq("active", true);
     if (options.categoryId) query = query.eq("category_id", options.categoryId);
     if (options.search) {
-      const cleaned = options.search.replace(/[,\(\)\"\'\\]/g, " ").trim();
+      const cleaned = options.search.replace(/[,()"'\\]/g, " ").trim();
       if (cleaned) {
         const s = cleaned.replace(/[%_]/g, "\\$&");
         query = query.or(`name.ilike.%${s}%,description.ilike.%${s}%,subcategory.ilike.%${s}%`);

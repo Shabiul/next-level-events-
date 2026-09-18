@@ -10,6 +10,9 @@ const DEFAULT_SUPABASE_ANON_KEY = "sb_publishable_V3yK30376tK26ibPkkQCxw_EYHALMM
 export function getSupabase(): SupabaseClient {
   const url = process.env.SUPABASE_URL?.trim() || DEFAULT_SUPABASE_URL;
   const key = (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY)?.trim() || DEFAULT_SUPABASE_ANON_KEY;
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.NODE_ENV === "production") {
+    console.warn("⚠️ Warning: SUPABASE_SERVICE_ROLE_KEY is not set in production. Database operations may be restricted by RLS.");
+  }
   const currentKey = `${url}:${key}`;
 
   if (cachedClient && cachedKey === currentKey) {

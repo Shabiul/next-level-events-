@@ -96,8 +96,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         }
 
-        role = role || 'admin';
-
         if (role === 'admin' || role === 'staff') {
           const user: AuthUser = {
             id: supaUser.user.id,
@@ -106,7 +104,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             name: [firstName, lastName].filter(Boolean).join(' ') || supaUser.user.email || 'Admin',
             firstName: firstName || '',
             lastName: lastName || '',
-            permissions: permissions || ['products', 'categories', 'orders', 'addons', 'activities', 'sliders', 'users', 'settings', 'terms'],
+            permissions: permissions || (role === 'admin'
+              ? ['products', 'categories', 'orders', 'addons', 'activities', 'sliders', 'users', 'settings', 'terms']
+              : ['orders', 'products']),
           };
           localStorage.setItem('token', accessToken);
           localStorage.setItem('user', JSON.stringify(user));
@@ -116,7 +116,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       }
 
-      const errorMsg = data?.msg || 'Supabase OAuth verification failed. Admin access denied.';
+      const errorMsg = data?.msg || 'Access denied. The account does not have admin console permissions.';
       toast.error(errorMsg);
       await signOutSupabase();
       localStorage.removeItem('token');

@@ -79,7 +79,8 @@ export function useWishlist() {
         }
       } else {
         if (mountedRef.current) {
-          setError(err instanceof Error ? err.message : String(err));
+          // In offline mode, do not show error banner
+          setError(null);
         }
       }
       if (mountedRef.current) {
@@ -140,28 +141,19 @@ export function useWishlist() {
           method: shouldAdd ? 'POST' : 'DELETE',
           headers: { Authorization: `Bearer ${token}` },
         });
-        const payload = (await response.json().catch(() => null)) as WishlistResponse | null;
-        if (!response.ok || !payload?.wishlist) {
-          throw new Error((payload as any)?.msg || 'Failed to update wishlist');
-        }
-
-        setItems(payload.wishlist);
-        auth.updateUser({
-          wishlist: payload.wishlist.map((item) => String(item._id)),
-        });
-        return true;
-      } catch {
-        setItems((prevItems) => {
-          if (!shouldAdd) {
-            if (prevItems.some((item) => String(item._id) === String(product._id))) return prevItems;
-            return [...prevItems, product];
-          } else {
-            return prevItems.filter((item) => String(item._id) !== String(product._id));
+        if (response.ok) {
+          const payload = (await response.json().catch(() => null)) as WishlistResponse | null;
+          if (payload?.wishlist) {
+            setItems(payload.wishlist);
+            auth.updateUser({
+              wishlist: payload.wishlist.map((item) => String(item._id)),
+            });
           }
-        });
-        auth.updateUser({ wishlist: currentWishlist });
-        return false;
+        }
+      } catch {
+        // Backend offline: keep local optimistic state
       }
+      return true;
     },
     [auth, wishlistIds]
   );

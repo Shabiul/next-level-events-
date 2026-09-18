@@ -6,6 +6,7 @@ import type { CatalogActivity, CatalogAddon, CatalogSelectionItem } from '../../
 import { getApiUrl } from '../../services/api.service';
 import { cn } from '../../utils/utils';
 import { AddonDetailModal, type AddonDetailItem } from './AddonDetailModal';
+import { DEFAULT_ADDONS, DEFAULT_ACTIVITIES } from '../../data/fallbackCatalog';
 
 interface Props {
   onSelectionChange?: (addons: CatalogSelectionItem[], activities: CatalogSelectionItem[]) => void;
@@ -92,13 +93,25 @@ const getItemInclusions = (item: RawCatalogItem): string[] => {
     .filter(Boolean);
 };
 
-const normalizeCatalogItem = (item: RawCatalogItem) => ({
+const normalizeAddonItem = (item: RawCatalogItem): CatalogAddon => ({
   ...item,
+  _id: String(item._id || item.id || ''),
+  name: String(item.name || ''),
   price: getItemPrice(item),
   image: getItemImage(item),
   images: getItemImages(item),
   inclusions: getItemInclusions(item),
-});
+} as unknown as CatalogAddon);
+
+const normalizeActivityItem = (item: RawCatalogItem): CatalogActivity => ({
+  ...item,
+  _id: String(item._id || item.id || ''),
+  name: String(item.name || ''),
+  price: getItemPrice(item),
+  image: getItemImage(item),
+  images: getItemImages(item),
+  inclusions: getItemInclusions(item),
+} as unknown as CatalogActivity);
 
 // These 8 are the generic "Popular Celebration Enhancements" also offered at
 // checkout (a shared stock photo, not a real product photo) -- on the
@@ -142,9 +155,9 @@ export const AddonsModule: React.FC<Props> = ({
   selectedActivityIds: externalSelectedActivityIds,
   themeCategory,
 }) => {
-  const [addons, setAddons] = useState<CatalogAddon[]>([]);
-  const [activities, setActivities] = useState<CatalogActivity[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [addons, setAddons] = useState<CatalogAddon[]>(() => sortCuratedLast((DEFAULT_ADDONS as any[]).map(normalizeAddonItem)));
+  const [activities, setActivities] = useState<CatalogActivity[]>(() => (DEFAULT_ACTIVITIES as any[]).map(normalizeActivityItem));
+  const [loading, setLoading] = useState(false);
   const [selectedAddonIds, setSelectedAddonIds] = useState<string[]>(externalSelectedAddonIds || []);
   const [selectedActivityIds, setSelectedActivityIds] = useState<string[]>(externalSelectedActivityIds || []);
   const [activeTab, setActiveTab] = useState<TabKey>('addons');
@@ -178,23 +191,21 @@ export const AddonsModule: React.FC<Props> = ({
 
   useEffect(() => {
     let isMounted = true;
-    setLoading(true);
 
     fetch(getApiUrl('/api/catalog'))
       .then(async (res) => {
         if (!res.ok) throw new Error('Failed to load catalog');
         const data = await res.json();
         if (isMounted) {
-          const addonList = Array.isArray(data.addons) ? data.addons.map(normalizeCatalogItem) : [];
-          setAddons(sortCuratedLast(addonList));
-          setActivities(Array.isArray(data.activities) ? data.activities.map(normalizeCatalogItem) : []);
+          const addonList = Array.isArray(data.addons) && data.addons.length > 0 ? data.addons.map(normalizeAddonItem) : [];
+          if (addonList.length > 0) setAddons(sortCuratedLast(addonList));
+          if (Array.isArray(data.activities) && data.activities.length > 0) {
+            setActivities(data.activities.map(normalizeActivityItem));
+          }
         }
       })
       .catch(() => {
-        if (isMounted) {
-          setAddons([]);
-          setActivities([]);
-        }
+        // preserve local fallback items
       })
       .finally(() => {
         if (isMounted) {

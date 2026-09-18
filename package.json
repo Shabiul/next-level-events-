@@ -7,6 +7,7 @@
     "dev:all": "node dev.js",
     "dev:nle": "npm --prefix NLE run dev",
     "dev:crm": "npm --prefix CRM run dev",
+    "dev:fullstack": "npm --prefix NLE run dev:fullstack",
     "build": "npm --prefix NLE run build && npm --prefix CRM run build",
     "build:nle": "npm --prefix NLE run build",
     "build:crm": "npm --prefix CRM run build",

@@ -65,7 +65,7 @@ router.get("/", async (_req: Request, res: Response) => {
     }
 
     return res.json({ addons, activities });
-  } catch (err: any) {
+  } catch {
     return res.json(FALLBACK_CATALOG);
   }
 });

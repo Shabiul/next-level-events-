@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import { SiteContentRepository } from "../src/db/repositories.js";
 import { requirePermission } from "../utils/auth.js";
+import { broadcastCatalogUpdate } from "../services/catalogSyncService.js";
 
 function requireContentScope(req: Request, res: Response, next: NextFunction) {
   const scope = req.params.key === "site-settings" ? "settings" : "terms";
@@ -94,7 +95,7 @@ router.get("/:key", async (req: Request, res: Response) => {
       return res.json({ key, ...def });
     }
     return res.json({ key, ...doc });
-  } catch (err: any) {
+  } catch {
     const key = String(req.params.key);
     const defKey = key as keyof typeof DEFAULTS;
     const def = DEFAULTS[defKey];
@@ -112,8 +113,9 @@ router.put("/:key", requireContentScope, async (req: Request, res: Response) => 
     }
 
     const doc = await SiteContentRepository.upsert(key, title, content);
+    broadcastCatalogUpdate("site_content_updated", { key });
     return res.json({ key, title: doc.title, content: doc.content });
-  } catch (err: any) {
+  } catch {
     return res.status(500).json({ msg: "Server error" });
   }
 });

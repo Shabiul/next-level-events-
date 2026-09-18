@@ -82,7 +82,7 @@ router.get("/profile", authMiddleware, async (req: Request, res: Response) => {
 
     const wishlist = await WishlistRepository.getByUserId(userId);
     return res.json({ user: publicUser(user, wishlist) });
-  } catch (err) {
+  } catch {
     return res.status(500).json({ msg: "Failed to load profile" });
   }
 });
@@ -97,7 +97,7 @@ router.get("/me", authMiddleware, async (req: Request, res: Response) => {
 
     const wishlist = await WishlistRepository.getByUserId(userId);
     return res.json({ user: publicUser(user, wishlist) });
-  } catch (err) {
+  } catch {
     return res.status(500).json({ msg: "Failed to load current user" });
   }
 });
@@ -119,7 +119,7 @@ router.put("/profile", authMiddleware, async (req: Request, res: Response) => {
 
     const wishlist = await WishlistRepository.getByUserId(userId);
     return res.json({ user: publicUser(user, wishlist) });
-  } catch (err) {
+  } catch {
     return res.status(500).json({ msg: "Failed to save profile" });
   }
 });

@@ -50,18 +50,52 @@ export function useSiteSettings(): SiteSettings {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(getApiUrl('/api/site-content/site-settings'))
-      .then((r) => r.json())
-      .then((data) => {
-        if (cancelled || !data?.content) return;
-        const parsed = JSON.parse(data.content);
-        setSettings((prev) => ({ ...prev, ...parsed }));
-      })
-      .catch(() => {
-        /* keep defaults */
-      });
+
+    const loadSettings = (force = false) => {
+      const cacheBuster = force ? `?_t=${Date.now()}` : '';
+      fetch(getApiUrl(`/api/site-content/site-settings${cacheBuster}`), { cache: 'no-store' })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((data) => {
+          if (cancelled || !data?.content) return;
+          const parsed = JSON.parse(data.content);
+          setSettings((prev) => ({ ...prev, ...parsed }));
+        })
+        .catch(() => {
+          /* keep defaults */
+        });
+    };
+
+    loadSettings();
+
+    // Cross-tab synchronization via BroadcastChannel
+    let broadcastChannel: BroadcastChannel | null = null;
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      try {
+        broadcastChannel = new BroadcastChannel('tdp_catalog_sync');
+        broadcastChannel.onmessage = (event) => {
+          if (event?.data?.type === 'CATALOG_UPDATED') {
+            loadSettings(true);
+          }
+        };
+      } catch {}
+    }
+
+    const onRevalidate = () => {
+      if (document.visibilityState === 'visible') {
+        loadSettings(true);
+      }
+    };
+
+    window.addEventListener('focus', onRevalidate);
+    document.addEventListener('visibilitychange', onRevalidate);
+    window.addEventListener('tdp_catalog_invalidate', () => loadSettings(true));
+
     return () => {
       cancelled = true;
+      if (broadcastChannel) broadcastChannel.close();
+      window.removeEventListener('focus', onRevalidate);
+      document.removeEventListener('visibilitychange', onRevalidate);
+      window.removeEventListener('tdp_catalog_invalidate', () => loadSettings(true));
     };
   }, []);
 

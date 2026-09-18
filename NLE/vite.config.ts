@@ -44,10 +44,26 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true,
+        configure: (proxy) => {
+          proxy.on('error', (_err, _req, res) => {
+            if (res && 'writeHead' in res && !(res as any).headersSent) {
+              (res as any).writeHead(503, { 'Content-Type': 'application/json' });
+              (res as any).end(JSON.stringify({ error: 'Backend server offline', standalone: true }));
+            }
+          });
+        },
       },
       '/share': {
         target: 'http://localhost:5000',
         changeOrigin: true,
+        configure: (proxy) => {
+          proxy.on('error', (_err, _req, res) => {
+            if (res && 'writeHead' in res && !(res as any).headersSent) {
+              (res as any).writeHead(503, { 'Content-Type': 'text/plain' });
+              (res as any).end('Backend server offline');
+            }
+          });
+        },
       },
     },
   },
@@ -60,10 +76,13 @@ export default defineConfig({
           if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router-dom')) {
             return 'vendor-react';
           }
-          if (id.includes('node_modules/framer-motion')) {
+          if (id.includes('node_modules/firebase')) {
+            return 'vendor-firebase';
+          }
+          if (id.includes('node_modules/framer-motion') || id.includes('node_modules/motion')) {
             return 'vendor-motion';
           }
-          if (id.includes('node_modules/lucide-react')) {
+          if (id.includes('node_modules/lucide-react') || id.includes('node_modules/react-icons') || id.includes('node_modules/@heroicons')) {
             return 'vendor-icons';
           }
         },

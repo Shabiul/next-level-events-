@@ -45,7 +45,7 @@ async function testSupabase() {
 
   console.log("\nTesting access to all tables in Supabase:\n");
 
-  let missingTables: string[] = [];
+  const missingTables: string[] = [];
   let successCount = 0;
 
   for (const table of tables) {

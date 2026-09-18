@@ -67,7 +67,7 @@ class EventExtractorService {
 
     try {
       extracted = JSON.parse(content);
-    } catch (error) {
+    } catch {
       console.error(
         "Failed to parse Event Extractor response:",
         content

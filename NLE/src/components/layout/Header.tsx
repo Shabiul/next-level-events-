@@ -109,10 +109,6 @@ export const Header: React.FC<HeaderProps> = ({
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const [mobileSearchFocused, setMobileSearchFocused] = useState(false);
   const [navSearchQuery, setNavSearchQuery] = useState('');
-  // Services mega-menu / mobile accordion: a service's sub-services stay
-  // collapsed until its own row is clicked, instead of every sub-list
-  // being shown at once.
-  const [expandedService, setExpandedService] = useState<string | null>(null);
   const [scrollY, setScrollY] = useState(0);
   const [activeSection, setActiveSection] = useState<string>('home');
 
@@ -527,7 +523,6 @@ export const Header: React.FC<HeaderProps> = ({
   const handleNavCategory = (catName: string, subName?: string) => {
     setMobileMenuOpen(false);
     setMobileServicesOpen(false);
-    setExpandedService(null);
     if (onSelectCategory) {
       onSelectCategory(catName, subName);
     } else {

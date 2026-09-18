@@ -5,7 +5,7 @@ import { getApiUrl } from '../lib/api';
 
 export function useHeroSlider() {
   const [index, setIndex] = useState(0);
-  const [slides, setSlides] = useState<HeroSlide[]>([]);
+  const [slides, setSlides] = useState<HeroSlide[]>(HERO_SLIDES);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {

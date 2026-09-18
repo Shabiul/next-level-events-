@@ -1,10 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { Menu, Crown, Search, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { AdminView, AuthUser } from '../types';
-import { Sidebar, DashboardView, CategoriesView, ProductsView, AddonsView, ActivitiesView, UsersView, EnquiriesView, SiteSettingsView, PaymentsView, StaffView } from './admin';
+import { Sidebar } from './admin/Sidebar';
 import { getApiUrl } from '../lib/api';
 import { cn } from '../lib/utils';
+
+const DashboardView = lazy(() => import('./admin/DashboardView').then(m => ({ default: m.DashboardView })));
+const CategoriesView = lazy(() => import('./admin/CategoriesView').then(m => ({ default: m.CategoriesView })));
+const ProductsView = lazy(() => import('./admin/ProductsView').then(m => ({ default: m.ProductsView })));
+const AddonsView = lazy(() => import('./admin/AddonsView').then(m => ({ default: m.AddonsView })));
+const ActivitiesView = lazy(() => import('./admin/ActivitiesView').then(m => ({ default: m.ActivitiesView })));
+const UsersView = lazy(() => import('./admin/UsersView').then(m => ({ default: m.UsersView })));
+const EnquiriesView = lazy(() => import('./admin/EnquiriesView').then(m => ({ default: m.EnquiriesView })));
+const SiteSettingsView = lazy(() => import('./admin/SiteSettingsView').then(m => ({ default: m.SiteSettingsView })));
+const PaymentsView = lazy(() => import('./admin/PaymentsView').then(m => ({ default: m.PaymentsView })));
+const StaffView = lazy(() => import('./admin/StaffView').then(m => ({ default: m.StaffView })));
 
 interface AdminPanelProps {
   user: AuthUser;
@@ -303,7 +314,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, onLogout }) => {
               </p>
             </div>
           ) : (
-            <>
+            <Suspense fallback={<div className="py-16 text-center text-xs font-bold text-[#381932] dark:text-[#FFF3E6]">Loading section...</div>}>
           {view === 'dashboard' && <DashboardView />}
           {view === 'categories' && <CategoriesView />}
           {view === 'products' && <ProductsView />}
@@ -504,7 +515,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, onLogout }) => {
           {view === 'users' && <UsersView />}
           {view === 'settings' && <SiteSettingsView />}
           {view === 'staff' && <StaffView />}
-            </>
+            </Suspense>
           )}
         </div>
       </div>

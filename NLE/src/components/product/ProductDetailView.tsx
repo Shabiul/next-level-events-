@@ -903,7 +903,7 @@ export const ProductDetailView: React.FC<Props> = ({ product, onBack, onBook }) 
           onClose={() => setShareOpen(false)}
           title={`${product.name} - The Decor Party`}
           text={`Book this event decoration: ${product.name} on The Decor Party`}
-          url={window.location.href}
+          url={`${window.location.origin}/share/product/${product._id || product.id}`}
         />
       </div>
     </div>

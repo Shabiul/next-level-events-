@@ -1,20 +1,29 @@
 import { useState, useEffect, useMemo } from 'react';
 import type { AdminProduct, AdminCategory } from '../types';
 import { getApiUrl } from '../services/api.service';
+import { DEFAULT_PRODUCTS, DEFAULT_CATEGORIES } from '../data/fallbackCatalog';
 
 export interface GroupedProducts {
   [categoryName: string]: AdminProduct[];
 }
 
-let memoryCategories: AdminCategory[] = [];
-let memoryGrouped: GroupedProducts = {};
-let memoryAllProducts: AdminProduct[] = [];
-let hasFreshCache = false;
+const buildGroups = (list: AdminProduct[]): GroupedProducts => {
+  const groups: GroupedProducts = {};
+  list.forEach((p: AdminProduct) => {
+    const cat = p.categoryName || 'Other';
+    if (!groups[cat]) groups[cat] = [];
+    groups[cat].push(p);
+  });
+  return groups;
+};
+
+let memoryCategories: AdminCategory[] = DEFAULT_CATEGORIES;
+let memoryAllProducts: AdminProduct[] = DEFAULT_PRODUCTS;
+let memoryGrouped: GroupedProducts = buildGroups(DEFAULT_PRODUCTS);
 
 const PRODUCTS_CACHE_KEY = 'tdp_cached_products';
 const CATEGORIES_CACHE_KEY = 'tdp_cached_categories';
 const CACHE_TIME_KEY = 'tdp_catalog_cache_time';
-const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
 
 import { syncDeploymentCache, setCookie } from '../utils/cacheManager';
 
@@ -22,13 +31,12 @@ import { syncDeploymentCache, setCookie } from '../utils/cacheManager';
 syncDeploymentCache();
 
 try {
-  const cachedTimeStr = localStorage.getItem(CACHE_TIME_KEY);
-  const cachedTime = cachedTimeStr ? Number(cachedTimeStr) : 0;
-  const isFresh = Date.now() - cachedTime < CACHE_TTL_MS;
-
   const savedCats = localStorage.getItem(CATEGORIES_CACHE_KEY);
   if (savedCats) {
-    memoryCategories = JSON.parse(savedCats);
+    const parsedCats = JSON.parse(savedCats);
+    if (Array.isArray(parsedCats) && parsedCats.length > 0) {
+      memoryCategories = parsedCats;
+    }
   }
 
   const savedProds = localStorage.getItem(PRODUCTS_CACHE_KEY);
@@ -37,16 +45,7 @@ try {
     // Ensure cache has a substantial catalog (at least 15 products) to avoid partial display lock-in
     if (Array.isArray(parsed) && parsed.length >= 15) {
       memoryAllProducts = parsed;
-      const groups: GroupedProducts = {};
-      parsed.forEach((p: AdminProduct) => {
-        const cat = p.categoryName || 'Other';
-        if (!groups[cat]) groups[cat] = [];
-        groups[cat].push(p);
-      });
-      memoryGrouped = groups;
-      if (isFresh && memoryCategories.length > 0) {
-        hasFreshCache = true;
-      }
+      memoryGrouped = buildGroups(parsed);
     }
   }
 } catch {
@@ -144,11 +143,16 @@ export function useProducts() {
         fetchCatalog(true);
       });
 
+      let sseErrorCount = 0;
       eventSource.onerror = () => {
-        // EventSource will automatically retry in background
+        sseErrorCount++;
+        if (sseErrorCount > 2) {
+          eventSource?.close();
+          eventSource = null;
+        }
       };
-    } catch (err) {
-      console.warn('[useProducts] Live SSE connection failed to initialize:', err);
+    } catch {
+      // ignore
     }
 
     // 2. Cross-tab synchronization via BroadcastChannel

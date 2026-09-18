@@ -10,7 +10,7 @@ import { CRM_URL } from '../config/crm';
 const ExplorePage = lazy(() => import('../pages/Explore/ExplorePage').then(m => ({ default: m.ExplorePage })));
 const OccasionPage = lazy(() => import('../pages/Occasion/OccasionPage').then(m => ({ default: m.OccasionPage })));
 const ProductPage = lazy(() => import('../pages/Product/ProductPage').then(m => ({ default: m.ProductPage })));
-import { BookingPage } from '../pages/Booking/BookingPage';
+const BookingPage = lazy(() => import('../pages/Booking/BookingPage').then(m => ({ default: m.BookingPage })));
 const OrderDetailsPage = lazy(() => import('../pages/Bookings/OrderDetailsPage').then(m => ({ default: m.OrderDetailsPage })));
 const BookingsPage = lazy(() => import('../pages/Bookings/BookingsPage').then(m => ({ default: m.BookingsPage })));
 const WishlistPage = lazy(() => import('../pages/Wishlist/WishlistPage').then(m => ({ default: m.WishlistPage })));

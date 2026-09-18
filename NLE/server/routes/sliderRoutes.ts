@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { SliderRepository } from "../src/db/repositories.js";
 import { requirePermission } from "../utils/auth.js";
+import { broadcastCatalogUpdate } from "../services/catalogSyncService.js";
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router.get("/", async (_req: Request, res: Response) => {
 router.post("/", requirePermission("sliders"), async (req: Request, res: Response) => {
   try {
     const slider = await SliderRepository.create(req.body);
+    broadcastCatalogUpdate("slider_created");
     res.json(slider);
   } catch (err: any) {
     res.status(500).json({ error: err.message || "Failed to create slider" });
@@ -26,6 +28,7 @@ router.put("/:id", requirePermission("sliders"), async (req: Request, res: Respo
   try {
     const id = String(req.params.id);
     const updated = await SliderRepository.update(id, req.body);
+    broadcastCatalogUpdate("slider_updated", { id });
     res.json(updated);
   } catch (err: any) {
     res.status(500).json({ error: err.message || "Failed to update slider" });
@@ -39,6 +42,7 @@ router.put("/reorder/all", requirePermission("sliders"), async (req: Request, re
       await SliderRepository.reorder(sliders);
     }
     const updated = await SliderRepository.listAll();
+    broadcastCatalogUpdate("slider_reordered");
     res.json(updated);
   } catch (err: any) {
     res.status(500).json({ error: err.message || "Failed to reorder sliders" });
@@ -49,6 +53,7 @@ router.delete("/:id", requirePermission("sliders"), async (req: Request, res: Re
   try {
     const id = String(req.params.id);
     await SliderRepository.delete(id);
+    broadcastCatalogUpdate("slider_deleted", { id });
     res.json({ message: "Slider deleted" });
   } catch (err: any) {
     res.status(500).json({ error: err.message || "Failed to delete slider" });

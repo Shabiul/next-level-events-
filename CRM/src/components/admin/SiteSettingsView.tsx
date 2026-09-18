@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { Save, RotateCcw, Phone, Mail, MapPin, Link2, Sparkles } from 'lucide-react';
 import { getApiUrl, authFetch } from '../../lib/api';
+import { broadcastCrmUpdate } from '../../lib/syncChannel';
 import { DEFAULT_SITE_SETTINGS, type SiteSettings } from '../../hooks/useSiteSettings';
 
 const getSiteSettingsApi = () => getApiUrl('/api/site-content/site-settings');
@@ -51,6 +52,7 @@ export const SiteSettingsView = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: 'Site Settings', content: JSON.stringify(values) }),
       });
+      broadcastCrmUpdate('site_content', 'site-settings');
       toast.success('Site settings saved! Changes go live immediately.');
     } catch {
       toast.error('Failed to save site settings');

@@ -172,7 +172,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             loop
             muted
             playsInline
-            preload="metadata"
+            preload="auto"
             disablePictureInPicture
             disableRemotePlayback
             controls={false}
@@ -180,9 +180,9 @@ export const HomePage: React.FC<HomePageProps> = ({
           >
             <source src="/landing page.mp4" type="video/mp4" />
           </video>
-          {/* Plum scrims -- left for the editorial copy, base for the search pill */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#381932]/90 via-[#381932]/45 to-[#381932]/10" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#381932]/80 via-transparent to-[#381932]/20" />
+          {/* Plum scrims -- tuned for maximum video clarity on the right while maintaining crisp contrast for editorial copy on the left */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#381932]/85 via-[#381932]/35 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#381932]/75 via-transparent to-transparent pointer-events-none" />
         </div>
 
         {/* Editorial hero content -- left aligned */}

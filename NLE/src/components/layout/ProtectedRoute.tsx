@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
 interface ProtectedRouteProps {
@@ -14,7 +14,6 @@ interface ProtectedRouteProps {
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const auth = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
   const authed = auth.isLoggedIn && !!auth.user;
   const restoring = auth.isLoading || !auth.initialized;
   const hasPrompted = useRef(false);

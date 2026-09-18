@@ -151,9 +151,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
       })
       .catch(() => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        setState(prev => ({ ...prev, user: null, isLoggedIn: false, isAdmin: false, isLoading: false, initialized: true, authRedirect: null }));
+        if (initialUser) {
+          setState(prev => ({ ...prev, isLoading: false, initialized: true }));
+        } else {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setState(prev => ({ ...prev, user: null, isLoggedIn: false, isAdmin: false, isLoading: false, initialized: true, authRedirect: null }));
+        }
       });
   }, []);
 

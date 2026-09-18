@@ -112,7 +112,6 @@ export const CardImage: React.FC<CardImageProps> = ({
             src={src}
             alt={alt}
             loading={effectiveLoading}
-            // @ts-ignore fetchPriority is standard in modern HTML
             fetchPriority={effectiveFetchPriority}
             decoding="async"
             onLoad={handleLoad}
