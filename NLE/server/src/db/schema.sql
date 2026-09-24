@@ -215,6 +215,20 @@ CREATE TABLE IF NOT EXISTS sliders (
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- 12b. GALLERY IMAGES
+CREATE TABLE IF NOT EXISTS gallery_images (
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+    image_url TEXT NOT NULL,
+    title TEXT DEFAULT '',
+    category TEXT DEFAULT '',
+    order_num INTEGER DEFAULT 0,
+    active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT now(),
+    updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_gallery_images_order ON gallery_images(order_num);
+
 -- 13. SITE CONTENT
 CREATE TABLE IF NOT EXISTS site_content (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
@@ -253,6 +267,7 @@ ALTER TABLE wishlists ENABLE ROW LEVEL SECURITY;
 ALTER TABLE otp_tokens ENABLE ROW LEVEL SECURITY;
 ALTER TABLE enquiries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sliders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE gallery_images ENABLE ROW LEVEL SECURITY;
 ALTER TABLE site_content ENABLE ROW LEVEL SECURITY;
 ALTER TABLE chat_sessions ENABLE ROW LEVEL SECURITY;
 
@@ -274,6 +289,9 @@ CREATE POLICY "Public read activities" ON activities FOR SELECT USING (true);
 
 DROP POLICY IF EXISTS "Public read sliders" ON sliders;
 CREATE POLICY "Public read sliders" ON sliders FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public read gallery_images" ON gallery_images;
+CREATE POLICY "Public read gallery_images" ON gallery_images FOR SELECT USING (true);
 
 DROP POLICY IF EXISTS "Public read site_content" ON site_content;
 CREATE POLICY "Public read site_content" ON site_content FOR SELECT USING (true);

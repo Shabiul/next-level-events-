@@ -4,49 +4,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, ArrowUpRight, ArrowRight, X, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { SeoHead } from '../../components/layout/SeoHead';
 import { useProducts } from '../../hooks/useProducts';
+import { useGalleryImages } from '../../hooks/useGalleryImages';
 import type { AdminProduct } from '../../types';
 import {
-  BIRTHDAY,
-  ANNIVERSARY,
-  DINNERS,
-  MOST_BOOKED,
-  HERO_SLIDES,
-  CAT_ICONS,
-} from '../../data';
-import { SERVICE_GALLERY_IMAGES } from '../../data/servicesData';
-export const normalizeToWebp = (rawUrl: string): string => {
-  if (!rawUrl) return '';
-  let url = rawUrl.trim();
-  if (!url.startsWith('/') && !url.startsWith('http')) {
-    url = '/' + url;
-  }
-  if (url.startsWith('http')) return url;
-  // Strictly convert any .jpg, .jpeg, .png to .webp
-  return url.replace(/\.(jpe?g|png)$/i, '.webp');
-};
-
-export const getImageDeduplicationKey = (rawUrl: string): string => {
-  if (!rawUrl) return '';
-  const clean = decodeURIComponent(rawUrl).split('?')[0].split('#')[0].toLowerCase();
-  const parts = clean.split('/');
-  const filename = parts[parts.length - 1] || clean;
-  // Remove file extension, non-alphanumeric chars, and trailing plural 's'
-  const stem = filename
-    .replace(/\.(jpg|jpeg|png|webp|avif|gif)$/i, '')
-    .replace(/[^a-z0-9]/g, '')
-    .replace(/s$/, '');
-  return stem || clean;
-};
-
-export type GalleryCategory =
-  | 'ALL'
-  | 'BIRTHDAYS'
-  | 'BALLOON DECOR'
-  | 'BABY SHOWERS'
-  | 'PROPOSALS'
-  | 'WEDDINGS'
-  | 'ANNIVERSARIES'
-  | 'CUSTOM THEMES';
+  type GalleryCategory,
+  normalizeToWebp,
+  getImageDeduplicationKey,
+  isRealPhoto,
+  mapCategoryToFilter,
+} from '../../data/galleryCuration';
 
 export interface GalleryImageItem {
   id: string;
@@ -75,533 +41,7 @@ const Sprig: React.FC<{ className?: string }> = ({ className = '' }) => (
   </svg>
 );
 
-const THEME_TO_GALLERY: Record<string, { category: GalleryCategory; tag: string; serviceName: string }> = {
-  'birthdays': { category: 'BIRTHDAYS', tag: 'Birthday Decor', serviceName: 'Birthdays' },
-  '1st birthday designs': { category: 'BIRTHDAYS', tag: '1st Birthday', serviceName: '1st Birthday Designs' },
-  'boy theme': { category: 'BIRTHDAYS', tag: 'Kids Theme', serviceName: 'Birthdays' },
-  'kids activities': { category: 'BIRTHDAYS', tag: 'Kids Activities', serviceName: 'Kids Activities' },
-  'baby showers': { category: 'BABY SHOWERS', tag: 'Baby Shower', serviceName: 'Baby Showers' },
-  'welcome baby': { category: 'BABY SHOWERS', tag: 'Welcome Baby', serviceName: 'Welcome Baby' },
-  'naming ceremonies': { category: 'BABY SHOWERS', tag: 'Naming Ceremony', serviceName: 'Naming Ceremonies' },
-  'annaprashan': { category: 'BABY SHOWERS', tag: 'Annaprashan', serviceName: 'Annaprashan' },
-  'terrace proposals': { category: 'PROPOSALS', tag: 'Terrace Proposal', serviceName: 'Proposal Setup' },
-  'heart arch setup': { category: 'PROPOSALS', tag: 'Heart Arch', serviceName: 'Proposal Setup' },
-  'candlelight pathway': { category: 'PROPOSALS', tag: 'Candlelight Pathway', serviceName: 'Proposal Setup' },
-  'proposal setup': { category: 'PROPOSALS', tag: 'Proposal Setup', serviceName: 'Proposal Setup' },
-  'pre & post wedding': { category: 'WEDDINGS', tag: 'Pre & Post Wedding', serviceName: 'Pre & Post Wedding' },
-  'groom-to-be': { category: 'WEDDINGS', tag: 'Groom-to-Be', serviceName: 'Pre & Post Wedding' },
-  'bride-to-be': { category: 'WEDDINGS', tag: 'Bride-to-Be', serviceName: 'Pre & Post Wedding' },
-  'national festivals': { category: 'WEDDINGS', tag: 'Festival Decor', serviceName: 'National Festivals' },
-  'anniversary celebrations': { category: 'ANNIVERSARIES', tag: 'Anniversary', serviceName: 'Anniversary Celebrations' },
-  'cabana setups': { category: 'ANNIVERSARIES', tag: 'Cabana Nights', serviceName: 'Cabana Setups' },
-  'simple wall decors': { category: 'CUSTOM THEMES', tag: 'Simple Wall Decor', serviceName: 'Simple Wall Decors' },
-  'gift hampers': { category: 'CUSTOM THEMES', tag: 'Gift Hampers', serviceName: 'Gift Hampers' },
-  'return gifts': { category: 'CUSTOM THEMES', tag: 'Return Gifts', serviceName: 'Return Gifts' },
-  'flower bouquets': { category: 'CUSTOM THEMES', tag: 'Flower Bouquets', serviceName: 'Flower Bouquets' },
-  'customised cakes': { category: 'CUSTOM THEMES', tag: 'Customised Cakes', serviceName: 'Customised Cakes' },
-  'opening decors': { category: 'CUSTOM THEMES', tag: 'Opening Decor', serviceName: 'Opening Decors' },
-  'graduation': { category: 'CUSTOM THEMES', tag: 'Graduation', serviceName: 'Graduation' },
-  'bike & car deliveries': { category: 'CUSTOM THEMES', tag: 'Bike & Car Surprise', serviceName: 'Bike & Car Deliveries' },
-  'car boot surprises': { category: 'CUSTOM THEMES', tag: 'Car Boot Surprise', serviceName: 'Car Boot Surprises' },
-  'live eateries / catering': { category: 'CUSTOM THEMES', tag: 'Live Eateries', serviceName: 'Live Eateries / Catering' },
-};
 
-interface ProductMeta {
-  title: string;
-  serviceName: string;
-  price?: string;
-  description?: string;
-  tag?: string;
-}
-
-const SPECIFIC_IMAGE_PRODUCTS: Record<string, ProductMeta> = {
-  // Simple Wall Decors
-  '/simple-wall-decor.jpg': {
-    title: 'Gold Chrome & Black Birthday Ring Arch',
-    serviceName: 'Simple Wall Decors',
-    price: '₹1,299',
-    description: 'Circular ring backdrop with metallic chrome balloons, fairy lights, and happy birthday neon foil banner.',
-    tag: 'Simple Wall Decor',
-  },
-  '/simple-wall-decors.jpg': {
-    title: 'Minimalist Pastel Wall Decor',
-    serviceName: 'Simple Wall Decors',
-    price: '₹1,599',
-    description: 'Clean pastel balloon wall arrangement with foil accents and warm ambient fairy lighting.',
-    tag: 'Simple Wall Decor',
-  },
-  '/SIMPLE WALL FOR HOME PAGE.jpg': {
-    title: 'Elegant Home Wall Balloon Styling',
-    serviceName: 'Simple Wall Decors',
-    price: '₹1,899',
-    description: 'Sophisticated balloon garland wall styling tailored for apartment living rooms and intimate spaces.',
-    tag: 'Simple Wall Decor',
-  },
-
-  // Proposals & Romantic
-  '/terrace propsal set up.jpg': {
-    title: '4ft MARRY ME LED Marquee Terrace Proposal',
-    serviceName: 'Proposal Setup',
-    price: '₹8,999',
-    description: 'Grand proposal setup featuring 4-foot illuminated MARRY ME marquee letters, plush red carpet aisle, and heart arch.',
-    tag: 'Terrace Proposal',
-  },
-  '/terrace-proposal.jpg': {
-    title: 'Candlelight Terrace Proposal Setup',
-    serviceName: 'Proposal Setup',
-    price: '₹6,999',
-    description: 'Rooftop candlelight pathway with sheer drapes, lanterns, fresh rose petals and fairy light canopy.',
-    tag: 'Terrace Proposal',
-  },
-  '/terrace.jpg': {
-    title: 'Bespoke Open-Air Terrace Proposal',
-    serviceName: 'Proposal Setup',
-    price: '₹7,999',
-    description: 'Romantic terrace ambience with panoramic city views, illuminated heart arch, and candlelit aisle.',
-    tag: 'Terrace Proposal',
-  },
-  '/heart arch set up 1.jpg': {
-    title: 'Floral & Balloon Heart Arch Proposal',
-    serviceName: 'Proposal Setup',
-    price: '₹4,999',
-    description: 'Heart-shaped arch styling with premium florals, balloons, fairy lights and red carpet entrance.',
-    tag: 'Heart Arch',
-  },
-  '/heart arch set up 2.jpg': {
-    title: 'Red Rose Heart Arch Installation',
-    serviceName: 'Proposal Setup',
-    price: '₹5,499',
-    description: 'Luxe floral heart arch with glowing neon signage and fresh rose petal pathway.',
-    tag: 'Heart Arch',
-  },
-  '/heart arch set up 3.jpg': {
-    title: 'Illuminated Neon Heart Arch Setup',
-    serviceName: 'Proposal Setup',
-    price: '₹5,999',
-    description: 'Spectacular illuminated heart backdrop with battery-operated warm candles and rose petals.',
-    tag: 'Heart Arch',
-  },
-  '/candelight pathway 1.jpg': {
-    title: 'Romantic Candlelight Pathway & Lanterns',
-    serviceName: 'Proposal Setup',
-    price: '₹2,999',
-    description: 'Warm candlelit walkway lined with glass lanterns, fresh rose petals and ambient fairy string lights.',
-    tag: 'Candlelight Pathway',
-  },
-  '/candelight pathway 2.jpg': {
-    title: 'Petal & Lantern Candlelit Walkway',
-    serviceName: 'Proposal Setup',
-    price: '₹3,399',
-    description: 'Intimate candlelit path with glowing lanterns and fresh botanical touches leading to the celebration.',
-    tag: 'Candlelight Pathway',
-  },
-  '/proposal set up.jpg': {
-    title: 'Romantic Marry Me Proposal Setup',
-    serviceName: 'Proposal Setup',
-    price: '₹5,999',
-    description: 'Complete proposal styling with marquee lighting, floral heart backdrop, and fairy light canopy.',
-    tag: 'Proposal Setup',
-  },
-  '/proposal set up 1.jpg': {
-    title: 'Neon Love & Heart Arch Proposal',
-    serviceName: 'Proposal Setup',
-    price: '₹6,499',
-    description: 'Signature romantic proposal styling with neon typography, pastel balloon clusters and rose petals.',
-    tag: 'Proposal Setup',
-  },
-  '/proposal set up 2.jpg': {
-    title: 'Luxe Candlelight Pathway Proposal',
-    serviceName: 'Proposal Setup',
-    price: '₹6,999',
-    description: 'Ambient candle pathway with floral heart frame and backdrop styling for outdoor and indoor venues.',
-    tag: 'Proposal Setup',
-  },
-
-  // Cabana Setups
-  '/kkkk.jpg': {
-    title: 'Rooftop Candlelight Cabana Dining',
-    serviceName: 'Cabana Setups',
-    price: '₹3,499',
-    description: 'Dreamy sheer drape cabana with fairy lights, plush floor seating, rose petals, and warm candle illumination.',
-    tag: 'Cabana Nights',
-  },
-  '/cabana.jpg': {
-    title: 'Bohemian Terrace Canopy Setup',
-    serviceName: 'Cabana Setups',
-    price: '₹4,999',
-    description: 'Chic boho macrame cabana with pampas grass, warm lanterns, and low-table candlelight dining arrangement.',
-    tag: 'Cabana Nights',
-  },
-  '/cabana set up 2.jpg': {
-    title: 'Romantic Sunset Cabana Canopy',
-    serviceName: 'Cabana Setups',
-    price: '₹3,799',
-    description: 'Weather-resistant canopy draped in ivory chiffon with warm fairy light curtains and cosy cushions.',
-    tag: 'Cabana Nights',
-  },
-  '/cabana set up 3.jpg': {
-    title: 'Fairytale Fairy Light Cabana Retreat',
-    serviceName: 'Cabana Setups',
-    price: '₹4,199',
-    description: 'Intimate glowing cabana canopy with 200+ warm LED fairy lights and fresh rose floral garland.',
-    tag: 'Cabana Nights',
-  },
-  '/cabana set up 4.jpg': {
-    title: 'Private Garden Cabana Dining',
-    serviceName: 'Cabana Setups',
-    price: '₹4,599',
-    description: 'Secluded outdoor cabana setup with low wooden table, lanterns, floral arrangements and floor cushions.',
-    tag: 'Cabana Nights',
-  },
-
-  // Birthdays & Milestones
-  '/birthday.jpg': {
-    title: 'Signature Milestone Birthday Arch',
-    serviceName: 'Birthdays',
-    price: '₹2,499',
-    description: 'Grand circular birthday arch with organic pastel and chrome balloon clusters and LED neon signage.',
-    tag: 'Birthday Decor',
-  },
-  '/birthday-landscape.jpg': {
-    title: 'Pastel Balloon Ring Birthday Setup',
-    serviceName: 'Birthdays',
-    price: '₹2,999',
-    description: 'Organic pastel balloon ring installation with personalised name banner and fairy string lights.',
-    tag: 'Birthday Decor',
-  },
-  '/BIRTHDAY FOR HOME PAGE.jpg': {
-    title: 'Grand Birthday Celebration Backdrop',
-    serviceName: 'Birthdays',
-    price: '₹3,499',
-    description: 'Full-stage birthday styling with balloon garland, cake cylinder tables, and custom backdrop printing.',
-    tag: 'Birthday Decor',
-  },
-  '/1ST BIRTHDAY FOR HOME PAGE.jpg': {
-    title: '1st Milestone Birthday Celebration Backdrop',
-    serviceName: '1st Birthday Designs',
-    price: '₹4,499',
-    description: 'Whimsical 1st birthday theme styling with giant milestone numbers, balloon clouds, and props.',
-    tag: '1st Birthday',
-  },
-  '/1ss.jpg': {
-    title: 'Prince & Princess 1st Birthday Arch',
-    serviceName: '1st Birthday Designs',
-    price: '₹3,999',
-    description: 'Regal pastel balloon arch with crown props, organic balloon garland, and personalised name board.',
-    tag: '1st Birthday',
-  },
-  '/bb.jpg': {
-    title: 'Organic Pastel Birthday Balloon Wall',
-    serviceName: 'Birthdays',
-    price: '₹2,799',
-    description: 'Modern organic balloon wall styling with customised color scheme and ambient backlighting.',
-    tag: 'Birthday Decor',
-  },
-  '/t2.jpg': {
-    title: 'Themed Milestone Birthday Decor Suite',
-    serviceName: 'Birthdays',
-    price: '₹3,199',
-    description: 'Milestone birthday decor featuring organic arch, cylinder cake plinths, and warm illumination.',
-    tag: 'Birthday Decor',
-  },
-  '/kids theme.jpg': {
-    title: 'Pastel Teddy Bear & Organic Cloud Arch',
-    serviceName: 'Birthdays',
-    price: '₹3,499',
-    description: 'Dreamy pastel balloon arch with 3D teddy bear mascot cutouts, cloud stands, and personalised name board.',
-    tag: 'Kids Theme',
-  },
-  '/boy theme.jpg': {
-    title: 'Little Explorer Boy Kids Birthday Theme',
-    serviceName: 'Birthdays',
-    price: '₹6,999',
-    description: 'Themed printed backdrop with balloon arch & cluster styling, cake table, and matching themed props.',
-    tag: 'Kids Theme',
-  },
-
-  // Baby Showers & Homecoming
-  '/baby-shower.jpg': {
-    title: 'Dreamy Pastel Baby Shower Decor',
-    serviceName: 'Baby Showers',
-    price: '₹3,499',
-    description: 'Gentle pastel balloon arch with mom-to-be sash, floral cradle garland, and welcome easel board.',
-    tag: 'Baby Shower',
-  },
-  '/welcome-baby.jpg': {
-    title: 'Newborn Homecoming Welcome Baby Decor',
-    serviceName: 'Welcome Baby',
-    price: '₹2,499',
-    description: 'Pastel balloon arch, cradle floral garland, personalised welcome board, and warm fairy lighting.',
-    tag: 'Welcome Baby',
-  },
-  '/NAMING CEREMONY CARD.jpg': {
-    title: 'Namkaran Traditional Naming Ceremony Setup',
-    serviceName: 'Naming Ceremonies',
-    price: '₹2,999',
-    description: 'Namkaran decor with floral cradle, pastel backdrop, personalised name board, and warm lighting.',
-    tag: 'Naming Ceremony',
-  },
-  '/Annaprashan.jpg': {
-    title: 'First Rice Ceremony Annaprashan Decor',
-    serviceName: 'Annaprashan',
-    price: '₹3,499',
-    description: 'Traditional floral backdrop with ceremonial seating, marigold accents, and customized signage.',
-    tag: 'Annaprashan',
-  },
-
-  // Pre & Post Wedding
-  '/PRE AND POST CARD.jpg': {
-    title: 'Pre & Post Wedding Celebration Styling',
-    serviceName: 'Pre & Post Wedding',
-    price: '₹7,999',
-    description: 'Engagement / Haldi / Ring Ceremony styling with floral installations, seating decor, and lighting.',
-    tag: 'Pre & Post Wedding',
-  },
-  '/pre and post 2.jpg': {
-    title: 'Engagement Floral Stage Backdrop',
-    serviceName: 'Pre & Post Wedding',
-    price: '₹8,499',
-    description: 'Bespoke floral stage installation with elegant drapery, ambient uplighting, and couple seating.',
-    tag: 'Pre & Post Wedding',
-  },
-  '/pre and post 3.jpg': {
-    title: 'Ring Ceremony Floral & Drape Installation',
-    serviceName: 'Pre & Post Wedding',
-    price: '₹8,999',
-    description: 'Luxe floral and sheer drape backdrop designed for intimate engagement ring ceremonies.',
-    tag: 'Pre & Post Wedding',
-  },
-  '/pre and post 5.jpg': {
-    title: 'Haldi Ceremony Marigold & Drape Setup',
-    serviceName: 'Pre & Post Wedding',
-    price: '₹7,499',
-    description: 'Vibrant marigold floral backdrop with yellow drapes, brass urlis, and festive floor cushions.',
-    tag: 'Pre & Post Wedding',
-  },
-  '/bride to be.jpg': {
-    title: 'Bride-to-Be Floral Bachelorette Decor',
-    serviceName: 'Pre & Post Wedding',
-    price: '₹4,999',
-    description: 'Chic bachelorette party setup with pastel balloon arch, bride-to-be neon sign, and photo props.',
-    tag: 'Bride-to-Be',
-  },
-  '/groom to be.jpg': {
-    title: 'Groom-to-Be Milestone Celebration Setup',
-    serviceName: 'Pre & Post Wedding',
-    price: '₹4,999',
-    description: 'Midnight celebration decor tailored for the groom with balloon columns and celebratory props.',
-    tag: 'Groom-to-Be',
-  },
-
-  // Car & Surprises
-  '/car bot.jpg': {
-    title: 'Midnight Car Boot Surprise Decor',
-    serviceName: 'Car Boot Surprises',
-    price: '₹1,999',
-    description: 'Surprise car trunk styling with fairy lights, helium balloons, photo bunting, and customized banner.',
-    tag: 'Car Boot Surprise',
-  },
-  '/car dilver.jpg': {
-    title: 'Grand Entry Car Floral Decoration',
-    serviceName: 'Bike & Car Deliveries',
-    price: '₹2,999',
-    description: 'Fresh floral garlands styled across the bonnet and grille for a grand celebration or wedding entry.',
-    tag: 'Bike & Car Surprise',
-  },
-  '/car deliver5.jpg': {
-    title: 'Bridal Bike Floral Decoration',
-    serviceName: 'Bike & Car Deliveries',
-    price: '₹1,499',
-    description: 'Rose and baby’s breath garland styling across the headlamp and handlebars for two-wheelers.',
-    tag: 'Bike & Car Surprise',
-  },
-
-  // Activities & Other Services
-  '/kids.jpg': {
-    title: 'Kids Party Games & Entertainment Station',
-    serviceName: 'Kids Activities',
-    price: '₹2,499',
-    description: 'Interactive games station with dedicated coordinator, activity materials, and party prizes.',
-    tag: 'Kids Activities',
-  },
-  '/kids-activities.jpg': {
-    title: 'Kids Activities & Entertainment Carnival',
-    serviceName: 'Kids Activities',
-    price: '₹3,499',
-    description: 'Full activity carnival with tattoo artists, balloon modelling, and games coordinator.',
-    tag: 'Kids Activities',
-  },
-  '/tattoo.jpg': {
-    title: 'Kids Face Painting & Tattoo Station',
-    serviceName: 'Kids Activities',
-    price: '₹1,999',
-    description: 'Skin-safe temporary tattoo and face painting artistry for children and party guests.',
-    tag: 'Kids Activities',
-  },
-  '/gift hamper.jpg': {
-    title: 'Luxury Celebration Gift Hamper',
-    serviceName: 'Gift Hampers',
-    price: '₹1,499',
-    description: 'Curated gourmet celebration hamper with chocolates, scented candle, and personalized note card.',
-    tag: 'Gift Hampers',
-  },
-  '/return gift.jpg': {
-    title: 'Curated Celebration Return Gift Pack',
-    serviceName: 'Return Gifts',
-    price: '₹999',
-    description: 'Premium customized party favors and return gifts packed in decorative celebration boxes.',
-    tag: 'Return Gifts',
-  },
-  '/flower bouqets.jpg': {
-    title: 'Fresh Botanical Celebration Flower Bouquet',
-    serviceName: 'Flower Bouquets',
-    price: '₹799',
-    description: 'Hand-tied bouquet of fresh exotic roses and seasonal blossoms wrapped in eco-friendly paper.',
-    tag: 'Flower Bouquets',
-  },
-  '/customsid cakes.jpg': {
-    title: 'Artisan Customised Celebration Cake',
-    serviceName: 'Customised Cakes',
-    price: '₹1,899',
-    description: 'Freshly baked artisanal designer cake customized to your celebration theme and flavor.',
-    tag: 'Customised Cakes',
-  },
-  '/OPINING CARD.jpg': {
-    title: 'Grand Store Opening Ribbon & Balloon Arch',
-    serviceName: 'Opening Decors',
-    price: '₹4,999',
-    description: 'Store/office launch decor with ribbon-cutting arch, balloon columns, and brand-color styling.',
-    tag: 'Opening Decor',
-  },
-  '/GRADUATION CARD.jpg': {
-    title: 'Congrats Milestone Graduation Decor',
-    serviceName: 'Graduation',
-    price: '₹3,499',
-    description: 'Graduation party backdrop with balloon garland, congrats bunting, and graduation photo props.',
-    tag: 'Graduation',
-  },
-  '/NATIONAL FISTIVAL CARD.jpg': {
-    title: 'Festive Tricolour Celebration Decor',
-    serviceName: 'National Festivals',
-    price: '₹2,999',
-    description: 'Patriotic / national festival decor with themed drapes, balloon columns, and ambient lighting.',
-    tag: 'Festival Decor',
-  },
-  '/about-purple-decor.jpg': {
-    title: 'Signature Purple Milestone Suite',
-    serviceName: 'Birthdays',
-    price: '₹4,999',
-    description: 'The Decor Party flagship purple celebration suite with organic balloon arch and fairy lighting.',
-    tag: 'Signature Milestone',
-  },
-  '/about-aesthetic.jpg': {
-    title: 'Bespoke Celebration Atmosphere Suite',
-    serviceName: 'Anniversary Celebrations',
-    price: '₹5,499',
-    description: 'Intimate celebration atmosphere styling with warm fairy lights and curated floral installations.',
-    tag: 'Atmosphere Styling',
-  },
-  '/about-purple-banner.jpg': {
-    title: 'Luxe Editorial Celebration Backdrop',
-    serviceName: 'Birthdays',
-    price: '₹4,499',
-    description: 'Editorial backdrop with balloon styling and customized lettering for milestone celebrations.',
-    tag: 'Editorial Suite',
-  },
-};
-
-const SPECIFIC_META_BY_STEM: Record<string, ProductMeta> = {};
-for (const [imgUrl, meta] of Object.entries(SPECIFIC_IMAGE_PRODUCTS)) {
-  const stem = getImageDeduplicationKey(imgUrl);
-  if (stem) {
-    SPECIFIC_META_BY_STEM[stem] = meta;
-  }
-}
-
-const findSpecificMeta = (url: string): ProductMeta | undefined => {
-  if (!url) return undefined;
-  const stem = getImageDeduplicationKey(url);
-  return SPECIFIC_META_BY_STEM[stem] || SPECIFIC_IMAGE_PRODUCTS[url];
-};
-
-// Curated sequence of existing premier setups for the gallery.
-// Any newly added images (from database/CRM/dynamic uploads) will automatically appear at the bottom.
-const PRESET_GALLERY_SEQUENCE: string[] = [
-  // 1-30: Premier showcase spanning all celebration categories
-  '/terrace propsal set up.jpg',       // 1. Proposal - 4ft Marry Me
-  '/birthday.jpg',                     // 2. Birthday - Signature Arch
-  '/cabana.jpg',                       // 3. Cabana - Bohemian Canopy
-  '/baby-shower.jpg',                  // 4. Baby Shower - Dreamy Pastel
-  '/simple-wall-decor.jpg',            // 5. Wall Decor - Gold Chrome Ring Arch
-  '/heart arch set up 1.jpg',          // 6. Proposal - Heart Arch
-  '/1ST BIRTHDAY FOR HOME PAGE.jpg',   // 7. 1st Birthday - Milestone Backdrop
-  '/bride to be.jpg',                  // 8. Wedding - Bride to be Floral
-  '/candelight pathway 1.jpg',         // 9. Proposal - Romantic Candlelight Pathway
-  '/cabana set up 2.jpg',              // 10. Cabana - Romantic Sunset Canopy
-  '/kids theme.jpg',                   // 11. Kids - Pastel Teddy Bear Cloud Arch
-  '/welcome-baby.jpg',                 // 12. Baby - Newborn Homecoming
-  '/pre and post 5.jpg',               // 13. Wedding - Haldi Ceremony Marigold
-  '/car bot.jpg',                      // 14. Car Surprise - Midnight Boot
-  '/terrace-proposal.jpg',             // 15. Proposal - Candlelight Terrace
-  '/BIRTHDAY FOR HOME PAGE.jpg',       // 16. Birthday - Grand Celebration
-  '/kkkk.jpg',                         // 17. Cabana - Rooftop Dining
-  '/NAMING CEREMONY CARD.jpg',         // 18. Baby - Namkaran Ceremony
-  '/pre and post 2.jpg',               // 19. Wedding - Engagement Floral Stage
-  '/1ss.jpg',                          // 20. 1st Birthday - Prince & Princess
-  '/groom to be.jpg',                  // 21. Wedding - Groom to be Setup
-  '/simple-wall-decors.jpg',           // 22. Wall Decor - Minimalist Pastel Wall
-  '/cabana set up 3.jpg',              // 23. Cabana - Fairytale Fairy Light
-  '/heart arch set up 2.jpg',          // 24. Proposal - Red Rose Heart Arch
-  '/boy theme.jpg',                    // 25. Kids - Little Explorer Theme
-  '/Annaprashan.jpg',                  // 26. Baby - First Rice Annaprashan
-  '/proposal set up 1.jpg',            // 27. Proposal - Neon Love Arch
-  '/car dilver.jpg',                   // 28. Car - Grand Entry Floral
-  '/about-purple-decor.jpg',           // 29. Birthday - Signature Purple Milestone
-  '/pre and post 3.jpg',               // 30. Wedding - Ring Ceremony Installation
-
-  // 31-54: Remaining curated setups
-  '/terrace.jpg',
-  '/SIMPLE WALL FOR HOME PAGE.jpg',
-  '/heart arch set up 3.jpg',
-  '/candelight pathway 2.jpg',
-  '/proposal set up.jpg',
-  '/proposal set up 2.jpg',
-  '/cabana set up 4.jpg',
-  '/birthday-landscape.jpg',
-  '/bb.jpg',
-  '/t2.jpg',
-  '/PRE AND POST CARD.jpg',
-  '/car deliver5.jpg',
-  '/kids.jpg',
-  '/kids-activities.jpg',
-  '/tattoo.jpg',
-  '/gift hamper.jpg',
-  '/return gift.jpg',
-  '/flower bouqets.jpg',
-  '/customsid cakes.jpg',
-  '/OPINING CARD.jpg',
-  '/GRADUATION CARD.jpg',
-  '/NATIONAL FISTIVAL CARD.jpg',
-  '/about-aesthetic.jpg',
-  '/about-purple-banner.jpg',
-];
-
-const PRESET_SEQUENCE_STEM_MAP = new Map<string, number>();
-PRESET_GALLERY_SEQUENCE.forEach((url, rank) => {
-  const stem = getImageDeduplicationKey(url);
-  if (stem && !PRESET_SEQUENCE_STEM_MAP.has(stem)) {
-    PRESET_SEQUENCE_STEM_MAP.set(stem, rank);
-  }
-});
-
-// Also map any remaining specific image products after the curated sequence
-let nextSeqRank = PRESET_GALLERY_SEQUENCE.length;
-for (const key of Object.keys(SPECIFIC_IMAGE_PRODUCTS)) {
-  const stem = getImageDeduplicationKey(key);
-  if (stem && !PRESET_SEQUENCE_STEM_MAP.has(stem)) {
-    PRESET_SEQUENCE_STEM_MAP.set(stem, nextSeqRank++);
-  }
-}
 
 const CATEGORIES: GalleryCategory[] = [
   'ALL',
@@ -614,21 +54,6 @@ const CATEGORIES: GalleryCategory[] = [
   'CUSTOM THEMES',
 ];
 
-const isRealPhoto = (url?: string): url is string =>
-  !!url && !/unsplash\.com|placehold|via\.placeholder|dummyimage/i.test(url);
-
-const mapCategoryToFilter = (catName?: string, name?: string): GalleryCategory => {
-  const c = (catName || '').toLowerCase();
-  const n = (name || '').toLowerCase();
-
-  if (c.includes('birthday') || n.includes('birthday') || n.includes('bday') || n.includes('kids')) return 'BIRTHDAYS';
-  if (c.includes('balloon') || n.includes('balloon') || n.includes('arch') || n.includes('garland') || n.includes('ring')) return 'BALLOON DECOR';
-  if (c.includes('baby') || n.includes('baby') || n.includes('cradle') || n.includes('shower') || n.includes('welcome baby')) return 'BABY SHOWERS';
-  if (c.includes('proposal') || n.includes('proposal') || n.includes('marry me') || n.includes('rose day')) return 'PROPOSALS';
-  if (c.includes('wedding') || n.includes('wedding') || n.includes('haldi') || n.includes('mehendi') || n.includes('sangeet') || c.includes('festival')) return 'WEDDINGS';
-  if (c.includes('anniversary') || n.includes('anniversary') || c.includes('romantic') || n.includes('cabana') || n.includes('candlelight') || c.includes('dinner')) return 'ANNIVERSARIES';
-  return 'CUSTOM THEMES';
-};
 
 interface GalleryCardProps {
   item: GalleryImageItem;
@@ -756,6 +181,7 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ item, index, shouldLoad, onLo
 export const GalleryPage: React.FC = () => {
   const navigate = useNavigate();
   const { products } = useProducts();
+  const { galleryImages: adminGalleryImages } = useGalleryImages();
   const [activeCategory, setActiveCategory] = useState<GalleryCategory>('ALL');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
@@ -814,18 +240,7 @@ export const GalleryPage: React.FC = () => {
       seenUrls.add(urlLower);
       seenKeys.add(key);
 
-      const specific = findSpecificMeta(item.image) || findSpecificMeta(webpUrl);
-
-      list.push({
-        ...item,
-        title: specific?.title || item.title,
-        serviceName: specific?.serviceName || item.serviceName,
-        serviceRoute: `/services/${encodeURIComponent(specific?.serviceName || item.serviceName)}`,
-        tag: specific?.tag || item.tag,
-        price: specific?.price || item.price,
-        description: specific?.description || item.description,
-        image: webpUrl,
-      });
+      list.push({ ...item, image: webpUrl });
     };
 
     // 1. Live Admin Products
@@ -868,101 +283,38 @@ export const GalleryPage: React.FC = () => {
       });
     }
 
-    // 2. Static package sets (BIRTHDAY, ANNIVERSARY, DINNERS, MOST_BOOKED)
-    const staticPackageSets = [
-      { items: BIRTHDAY, cat: 'BIRTHDAYS' as GalleryCategory, defaultTag: 'Birthday Package', defaultService: 'Birthdays' },
-      { items: ANNIVERSARY, cat: 'ANNIVERSARIES' as GalleryCategory, defaultTag: 'Anniversary Package', defaultService: 'Anniversary Celebrations' },
-      { items: DINNERS, cat: 'ANNIVERSARIES' as GalleryCategory, defaultTag: 'Candlelight Dinner', defaultService: 'Anniversary Celebrations' },
-      { items: MOST_BOOKED, cat: 'CUSTOM THEMES' as GalleryCategory, defaultTag: 'Most Booked', defaultService: 'Birthdays' },
-    ];
-
-    staticPackageSets.forEach(({ items, cat, defaultTag, defaultService }) => {
-      items.forEach((p, idx) => {
-        const specific = SPECIFIC_IMAGE_PRODUCTS[p.img];
-        const serviceName = specific?.serviceName || (p.badge?.includes('Romantic') ? 'Anniversary Celebrations' : defaultService);
-        pushItem({
-          id: `static-pkg-${cat}-${idx}`,
-          title: specific?.title || p.title,
-          category: mapCategoryToFilter(cat, p.title),
-          serviceName,
-          serviceRoute: `/services/${encodeURIComponent(serviceName)}`,
-          image: p.img,
-          tag: specific?.tag || p.badge || defaultTag,
-          price: specific?.price || p.price,
-          description: specific?.description,
-        });
-      });
+    // 2. Admin-managed gallery images (added/removed/reordered from the CRM
+    // Gallery tab). Ranked by the CRM's own order -- these lead the grid,
+    // ahead of the legacy curated sequence below, since the CRM is now the
+    // live source of truth for what's freshly added.
+    const crmRankMap = new Map<string, number>();
+    let crmRank = 0;
+    adminGalleryImages.forEach((g) => {
+      if (g.active === false) return;
+      crmRankMap.set(`crm-gallery-${g._id}`, crmRank++);
     });
 
-    // 3. Hero and curated category icons
-    HERO_SLIDES.forEach((slide, idx) => {
-      const specific = SPECIFIC_IMAGE_PRODUCTS[slide.img];
-      const serviceName = specific?.serviceName || 'Birthdays';
+    adminGalleryImages.forEach((g) => {
+      if (g.active === false) return;
+      const serviceName = g.category || 'Birthdays';
       pushItem({
-        id: `hero-slide-${idx}`,
-        title: specific?.title || slide.headline.replace('\n', ' '),
-        category: mapCategoryToFilter(slide.chip, slide.headline),
+        id: `crm-gallery-${g._id}`,
+        title: g.title || 'Celebration Setup',
+        category: mapCategoryToFilter(g.category, g.title),
         serviceName,
         serviceRoute: `/services/${encodeURIComponent(serviceName)}`,
-        image: slide.img,
-        tag: specific?.tag || slide.chip,
-        price: specific?.price,
-        description: specific?.description || slide.sub,
+        image: g.imageUrl,
+        tag: g.category || 'Gallery',
       });
     });
 
-    CAT_ICONS.forEach((icon, idx) => {
-      const specific = SPECIFIC_IMAGE_PRODUCTS[icon.img];
-      const serviceName = specific?.serviceName || icon.label.replace('\n', ' ');
-      pushItem({
-        id: `cat-icon-${idx}`,
-        title: specific?.title || `${icon.label.replace('\n', ' ')} Setup`,
-        category: mapCategoryToFilter(icon.label, icon.label),
-        serviceName,
-        serviceRoute: `/services/${encodeURIComponent(serviceName)}`,
-        image: icon.img,
-        tag: specific?.tag || 'Curated Service',
-        price: specific?.price,
-        description: specific?.description,
-      });
-    });
+    // Sort items: CRM-managed images lead in the CRM's own order; everything
+    // else (live product images) follows in whatever order they arrived.
+    const rankOf = (item: GalleryImageItem): number => crmRankMap.get(item.id) ?? crmRankMap.size;
 
-    // 4. Themes from servicesData
-    for (const [theme, meta] of Object.entries(THEME_TO_GALLERY)) {
-      const images = SERVICE_GALLERY_IMAGES[theme] || [];
-      images.forEach((image, idx) => {
-        const specific = SPECIFIC_IMAGE_PRODUCTS[image];
-        const title = specific?.title || `${meta.tag} Celebration Setup ${idx + 1}`;
-        const serviceName = specific?.serviceName || meta.serviceName;
-        const price = specific?.price || '₹2,999';
-        const description = specific?.description || `Premium ${serviceName} styled in Bengaluru with 100% picture-match guarantee.`;
-        const tag = specific?.tag || meta.tag;
-
-        pushItem({
-          id: `gal-${theme.replace(/[^a-z0-9]/g, '')}-${idx}`,
-          title,
-          category: meta.category,
-          serviceName,
-          serviceRoute: `/services/${encodeURIComponent(serviceName)}`,
-          image,
-          tag,
-          price,
-          description,
-        });
-      });
-    }
-
-    // Sort items: preset existing images appear first in their curated sequence,
-    // while any newly added images (from database/CRM/admin) appear strictly at the bottom.
     list.sort((a, b) => {
-      const keyA = getImageDeduplicationKey(a.image);
-      const keyB = getImageDeduplicationKey(b.image);
-      const rankA = PRESET_SEQUENCE_STEM_MAP.has(keyA)
-        ? PRESET_SEQUENCE_STEM_MAP.get(keyA)!
-        : 1000000;
-      const rankB = PRESET_SEQUENCE_STEM_MAP.has(keyB)
-        ? PRESET_SEQUENCE_STEM_MAP.get(keyB)!
-        : 1000000;
+      const rankA = rankOf(a);
+      const rankB = rankOf(b);
 
       if (rankA !== rankB) {
         return rankA - rankB;
@@ -971,7 +323,7 @@ export const GalleryPage: React.FC = () => {
     });
 
     return list;
-  }, [products]);
+  }, [products, adminGalleryImages]);
 
   // Caching metadata & cookie for server load reduction
   useEffect(() => {

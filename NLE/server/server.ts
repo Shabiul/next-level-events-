@@ -23,6 +23,7 @@ import contactRoutes from "./routes/contactRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import otpRoutes from "./routes/otpRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
+import galleryRoutes from "./routes/galleryRoutes.js";
 import { connectDatabase } from "./src/db/connection.js";
 import { ProductRepository } from "./src/db/repositories.js";
 import helmet from "helmet";
@@ -243,6 +244,7 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/auth/otp", otpRoutes);
 app.use("/api/uploads", uploadRoutes);
+app.use("/api/gallery", galleryRoutes);
 
 app.get("/product/:productId", (req: Request, res: Response) => {
   const frontend = (process.env.FRONTEND_URL || "https://thedecorparty.com").replace(/\/$/, "");

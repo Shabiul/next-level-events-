@@ -277,6 +277,17 @@ export interface AdminProduct {
   updatedAt: string;
 }
 
+export interface AdminGalleryImage {
+  _id: string;
+  imageUrl: string;
+  title?: string;
+  category?: string;
+  order: number;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface AdminSlide {
   _id: string;
   image: string;
@@ -325,12 +336,12 @@ export interface AdminUser {
   active: boolean;
 }
 
-export type AdminView = 'dashboard' | 'categories' | 'products' | 'addons' | 'activities' | 'orders' | 'payments' | 'enquiries' | 'users' | 'settings' | 'staff';
+export type AdminView = 'dashboard' | 'categories' | 'products' | 'addons' | 'activities' | 'gallery' | 'orders' | 'payments' | 'enquiries' | 'users' | 'settings' | 'staff';
 
 /** Scopes a staff account can be granted -- every AdminView except
  * 'dashboard' (always visible) and 'staff' (admin-only, not delegable). */
 export const STAFF_SCOPES: Exclude<AdminView, 'dashboard' | 'staff'>[] = [
-  'categories', 'products', 'addons', 'activities',
+  'categories', 'products', 'addons', 'activities', 'gallery',
   'orders', 'payments', 'enquiries', 'users', 'settings',
 ];
 

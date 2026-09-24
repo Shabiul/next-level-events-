@@ -904,6 +904,79 @@ export const SliderRepository = {
   },
 };
 
+const GALLERY_IMAGE_LIMIT = 50;
+
+export const GalleryRepository = {
+  async listAll(): Promise<any[]> {
+    const { data, error } = await supabase.from("gallery_images").select("*").order("order_num", { ascending: true });
+    if (error) throw error;
+    return (data || []).map((g) => ({ ...g, _id: g.id, order: g.order_num, imageUrl: g.image_url }));
+  },
+
+  async create(image: any): Promise<any> {
+    const { count } = await supabase.from("gallery_images").select("*", { count: "exact", head: true });
+    if ((count || 0) >= GALLERY_IMAGE_LIMIT) {
+      throw Object.assign(new Error(`Gallery is full (${GALLERY_IMAGE_LIMIT} image max). Remove one before adding another.`), {
+        statusCode: 400,
+      });
+    }
+    const order_num = image.order ?? (count || 0);
+    const { data, error } = await supabase
+      .from("gallery_images")
+      .insert({
+        image_url: image.imageUrl || image.image_url,
+        title: image.title || "",
+        category: image.category || "",
+        order_num,
+        active: image.active !== false,
+      })
+      .select("*")
+      .single();
+    if (error) throw error;
+
+    // The count check above isn't atomic with the insert -- two concurrent
+    // requests can both pass it when right at the limit. Re-check after
+    // insert and undo this one if it pushed the table over, so the cap
+    // self-corrects instead of sticking above 50 until someone notices.
+    const { count: afterCount } = await supabase.from("gallery_images").select("*", { count: "exact", head: true });
+    if ((afterCount || 0) > GALLERY_IMAGE_LIMIT) {
+      await supabase.from("gallery_images").delete().eq("id", data.id);
+      throw Object.assign(new Error(`Gallery is full (${GALLERY_IMAGE_LIMIT} image max). Remove one before adding another.`), {
+        statusCode: 400,
+      });
+    }
+
+    return { ...data, _id: data.id, order: data.order_num, imageUrl: data.image_url };
+  },
+
+  async update(id: string, updates: any): Promise<any> {
+    const payload: Record<string, any> = { updated_at: new Date().toISOString() };
+    if (updates.imageUrl !== undefined || updates.image_url !== undefined) payload.image_url = updates.imageUrl ?? updates.image_url;
+    if (updates.title !== undefined) payload.title = updates.title;
+    if (updates.category !== undefined) payload.category = updates.category;
+    if (updates.active !== undefined) payload.active = updates.active;
+    if (updates.order !== undefined) payload.order_num = updates.order;
+
+    const { data, error } = await supabase.from("gallery_images").update(payload).eq("id", id).select("*").maybeSingle();
+    if (error) throw error;
+    return data ? { ...data, _id: data.id, order: data.order_num, imageUrl: data.image_url } : null;
+  },
+
+  async reorder(orderedIds: string[]): Promise<void> {
+    const results = await Promise.all(
+      orderedIds.map((id, index) => supabase.from("gallery_images").update({ order_num: index }).eq("id", id))
+    );
+    const failed = results.find((r) => r.error);
+    if (failed?.error) throw failed.error;
+  },
+
+  async delete(id: string): Promise<boolean> {
+    const { error } = await supabase.from("gallery_images").delete().eq("id", id);
+    if (error) throw error;
+    return true;
+  },
+};
+
 export const SiteContentRepository = {
   async getByKey(key: string): Promise<{ title: string; content: string } | null> {
     const { data, error } = await supabase.from("site_content").select("*").eq("key", key).maybeSingle();

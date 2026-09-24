@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { getApiUrl } from '../lib/api';
+import { useLiveSync } from './useLiveSync';
 
 /**
  * Site-wide settings admins can edit from /admin/settings (contact details,
@@ -48,56 +49,18 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
 export function useSiteSettings(): SiteSettings {
   const [settings, setSettings] = useState<SiteSettings>(DEFAULT_SITE_SETTINGS);
 
-  useEffect(() => {
-    let cancelled = false;
-
-    const loadSettings = (force = false) => {
-      const cacheBuster = force ? `?_t=${Date.now()}` : '';
-      fetch(getApiUrl(`/api/site-content/site-settings${cacheBuster}`), { cache: 'no-store' })
-        .then((r) => (r.ok ? r.json() : null))
-        .then((data) => {
-          if (cancelled || !data?.content) return;
-          const parsed = JSON.parse(data.content);
-          setSettings((prev) => ({ ...prev, ...parsed }));
-        })
-        .catch(() => {
-          /* keep defaults */
-        });
-    };
-
-    loadSettings();
-
-    // Cross-tab synchronization via BroadcastChannel
-    let broadcastChannel: BroadcastChannel | null = null;
-    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
-      try {
-        broadcastChannel = new BroadcastChannel('tdp_catalog_sync');
-        broadcastChannel.onmessage = (event) => {
-          if (event?.data?.type === 'CATALOG_UPDATED') {
-            loadSettings(true);
-          }
-        };
-      } catch {}
+  useLiveSync(async (force) => {
+    const cacheBuster = force ? `?_t=${Date.now()}` : '';
+    try {
+      const res = await fetch(getApiUrl(`/api/site-content/site-settings${cacheBuster}`), { cache: 'no-store' });
+      const data = res.ok ? await res.json() : null;
+      if (!data?.content) return;
+      const parsed = JSON.parse(data.content);
+      setSettings((prev) => ({ ...prev, ...parsed }));
+    } catch {
+      /* keep defaults */
     }
-
-    const onRevalidate = () => {
-      if (document.visibilityState === 'visible') {
-        loadSettings(true);
-      }
-    };
-
-    window.addEventListener('focus', onRevalidate);
-    document.addEventListener('visibilitychange', onRevalidate);
-    window.addEventListener('tdp_catalog_invalidate', () => loadSettings(true));
-
-    return () => {
-      cancelled = true;
-      if (broadcastChannel) broadcastChannel.close();
-      window.removeEventListener('focus', onRevalidate);
-      document.removeEventListener('visibilitychange', onRevalidate);
-      window.removeEventListener('tdp_catalog_invalidate', () => loadSettings(true));
-    };
-  }, []);
+  });
 
   return settings;
 }

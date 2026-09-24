@@ -8,6 +8,7 @@ import { cn } from "../../lib/utils";
 import { getApiUrl, authFetch, parseJsonSafe } from '../../lib/api';
 import { supabase } from '../../lib/supabase';
 import { UPLOAD_URL } from '../../lib/uploads';
+import { compressImage } from '../../lib/imageCompress';
 import { resolveImageUrl, handleImageError } from '../../lib/imageUrl';
 import { BADGE_COLORS, getAdminBadgeColorClass } from '../../lib/badges';
 import { trackAdminAction } from '../../lib/analytics';
@@ -255,19 +256,20 @@ export const ProductsView = () => {
   };
 
   const uploadImageFile = async (file: File) => {
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image size should be less than 5MB");
-      return;
-    }
-
     if (!file.type.startsWith("image/")) {
       toast.error("Please upload an image file");
       return;
     }
 
     setUploading(true);
+    const compressed = await compressImage(file);
+    if (compressed.size > 5 * 1024 * 1024) {
+      toast.error("Image is still over 5MB after compression");
+      setUploading(false);
+      return;
+    }
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", compressed);
     formData.append("folder", "ems/products");
 
     try {
@@ -307,19 +309,20 @@ export const ProductsView = () => {
   };
 
   const uploadMoreImageFile = async (file: File) => {
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image size should be less than 5MB");
-      return;
-    }
-
     if (!file.type.startsWith("image/")) {
       toast.error("Please upload an image file");
       return;
     }
 
     setMoreUploading(true);
+    const compressed = await compressImage(file);
+    if (compressed.size > 5 * 1024 * 1024) {
+      toast.error("Image is still over 5MB after compression");
+      setMoreUploading(false);
+      return;
+    }
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", compressed);
     formData.append("folder", "ems/products");
 
     try {

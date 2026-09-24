@@ -15,6 +15,7 @@ const SCOPE_LABELS: Record<Exclude<AdminView, 'dashboard' | 'staff'>, string> = 
   products: 'Products',
   addons: 'Add-ons',
   activities: 'Activities',
+  gallery: 'Gallery',
   orders: 'Bookings',
   payments: 'Payments',
   enquiries: 'Enquiries',

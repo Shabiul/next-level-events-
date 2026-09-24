@@ -10,6 +10,7 @@ import { getApiUrl, authFetch, parseJsonSafe } from '../../lib/api';
 import { supabase } from '../../lib/supabase';
 import { resolveImageUrl, handleImageError } from '../../lib/imageUrl';
 import { UPLOAD_URL } from '../../lib/uploads';
+import { compressImage } from '../../lib/imageCompress';
 import { trackAdminAction } from '../../lib/analytics';
 import { broadcastCrmUpdate } from '../../lib/syncChannel';
 
@@ -201,19 +202,20 @@ export const CategoriesView = () => {
   };
 
   const uploadCategoryImageFile = async (file: File) => {
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image size should be less than 5MB");
-      return;
-    }
-
     if (!file.type.startsWith("image/")) {
       toast.error("Please upload an image file");
       return;
     }
 
     setUploading(true);
+    const compressed = await compressImage(file);
+    if (compressed.size > 5 * 1024 * 1024) {
+      toast.error("Image is still over 5MB after compression");
+      setUploading(false);
+      return;
+    }
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", compressed);
     formData.append("folder", "ems/categories");
 
     try {
@@ -253,19 +255,20 @@ export const CategoriesView = () => {
   };
 
   const uploadSubImageFile = async (file: File) => {
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image size should be less than 5MB");
-      return;
-    }
-
     if (!file.type.startsWith("image/")) {
       toast.error("Please upload an image file");
       return;
     }
 
     setSubUploading(true);
+    const compressed = await compressImage(file);
+    if (compressed.size > 5 * 1024 * 1024) {
+      toast.error("Image is still over 5MB after compression");
+      setSubUploading(false);
+      return;
+    }
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", compressed);
     formData.append("folder", "ems/subcategories");
 
     try {

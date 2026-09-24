@@ -11,6 +11,7 @@ const CategoriesView = lazy(() => import('./admin/CategoriesView').then(m => ({ 
 const ProductsView = lazy(() => import('./admin/ProductsView').then(m => ({ default: m.ProductsView })));
 const AddonsView = lazy(() => import('./admin/AddonsView').then(m => ({ default: m.AddonsView })));
 const ActivitiesView = lazy(() => import('./admin/ActivitiesView').then(m => ({ default: m.ActivitiesView })));
+const GalleryView = lazy(() => import('./admin/GalleryView').then(m => ({ default: m.GalleryView })));
 const UsersView = lazy(() => import('./admin/UsersView').then(m => ({ default: m.UsersView })));
 const EnquiriesView = lazy(() => import('./admin/EnquiriesView').then(m => ({ default: m.EnquiriesView })));
 const SiteSettingsView = lazy(() => import('./admin/SiteSettingsView').then(m => ({ default: m.SiteSettingsView })));
@@ -76,6 +77,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, onLogout }) => {
         return 'addons';
       case 'activities':
         return 'activities';
+      case 'gallery':
+        return 'gallery';
       case 'orders':
         return 'orders';
       case 'bookings':
@@ -116,6 +119,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, onLogout }) => {
       products: '/products',
       addons: '/addons',
       activities: '/activities',
+      gallery: '/gallery',
       orders: '/orders',
       payments: '/payments',
       enquiries: '/enquiries',
@@ -320,6 +324,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ user, onLogout }) => {
           {view === 'products' && <ProductsView />}
           {view === 'addons' && <AddonsView />}
           {view === 'activities' && <ActivitiesView />}
+          {view === 'gallery' && <GalleryView />}
           {view === 'orders' && (
             <div className="space-y-5">
               {/* Header card */}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, FolderTree, Gift, Package, Inbox, Users, PartyPopper, Sparkles, LogOut, ChevronRight, Settings, IndianRupee, UserCog } from 'lucide-react';
+import { LayoutDashboard, FolderTree, Gift, Package, Inbox, Users, PartyPopper, Sparkles, LogOut, ChevronRight, Settings, IndianRupee, UserCog, Image } from 'lucide-react';
 import type { AdminView, AuthUser } from '../../types';
 import { cn } from '../../lib/utils';
 
@@ -13,6 +13,7 @@ const NAV_ITEMS: { view: AdminView; icon: React.ElementType; label: string }[] =
   { view: 'products', icon: Gift, label: 'Products' },
   { view: 'addons', icon: Sparkles, label: 'Add-ons' },
   { view: 'activities', icon: PartyPopper, label: 'Activities' },
+  { view: 'gallery', icon: Image, label: 'Gallery' },
   { view: 'orders', icon: Package, label: 'Bookings' },
   { view: 'payments', icon: IndianRupee, label: 'Payments' },
   { view: 'enquiries', icon: Inbox, label: 'Enquiries' },

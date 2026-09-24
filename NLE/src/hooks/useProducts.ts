@@ -1,7 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import type { AdminProduct, AdminCategory } from '../types';
 import { getApiUrl } from '../services/api.service';
 import { DEFAULT_PRODUCTS, DEFAULT_CATEGORIES } from '../data/fallbackCatalog';
+import { useLiveSync } from './useLiveSync';
 
 export interface GroupedProducts {
   [categoryName: string]: AdminProduct[];
@@ -58,11 +59,8 @@ export function useProducts() {
   const [products, setProducts] = useState<AdminProduct[]>(memoryAllProducts);
   const [loading, setLoading] = useState(memoryAllProducts.length === 0);
 
-  useEffect(() => {
-    let lastKnownVersion = 0;
-
-    const fetchCatalog = async (force = false) => {
-      try {
+  useLiveSync(async (force) => {
+    try {
         const cacheBuster = force ? `?_t=${Date.now()}` : '';
         const [allProds, cats]: [AdminProduct[], AdminCategory[]] = await Promise.all([
           fetch(getApiUrl(`/api/products${cacheBuster}`), { cache: 'no-store' })
@@ -113,94 +111,12 @@ export function useProducts() {
         if (force) {
           window.dispatchEvent(new CustomEvent('tdp_catalog_invalidate'));
         }
-      } catch (err) {
-        console.warn('[useProducts] Failed to revalidate catalog:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCatalog();
-
-    // 1. Real-time Live Sync via Server-Sent Events (SSE)
-    let eventSource: EventSource | null = null;
-    try {
-      const sseUrl = getApiUrl('/api/catalog/live');
-      eventSource = new EventSource(sseUrl);
-
-      eventSource.addEventListener('init', (e: MessageEvent) => {
-        try {
-          const data = JSON.parse(e.data);
-          if (data?.version) lastKnownVersion = Number(data.version);
-        } catch {}
-      });
-
-      eventSource.addEventListener('catalog_updated', (e: MessageEvent) => {
-        try {
-          const data = JSON.parse(e.data);
-          if (data?.version) lastKnownVersion = Number(data.version);
-        } catch {}
-        fetchCatalog(true);
-      });
-
-      let sseErrorCount = 0;
-      eventSource.onerror = () => {
-        sseErrorCount++;
-        if (sseErrorCount > 2) {
-          eventSource?.close();
-          eventSource = null;
-        }
-      };
-    } catch {
-      // ignore
+    } catch (err) {
+      console.warn('[useProducts] Failed to revalidate catalog:', err);
+    } finally {
+      setLoading(false);
     }
-
-    // 2. Cross-tab synchronization via BroadcastChannel
-    let broadcastChannel: BroadcastChannel | null = null;
-    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
-      try {
-        broadcastChannel = new BroadcastChannel('tdp_catalog_sync');
-        broadcastChannel.onmessage = (event) => {
-          if (event?.data?.type === 'CATALOG_UPDATED') {
-            fetchCatalog(true);
-          }
-        };
-      } catch {}
-    }
-
-    // 3. Revalidate catalog on tab focus / visibility change with version check
-    const checkVersionAndRevalidate = async () => {
-      if (document.visibilityState !== 'visible') return;
-      try {
-        const res = await fetch(getApiUrl(`/api/catalog/version?_t=${Date.now()}`), { cache: 'no-store' });
-        if (res.ok) {
-          const json = await res.json();
-          if (json?.version && Number(json.version) !== lastKnownVersion) {
-            lastKnownVersion = Number(json.version);
-            fetchCatalog(true);
-            return;
-          }
-        }
-      } catch {}
-      fetchCatalog(false);
-    };
-
-    window.addEventListener('focus', checkVersionAndRevalidate);
-    document.addEventListener('visibilitychange', checkVersionAndRevalidate);
-    window.addEventListener('tdp_catalog_invalidate', () => fetchCatalog(false));
-
-    return () => {
-      if (eventSource) {
-        eventSource.close();
-      }
-      if (broadcastChannel) {
-        broadcastChannel.close();
-      }
-      window.removeEventListener('focus', checkVersionAndRevalidate);
-      document.removeEventListener('visibilitychange', checkVersionAndRevalidate);
-      window.removeEventListener('tdp_catalog_invalidate', () => fetchCatalog(false));
-    };
-  }, []);
+  });
 
   const featuredProducts = useMemo(() => products.filter(p => p.featured), [products]);
   const popularProducts = useMemo(() => products.slice(0, 10), [products]);

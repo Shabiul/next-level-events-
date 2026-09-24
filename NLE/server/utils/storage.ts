@@ -53,6 +53,9 @@ export async function uploadAsset(
   const { error } = await supabase.storage.from(BUCKET).upload(path, buffer, {
     contentType: mimetype,
     upsert: false,
+    // Filenames are unique per upload (timestamp + random), so it's always
+    // safe to cache the bytes forever -- nothing ever overwrites a path.
+    cacheControl: "31536000",
   });
   if (error) throw error;
 
