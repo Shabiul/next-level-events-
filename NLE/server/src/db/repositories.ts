@@ -920,7 +920,17 @@ export const GalleryRepository = {
         statusCode: 400,
       });
     }
-    const order_num = image.order ?? (count || 0);
+    // Row count alone breaks as an order_num once a row's been deleted from
+    // the middle (leaves a gap, but count still drops -- a later insert
+    // could collide with the still-highest existing order_num). Base it on
+    // the actual max instead, which stays correct regardless of deletions.
+    const { data: highest } = await supabase
+      .from("gallery_images")
+      .select("order_num")
+      .order("order_num", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    const order_num = image.order ?? ((highest?.order_num ?? -1) + 1);
     const { data, error } = await supabase
       .from("gallery_images")
       .insert({

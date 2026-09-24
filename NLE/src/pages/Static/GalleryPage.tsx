@@ -132,7 +132,6 @@ const GalleryCard: React.FC<GalleryCardProps> = ({ item, index, shouldLoad, onLo
               ref={imgRef}
               src={src}
               alt={item.title}
-              decoding="async"
               onLoad={() => {
                 setImageLoaded(true);
                 handleDone();
@@ -360,8 +359,12 @@ export const GalleryPage: React.FC = () => {
       : allImages.filter((item) => item.category === activeCategory);
   }, [activeCategory, allImages]);
 
-  // Progressive sequential loading (30 images initial batch & 50% scroll trigger)
-  const PAGE_SIZE = 30;
+  // This scroll-triggered progressive queue was sized for the old ~571-image
+  // static dataset. The gallery is now capped at PER_CATEGORY_LIMIT * 7
+  // categories (~49) total, so PAGE_SIZE just needs to cover the max --
+  // everything then loads immediately on mount instead of depending on the
+  // IntersectionObserver sentinels firing correctly for every scroll style.
+  const PAGE_SIZE = 60;
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
