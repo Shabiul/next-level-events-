@@ -60,7 +60,7 @@ export function useSiteSettings(): SiteSettings {
     } catch {
       /* keep defaults */
     }
-  });
+  }, ['site_content']);
 
   return settings;
 }

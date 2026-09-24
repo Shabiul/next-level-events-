@@ -113,7 +113,7 @@ router.put("/:key", requireContentScope, async (req: Request, res: Response) => 
     }
 
     const doc = await SiteContentRepository.upsert(key, title, content);
-    broadcastCatalogUpdate("site_content_updated", { key });
+    broadcastCatalogUpdate();
     return res.json({ key, title: doc.title, content: doc.content });
   } catch {
     return res.status(500).json({ msg: "Server error" });

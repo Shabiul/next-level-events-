@@ -151,7 +151,7 @@ router.post("/", requirePermission("products"), async (req: Request, res: Respon
       activities: Array.isArray(req.body.activities) ? req.body.activities : [],
     };
     const product = await ProductRepository.create(payload);
-    broadcastCatalogUpdate("product_created", { id: product?._id, name: product?.name });
+    broadcastCatalogUpdate();
     const version = getCatalogVersion();
     res.cookie("tdp_catalog_v", String(version), { path: "/", maxAge: 30 * 86400 * 1000, sameSite: "lax" });
     try {
@@ -174,7 +174,7 @@ router.put("/:id", requirePermission("products"), async (req: Request, res: Resp
       activities: Array.isArray(req.body.activities) ? req.body.activities : [],
     };
     const updated = await ProductRepository.update(id, payload);
-    broadcastCatalogUpdate("product_updated", { id: updated?._id || id, name: updated?.name });
+    broadcastCatalogUpdate();
     const version = getCatalogVersion();
     res.cookie("tdp_catalog_v", String(version), { path: "/", maxAge: 30 * 86400 * 1000, sameSite: "lax" });
     if (updated) {
@@ -193,7 +193,7 @@ router.delete("/:id", requirePermission("products"), async (req: Request, res: R
   try {
     const id = String(req.params.id);
     const deleted = await ProductRepository.delete(id);
-    broadcastCatalogUpdate("product_deleted", { id });
+    broadcastCatalogUpdate();
     const version = getCatalogVersion();
     res.cookie("tdp_catalog_v", String(version), { path: "/", maxAge: 30 * 86400 * 1000, sameSite: "lax" });
     if (deleted) {

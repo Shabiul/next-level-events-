@@ -38,7 +38,7 @@ router.post("/", requirePermission("categories"), async (req: Request, res: Resp
       subcategories: req.body.subcategories || [],
     });
 
-    broadcastCatalogUpdate("category_created", { id: category?.id, name: category?.name });
+    broadcastCatalogUpdate();
     res.cookie("tdp_catalog_v", String(getCatalogVersion()), { maxAge: 86400000, httpOnly: false, sameSite: "lax", path: "/" });
 
     try {
@@ -64,7 +64,7 @@ const handleReorder = async (req: Request, res: Response) => {
     );
 
     await CategoryRepository.reorder(validIds);
-    broadcastCatalogUpdate("category_reordered");
+    broadcastCatalogUpdate();
     res.cookie("tdp_catalog_v", String(getCatalogVersion()), { maxAge: 86400000, httpOnly: false, sameSite: "lax", path: "/" });
 
     try {
@@ -97,7 +97,7 @@ router.put("/:id", requirePermission("categories"), async (req: Request, res: Re
       subcategories: req.body.subcategories,
     });
 
-    broadcastCatalogUpdate("category_updated", { id, name: updated?.name });
+    broadcastCatalogUpdate();
     res.cookie("tdp_catalog_v", String(getCatalogVersion()), { maxAge: 86400000, httpOnly: false, sameSite: "lax", path: "/" });
 
     if (updated) {
@@ -125,7 +125,7 @@ router.delete("/:id", requirePermission("categories"), async (req: Request, res:
     }
 
     const deleted = await CategoryRepository.delete(id);
-    broadcastCatalogUpdate("category_deleted", { id });
+    broadcastCatalogUpdate();
     res.cookie("tdp_catalog_v", String(getCatalogVersion()), { maxAge: 86400000, httpOnly: false, sameSite: "lax", path: "/" });
 
     if (deleted) {

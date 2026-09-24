@@ -55,7 +55,7 @@ router.post("/", requirePermission("activities"), async (req: Request, res: Resp
       }))
     );
 
-    broadcastCatalogUpdate("activity_created");
+    broadcastCatalogUpdate();
     res.status(201).json(populated);
   } catch (err: any) {
     res.status(500).json({ error: err.message || "Failed to create activities" });
@@ -85,7 +85,7 @@ router.put("/:id", requirePermission("activities"), async (req: Request, res: Re
     }
 
     const product = updated.product_id ? await ProductRepository.findById(updated.product_id) : null;
-    broadcastCatalogUpdate("activity_updated", { id: updated.id });
+    broadcastCatalogUpdate();
     res.json({
       _id: updated.id,
       id: updated.id,
@@ -101,7 +101,7 @@ router.delete("/:id", requirePermission("activities"), async (req: Request, res:
   try {
     const { error } = await supabase.from("activities").delete().eq("id", req.params.id);
     if (error) throw error;
-    broadcastCatalogUpdate("activity_deleted", { id: req.params.id });
+    broadcastCatalogUpdate();
     res.json({ message: "Activity deleted" });
   } catch (err: any) {
     res.status(500).json({ error: err.message || "Failed to delete activity" });

@@ -20,7 +20,7 @@ router.post("/", requirePermission("gallery"), async (req: Request, res: Respons
       return res.status(400).json({ error: "imageUrl is required" });
     }
     const image = await GalleryRepository.create(req.body);
-    broadcastCatalogUpdate("gallery_image_created", { id: image?._id });
+    broadcastCatalogUpdate();
     res.json(image);
   } catch (err: any) {
     res.status(err.statusCode || 500).json({ error: err.message || "Failed to create gallery image" });
@@ -34,7 +34,7 @@ router.put("/reorder", requirePermission("gallery"), async (req: Request, res: R
       return res.status(400).json({ error: "orderedIds must be a non-empty array" });
     }
     await GalleryRepository.reorder(orderedIds);
-    broadcastCatalogUpdate("gallery_image_reordered");
+    broadcastCatalogUpdate();
     res.json({ message: "Gallery order updated" });
   } catch (err: any) {
     res.status(500).json({ error: err.message || "Failed to reorder gallery images" });
@@ -45,7 +45,7 @@ router.put("/:id", requirePermission("gallery"), async (req: Request, res: Respo
   try {
     const id = String(req.params.id);
     const updated = await GalleryRepository.update(id, req.body);
-    broadcastCatalogUpdate("gallery_image_updated", { id });
+    broadcastCatalogUpdate();
     res.json(updated);
   } catch (err: any) {
     res.status(500).json({ error: err.message || "Failed to update gallery image" });
@@ -56,7 +56,7 @@ router.delete("/:id", requirePermission("gallery"), async (req: Request, res: Re
   try {
     const id = String(req.params.id);
     await GalleryRepository.delete(id);
-    broadcastCatalogUpdate("gallery_image_deleted", { id });
+    broadcastCatalogUpdate();
     res.json({ message: "Gallery image deleted" });
   } catch (err: any) {
     res.status(500).json({ error: err.message || "Failed to delete gallery image" });

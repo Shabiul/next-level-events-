@@ -45,7 +45,7 @@ export function useGalleryImages() {
     } catch {
       // keep whatever's already in state (cached or empty)
     }
-  });
+  }, ['gallery_images']);
 
   return { galleryImages: images };
 }

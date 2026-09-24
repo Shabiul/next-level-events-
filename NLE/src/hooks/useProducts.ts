@@ -74,12 +74,7 @@ export function useProducts() {
         if (Array.isArray(allProds) && allProds.length > 0) {
           const active = allProds.filter((p) => p?.active !== false);
           if (active.length > 0) {
-            const groups: GroupedProducts = {};
-            active.forEach((p) => {
-              const cat = p.categoryName || 'Other';
-              if (!groups[cat]) groups[cat] = [];
-              groups[cat].push(p);
-            });
+            const groups = buildGroups(active);
             memoryGrouped = groups;
             memoryAllProducts = active;
             setGrouped(groups);
@@ -116,7 +111,7 @@ export function useProducts() {
     } finally {
       setLoading(false);
     }
-  });
+  }, ['products', 'categories']);
 
   const featuredProducts = useMemo(() => products.filter(p => p.featured), [products]);
   const popularProducts = useMemo(() => products.slice(0, 10), [products]);

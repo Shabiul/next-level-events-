@@ -296,6 +296,26 @@ CREATE POLICY "Public read gallery_images" ON gallery_images FOR SELECT USING (t
 DROP POLICY IF EXISTS "Public read site_content" ON site_content;
 CREATE POLICY "Public read site_content" ON site_content FOR SELECT USING (true);
 
+-- Realtime: the storefront subscribes to these tables directly (via
+-- supabase-js on the client) for live catalog sync, replacing the old
+-- server-held SSE stream which doesn't work on stateless serverless hosts.
+-- Idempotent (unlike a plain ALTER PUBLICATION ADD TABLE, which errors and
+-- aborts the rest of this script's transaction if re-run against a
+-- publication that already has the table).
+DO $$
+DECLARE
+  t text;
+BEGIN
+  FOREACH t IN ARRAY ARRAY['products', 'categories', 'addons', 'activities', 'gallery_images', 'site_content']
+  LOOP
+    IF NOT EXISTS (
+      SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = t
+    ) THEN
+      EXECUTE format('ALTER PUBLICATION supabase_realtime ADD TABLE %I', t);
+    END IF;
+  END LOOP;
+END $$;
+
 -- Public Contact & Enquiries: Public can insert enquiries
 DROP POLICY IF EXISTS "Public insert enquiries" ON enquiries;
 CREATE POLICY "Public insert enquiries" ON enquiries FOR INSERT WITH CHECK (true);
