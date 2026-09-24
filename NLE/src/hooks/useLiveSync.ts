@@ -26,7 +26,12 @@ export function useLiveSync(revalidate: (force: boolean) => void, tables: string
   useEffect(() => {
     revalidateRef.current(false);
 
-    let channel = supabase?.channel(`live-sync:${tableKey}`);
+    // A fixed channel name collides with itself on a fast remount (React
+    // StrictMode's dev double-invoke, or navigating away and back before the
+    // previous channel's async removeChannel() finishes) -- the Realtime
+    // client reuses the already-SUBSCRIBED instance for that topic, and
+    // calling .on() on it then throws. A per-mount-unique name sidesteps it.
+    let channel = supabase?.channel(`live-sync:${tableKey}:${Math.random().toString(36).slice(2)}`);
     if (channel) {
       for (const table of tables) {
         channel = channel.on(
