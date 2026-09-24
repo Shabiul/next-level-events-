@@ -54,6 +54,9 @@ const CATEGORIES: GalleryCategory[] = [
   'CUSTOM THEMES',
 ];
 
+// Hard cap: 7 categories x 7 images = ~50 total shown on the public page.
+const PER_CATEGORY_LIMIT = 7;
+
 
 interface GalleryCardProps {
   item: GalleryImageItem;
@@ -322,7 +325,18 @@ export const GalleryPage: React.FC = () => {
       return 0;
     });
 
-    return list;
+    // Hard cap per category so the public gallery never balloons past a
+    // handful dozen images regardless of how many live products exist --
+    // keeps the first N (already CRM-priority-sorted above) per category.
+    const perCategoryCount = new Map<GalleryCategory, number>();
+    const capped = list.filter((item) => {
+      const used = perCategoryCount.get(item.category) || 0;
+      if (used >= PER_CATEGORY_LIMIT) return false;
+      perCategoryCount.set(item.category, used + 1);
+      return true;
+    });
+
+    return capped;
   }, [products, adminGalleryImages]);
 
   // Caching metadata & cookie for server load reduction
@@ -543,10 +557,6 @@ export const GalleryPage: React.FC = () => {
           <div className="mt-8 sm:mt-10 flex items-center justify-start sm:justify-center overflow-x-auto pb-2 scrollbar-none gap-2.5 px-1 max-w-full">
             {CATEGORIES.map((cat) => {
               const isActive = activeCategory === cat;
-              const count =
-                cat === 'ALL'
-                  ? allImages.length
-                  : allImages.filter((item) => item.category === cat).length;
 
               return (
                 <button
@@ -560,13 +570,6 @@ export const GalleryPage: React.FC = () => {
                   }`}
                 >
                   <span>{cat}</span>
-                  <span
-                    className={`rounded-full px-1.5 text-[10px] font-bold ${
-                      isActive ? 'bg-[#FFF3E6]/20 text-[#FFF3E6]' : 'bg-[#A78A9F]/15 text-[#381932]'
-                    }`}
-                  >
-                    {count}
-                  </span>
                 </button>
               );
             })}
